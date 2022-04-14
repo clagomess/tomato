@@ -1,23 +1,23 @@
-package com.github.clagomess.tomato.form;
+package com.github.clagomess.tomato.ui;
 
-import com.github.clagomess.tomato.form.collection.CollectionForm;
-import com.github.clagomess.tomato.form.request.RequestForm;
+import com.github.clagomess.tomato.ui.collection.CollectionUi;
+import com.github.clagomess.tomato.ui.request.RequestUi;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MainForm extends JFrame {
-    private final CollectionForm collectionForm = new CollectionForm();
-    private final RequestForm requestForm = new RequestForm();
+public class MainUi extends JFrame {
+    private final CollectionUi collectionUi = new CollectionUi();
+    private final RequestUi requestUi = new RequestUi();
 
-    public MainForm(){
+    public MainUi(){
         setTitle("Tomato");
         setVisible(true);
         setMinimumSize(new Dimension(1000, 500));
         setJMenuBar(getMenu());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, collectionForm, requestForm);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, collectionUi, requestUi);
         splitPane.setOneTouchExpandable(true);
         splitPane.setDividerLocation(200);
 

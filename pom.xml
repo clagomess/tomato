@@ -26,5 +26,13 @@
             <artifactId>miglayout</artifactId>
             <version>3.7.4</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fifesoft/rsyntaxtextarea -->
+        <dependency>
+            <groupId>com.fifesoft</groupId>
+            <artifactId>rsyntaxtextarea</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
     </dependencies>
 </project>

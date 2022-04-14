@@ -1,11 +1,11 @@
-package com.github.clagomess.tomato.form.collection;
+package com.github.clagomess.tomato.ui.collection;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 
-public class CollectionForm extends JPanel {
-    public CollectionForm() {
+public class CollectionUi extends JPanel {
+    public CollectionUi() {
         setLayout(new BorderLayout());
         setMinimumSize(new Dimension(0, 0));
 
