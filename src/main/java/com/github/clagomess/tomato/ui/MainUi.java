@@ -18,7 +18,6 @@ public class MainUi extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, collectionUi, requestUi);
-        splitPane.setOneTouchExpandable(true);
         splitPane.setDividerLocation(200);
 
         add(splitPane);

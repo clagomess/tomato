@@ -35,7 +35,7 @@ public class RequestUi extends JTabbedPane {
 
         JTabbedPane tpRequest = new JTabbedPane();
         tpRequest.addTab("Body", getEditor());
-        tpRequest.addTab("Header", new JPanel(new BorderLayout()));
+        tpRequest.addTab("Header", getHeader());
 
         pRequest.add(tpRequest, "span, height 100%");
 
@@ -52,7 +52,7 @@ public class RequestUi extends JTabbedPane {
 
     public Component getEditor(){
         JPanel jPanel = new JPanel();
-        jPanel.setLayout(new BorderLayout());
+        jPanel.setLayout(new MigLayout("", "[grow, fill]", ""));
 
 
         Theme theme = null;
@@ -72,8 +72,31 @@ public class RequestUi extends JTabbedPane {
         RTextScrollPane sp = new RTextScrollPane(textArea);
         sp.setBorder(BorderFactory.createEmptyBorder());
 
-        jPanel.add(sp);
+        JPanel jradios = new JPanel();
+        jradios.add(new JRadioButton("No Body"));
+        jradios.add(new JRadioButton("Multipart Form"));
+        jradios.add(new JRadioButton("URL Encoded Form"));
+        jradios.add(new JRadioButton("Raw"));
+        jradios.add(new JRadioButton("Binary"));
+
+        jPanel.add(jradios, "wrap");
+        jPanel.add(sp, "height 100%");
 
         return jPanel;
+    }
+
+    public Component getHeader(){
+        JPanel jPanel = new JPanel();
+        jPanel.setLayout(new BorderLayout());
+
+        JTable table = new JTable(new String[][]{
+                {"Content-Type", "application/json"},
+                {"Origin", "localhost"},
+        }, new String[]{"Header", "Value"});
+
+        JScrollPane spane = new JScrollPane();
+        spane.add(table);
+        jPanel.add(spane);
+        return table;
     }
 }
