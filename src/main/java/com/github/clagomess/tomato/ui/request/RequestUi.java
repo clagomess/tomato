@@ -42,7 +42,19 @@ public class RequestUi extends JTabbedPane {
         // --- RESPONSE
 
         JPanel pResponse = new JPanel();
-        pResponse.add(new JButton("Content"));
+        pResponse.setLayout(new MigLayout("insets 10 0 10 0", "[grow,fill]", ""));
+
+        JPanel jPanelRL = new JPanel();
+        jPanelRL.add(new JLabel("200 OK"));
+        jPanelRL.add(new JLabel("3.2s"));
+        jPanelRL.add(new JLabel("14Kb"));
+        pResponse.add(jPanelRL, "wrap, width 100%");
+
+        JTabbedPane tpResponse = new JTabbedPane();
+        tpResponse.addTab("Body", new JButton("AAAAA"));
+        tpResponse.addTab("Header", getHeader());
+        tpResponse.addTab("HTTP", new JTextArea());
+        pResponse.add(tpResponse, "height 100%");
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pRequest, pResponse);
 
@@ -98,5 +110,12 @@ public class RequestUi extends JTabbedPane {
         spane.add(table);
         jPanel.add(spane);
         return table;
+    }
+
+    public Component getResponse(){
+        JPanel pResponse = new JPanel();
+        pResponse.setLayout(new MigLayout());
+
+        return pResponse;
     }
 }
