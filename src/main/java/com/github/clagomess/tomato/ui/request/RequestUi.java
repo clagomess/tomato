@@ -37,7 +37,7 @@ public class RequestUi extends JTabbedPane {
         tpRequest.addTab("Body", getEditor());
         tpRequest.addTab("Header", new JPanel(new BorderLayout()));
 
-        pRequest.add(tpRequest, "span, pushx");
+        pRequest.add(tpRequest, "span, height 100%");
 
         // --- RESPONSE
 
@@ -45,16 +45,15 @@ public class RequestUi extends JTabbedPane {
         pResponse.add(new JButton("Content"));
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pRequest, pResponse);
-        splitPane.setDividerLocation(.5);
 
 
         return splitPane;
     }
 
-    public JPanel getEditor(){
+    public Component getEditor(){
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BorderLayout());
-        jPanel.setMinimumSize(new Dimension(0, 500));
+
 
         Theme theme = null;
         try {
@@ -71,6 +70,7 @@ public class RequestUi extends JTabbedPane {
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
         textArea.setCodeFoldingEnabled(true);
         RTextScrollPane sp = new RTextScrollPane(textArea);
+        sp.setBorder(BorderFactory.createEmptyBorder());
 
         jPanel.add(sp);
 
