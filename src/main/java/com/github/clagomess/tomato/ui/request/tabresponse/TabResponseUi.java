@@ -37,21 +37,17 @@ public class TabResponseUi extends JPanel {
     public Component getHeader(){
         DefaultTableModel tblCameraDTM = new DefaultTableModel();
 
-        JPanel jPanel = new JPanel();
-        jPanel.setLayout(new BorderLayout());
-
         JTable table = new JTable(tblCameraDTM);
         table.setFocusable(false);
         table.setShowGrid(true);
         tblCameraDTM.addColumn("Header");
         tblCameraDTM.addColumn("Value");
-        tblCameraDTM.addColumn(new Object[]{"Content-Type", "application/json"});
-        tblCameraDTM.addColumn(new Object[]{"Origin", "localhost"});
+        tblCameraDTM.addRow(new String[]{"Content-Type", "application/json"});
+        tblCameraDTM.addRow(new String[]{"Origin", "localhost"});
 
         JScrollPane spane = new JScrollPane();
-        spane.add(table);
-        jPanel.add(spane);
+        spane.setViewportView(table);
 
-        return jPanel;
+        return spane;
     }
 }

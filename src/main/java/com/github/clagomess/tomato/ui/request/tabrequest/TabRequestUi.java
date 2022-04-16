@@ -61,17 +61,13 @@ public class TabRequestUi extends JPanel {
     }
 
     public Component getHeader(){
-        JPanel jPanel = new JPanel();
-        jPanel.setLayout(new BorderLayout());
-
         JTable table = new JTable(new String[][]{
                 {"Content-Type", "application/json"},
                 {"Origin", "localhost"},
         }, new String[]{"Header", "Value"});
 
         JScrollPane spane = new JScrollPane();
-        spane.add(table);
-        jPanel.add(spane);
-        return table;
+        spane.setViewportView(table);
+        return spane;
     }
 }
