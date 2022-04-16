@@ -1,5 +1,7 @@
 package com.github.clagomess.tomato.ui.request.tabrequest;
 
+import com.github.clagomess.tomato.enums.BodyTypeEnum;
+import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.EditorFactory;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
@@ -7,6 +9,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 @Getter
 public class TabRequestUi extends JPanel {
@@ -21,7 +24,7 @@ public class TabRequestUi extends JPanel {
 
         add(lblRequestName, "span");
         add(new JSeparator(JSeparator.HORIZONTAL), "span");
-        add(getHttpOptionsComponent());
+        add(getHttpMethodsComponent());
         add(txtRequestUrl, "width 100%");
         add(btnSendRequest);
         add(btnSaveRequest, "wrap");
@@ -33,31 +36,73 @@ public class TabRequestUi extends JPanel {
         add(tpRequest, "span, height 100%");
     }
 
-    public JComboBox<String> getHttpOptionsComponent(){
-        JComboBox<String> httpOptions = new JComboBox<>();
-        httpOptions.addItem("GET");
-        httpOptions.addItem("PUT");
-        httpOptions.addItem("OPTIONS");
-        return httpOptions;
+    public JComboBox<String> getHttpMethodsComponent(){
+        JComboBox<String> httpMethod = new JComboBox<>();
+        Arrays.stream(HttpMethodEnum.values()).forEach(item -> httpMethod.addItem(item.getMethod()));
+        return httpMethod;
     }
 
     public Component getBody(){
-        JPanel jPanel = new JPanel();
-        jPanel.setLayout(new MigLayout("", "[grow, fill]", ""));
+        JPanel bodyPanel = new JPanel();
+        bodyPanel.setLayout(new MigLayout("", "[grow, fill]", ""));
 
+        ButtonGroup bgBodyType = new ButtonGroup();
+        JPanel pRadioBodyType = new JPanel();
+
+        Arrays.stream(BodyTypeEnum.values()).forEach(item -> {
+            JRadioButton rbBodyType = new JRadioButton(item.getDescription());
+            rbBodyType.setSelected(item == BodyTypeEnum.NO_BODY);
+            rbBodyType.addActionListener(l -> {
+                bodyPanel.remove(1);
+                bodyPanel.add(getBodyType(item));
+                bodyPanel.revalidate();
+                bodyPanel.repaint();
+            });
+
+            bgBodyType.add(rbBodyType);
+            pRadioBodyType.add(rbBodyType);
+        });
+
+        bodyPanel.add(pRadioBodyType, "wrap");
+        bodyPanel.add(getBodyType(BodyTypeEnum.NO_BODY), "height 100%");
+
+        return bodyPanel;
+    }
+
+    private Component getBodyType(BodyTypeEnum bodyType){
+        switch (bodyType){
+            case MULTIPART_FORM:
+                return getMultiPartFormBodyType();
+            case URL_ENCODED_FORM:
+                return getUrlEncodedFormBodyType();
+            case RAW:
+                return getRawBodyType();
+            case BINARY:
+                return getBinaryBodyType();
+            default:
+                return getNoBodyBodyType();
+        }
+    }
+
+    private Component getNoBodyBodyType(){
+        return new JPanel();
+    }
+
+    private Component getMultiPartFormBodyType(){
+        return new JPanel();
+    }
+
+    private Component getUrlEncodedFormBodyType(){
+        return new JPanel();
+    }
+
+    private Component getRawBodyType(){
         RSyntaxTextArea textArea = EditorFactory.getInstance().createEditor();
+        return EditorFactory.createScroll(textArea);
+    }
 
-        JPanel jradios = new JPanel();
-        jradios.add(new JRadioButton("No Body"));
-        jradios.add(new JRadioButton("Multipart Form"));
-        jradios.add(new JRadioButton("URL Encoded Form"));
-        jradios.add(new JRadioButton("Raw"));
-        jradios.add(new JRadioButton("Binary"));
-
-        jPanel.add(jradios, "wrap");
-        jPanel.add(EditorFactory.createScroll(textArea), "height 100%");
-
-        return jPanel;
+    private Component getBinaryBodyType(){
+        return new JPanel();
     }
 
     public Component getHeader(){
