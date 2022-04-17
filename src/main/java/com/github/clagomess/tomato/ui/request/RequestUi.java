@@ -16,24 +16,24 @@ public class RequestUi extends JTabbedPane {
 
     public RequestUi(){
         Arrays.asList("Aoba", "Aoba", "Bene").forEach(this::addNewTab);
-        addTab(ADD_TAB_TITLE, new JPanel());
 
         addChangeListener(e -> {
             if(getSelectedIndex() != indexOfTab(ADD_TAB_TITLE) || getSelectedIndex() == -1) return;
-
-            int index = getSelectedIndex();
-            removeTabAt(index);
             addNewTab("New Request");
-            setSelectedIndex(index);
-            addTab(ADD_TAB_TITLE, new JPanel());
         });
     }
 
     public void addNewTab(String title){
+        // remove "+" tab
+        if(indexOfTab(ADD_TAB_TITLE) != -1) removeTabAt(indexOfTab(ADD_TAB_TITLE));
+
+        // add new
         String uniqueTitle = getUniqueTabTitle(title);
         addTab(uniqueTitle, getTabContent());
         addTabOptions(uniqueTitle);
         tabTitles.add(uniqueTitle);
+        addTab(ADD_TAB_TITLE, new JPanel());
+        setSelectedIndex(getTabCount() -2);
     }
 
     public JSplitPane getTabContent(){
@@ -64,7 +64,7 @@ public class RequestUi extends JTabbedPane {
         JButton btnClose = new JButton("x");
         btnClose.setBorder(BorderFactory.createEmptyBorder());
 
-        pnlTab.add(new JLabel(IconFactory.ICON_HTTP_METHOD_GET));
+        pnlTab.add(new JLabel(IconFactory.ICON_HTTP_METHOD_GET)); //@TODO: remove marreta
         pnlTab.add(new JLabel(tabTitle));
         pnlTab.add(btnClose);
 

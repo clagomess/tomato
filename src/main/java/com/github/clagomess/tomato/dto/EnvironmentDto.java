@@ -12,10 +12,19 @@ public class EnvironmentDto {
     private String name;
     private List<Env> envs = new ArrayList<>();
 
+    public EnvironmentDto(String name) {
+        this.name = name;
+    }
+
     @Data
     public static class Env {
         private String id = UUID.randomUUID().toString();
         private String key;
         private String value;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

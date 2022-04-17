@@ -11,4 +11,9 @@ public class CollectionDto {
     private String id = UUID.randomUUID().toString();
     private String name;
     private List<RequestDto> requests = new ArrayList<>();
+
+    public CollectionDto(String name, List<RequestDto> requests) {
+        this.name = name;
+        this.requests = requests;
+    }
 }

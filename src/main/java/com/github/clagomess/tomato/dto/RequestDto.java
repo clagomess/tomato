@@ -18,6 +18,10 @@ public class RequestDto {
     private List<KeyValueItem> headers = new ArrayList<>();
     private Body body = new Body();
 
+    public RequestDto(String name) {
+        this.name = name;
+    }
+
     @Data
     private static class Body {
         private BodyTypeEnum bodyType = BodyTypeEnum.NO_BODY;
@@ -38,5 +42,10 @@ public class RequestDto {
     @Data
     private static class MultiPartFormItem extends KeyValueItem{
         private KeyValueTypeEnum type = KeyValueTypeEnum.TEXT;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

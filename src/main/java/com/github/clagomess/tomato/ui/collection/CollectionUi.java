@@ -1,23 +1,33 @@
 package com.github.clagomess.tomato.ui.collection;
 
+import com.github.clagomess.tomato.dto.CollectionDto;
+import com.github.clagomess.tomato.dto.EnvironmentDto;
+import com.github.clagomess.tomato.ui.MainUi;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CollectionUi extends JPanel {
-    public CollectionUi() {
+    private final MainUi parent;
+    private List<CollectionDto> collections = new ArrayList<>();
+    private List<EnvironmentDto> environments = new ArrayList<>();
+    private final DefaultMutableTreeNode root = new DefaultMutableTreeNode("ROOT");
+    private final JComboBox<EnvironmentDto> cbEnvironment = new JComboBox<>();
+    private final JTree tree = new JTree(root);
+
+    public CollectionUi(MainUi parent) {
+        this.parent = parent;
         setLayout(new MigLayout("", "[grow, fill]", ""));
-
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("ROOT");
-        root.add(getFilho());
-        root.add(getFilho());
-        root.add(getFilho());
-        root.add(getFilho());
-
-        JTree tree = new JTree(root);
         tree.setRootVisible(false);
+        tree.setCellRenderer(new CollectionTreeCellRender());
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree.addMouseListener(new CollectionTreeMouseListener(tree, this.parent.getRequestUi()));
 
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -25,25 +35,35 @@ public class CollectionUi extends JPanel {
         add(scrollPane, "height 100%");
     }
 
-    public DefaultMutableTreeNode getFilho(){
-        DefaultMutableTreeNode filho = new DefaultMutableTreeNode("FOO - API");
-        filho.add(new DefaultMutableTreeNode("/api/get-stuff"));
-        filho.add(new DefaultMutableTreeNode("/api/post-stuff"));
-        filho.add(new DefaultMutableTreeNode("/api/put-stuff"));
-        return filho;
+    public void setCollections(List<CollectionDto> collections){
+        this.collections = collections;
+        this.root.removeAllChildren();
+
+        this.collections.forEach(collection -> {
+            DefaultMutableTreeNode collectionNode = new DefaultMutableTreeNode(collection.getName());
+            collection.getRequests().forEach(request -> {
+                collectionNode.add(new DefaultMutableTreeNode(request));
+            });
+            this.root.add(collectionNode);
+        });
+
+        DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+        model.reload();
     }
 
-    public Component getEnv(){
-        JPanel jPanel = new JPanel();
-        jPanel.setLayout(new BorderLayout());
+    public void setEnvironments(List<EnvironmentDto> environments){
+        this.environments = environments;
+        this.cbEnvironment.removeAllItems();
+        this.environments.forEach(cbEnvironment::addItem);
+    }
 
-        JComboBox<String> envs = new JComboBox<>();
-        envs.setForeground(Color.GREEN);
-        envs.addItem("Desenvolvimento");
-        envs.addItem("Produção");
+    public JPanel getEnv(){
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
 
-        jPanel.add(envs);
+        cbEnvironment.setForeground(Color.GREEN);
+        panel.add(cbEnvironment);
 
-        return jPanel;
+        return panel;
     }
 }
