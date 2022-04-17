@@ -38,7 +38,7 @@ public class RequestUi extends JTabbedPane {
 
     public JSplitPane getTabContent(RequestDto dto){
         TabResponseUi tabResponseUi = new TabResponseUi();
-        TabRequestUi tabRequestUi = new TabRequestUi(dto);
+        TabRequestUi tabRequestUi = new TabRequestUi(dto, tabResponseUi);
         return new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabRequestUi, tabResponseUi);
     }
 

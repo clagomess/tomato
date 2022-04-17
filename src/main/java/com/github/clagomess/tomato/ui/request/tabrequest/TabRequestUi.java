@@ -1,9 +1,12 @@
 package com.github.clagomess.tomato.ui.request.tabrequest;
 
+import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.EditorFactory;
+import com.github.clagomess.tomato.service.DataService;
+import com.github.clagomess.tomato.ui.request.tabresponse.TabResponseUi;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -22,9 +25,9 @@ public class TabRequestUi extends JPanel {
     private final JComboBox<HttpMethodEnum> cbHttpMethod = new JComboBox<>();
     private final JTextField txtRequestUrl = new JTextField();
     private final JButton btnSendRequest = new JButton("Send");
-    private final JButton btnSaveRequest = new JButton("Save");
+    private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
 
-    public TabRequestUi(RequestDto requestDto){
+    public TabRequestUi(RequestDto requestDto, TabResponseUi tabResponseUi){
         this.requestDto = requestDto;
 
         // layout definitions
@@ -47,10 +50,14 @@ public class TabRequestUi extends JPanel {
         // data handling
         Arrays.stream(HttpMethodEnum.values()).forEach(cbHttpMethod::addItem);
         fillDataFromRequestDto();
+        btnSendRequest.addActionListener(l -> btnSendRequestAction());
+        btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
     }
 
     private void fillDataFromRequestDto(){
-        lblRequestName.setText(requestDto.getName());
+        String collectionName = DataService.getInstance().getCollectionNameByResquestId(requestDto.getId());
+
+        lblRequestName.setText(String.format("%s - %s", collectionName, requestDto.getName())); //@TODO: change format
         cbHttpMethod.setSelectedItem(requestDto.getMethod());
         txtRequestUrl.setText(requestDto.getUrl());
     }
@@ -127,5 +134,23 @@ public class TabRequestUi extends JPanel {
         JScrollPane spane = new JScrollPane();
         spane.setViewportView(table);
         return spane;
+    }
+
+    public void btnSendRequestAction(){
+        btnSendRequest.setEnabled(false);
+        new Thread(() -> {
+            try {
+                // @TODO: implements
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } finally {
+                btnSendRequest.setEnabled(true);
+            }
+        }).start();
+    }
+
+    public void btnSaveRequestAction(){
+        //@TODO: implements
     }
 }

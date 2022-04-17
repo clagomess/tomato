@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.EnvironmentDto;
+import com.github.clagomess.tomato.service.DataService;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -11,14 +12,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 public class CollectionUi extends JPanel {
-    private List<CollectionDto> collections = new ArrayList<>();
-    private List<EnvironmentDto> environments = new ArrayList<>();
     private final DefaultMutableTreeNode root = new DefaultMutableTreeNode("ROOT");
     private final JComboBox<EnvironmentDto> cbEnvironment = new JComboBox<>();
     private final JTree tree = new JTree(root);
@@ -34,13 +32,16 @@ public class CollectionUi extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(getEnv(), "wrap");
         add(scrollPane, "height 100%");
+
+        // data
+        setCollections(DataService.getInstance().getCurrentWorkspace().getCollections());
+        setEnvironments(DataService.getInstance().getCurrentWorkspace().getEnvironments());
     }
 
     public void setCollections(List<CollectionDto> collections){
-        this.collections = collections;
         this.root.removeAllChildren();
 
-        this.collections.forEach(collection -> {
+        collections.forEach(collection -> {
             DefaultMutableTreeNode collectionNode = new DefaultMutableTreeNode(collection.getName());
             collection.getRequests().forEach(request -> {
                 collectionNode.add(new DefaultMutableTreeNode(request));
@@ -53,9 +54,8 @@ public class CollectionUi extends JPanel {
     }
 
     public void setEnvironments(List<EnvironmentDto> environments){
-        this.environments = environments;
         this.cbEnvironment.removeAllItems();
-        this.environments.forEach(cbEnvironment::addItem);
+        environments.forEach(cbEnvironment::addItem);
     }
 
     public JPanel getEnv(){
