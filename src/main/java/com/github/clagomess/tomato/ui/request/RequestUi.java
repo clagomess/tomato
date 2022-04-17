@@ -3,7 +3,6 @@ package com.github.clagomess.tomato.ui.request;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.IconFactory;
-import com.github.clagomess.tomato.ui.MainUi;
 import com.github.clagomess.tomato.ui.request.tabrequest.TabRequestUi;
 import com.github.clagomess.tomato.ui.request.tabresponse.TabResponseUi;
 import net.miginfocom.swing.MigLayout;

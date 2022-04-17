@@ -6,8 +6,10 @@ import com.github.clagomess.tomato.ui.MainUi;
 import javax.swing.*;
 
 public class Main {
+    public static MainUi mainUi;
+
     public static void main(String[] argv){
         FlatDarculaLaf.setup();
-        SwingUtilities.invokeLater(() -> new MainUi());
+        SwingUtilities.invokeLater(() -> mainUi = new MainUi());
     }
 }

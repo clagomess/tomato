@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.collection;
 
+import com.github.clagomess.tomato.Main;
 import com.github.clagomess.tomato.dto.RequestDto;
-import com.github.clagomess.tomato.ui.request.RequestUi;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -11,11 +11,9 @@ import java.awt.event.MouseEvent;
 
 public class CollectionTreeMouseListener extends MouseAdapter {
     private final JTree tree;
-    //private final RequestUi requestUi;
 
-    public CollectionTreeMouseListener(JTree tree, RequestUi requestUi) {
+    public CollectionTreeMouseListener(JTree tree) {
         this.tree = tree;
-        //this.requestUi = requestUi;
     }
 
     @Override
@@ -27,7 +25,7 @@ public class CollectionTreeMouseListener extends MouseAdapter {
 
             if(selectedNode.getUserObject() instanceof RequestDto){
                 RequestDto dto = (RequestDto) selectedNode.getUserObject();
-                // requestUi.addNewTab(dto);
+                Main.mainUi.getRequestUi().addNewTab(dto);
             }
         }
     }

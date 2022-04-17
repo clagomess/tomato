@@ -2,7 +2,6 @@ package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.EnvironmentDto;
-import com.github.clagomess.tomato.ui.MainUi;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -18,7 +17,6 @@ import java.util.List;
 @Getter
 @Setter
 public class CollectionUi extends JPanel {
-    //private MainUi parent;
     private List<CollectionDto> collections = new ArrayList<>();
     private List<EnvironmentDto> environments = new ArrayList<>();
     private final DefaultMutableTreeNode root = new DefaultMutableTreeNode("ROOT");
@@ -30,7 +28,7 @@ public class CollectionUi extends JPanel {
         tree.setRootVisible(false);
         tree.setCellRenderer(new CollectionTreeCellRender());
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        tree.addMouseListener(new CollectionTreeMouseListener(tree, null)); //@TODO: null
+        tree.addMouseListener(new CollectionTreeMouseListener(tree));
 
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());

@@ -4,8 +4,6 @@ import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.EditorFactory;
-import com.github.clagomess.tomato.ui.request.RequestUi;
-import com.github.clagomess.tomato.ui.request.tabresponse.TabResponseUi;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -19,8 +17,6 @@ import java.util.Arrays;
 @Setter
 public class TabRequestUi extends JPanel {
     private final RequestDto requestDto;
-    //private RequestUi parent;
-    //private TabResponseUi tabResponseUi;
 
     private final JLabel lblRequestName = new JLabel("FOO - API / /api/get/test");
     private final JComboBox<HttpMethodEnum> cbHttpMethod = new JComboBox<>();
