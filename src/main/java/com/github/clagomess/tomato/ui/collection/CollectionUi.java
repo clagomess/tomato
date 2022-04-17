@@ -3,6 +3,8 @@ package com.github.clagomess.tomato.ui.collection;
 import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.EnvironmentDto;
 import com.github.clagomess.tomato.ui.MainUi;
+import lombok.Getter;
+import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -13,22 +15,22 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class CollectionUi extends JPanel {
-    private final MainUi parent;
+    //private MainUi parent;
     private List<CollectionDto> collections = new ArrayList<>();
     private List<EnvironmentDto> environments = new ArrayList<>();
     private final DefaultMutableTreeNode root = new DefaultMutableTreeNode("ROOT");
     private final JComboBox<EnvironmentDto> cbEnvironment = new JComboBox<>();
     private final JTree tree = new JTree(root);
 
-    public CollectionUi(MainUi parent) {
-        this.parent = parent;
-
+    public CollectionUi() {
         setLayout(new MigLayout("", "[grow, fill]", ""));
         tree.setRootVisible(false);
         tree.setCellRenderer(new CollectionTreeCellRender());
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        tree.addMouseListener(new CollectionTreeMouseListener(tree, this.parent.getRequestUi()));
+        tree.addMouseListener(new CollectionTreeMouseListener(tree, null)); //@TODO: null
 
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());

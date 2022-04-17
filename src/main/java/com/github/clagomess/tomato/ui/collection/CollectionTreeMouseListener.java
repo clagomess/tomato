@@ -11,11 +11,11 @@ import java.awt.event.MouseEvent;
 
 public class CollectionTreeMouseListener extends MouseAdapter {
     private final JTree tree;
-    private final RequestUi requestUi;
+    //private final RequestUi requestUi;
 
     public CollectionTreeMouseListener(JTree tree, RequestUi requestUi) {
         this.tree = tree;
-        this.requestUi = requestUi;
+        //this.requestUi = requestUi;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class CollectionTreeMouseListener extends MouseAdapter {
 
             if(selectedNode.getUserObject() instanceof RequestDto){
                 RequestDto dto = (RequestDto) selectedNode.getUserObject();
-                requestUi.addNewTab(dto);
+                // requestUi.addNewTab(dto);
             }
         }
     }

@@ -18,8 +18,8 @@ public class MainUi extends JFrame {
     private final RequestUi requestUi;
 
     public MainUi(){
-        this.collectionUi = new CollectionUi(this);
-        this.requestUi = new RequestUi(this);
+        this.collectionUi = new CollectionUi();
+        this.requestUi = new RequestUi();
 
         mock();
         setTitle("Tomato");

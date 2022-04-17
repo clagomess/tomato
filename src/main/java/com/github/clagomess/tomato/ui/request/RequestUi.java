@@ -14,13 +14,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class RequestUi extends JTabbedPane {
-    private final MainUi parent;
     private final String ADD_TAB_TITLE = "+";
     private final List<String> tabTitles = new ArrayList<>();
 
-    public RequestUi(MainUi parent){
-        this.parent = parent;
-
+    public RequestUi(){
         Stream.of("Aoba", "Aoba", "Bene")
                 .map(RequestDto::new)
                 .forEach(this::addNewTab);
@@ -46,7 +43,7 @@ public class RequestUi extends JTabbedPane {
 
     public JSplitPane getTabContent(RequestDto dto){
         TabResponseUi tabResponseUi = new TabResponseUi();
-        TabRequestUi tabRequestUi = new TabRequestUi(this, dto, tabResponseUi);
+        TabRequestUi tabRequestUi = new TabRequestUi(dto);
         return new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabRequestUi, tabResponseUi);
     }
 
