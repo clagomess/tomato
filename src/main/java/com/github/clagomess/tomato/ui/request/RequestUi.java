@@ -10,21 +10,17 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class RequestUi extends JTabbedPane {
     private final String ADD_TAB_TITLE = "+";
     private final List<String> tabTitles = new ArrayList<>();
 
     public RequestUi(){
-        Stream.of("Aoba", "Aoba", "Bene")
-                .map(RequestDto::new)
-                .forEach(this::addNewTab);
-
         addChangeListener(e -> {
             if(getSelectedIndex() != indexOfTab(ADD_TAB_TITLE) || getSelectedIndex() == -1) return;
             addNewTab(new RequestDto("New Request"));
         });
+        addNewTab(new RequestDto("New Request"));
     }
 
     public void addNewTab(RequestDto dto){
