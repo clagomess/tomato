@@ -15,10 +15,11 @@ import java.util.List;
 @Getter
 public class MainUi extends JFrame {
     private final CollectionUi collectionUi;
-    private final RequestUi requestUi = new RequestUi();
+    private final RequestUi requestUi;
 
     public MainUi(){
         this.collectionUi = new CollectionUi(this);
+        this.requestUi = new RequestUi(this);
 
         mock();
         setTitle("Tomato");

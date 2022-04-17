@@ -1,8 +1,11 @@
 package com.github.clagomess.tomato.ui.request.tabrequest;
 
+import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.EditorFactory;
+import com.github.clagomess.tomato.ui.request.RequestUi;
+import com.github.clagomess.tomato.ui.request.tabresponse.TabResponseUi;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -13,18 +16,28 @@ import java.util.Arrays;
 
 @Getter
 public class TabRequestUi extends JPanel {
+    private final RequestUi parent;
+    private final RequestDto requestDto;
+    private final TabResponseUi tabResponseUi;
+
     private final JLabel lblRequestName = new JLabel("FOO - API / /api/get/test");
+    private final JComboBox<HttpMethodEnum> cbHttpMethod = new JComboBox<>();
     private final JTextField txtRequestUrl = new JTextField();
     private final JButton btnSendRequest = new JButton("Send");
     private final JButton btnSaveRequest = new JButton("Save");
 
-    public TabRequestUi(){
+    public TabRequestUi(RequestUi parent, RequestDto requestDto, TabResponseUi tabResponseUi){
+        this.parent = parent;
+        this.requestDto = requestDto;
+        this.tabResponseUi = tabResponseUi;
+
+        // layout definitions
         setLayout(new MigLayout("insets 10 0 10 0", "[grow,fill]", ""));
         setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY)); //@TODO: fix color
 
         add(lblRequestName, "span");
         add(new JSeparator(JSeparator.HORIZONTAL), "span");
-        add(getHttpMethodsComponent());
+        add(cbHttpMethod);
         add(txtRequestUrl, "width 100%");
         add(btnSendRequest);
         add(btnSaveRequest, "wrap");
@@ -34,12 +47,16 @@ public class TabRequestUi extends JPanel {
         tpRequest.addTab("Header", getHeader());
 
         add(tpRequest, "span, height 100%");
+
+        // data handling
+        Arrays.stream(HttpMethodEnum.values()).forEach(cbHttpMethod::addItem);
+        fillDataFromRequestDto();
     }
 
-    public JComboBox<String> getHttpMethodsComponent(){
-        JComboBox<String> httpMethod = new JComboBox<>();
-        Arrays.stream(HttpMethodEnum.values()).forEach(item -> httpMethod.addItem(item.getMethod()));
-        return httpMethod;
+    private void fillDataFromRequestDto(){
+        lblRequestName.setText(requestDto.getName());
+        cbHttpMethod.setSelectedItem(requestDto.getMethod());
+        txtRequestUrl.setText(requestDto.getUrl());
     }
 
     public Component getBody(){

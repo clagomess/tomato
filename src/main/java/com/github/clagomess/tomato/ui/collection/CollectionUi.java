@@ -23,6 +23,7 @@ public class CollectionUi extends JPanel {
 
     public CollectionUi(MainUi parent) {
         this.parent = parent;
+
         setLayout(new MigLayout("", "[grow, fill]", ""));
         tree.setRootVisible(false);
         tree.setCellRenderer(new CollectionTreeCellRender());

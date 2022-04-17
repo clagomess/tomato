@@ -27,7 +27,7 @@ public class CollectionTreeMouseListener extends MouseAdapter {
 
             if(selectedNode.getUserObject() instanceof RequestDto){
                 RequestDto dto = (RequestDto) selectedNode.getUserObject();
-                requestUi.addNewTab(dto.getName()); //@TODO: pass all dto
+                requestUi.addNewTab(dto);
             }
         }
     }

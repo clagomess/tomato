@@ -17,7 +17,7 @@ public class CollectionTreeCellRender extends DefaultTreeCellRenderer {
             RequestDto dto = (RequestDto) userObject;
 
             JLabel label = new JLabel(dto.getName());
-            label.setIcon(IconFactory.ICON_HTTP_METHOD_GET); //@TODO: change to map
+            label.setIcon(IconFactory.createHttpMethodIcon(dto.getMethod()));
             return label;
         }
 
