@@ -10,28 +10,21 @@ import java.awt.*;
 
 @Getter
 public class TabResponseUi extends JPanel {
-    private final JLabel lblHttpStatus = new JLabel("200 OK");
-    private final JLabel lblResponseTime = new JLabel("3.2s");
-    private final JLabel lblResponseSize = new JLabel("14KB");
-
     private final JTextArea txtResponseRAW = new JTextArea();
     private final JTextArea txtHTTPDebug = new JTextArea();
 
     public TabResponseUi(){
         setLayout(new MigLayout("insets 10 0 10 0", "[grow,fill]", ""));
 
-        JPanel pResponseStatus = new JPanel();
-        pResponseStatus.add(lblHttpStatus);
-        pResponseStatus.add(lblResponseTime);
-        pResponseStatus.add(lblResponseSize);
-        add(pResponseStatus, "wrap, width 100%");
+        add(new StatusResponseUI(200, 3.2, 14), "width 100%");
+        add(new JButton("Download"), "wrap");
 
         JTabbedPane tpResponse = new JTabbedPane();
         tpResponse.addTab("Preview", EditorFactory.createScroll(EditorFactory.getInstance().createEditor()));
         tpResponse.addTab("RAW", txtResponseRAW);
         tpResponse.addTab("Header", getHeader());
         tpResponse.addTab("HTTP", txtHTTPDebug);
-        add(tpResponse, "height 100%");
+        add(tpResponse, "span, height 100%");
     }
 
     public Component getHeader(){
