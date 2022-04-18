@@ -14,7 +14,7 @@ public class TabResponseUi extends JPanel {
     private final JTextArea txtHTTPDebug = new JTextArea();
 
     public TabResponseUi(){
-        setLayout(new MigLayout("insets 10 0 10 0", "[grow,fill]", ""));
+        setLayout(new MigLayout("insets 10 5 10 10", "[grow,fill]", ""));
 
         add(new StatusResponseUI(200, 3.2, 14), "width 100%");
         add(new JButton("Download"), "wrap");

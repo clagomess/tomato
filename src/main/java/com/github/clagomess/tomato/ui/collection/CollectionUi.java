@@ -22,7 +22,7 @@ public class CollectionUi extends JPanel {
     private final JTree tree = new JTree(root);
 
     public CollectionUi() {
-        setLayout(new MigLayout("", "[grow, fill]", ""));
+        setLayout(new MigLayout("insets 10 10 10 5", "[grow, fill]", ""));
         tree.setRootVisible(false);
         tree.setCellRenderer(new CollectionTreeCellRender());
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

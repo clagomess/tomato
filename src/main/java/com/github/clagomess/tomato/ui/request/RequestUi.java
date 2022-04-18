@@ -8,6 +8,7 @@ import com.github.clagomess.tomato.ui.request.tabresponse.TabResponseUi;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 

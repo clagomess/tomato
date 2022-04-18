@@ -31,8 +31,7 @@ public class TabRequestUi extends JPanel {
         this.requestDto = requestDto;
 
         // layout definitions
-        setLayout(new MigLayout("insets 10 0 10 0", "[grow,fill]", ""));
-        setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY)); //@TODO: fix color
+        setLayout(new MigLayout("insets 10 5 10 5", "[grow,fill]", ""));
 
         add(lblRequestName, "span");
         add(new JSeparator(JSeparator.HORIZONTAL), "span");
@@ -64,17 +63,17 @@ public class TabRequestUi extends JPanel {
 
     public Component getBody(){
         JPanel bodyPanel = new JPanel();
-        bodyPanel.setLayout(new MigLayout("", "[grow, fill]", ""));
+        bodyPanel.setLayout(new MigLayout("insets 5 0 0 0", "[grow, fill]", ""));
 
         ButtonGroup bgBodyType = new ButtonGroup();
-        JPanel pRadioBodyType = new JPanel();
+        JPanel pRadioBodyType = new JPanel(new MigLayout("insets 5 0 5 0"));
 
         Arrays.stream(BodyTypeEnum.values()).forEach(item -> {
             JRadioButton rbBodyType = new JRadioButton(item.getDescription());
             rbBodyType.setSelected(item == BodyTypeEnum.NO_BODY);
             rbBodyType.addActionListener(l -> {
                 bodyPanel.remove(1);
-                bodyPanel.add(getBodyType(item));
+                bodyPanel.add(getBodyType(item), "height 100%");
                 bodyPanel.revalidate();
                 bodyPanel.repaint();
             });
@@ -130,6 +129,8 @@ public class TabRequestUi extends JPanel {
                 {"Content-Type", "application/json"},
                 {"Origin", "localhost"},
         }, new String[]{"Header", "Value"});
+
+        table.setFocusable(false);
 
         JScrollPane spane = new JScrollPane();
         spane.setViewportView(table);
