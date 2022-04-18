@@ -15,6 +15,9 @@ public class IconFactory {
     public static final ImageIcon ICON_HTTP_METHOD_PUT = new ImageIcon(Objects.requireNonNull(IconFactory.class
             .getResource("http-methods/PUT.png")));
 
+    public static final ImageIcon ICON_FAVICON = new ImageIcon(Objects.requireNonNull(IconFactory.class
+            .getResource("favicon/favicon.png")));
+
     public static ImageIcon createHttpMethodIcon(HttpMethodEnum httpMethod){
         switch (httpMethod){
             case DELETE:

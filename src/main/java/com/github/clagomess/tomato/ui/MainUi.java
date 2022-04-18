@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.ui;
 
+import com.github.clagomess.tomato.factory.IconFactory;
 import com.github.clagomess.tomato.ui.collection.CollectionUi;
 import com.github.clagomess.tomato.ui.request.RequestUi;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class MainUi extends JFrame {
         this.requestUi = new RequestUi();
 
         setTitle("Tomato");
+        setIconImage(IconFactory.ICON_FAVICON.getImage());
         setVisible(true);
         setMinimumSize(new Dimension(1000, 500));
         setJMenuBar(getMenu());
@@ -35,6 +37,7 @@ public class MainUi extends JFrame {
         menuBar.add(new JMenu("Workspace"));
         menuBar.add(new JMenu("Collection"));
         menuBar.add(new JMenu("Environment"));
+        menuBar.add(new JMenu("About"));
 
         return menuBar;
     }
