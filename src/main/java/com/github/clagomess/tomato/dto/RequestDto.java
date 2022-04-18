@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +33,17 @@ public class RequestDto {
     }
 
     @Data
-    private static class KeyValueItem {
+    @NoArgsConstructor
+    public static class KeyValueItem {
         private String id = UUID.randomUUID().toString();
         private boolean selected = true;
         private String key;
         private String value;
+
+        public KeyValueItem(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
     }
 
     @Data

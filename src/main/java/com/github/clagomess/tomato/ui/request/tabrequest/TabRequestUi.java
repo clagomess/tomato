@@ -26,6 +26,7 @@ public class TabRequestUi extends JPanel {
     private final JTextField txtRequestUrl = new JTextField();
     private final JButton btnSendRequest = new JButton("Send");
     private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
+    private final RequestKeyValueTableUI tblHeader = new RequestKeyValueTableUI("Header", "Value");
 
     public TabRequestUi(RequestDto requestDto, TabResponseUi tabResponseUi){
         this.requestDto = requestDto;
@@ -42,7 +43,7 @@ public class TabRequestUi extends JPanel {
 
         JTabbedPane tpRequest = new JTabbedPane();
         tpRequest.addTab("Body", getBody());
-        tpRequest.addTab("Header", getHeader());
+        tpRequest.addTab("Header", tblHeader);
 
         add(tpRequest, "span, height 100%");
 
@@ -112,7 +113,7 @@ public class TabRequestUi extends JPanel {
     }
 
     private Component getUrlEncodedFormBodyType(){
-        return new JPanel();
+        return new RequestKeyValueTableUI("Key", "Value");
     }
 
     private Component getRawBodyType(){
@@ -122,19 +123,6 @@ public class TabRequestUi extends JPanel {
 
     private Component getBinaryBodyType(){
         return new JPanel();
-    }
-
-    public Component getHeader(){
-        JTable table = new JTable(new String[][]{
-                {"Content-Type", "application/json"},
-                {"Origin", "localhost"},
-        }, new String[]{"Header", "Value"});
-
-        table.setFocusable(false);
-
-        JScrollPane spane = new JScrollPane();
-        spane.setViewportView(table);
-        return spane;
     }
 
     public void btnSendRequestAction(){
