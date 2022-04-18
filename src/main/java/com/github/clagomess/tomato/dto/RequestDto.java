@@ -5,10 +5,11 @@ import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
+import javax.ws.rs.core.MultivaluedMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 public class RequestDto extends TomatoMetadataDto {
@@ -23,12 +24,20 @@ public class RequestDto extends TomatoMetadataDto {
     }
 
     @Data
-    private static class Body {
+    public static class Body {
         private BodyTypeEnum bodyType = BodyTypeEnum.NO_BODY;
         private String raw;
         private String binaryFilePath;
         private List<KeyValueItem> urlEncodedForm;
         private List<MultiPartFormItem> multiPartForm;
+
+        public FormDataMultiPart toMultiPartForm(){
+            return null; //@TODO: implements parse to FormDataMultiPart
+        }
+
+        public MultivaluedMap<String, String> toUrlEncodedForm(){
+            return null; //@TODO: implements parser to MultivaluedMap
+        }
     }
 
     @Data
