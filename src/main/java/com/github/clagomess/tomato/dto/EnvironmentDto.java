@@ -4,11 +4,9 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data
-public class EnvironmentDto {
-    private String id = UUID.randomUUID().toString();
+public class EnvironmentDto extends TomatoMetadataDto {
     private String name;
     private List<Env> envs = new ArrayList<>();
 
@@ -17,8 +15,7 @@ public class EnvironmentDto {
     }
 
     @Data
-    public static class Env {
-        private String id = UUID.randomUUID().toString();
+    public static class Env extends TomatoMetadataDto {
         private String key;
         private String value;
     }

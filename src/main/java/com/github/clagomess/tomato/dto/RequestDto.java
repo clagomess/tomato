@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-public class RequestDto {
-    private String id = UUID.randomUUID().toString();
+public class RequestDto extends TomatoMetadataDto {
     private String name;
     private HttpMethodEnum method = HttpMethodEnum.GET;
     private String url;
@@ -34,8 +33,7 @@ public class RequestDto {
 
     @Data
     @NoArgsConstructor
-    public static class KeyValueItem {
-        private String id = UUID.randomUUID().toString();
+    public static class KeyValueItem extends TomatoMetadataDto {
         private boolean selected = true;
         private String key;
         private String value;
