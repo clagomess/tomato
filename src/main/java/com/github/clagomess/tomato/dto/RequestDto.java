@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class RequestDto extends TomatoMetadataDto {
     private String name;
     private HttpMethodEnum method = HttpMethodEnum.GET;
