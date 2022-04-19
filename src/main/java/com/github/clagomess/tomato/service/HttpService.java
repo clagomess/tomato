@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.service;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.util.LoggerHandlerUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.ssl.SSLContexts;
 import org.glassfish.jersey.client.ClientConfig;
@@ -14,12 +15,14 @@ import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Slf4j
 public class HttpService {
     private final LoggerHandlerUtil loggerHandler = new LoggerHandlerUtil();
 
@@ -64,9 +67,9 @@ public class HttpService {
             case MULTIPART_FORM:
                 return Entity.entity(dto.getBody().toMultiPartForm(), MediaType.TEXT_PLAIN_TYPE);
             case RAW:
-                return null; //Entity.entity(dto.getBody().getRaw(), dto.getBody().getRawContentType()); //@TODO: must be checked
+                return Entity.entity(dto.getBody().getRaw(), dto.getBody().getBodyContentType());
             case BINARY:
-                return null; //Entity.entity(new File(dto.getBody().getBinaryFilePath()), dto.getBody().getBinaryContentType()); //@TODO: must be checked
+                return Entity.entity(new File(dto.getBody().getBinaryFilePath()), dto.getBody().getBodyContentType());
             default:
                 return Entity.text(null);
         }
@@ -107,8 +110,6 @@ public class HttpService {
 
             String responseContent = response.readEntity(String.class);
 
-            result.setRequestStatus(true);
-            result.setRequestDebug(loggerHandler.getLogText().toString());
             result.setHttpResponse(new ResponseDto.Response());
             result.getHttpResponse().setRequestTime(requestTime);
             result.getHttpResponse().setBodySize(responseContent.length());
@@ -117,9 +118,12 @@ public class HttpService {
             result.getHttpResponse().setHeaders(response.getStringHeaders());
             result.getHttpResponse().setContentType(response.getMediaType());
             result.getHttpResponse().setBody(responseContent);
-        } catch (KeyStoreException | NoSuchAlgorithmException | KeyManagementException e){
+            result.setRequestStatus(true);
+        } catch (Exception e) {
             result.setRequestMessage(e.getMessage());
-            e.printStackTrace(); //@TODO: refactor
+            log.error(HttpService.class.getName(), e);
+        } finally {
+            result.setRequestDebug(loggerHandler.getLogText().toString());
         }
 
         return result;

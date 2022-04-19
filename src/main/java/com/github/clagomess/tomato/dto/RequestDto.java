@@ -27,6 +27,7 @@ public class RequestDto extends TomatoMetadataDto {
     @Data
     public static class Body {
         private BodyTypeEnum bodyType = BodyTypeEnum.NO_BODY;
+        private String bodyContentType;
         private String raw;
         private String binaryFilePath;
         private List<KeyValueItem> urlEncodedForm;

@@ -377,7 +377,36 @@ public class HttpServiceTest {
         request.setHeaders(Collections.singletonList(new RequestDto.KeyValueItem("content-type", "application/json")));
         request.setBody(new RequestDto.Body());
         request.getBody().setBodyType(BodyTypeEnum.RAW);
+        request.getBody().setBodyContentType("application/json");
         request.getBody().setRaw("{\"foo\": \"bar\"}");
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+    }
+
+    @Test
+    public void post_binary(){
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/post_binary")
+                                .withContentType(MediaType.APPLICATION_OCTET_STREAM)
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.TEXT_PLAIN)
+                                .withBody("hello")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/post_binary");
+        request.setMethod(HttpMethodEnum.POST);
+        request.setBody(new RequestDto.Body());
+        request.getBody().setBodyType(BodyTypeEnum.BINARY);
+        request.getBody().setBodyContentType("application/octet-stream");
+        request.getBody().setBinaryFilePath(".gitignore");
 
         HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
@@ -406,6 +435,7 @@ public class HttpServiceTest {
         request.setHeaders(Collections.singletonList(new RequestDto.KeyValueItem("content-type", "application/json")));
         request.setBody(new RequestDto.Body());
         request.getBody().setBodyType(BodyTypeEnum.RAW);
+        request.getBody().setBodyContentType("application/json");
         request.getBody().setRaw("{\"foo\": \"bar\"}");
 
         HttpService httpService = new HttpService();
