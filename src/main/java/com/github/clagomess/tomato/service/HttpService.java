@@ -19,6 +19,7 @@ import java.io.File;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -83,10 +84,10 @@ public class HttpService {
             Invocation.Builder invocationBuilder = webTarget.request();
 
             // set headers
-            // invocationBuilder.headers(restParam.getHeader()); //@TODO: impl use of header
+            invocationBuilder.headers(dto.toMultivaluedMapHeaders());
 
             // set cookies
-            // invocationBuilder.cookie(item.getKey(), item.getValue()); //@TODO: impl use of cookies
+            dto.getCookies().forEach(item -> invocationBuilder.cookie(item.getKey(), item.getValue()));
 
             Response response;
             long requestTime = System.currentTimeMillis();
@@ -118,6 +119,14 @@ public class HttpService {
             result.getHttpResponse().setHeaders(response.getStringHeaders());
             result.getHttpResponse().setContentType(response.getMediaType());
             result.getHttpResponse().setBody(responseContent);
+
+            if(response.getCookies() != null){ //@TODO: needs refactor
+                result.getHttpResponse().setCookies(new HashMap<>());
+                response.getCookies().forEach((key, value) -> {
+                    result.getHttpResponse().getCookies().put(key, value.getValue());
+                });
+            }
+
             result.setRequestStatus(true);
         } catch (Exception e) {
             result.setRequestMessage(e.getMessage());

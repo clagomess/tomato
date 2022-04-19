@@ -224,6 +224,7 @@ public class HttpServiceTest {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/set_cookie");
         request.setMethod(HttpMethodEnum.GET);
+        request.getCookies().add(new RequestDto.KeyValueItem("foo", "bar"));
 
         HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
@@ -252,7 +253,7 @@ public class HttpServiceTest {
         HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
-        Assertions.fail("Impl. get cookie");
+        Assertions.assertEquals("bar", response.getHttpResponse().getCookies().get("foo"));
     }
 
     @Test
@@ -374,7 +375,6 @@ public class HttpServiceTest {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/post_raw");
         request.setMethod(HttpMethodEnum.POST);
-        request.setHeaders(Collections.singletonList(new RequestDto.KeyValueItem("content-type", "application/json")));
         request.setBody(new RequestDto.Body());
         request.getBody().setBodyType(BodyTypeEnum.RAW);
         request.getBody().setBodyContentType("application/json");
@@ -432,7 +432,6 @@ public class HttpServiceTest {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/put_raw");
         request.setMethod(HttpMethodEnum.PUT);
-        request.setHeaders(Collections.singletonList(new RequestDto.KeyValueItem("content-type", "application/json")));
         request.setBody(new RequestDto.Body());
         request.getBody().setBodyType(BodyTypeEnum.RAW);
         request.getBody().setBodyContentType("application/json");

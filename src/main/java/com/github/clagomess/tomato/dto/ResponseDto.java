@@ -28,6 +28,7 @@ public class ResponseDto {
         private Integer bodySize;
         private long requestTime;
         private Map<String, List<String>> headers;
+        private Map<String, String> cookies;
         private MediaType contentType;
         private String body;
     }

@@ -7,8 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -18,10 +20,20 @@ public class RequestDto extends TomatoMetadataDto {
     private HttpMethodEnum method = HttpMethodEnum.GET;
     private String url;
     private List<KeyValueItem> headers = new ArrayList<>();
+    private List<KeyValueItem> cookies = new ArrayList<>();
     private Body body = new Body();
 
     public RequestDto(String name) {
         this.name = name;
+    }
+
+    public MultivaluedMap<String, Object> toMultivaluedMapHeaders(){
+        MultivaluedMap<String, Object> map = new MultivaluedHashMap<>();
+        headers.forEach(item -> {
+            map.put(item.getKey(), Collections.singletonList(item.getValue()));
+        });
+
+        return map;
     }
 
     @Data
@@ -34,11 +46,18 @@ public class RequestDto extends TomatoMetadataDto {
         private List<MultiPartFormItem> multiPartForm;
 
         public FormDataMultiPart toMultiPartForm(){
-            return null; //@TODO: implements parse to FormDataMultiPart
+            FormDataMultiPart form = new FormDataMultiPart();
+            multiPartForm.forEach(item -> form.field(item.getKey(), item.getValue()));
+            return form;
         }
 
         public MultivaluedMap<String, String> toUrlEncodedForm(){
-            return null; //@TODO: implements parser to MultivaluedMap
+            MultivaluedMap<String, String> map = new MultivaluedHashMap<>();
+            urlEncodedForm.forEach(item -> {
+                map.put(item.getKey(), Collections.singletonList(item.getValue()));
+            });
+
+            return map;
         }
     }
 
@@ -56,8 +75,13 @@ public class RequestDto extends TomatoMetadataDto {
     }
 
     @Data
-    private static class MultiPartFormItem extends KeyValueItem{
+    @NoArgsConstructor
+    public static class MultiPartFormItem extends KeyValueItem{
         private KeyValueTypeEnum type = KeyValueTypeEnum.TEXT;
+
+        public MultiPartFormItem(String key, String value) {
+            super(key, value);
+        }
     }
 
     @Override
