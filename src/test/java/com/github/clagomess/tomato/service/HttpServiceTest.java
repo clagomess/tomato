@@ -2,15 +2,17 @@ package com.github.clagomess.tomato.service;
 
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndServer;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
-import org.mockserver.model.MediaType;
+import org.mockserver.matchers.MatchType;
+import org.mockserver.model.*;
+
+import java.util.Collections;
 
 public class HttpServiceTest {
     private static ClientAndServer mockServer;
@@ -18,6 +20,17 @@ public class HttpServiceTest {
     @BeforeAll
     public static void setup(){
         mockServer = ClientAndServer.startClientAndServer(8500);
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("GET")
+                                .withPath("/hello")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.TEXT_PLAIN)
+                                .withBody("hello")
+                );
     }
 
     @Test
@@ -48,6 +61,379 @@ public class HttpServiceTest {
         Assertions.assertEquals(42, response.getHttpResponse().getBodySize());
         Assertions.assertEquals("application/json", response.getHttpResponse().getContentType().toString());
         Assertions.assertNotNull(response.getRequestDebug());
+    }
+
+    @Test
+    public void get_response_binary() {
+        //@TODO: test filedownload
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("GET")
+                                .withPath("/get_response_binary")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.create("application", "pdf"))
+                                .withBody(new byte[]{0x25, 0x50, 0x44, 0x46})
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/get_response_binary");
+        request.setMethod(HttpMethodEnum.GET);
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+
+        Assertions.assertTrue(response.isRequestStatus());
+        Assertions.assertNull(response.getRequestMessage());
+        Assertions.assertEquals(4, response.getHttpResponse().getBodySize());
+        Assertions.assertEquals("application/pdf", response.getHttpResponse().getContentType().toString());
+
+        Assertions.assertEquals(new byte[]{0x25, 0x50, 0x44, 0x46}, response.getHttpResponse().getBody().getBytes());
+    }
+
+    @Test
+    public void set_headers() {
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("GET")
+                                .withPath("/set_headers")
+                                .withHeader(new Header("foo", "bar"))
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.APPLICATION_JSON)
+                                .withBody("{}")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/set_headers");
+        request.setMethod(HttpMethodEnum.GET);
+        request.setHeaders(Collections.singletonList(new RequestDto.KeyValueItem("foo", "bar")));
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+    }
+
+    @Test
+    public void get_headers() {
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("GET")
+                                .withPath("/get_headers")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.APPLICATION_JSON)
+                                .withHeader(new Header("foo", "bar"))
+                                .withBody("{}")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/get_headers");
+        request.setMethod(HttpMethodEnum.GET);
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+        Assertions.assertTrue(response.getHttpResponse().getHeaders().keySet().stream().anyMatch("foo"::equals));
+    }
+
+    @Test
+    public void follow_redirect() {
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("GET")
+                                .withPath("/follow_redirect")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(301)
+                                .withHeader(new Header("Location", "http://localhost:8500/hello"))
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/follow_redirect");
+        request.setMethod(HttpMethodEnum.GET);
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+        Assertions.assertEquals("hello", response.getHttpResponse().getBody());
+    }
+
+    @Test
+    public void conection_error(){
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8110/");
+        request.setMethod(HttpMethodEnum.GET);
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+
+        Assertions.assertNull(response.getHttpResponse());
+        Assertions.assertNotNull(response.getRequestDebug());
+        Assertions.assertFalse(response.isRequestStatus());
+        Assertions.assertNotNull(response.getRequestMessage());
+    }
+
+    @Test
+    public void conection_drop(){
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("GET")
+                                .withPath("/conection_drop")
+                )
+                .error(
+                        HttpError.error()
+                                .withDropConnection(true)
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/conection_drop");
+        request.setMethod(HttpMethodEnum.GET);
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+
+        Assertions.assertNull(response.getHttpResponse());
+        Assertions.assertNotNull(response.getRequestDebug());
+        Assertions.assertFalse(response.isRequestStatus());
+        Assertions.assertNotNull(response.getRequestMessage());
+    }
+
+    @Test
+    public void set_cookie() {
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("GET")
+                                .withPath("/set_cookie")
+                                .withCookie("foo", "bar")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.APPLICATION_JSON)
+                                .withBody("{}")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/set_cookie");
+        request.setMethod(HttpMethodEnum.GET);
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+    }
+
+    @Test
+    public void get_cookie() {
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("GET")
+                                .withPath("/get_cookie")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.APPLICATION_JSON)
+                                .withCookie("foo", "bar")
+                                .withBody("{}")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/get_cookie");
+        request.setMethod(HttpMethodEnum.GET);
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+        Assertions.fail("Impl. get cookie");
+    }
+
+    @Test
+    public void post_urlencoded_form(){
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/post_urlencoded_form")
+                                .withBody(ParameterBody.params(
+                                        Parameter.param("foo", "bar")
+                                ))
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.APPLICATION_JSON)
+                                .withCookie("foo", "bar")
+                                .withBody("{}")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/post_urlencoded_form");
+        request.setMethod(HttpMethodEnum.POST);
+        request.setBody(new RequestDto.Body());
+        request.getBody().setBodyType(BodyTypeEnum.URL_ENCODED_FORM);
+        request.getBody().setUrlEncodedForm(Collections.singletonList(new RequestDto.KeyValueItem("foo", "bar")));
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+    }
+
+    @Test
+    public void get_with_query_param(){
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("GET")
+                                .withPath("/get_with_query_param")
+                                .withQueryStringParameter("foo", "bar")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.TEXT_PLAIN)
+                                .withBody("hello")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/get_with_query_param?foo=bar");
+        request.setMethod(HttpMethodEnum.GET);
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+    }
+
+
+
+    @Test
+    public void get_with_response_500(){
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("GET")
+                                .withPath("/get_with_response_500")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(500)
+                                .withContentType(MediaType.TEXT_PLAIN)
+                                .withBody("hello")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/get_with_response_500");
+        request.setMethod(HttpMethodEnum.GET);
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(500, response.getHttpResponse().getStatus());
+        Assertions.assertEquals("hello", response.getHttpResponse().getBody());
+    }
+
+    @Test
+    public void test_ssl_problem(){
+        Assertions.fail("impl. test ssl problem");
+    }
+
+    @Test
+    public void get_with_proxy(){
+        Assertions.fail("impl. test proxy");
+    }
+
+    @Test
+    public void post_multpart_form(){
+        Assertions.fail("impl. test multpart form");
+    }
+
+    @Test
+    public void post_multpart_form_with_file(){
+        Assertions.fail("impl. multpart form with file");
+    }
+
+    @Test
+    public void post_raw(){
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/post_raw")
+                                .withContentType(MediaType.APPLICATION_JSON)
+                                .withBody(JsonBody.json("{\"foo\": \"bar\"}", MatchType.STRICT))
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.TEXT_PLAIN)
+                                .withBody("hello")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/post_raw");
+        request.setMethod(HttpMethodEnum.POST);
+        request.setHeaders(Collections.singletonList(new RequestDto.KeyValueItem("content-type", "application/json")));
+        request.setBody(new RequestDto.Body());
+        request.getBody().setBodyType(BodyTypeEnum.RAW);
+        request.getBody().setRaw("{\"foo\": \"bar\"}");
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+    }
+
+    @Test
+    public void put_raw(){
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("PUT")
+                                .withPath("/put_raw")
+                                .withContentType(MediaType.APPLICATION_JSON)
+                                .withBody(JsonBody.json("{\"foo\": \"bar\"}", MatchType.STRICT))
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.TEXT_PLAIN)
+                                .withBody("hello")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/put_raw");
+        request.setMethod(HttpMethodEnum.PUT);
+        request.setHeaders(Collections.singletonList(new RequestDto.KeyValueItem("content-type", "application/json")));
+        request.setBody(new RequestDto.Body());
+        request.getBody().setBodyType(BodyTypeEnum.RAW);
+        request.getBody().setRaw("{\"foo\": \"bar\"}");
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+    }
+
+    @Test
+    public void delete(){
+        mockServer.when(
+                        HttpRequest.request()
+                                .withMethod("DELETE")
+                                .withPath("/delete")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(200)
+                                .withContentType(MediaType.TEXT_PLAIN)
+                                .withBody("hello")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/delete");
+        request.setMethod(HttpMethodEnum.DELETE);
+
+        HttpService httpService = new HttpService();
+        ResponseDto response = httpService.perform(request);
+        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
     }
 
     @AfterAll
