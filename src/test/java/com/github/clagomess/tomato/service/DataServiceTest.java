@@ -20,12 +20,20 @@ public class DataServiceTest {
     public static void setup(){
         RequestDto request = new RequestDto();
         CollectionDto collection = new CollectionDto();
+        collection.setName(RandomStringUtils.randomAlphabetic(10));
         collection.setRequests(Collections.singletonList(request));
 
         workspace = new WorkspaceDto();
         workspace.setName(RandomStringUtils.randomAlphabetic(10));
         workspace.setEnvironments(Collections.singletonList(new EnvironmentDto()));
         workspace.setCollections(Collections.singletonList(collection));
+    }
+
+    @Test
+    public void getCollectionNameByResquestId(){
+        String requestId = workspace.getCollections().get(0).getRequests().get(0).getId();
+        val result = DataService.getInstance().getCollectionNameByResquestId(requestId);
+        Assertions.assertEquals(workspace.getCollections().get(0).getName(), result);
     }
 
     @Test
