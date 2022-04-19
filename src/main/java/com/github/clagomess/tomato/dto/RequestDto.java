@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class RequestDto extends TomatoMetadataDto {
     private String name;
     private HttpMethodEnum method = HttpMethodEnum.GET;
@@ -63,6 +65,7 @@ public class RequestDto extends TomatoMetadataDto {
 
     @Data
     @NoArgsConstructor
+    @EqualsAndHashCode(callSuper = true)
     public static class KeyValueItem extends TomatoMetadataDto {
         private boolean selected = true;
         private String key;
@@ -76,6 +79,7 @@ public class RequestDto extends TomatoMetadataDto {
 
     @Data
     @NoArgsConstructor
+    @EqualsAndHashCode(callSuper = true)
     public static class MultiPartFormItem extends KeyValueItem{
         private KeyValueTypeEnum type = KeyValueTypeEnum.TEXT;
 
