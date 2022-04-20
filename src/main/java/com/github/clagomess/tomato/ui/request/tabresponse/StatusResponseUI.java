@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.request.tabresponse;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.factory.DialogFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,11 +11,17 @@ public class StatusResponseUI extends JPanel {
         setLayout(new FlowLayout(FlowLayout.LEFT));
     }
 
+    public void reset(){
+        removeAll();
+        revalidate();
+        repaint();
+    }
+
     public void update(ResponseDto dto){
         removeAll();
 
         if(!dto.isRequestStatus()){
-            add(createContainer(Color.GREEN, dto.getRequestMessage())); //@TODO: show as alert
+            DialogFactory.createDialogWarning(this, dto.getRequestMessage());
             return;
         }
 

@@ -82,6 +82,16 @@ public class DataService {
         }
     }
 
+    public void writeFile(File file, byte[] content) throws IOException {
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            int i = 0;
+            while (i < content.length) {
+                bw.write(content[i]);
+                i++;
+            }
+        }
+    }
+
     protected void saveTomatoConfig(TomatoConfigDto config) throws IOException {
         String homeDir = getTomatoHomeDir();
         writeFile(homeDir + File.separator + "tomato.config.json", config);

@@ -12,6 +12,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.matchers.MatchType;
 import org.mockserver.model.*;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 public class HttpServiceTest {
@@ -90,7 +91,7 @@ public class HttpServiceTest {
         Assertions.assertEquals(4, response.getHttpResponse().getBodySize());
         Assertions.assertEquals("application/pdf", response.getHttpResponse().getContentType().toString());
 
-        Assertions.assertEquals(new byte[]{0x25, 0x50, 0x44, 0x46}, response.getHttpResponse().getBody().getBytes());
+        Assertions.assertTrue(Arrays.equals(new byte[]{0x25, 0x50, 0x44, 0x46}, response.getHttpResponse().getBody()));
     }
 
     @Test
@@ -163,7 +164,7 @@ public class HttpServiceTest {
         HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
-        Assertions.assertEquals("hello", response.getHttpResponse().getBody());
+        Assertions.assertEquals("hello", response.getHttpResponse().getBodyAsString());
     }
 
     @Test
@@ -333,7 +334,7 @@ public class HttpServiceTest {
         HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(500, response.getHttpResponse().getStatus());
-        Assertions.assertEquals("hello", response.getHttpResponse().getBody());
+        Assertions.assertEquals("hello", response.getHttpResponse().getBodyAsString());
     }
 
     @Test

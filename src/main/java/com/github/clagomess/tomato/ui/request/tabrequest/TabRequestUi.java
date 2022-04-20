@@ -6,17 +6,17 @@ import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
-import com.github.clagomess.tomato.factory.EditorFactory;
+import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.service.HttpService;
+import com.github.clagomess.tomato.ui.request.tabrequest.bodytype.MultiPartFormUI;
+import com.github.clagomess.tomato.ui.request.tabrequest.bodytype.RawBodyUI;
 import com.github.clagomess.tomato.ui.request.tabresponse.TabResponseUi;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Arrays;
 
 @Getter
@@ -72,10 +72,10 @@ public class TabRequestUi extends JPanel {
     }
 
     private void fillRequestDtoFromUI(){
-        requestDto.setUrl(txtRequestUrl.getText());
+        requestDto.setUrl(txtRequestUrl.getText()); // //@TODO: não fazer dessa forma, pois está atualizando na arvore. criar um novo objeto
     }
 
-    public Component getBody(){
+    public JPanel getBody(){
         JPanel bodyPanel = new JPanel();
         bodyPanel.setLayout(new MigLayout("insets 5 0 0 0", "[grow, fill]", ""));
 
@@ -102,52 +102,32 @@ public class TabRequestUi extends JPanel {
         return bodyPanel;
     }
 
-    private Component getBodyType(BodyTypeEnum bodyType){
+    private JComponent getBodyType(BodyTypeEnum bodyType){
         switch (bodyType){
             case MULTIPART_FORM:
-                return getMultiPartFormBodyType();
+                return new MultiPartFormUI();
             case URL_ENCODED_FORM:
-                return getUrlEncodedFormBodyType();
+                return new RequestKeyValueTableUI("Key", "Value");
             case RAW:
-                return getRawBodyType();
+                return new RawBodyUI();
             case BINARY:
-                return getBinaryBodyType();
+                return new FileChooserUI();
             default:
-                return getNoBodyBodyType();
+                return new JPanel();
         }
-    }
-
-    private Component getNoBodyBodyType(){
-        return new JPanel();
-    }
-
-    private Component getMultiPartFormBodyType(){
-        return new JPanel();
-    }
-
-    private Component getUrlEncodedFormBodyType(){
-        return new RequestKeyValueTableUI("Key", "Value");
-    }
-
-    private Component getRawBodyType(){
-        RSyntaxTextArea textArea = EditorFactory.getInstance().createEditor();
-        return EditorFactory.createScroll(textArea);
-    }
-
-    private Component getBinaryBodyType(){
-        return new JPanel();
     }
 
     public void btnSendRequestAction(){
         btnSendRequest.setEnabled(false);
         fillRequestDtoFromUI();
+        tabResponseUi.reset();
 
         new Thread(() -> {
             try {
                 ResponseDto responseDto = new HttpService().perform(requestDto);
                 tabResponseUi.update(responseDto);
             } catch (Throwable e) {
-                e.printStackTrace(); //@TODO: remove
+                DialogFactory.createDialogException(this, e);
             } finally {
                 btnSendRequest.setEnabled(true);
             }
@@ -169,7 +149,7 @@ public class TabRequestUi extends JPanel {
                     requestDto
             );
         }catch (Throwable e){
-            //@TODO: show dialog
+            DialogFactory.createDialogException(this, e);
         }
 
         // @TODO: remove unsaved-hint

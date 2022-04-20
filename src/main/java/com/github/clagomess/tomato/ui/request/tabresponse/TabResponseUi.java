@@ -1,7 +1,9 @@
 package com.github.clagomess.tomato.ui.request.tabresponse;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.factory.EditorFactory;
+import com.github.clagomess.tomato.service.DataService;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -9,6 +11,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.IOException;
 
 @Getter
 public class TabResponseUi extends JPanel {
@@ -16,19 +19,26 @@ public class TabResponseUi extends JPanel {
     private final JTextArea txtHTTPDebug = EditorFactory.createRawTextViewer();
     private final RSyntaxTextArea txtPreview = EditorFactory.getInstance().createEditor();
     private final StatusResponseUI statusResponseUI = new StatusResponseUI();
+    private final JButton btnDownload = new JButton("Download");
+
+    private ResponseDto responseDto = null;
 
     public TabResponseUi(){
         setLayout(new MigLayout("insets 10 5 10 10", "[grow,fill]", ""));
 
         add(statusResponseUI, "width 100%");
-        add(new JButton("Download"), "wrap");
+        add(btnDownload, "wrap");
 
         JTabbedPane tpResponse = new JTabbedPane();
         tpResponse.addTab("Preview", EditorFactory.createScroll(txtPreview));
         tpResponse.addTab("RAW", EditorFactory.createScroll(txtResponseRAW));
         tpResponse.addTab("Header", getHeader());
-        tpResponse.addTab("HTTP", EditorFactory.createScroll(txtHTTPDebug));
+        tpResponse.addTab("Debug", EditorFactory.createScroll(txtHTTPDebug));
         add(tpResponse, "span, height 100%");
+
+        // configure
+        btnDownload.addActionListener(l -> btnDownloadAction());
+        btnDownload.setEnabled(false);
     }
 
     public Component getHeader(){
@@ -48,12 +58,22 @@ public class TabResponseUi extends JPanel {
         return spane;
     }
 
+    public void reset(){
+        btnDownload.setEnabled(false);
+        txtResponseRAW.setText("");
+        txtHTTPDebug.setText("");
+        txtPreview.setText("");
+        statusResponseUI.reset();
+    }
+
     public void update(ResponseDto responseDto){
+        this.responseDto = responseDto;
         txtHTTPDebug.setText(responseDto.getRequestDebug());
 
         if(responseDto.isRequestStatus()) {
-            txtResponseRAW.setText(responseDto.getHttpResponse().getBody());
-            txtPreview.setText(responseDto.getHttpResponse().getBody());
+            btnDownload.setEnabled(true);
+            txtResponseRAW.setText(responseDto.getHttpResponse().getBodyAsString());
+            txtPreview.setText(responseDto.getHttpResponse().getBodyAsString());
 
             String syntax = EditorFactory.createSyntaxStyleFromContentType(
                     responseDto.getHttpResponse().getContentType().toString()
@@ -62,5 +82,18 @@ public class TabResponseUi extends JPanel {
         }
 
         statusResponseUI.update(responseDto);
+    }
+
+    private void btnDownloadAction(){
+        JFileChooser file = new JFileChooser();
+        file.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        if(file.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+            try {
+                DataService.getInstance().writeFile(file.getSelectedFile(), responseDto.getHttpResponse().getBody());
+            } catch (IOException e){
+                DialogFactory.createDialogException(this, e);
+            }
+        }
     }
 }

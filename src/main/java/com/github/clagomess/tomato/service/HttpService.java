@@ -19,7 +19,6 @@ import java.io.File;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -109,23 +108,17 @@ public class HttpService {
             }
             requestTime = System.currentTimeMillis() - requestTime;
 
-            String responseContent = response.readEntity(String.class);
+            byte[] responseContent = response.readEntity(byte[].class);
 
             result.setHttpResponse(new ResponseDto.Response());
             result.getHttpResponse().setRequestTime(requestTime);
-            result.getHttpResponse().setBodySize(responseContent.length());
+            result.getHttpResponse().setBodySize(responseContent.length);
             result.getHttpResponse().setStatus(response.getStatus());
             result.getHttpResponse().setStatusReason(response.getStatusInfo().getReasonPhrase());
             result.getHttpResponse().setHeaders(response.getStringHeaders());
+            result.getHttpResponse().setCookies(response.getCookies());
             result.getHttpResponse().setContentType(response.getMediaType());
             result.getHttpResponse().setBody(responseContent);
-
-            if(response.getCookies() != null){ //@TODO: needs refactor
-                result.getHttpResponse().setCookies(new HashMap<>());
-                response.getCookies().forEach((key, value) -> {
-                    result.getHttpResponse().getCookies().put(key, value.getValue());
-                });
-            }
 
             result.setRequestStatus(true);
         } catch (Throwable e) {

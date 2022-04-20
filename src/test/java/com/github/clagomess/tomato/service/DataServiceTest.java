@@ -29,7 +29,7 @@ public class DataServiceTest {
     @Test
     public void getCollectionNameByResquestId(){
         String requestId = workspace.getCollections().get(0).getRequests().get(0).getId();
-        val result = DataService.getInstance().getCollectionNameByResquestId(requestId);
+        val result = DataService.getInstance().getCollectionByResquestId(requestId);
         Assertions.assertEquals(workspace.getCollections().get(0).getName(), result);
     }
 

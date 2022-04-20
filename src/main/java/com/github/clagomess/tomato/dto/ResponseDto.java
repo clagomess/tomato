@@ -3,7 +3,9 @@ package com.github.clagomess.tomato.dto;
 import lombok.Data;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +29,18 @@ public class ResponseDto {
         private String statusReason;
         private Integer bodySize;
         private long requestTime;
-        private Map<String, List<String>> headers;
-        private Map<String, String> cookies;
+        private Map<String, List<String>> headers = new HashMap<>();
+        private Map<String, String> cookies = new HashMap<>();
         private MediaType contentType;
-        private String body;
+        private byte[] body;
+
+        public String getBodyAsString(){
+            return new String(body);
+        }
+
+        public void setCookies(Map<String, NewCookie> map){
+            if(map == null || map.isEmpty()) return;
+            map.forEach((key, value) -> cookies.put(key, value.getValue()));
+        }
     }
 }
