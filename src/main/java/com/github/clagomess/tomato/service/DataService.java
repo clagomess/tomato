@@ -29,14 +29,14 @@ public class DataService {
         return instance;
     }
 
-    public String getCollectionNameByResquestId(String requestId){
+    public CollectionDto getCollectionByResquestId(String requestId) {
         Optional<CollectionDto> optCollection = currentWorkspace.getCollections().stream()
                 .filter(collection ->
                         collection.getRequests().stream()
                                 .anyMatch(request -> request.getId().equals(requestId))
                 ).findFirst();
 
-        return optCollection.map(CollectionDto::getName).orElse(null);
+        return optCollection.orElse(null);
     }
 
     protected String getTomatoHomeDir(){
@@ -102,7 +102,7 @@ public class DataService {
         writeFile(environmentsFilename, environments);
     }
 
-    protected void saveRequest(String workspaceId, String collectionId, RequestDto request) throws IOException {
+    public void saveRequest(String workspaceId, String collectionId, RequestDto request) throws IOException {
         String collectionDir = getCollectionDir(workspaceId, collectionId);
         String requestFilename = collectionDir + File.separator + "request_" + request.getId() + ".json";
         writeFile(requestFilename, request);

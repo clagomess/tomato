@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.request.tabrequest;
 
 import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
+import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
@@ -59,9 +60,13 @@ public class TabRequestUi extends JPanel {
     }
 
     private void fillUIFromRequestDto(){
-        String collectionName = DataService.getInstance().getCollectionNameByResquestId(requestDto.getId());
+        CollectionDto collection = DataService.getInstance().getCollectionByResquestId(requestDto.getId());
+        if(collection == null){
+            lblRequestName.setText(requestDto.getName());
+        }else {
+            lblRequestName.setText(String.format("%s - %s", collection.getName(), requestDto.getName())); //@TODO: modify UI
+        }
 
-        lblRequestName.setText(String.format("%s - %s", collectionName, requestDto.getName())); //@TODO: change format
         cbHttpMethod.setSelectedItem(requestDto.getMethod());
         txtRequestUrl.setText(requestDto.getUrl());
     }
@@ -150,6 +155,23 @@ public class TabRequestUi extends JPanel {
     }
 
     public void btnSaveRequestAction(){
-        //@TODO: implements
+        fillRequestDtoFromUI();
+        CollectionDto collection = DataService.getInstance().getCollectionByResquestId(requestDto.getId());
+        if(collection == null){
+            // @TODO: prompt diolog when new
+            return;
+        }
+
+        try {
+            DataService.getInstance().saveRequest(
+                    DataService.getInstance().getCurrentWorkspace().getId(),
+                    collection.getId(),
+                    requestDto
+            );
+        }catch (Throwable e){
+            //@TODO: show dialog
+        }
+
+        // @TODO: remove unsaved-hint
     }
 }

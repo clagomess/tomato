@@ -12,18 +12,12 @@ import java.awt.*;
 
 @Getter
 public class TabResponseUi extends JPanel {
-    private final JTextArea txtResponseRAW = new JTextArea();
-    private final JTextArea txtHTTPDebug = new JTextArea();
+    private final JTextArea txtResponseRAW = EditorFactory.createRawTextViewer();
+    private final JTextArea txtHTTPDebug = EditorFactory.createRawTextViewer();
     private final RSyntaxTextArea txtPreview = EditorFactory.getInstance().createEditor();
     private final StatusResponseUI statusResponseUI = new StatusResponseUI();
 
     public TabResponseUi(){
-        // @TODO: criar factory, e adicionar font consolas, adicionar Scroll
-        txtHTTPDebug.setLineWrap(true);
-        txtHTTPDebug.setWrapStyleWord(true);
-        txtResponseRAW.setLineWrap(true);
-        txtResponseRAW.setWrapStyleWord(true);
-
         setLayout(new MigLayout("insets 10 5 10 10", "[grow,fill]", ""));
 
         add(statusResponseUI, "width 100%");
@@ -31,9 +25,9 @@ public class TabResponseUi extends JPanel {
 
         JTabbedPane tpResponse = new JTabbedPane();
         tpResponse.addTab("Preview", EditorFactory.createScroll(txtPreview));
-        tpResponse.addTab("RAW", txtResponseRAW);
+        tpResponse.addTab("RAW", EditorFactory.createScroll(txtResponseRAW));
         tpResponse.addTab("Header", getHeader());
-        tpResponse.addTab("HTTP", txtHTTPDebug);
+        tpResponse.addTab("HTTP", EditorFactory.createScroll(txtHTTPDebug));
         add(tpResponse, "span, height 100%");
     }
 
@@ -55,11 +49,18 @@ public class TabResponseUi extends JPanel {
     }
 
     public void update(ResponseDto responseDto){
-        txtResponseRAW.setText(responseDto.getHttpResponse().getBody());
         txtHTTPDebug.setText(responseDto.getRequestDebug());
-        txtPreview.setText(responseDto.getHttpResponse().getBody());
-        // @TODO: check when "text/html; charset=ISO-8859-1"
-        txtPreview.setSyntaxEditingStyle(responseDto.getHttpResponse().getContentType().toString());
+
+        if(responseDto.isRequestStatus()) {
+            txtResponseRAW.setText(responseDto.getHttpResponse().getBody());
+            txtPreview.setText(responseDto.getHttpResponse().getBody());
+
+            String syntax = EditorFactory.createSyntaxStyleFromContentType(
+                    responseDto.getHttpResponse().getContentType().toString()
+            );
+            txtPreview.setSyntaxEditingStyle(syntax);
+        }
+
         statusResponseUI.update(responseDto);
     }
 }

@@ -14,21 +14,30 @@ public class StatusResponseUI extends JPanel {
         removeAll();
 
         if(!dto.isRequestStatus()){
-            add(createContainer(Color.GREEN, dto.getRequestMessage()));
+            add(createContainer(Color.GREEN, dto.getRequestMessage())); //@TODO: show as alert
             return;
         }
 
-        add(createContainer(Color.GREEN, String.format(
+        add(createContainer(getHttpStatusColor(dto.getHttpResponse().getStatus()), String.format(
                 "%s %s",
                 dto.getHttpResponse().getStatus(),
                 dto.getHttpResponse().getStatusReason()
-        ))); //@TODO: needs change collor
+        )));
 
         add(createContainer(Color.GRAY, String.format("%ss", dto.getHttpResponse().getRequestTime()))); //@TODO: format ms
         add(createContainer(Color.GRAY, String.format("%sKB", dto.getHttpResponse().getBodySize()))); //@TODO: format KB
 
         revalidate();
         repaint();
+    }
+
+    private Color getHttpStatusColor(Integer status){
+        //@TODO: change color pallete
+        if(status >= 100 && status <= 199) return Color.CYAN;
+        if(status >= 200 && status <= 299) return Color.GREEN;
+        if(status >= 300 && status <= 399) return Color.YELLOW;
+        if(status >= 400 && status <= 499) return Color.ORANGE;
+        return Color.RED;
     }
 
     private JPanel createContainer(Color color, String text){

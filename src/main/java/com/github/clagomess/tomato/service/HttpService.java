@@ -128,7 +128,7 @@ public class HttpService {
             }
 
             result.setRequestStatus(true);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             result.setRequestMessage(e.getMessage());
             log.error(HttpService.class.getName(), e);
         } finally {
