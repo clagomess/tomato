@@ -1,14 +1,34 @@
 package com.github.clagomess.tomato.ui.request.tabresponse;
 
+import com.github.clagomess.tomato.dto.ResponseDto;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class StatusResponseUI extends JPanel {
-    public StatusResponseUI(int httpStatus, double requestTime, double requestSize){
+    public StatusResponseUI(){
         setLayout(new FlowLayout(FlowLayout.LEFT));
-        add(createContainer(Color.GREEN, String.format("%s OK", httpStatus))); //@TODO: needs improvements
-        add(createContainer(Color.GRAY, String.format("%ss", requestTime))); //@TODO: needs improvements
-        add(createContainer(Color.GRAY, String.format("%sKB", requestSize))); //@TODO: needs improvements
+    }
+
+    public void update(ResponseDto dto){
+        removeAll();
+
+        if(!dto.isRequestStatus()){
+            add(createContainer(Color.GREEN, dto.getRequestMessage()));
+            return;
+        }
+
+        add(createContainer(Color.GREEN, String.format(
+                "%s %s",
+                dto.getHttpResponse().getStatus(),
+                dto.getHttpResponse().getStatusReason()
+        ))); //@TODO: needs change collor
+
+        add(createContainer(Color.GRAY, String.format("%ss", dto.getHttpResponse().getRequestTime()))); //@TODO: format ms
+        add(createContainer(Color.GRAY, String.format("%sKB", dto.getHttpResponse().getBodySize()))); //@TODO: format KB
+
+        revalidate();
+        repaint();
     }
 
     private JPanel createContainer(Color color, String text){

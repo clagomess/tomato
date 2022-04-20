@@ -2,10 +2,12 @@ package com.github.clagomess.tomato.ui.request.tabrequest;
 
 import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
 import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.EditorFactory;
 import com.github.clagomess.tomato.service.DataService;
+import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.ui.request.tabresponse.TabResponseUi;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +22,7 @@ import java.util.Arrays;
 @Setter
 public class TabRequestUi extends JPanel {
     private final RequestDto requestDto;
+    private final TabResponseUi tabResponseUi;
 
     private final JLabel lblRequestName = new JLabel("FOO - API / /api/get/test");
     private final JComboBox<HttpMethodEnum> cbHttpMethod = new JComboBox<>();
@@ -30,6 +33,7 @@ public class TabRequestUi extends JPanel {
 
     public TabRequestUi(RequestDto requestDto, TabResponseUi tabResponseUi){
         this.requestDto = requestDto;
+        this.tabResponseUi = tabResponseUi;
 
         // layout definitions
         setLayout(new MigLayout("insets 10 5 10 5", "[grow,fill]", ""));
@@ -49,17 +53,21 @@ public class TabRequestUi extends JPanel {
 
         // data handling
         Arrays.stream(HttpMethodEnum.values()).forEach(cbHttpMethod::addItem);
-        fillDataFromRequestDto();
+        fillUIFromRequestDto();
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
     }
 
-    private void fillDataFromRequestDto(){
+    private void fillUIFromRequestDto(){
         String collectionName = DataService.getInstance().getCollectionNameByResquestId(requestDto.getId());
 
         lblRequestName.setText(String.format("%s - %s", collectionName, requestDto.getName())); //@TODO: change format
         cbHttpMethod.setSelectedItem(requestDto.getMethod());
         txtRequestUrl.setText(requestDto.getUrl());
+    }
+
+    private void fillRequestDtoFromUI(){
+        requestDto.setUrl(txtRequestUrl.getText());
     }
 
     public Component getBody(){
@@ -127,12 +135,14 @@ public class TabRequestUi extends JPanel {
 
     public void btnSendRequestAction(){
         btnSendRequest.setEnabled(false);
+        fillRequestDtoFromUI();
+
         new Thread(() -> {
             try {
-                // @TODO: implements
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                ResponseDto responseDto = new HttpService().perform(requestDto);
+                tabResponseUi.update(responseDto);
+            } catch (Throwable e) {
+                e.printStackTrace(); //@TODO: remove
             } finally {
                 btnSendRequest.setEnabled(true);
             }

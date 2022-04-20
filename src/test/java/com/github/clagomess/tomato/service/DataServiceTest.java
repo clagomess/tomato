@@ -1,9 +1,6 @@
 package com.github.clagomess.tomato.service;
 
-import com.github.clagomess.tomato.dto.CollectionDto;
-import com.github.clagomess.tomato.dto.EnvironmentDto;
-import com.github.clagomess.tomato.dto.RequestDto;
-import com.github.clagomess.tomato.dto.WorkspaceDto;
+import com.github.clagomess.tomato.dto.*;
 import lombok.val;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -47,6 +44,13 @@ public class DataServiceTest {
     }
 
     @Test
+    public void saveTomatoConfig() throws IOException {
+        val dto = new TomatoConfigDto();
+        dto.setCurrentWorkspaceId(workspace.getId());
+        DataService.getInstance().saveTomatoConfig(dto);
+    }
+
+    @Test
     public void saveWorkspace() throws IOException {
         val listDto = Collections.singletonList(workspace);
         DataService.getInstance().saveWorkspace(listDto);
@@ -72,6 +76,6 @@ public class DataServiceTest {
 
     @Test
     public void readAllContent() throws IOException {
-        val result = DataService.getInstance().readAllContent();
+        DataService.getInstance().readAllContent();
     }
 }

@@ -2,25 +2,27 @@ package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.clagomess.tomato.dto.CollectionDto;
-import com.github.clagomess.tomato.dto.EnvironmentDto;
-import com.github.clagomess.tomato.dto.RequestDto;
-import com.github.clagomess.tomato.dto.WorkspaceDto;
+import com.github.clagomess.tomato.dto.*;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
+@Slf4j
 @Getter
 public class DataService {
+    private TomatoConfigDto configuration;
     private List<WorkspaceDto> workspaces = new ArrayList<>();
     private WorkspaceDto currentWorkspace;
 
     private DataService(){
-        mock();
+        try {
+            startLoad(); //@TODO: não deve ficar aqui
+        }catch (Throwable e){
+            log.error(DataService.class.getName(), e); //@TODO: melhorar e colocar um failback
+        }
     }
     private static final DataService instance = new DataService();
     public synchronized static DataService getInstance(){
@@ -35,31 +37,6 @@ public class DataService {
                 ).findFirst();
 
         return optCollection.map(CollectionDto::getName).orElse(null);
-    }
-
-    private void mock(){ //@TODO: must die
-        WorkspaceDto workspace = new WorkspaceDto();
-        workspace.setName("Tomato");
-
-        List<EnvironmentDto> environmentDtoList = new ArrayList<>();
-        environmentDtoList.add(new EnvironmentDto("Desenvolvimento"));
-        environmentDtoList.add(new EnvironmentDto("Homologação"));
-        environmentDtoList.add(new EnvironmentDto("Produção"));
-
-        workspace.setEnvironments(environmentDtoList);
-
-        List<RequestDto> requestDtos = new ArrayList<>();
-        requestDtos.add(new RequestDto("/api/fooo"));
-        requestDtos.add(new RequestDto("/api/bar"));
-        requestDtos.add(new RequestDto("/api/aboa"));
-
-        List<CollectionDto> collectionDtos = new ArrayList<>();
-        collectionDtos.add(new CollectionDto("FOO", requestDtos));
-        collectionDtos.add(new CollectionDto("BAR", requestDtos));
-        workspace.setCollections(collectionDtos);
-
-        workspaces.add(workspace);
-        currentWorkspace = workspace;
     }
 
     protected String getTomatoHomeDir(){
@@ -100,9 +77,14 @@ public class DataService {
 
     private void writeFile(String filepath, Object content) throws IOException {
         String jsonContent = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(content);
-        BufferedWriter bw = new BufferedWriter(new FileWriter(filepath)); //@TODO: melhorar com try-gato
-        bw.write(jsonContent);
-        bw.close();
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(filepath))) {
+            bw.write(jsonContent);
+        }
+    }
+
+    protected void saveTomatoConfig(TomatoConfigDto config) throws IOException {
+        String homeDir = getTomatoHomeDir();
+        writeFile(homeDir + File.separator + "tomato.config.json", config);
     }
 
     protected void saveWorkspace(List<WorkspaceDto> workspaces) throws IOException {
@@ -128,10 +110,11 @@ public class DataService {
 
     private <T> T readFile(String filepath, TypeReference<T> type) throws IOException {
         StringBuilder sb = new StringBuilder();
-        BufferedReader br = new BufferedReader(new FileReader(filepath)); //@TODO: melhorar com try-gato
-        int value;
-        while ((value = br.read()) != -1) {
-            sb.append((char) value);
+        try(BufferedReader br = new BufferedReader(new FileReader(filepath))) {
+            int value;
+            while ((value = br.read()) != -1) {
+                sb.append((char) value);
+            }
         }
 
         return new ObjectMapper().readValue(sb.toString(), type);
@@ -170,6 +153,27 @@ public class DataService {
             workspace.setEnvironments(environmentList);
         }
 
-        return null;
+        return workspaces;
+    }
+
+    public void startLoad() throws IOException {
+        this.workspaces = readAllContent();
+        this.configuration = readFile(getTomatoHomeDir() + File.separator + "tomato.config.json", new TypeReference<TomatoConfigDto>(){});
+
+        if(this.workspaces == null || this.workspaces.isEmpty()){
+            this.workspaces = Collections.singletonList(new WorkspaceDto());
+            //saveWorkspace(this.workspaces);
+        }
+
+        if(StringUtils.isBlank(this.configuration.getCurrentWorkspaceId())){
+            this.currentWorkspace = this.workspaces.get(0);
+            this.configuration.setCurrentWorkspaceId(this.workspaces.get(0).getId());
+            //this.saveTomatoConfig(this.configuration);
+        }else{
+            this.currentWorkspace = this.workspaces.stream()
+                    .filter(item -> item.getId().equals(this.configuration.getCurrentWorkspaceId()))
+                    .findFirst()
+                    .orElse(this.workspaces.get(0));
+        }
     }
 }

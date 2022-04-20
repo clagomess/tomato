@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class RequestDto extends TomatoMetadataDto {
-    private String name;
+    private String name = "New Request";
     private HttpMethodEnum method = HttpMethodEnum.GET;
     private String url;
     private List<KeyValueItem> headers = new ArrayList<>();

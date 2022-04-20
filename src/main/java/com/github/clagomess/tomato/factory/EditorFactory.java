@@ -30,6 +30,8 @@ public class EditorFactory {
 
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
         textArea.setCodeFoldingEnabled(true);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
 
         return textArea;
     }
