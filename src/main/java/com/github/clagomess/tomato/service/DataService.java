@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.clagomess.tomato.dto.*;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 
@@ -15,6 +16,8 @@ import java.util.*;
 public class DataService {
     private TomatoConfigDto configuration;
     private List<WorkspaceDto> workspaces = new ArrayList<>();
+
+    @Setter
     private WorkspaceDto currentWorkspace;
 
     private DataService(){

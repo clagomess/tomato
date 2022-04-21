@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.IconFactory;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.TabRequestUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
+import com.github.clagomess.tomato.util.UIPublisherUtil;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -18,9 +19,14 @@ public class RequestUI extends JTabbedPane {
     public RequestUI(){
         addChangeListener(e -> {
             if(getSelectedIndex() != indexOfTab(ADD_TAB_TITLE) || getSelectedIndex() == -1) return;
-            addNewTab(new RequestDto("New Request"));
+            addNewTab(new RequestDto());
         });
-        addNewTab(new RequestDto("New Request"));
+        addNewTab(new RequestDto()); //@TODO: melhorar
+
+        UIPublisherUtil.getInstance().getSwitchWorkspaceFIList().add(w -> {
+            removeAll();
+            addNewTab(new RequestDto());
+        });
     }
 
     public void addNewTab(RequestDto dto){

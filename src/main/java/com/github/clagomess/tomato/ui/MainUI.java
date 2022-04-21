@@ -10,11 +10,11 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 @Getter
-public class MainUi extends JFrame {
+public class MainUI extends JFrame {
     private final CollectionUI collectionUi;
     private final RequestUI requestUi;
 
-    public MainUi(){
+    public MainUI(){
         this.collectionUi = new CollectionUI();
         this.requestUi = new RequestUI();
 
@@ -43,7 +43,7 @@ public class MainUi extends JFrame {
 
         // workspace
         JMenu mWorkspace = new JMenu("Workspace");
-        mWorkspace.add(createMenuItem("Switch", l -> {})); //@TODO: impl. menu workspace.switch
+        mWorkspace.add(createMenuItem("Switch", l -> new WorkspaceSwitchUI()));
         mWorkspace.add(createMenuItem("Edit Workspaces", l -> {})); //@TODO: impl. menu workspace.switch
         menuBar.add(mWorkspace);
 

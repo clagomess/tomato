@@ -25,10 +25,6 @@ public class RequestDto extends TomatoMetadataDto {
     private List<KeyValueItem> cookies = new ArrayList<>();
     private Body body = new Body();
 
-    public RequestDto(String name) {
-        this.name = name;
-    }
-
     public MultivaluedMap<String, Object> toMultivaluedMapHeaders(){
         MultivaluedMap<String, Object> map = new MultivaluedHashMap<>();
         headers.forEach(item -> {

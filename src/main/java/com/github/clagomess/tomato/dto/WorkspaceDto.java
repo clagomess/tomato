@@ -17,4 +17,9 @@ public class WorkspaceDto extends TomatoMetadataDto {
 
     @JsonIgnore
     private List<EnvironmentDto> environments = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -3,7 +3,9 @@ package com.github.clagomess.tomato.ui.main.collection;
 import com.github.clagomess.tomato.constant.ColorConstant;
 import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.EnvironmentDto;
+import com.github.clagomess.tomato.dto.WorkspaceDto;
 import com.github.clagomess.tomato.service.DataService;
+import com.github.clagomess.tomato.util.UIPublisherUtil;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -42,12 +44,17 @@ public class CollectionUI extends JPanel {
         add(scrollPane, "height 100%");
 
         // data
-        lblCurrentWorkspace.setText(DataService.getInstance().getCurrentWorkspace().getName());
-        setCollections(DataService.getInstance().getCurrentWorkspace().getCollections());
-        setEnvironments(DataService.getInstance().getCurrentWorkspace().getEnvironments());
+        setData(DataService.getInstance().getCurrentWorkspace());
+        UIPublisherUtil.getInstance().getSwitchWorkspaceFIList().add((this::setData));
     }
 
-    public void setCollections(List<CollectionDto> collections){
+    private void setData(WorkspaceDto currentWorkspace){
+        lblCurrentWorkspace.setText(currentWorkspace.getName());
+        setCollections(currentWorkspace.getCollections());
+        setEnvironments(currentWorkspace.getEnvironments());
+    }
+
+    private void setCollections(List<CollectionDto> collections){
         this.root.removeAllChildren();
 
         collections.forEach(collection -> {
@@ -62,7 +69,7 @@ public class CollectionUI extends JPanel {
         model.reload();
     }
 
-    public void setEnvironments(List<EnvironmentDto> environments){
+    private void setEnvironments(List<EnvironmentDto> environments){
         this.cbEnvironment.removeAllItems();
         environments.forEach(cbEnvironment::addItem);
     }
