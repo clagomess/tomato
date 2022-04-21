@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.ui.request.tabresponse;
 
+import com.github.clagomess.tomato.constant.ColorConstant;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.factory.DialogFactory;
 
@@ -39,17 +40,16 @@ public class StatusResponseUI extends JPanel {
     }
 
     private Color getHttpStatusColor(Integer status){
-        //@TODO: change color pallete
-        if(status >= 100 && status <= 199) return Color.CYAN;
-        if(status >= 200 && status <= 299) return Color.GREEN;
-        if(status >= 300 && status <= 399) return Color.YELLOW;
-        if(status >= 400 && status <= 499) return Color.ORANGE;
-        return Color.RED;
+        if(status >= 100 && status <= 199) return ColorConstant.PURPLE;
+        if(status >= 200 && status <= 299) return ColorConstant.GREEN;
+        if(status >= 300 && status <= 399) return ColorConstant.YELLOW;
+        if(status >= 400 && status <= 499) return ColorConstant.ORANGE;
+        return ColorConstant.RED;
     }
 
     private JPanel createContainer(Color color, String text){
         JLabel label = new JLabel(text);
-        label.setForeground(Color.WHITE);
+        label.setForeground(ColorConstant.FOREGROUND);
 
         JPanel panel = new JPanel();
         panel.setBackground(color);
