@@ -1,21 +1,21 @@
-package com.github.clagomess.tomato.ui.request;
+package com.github.clagomess.tomato.ui.main.request;
 
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.IconFactory;
-import com.github.clagomess.tomato.ui.request.tabrequest.TabRequestUi;
-import com.github.clagomess.tomato.ui.request.tabresponse.TabResponseUi;
+import com.github.clagomess.tomato.ui.main.request.tabrequest.TabRequestUI;
+import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestUi extends JTabbedPane {
+public class RequestUI extends JTabbedPane {
     private final String ADD_TAB_TITLE = "+";
     private final List<String> tabTitles = new ArrayList<>();
 
-    public RequestUi(){
+    public RequestUI(){
         addChangeListener(e -> {
             if(getSelectedIndex() != indexOfTab(ADD_TAB_TITLE) || getSelectedIndex() == -1) return;
             addNewTab(new RequestDto("New Request"));
@@ -37,8 +37,8 @@ public class RequestUi extends JTabbedPane {
     }
 
     public JSplitPane getTabContent(RequestDto dto){
-        TabResponseUi tabResponseUi = new TabResponseUi();
-        TabRequestUi tabRequestUi = new TabRequestUi(dto, tabResponseUi);
+        TabResponseUI tabResponseUi = new TabResponseUI();
+        TabRequestUI tabRequestUi = new TabRequestUI(dto, tabResponseUi);
         return new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabRequestUi, tabResponseUi);
     }
 

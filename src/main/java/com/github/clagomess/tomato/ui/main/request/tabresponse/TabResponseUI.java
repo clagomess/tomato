@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.ui.request.tabresponse;
+package com.github.clagomess.tomato.ui.main.request.tabresponse;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.factory.DialogFactory;
@@ -14,7 +14,7 @@ import java.awt.*;
 import java.io.IOException;
 
 @Getter
-public class TabResponseUi extends JPanel {
+public class TabResponseUI extends JPanel {
     private final JTextArea txtResponseRAW = EditorFactory.createRawTextViewer();
     private final JTextArea txtHTTPDebug = EditorFactory.createRawTextViewer();
     private final RSyntaxTextArea txtPreview = EditorFactory.getInstance().createEditor();
@@ -23,7 +23,7 @@ public class TabResponseUi extends JPanel {
 
     private ResponseDto responseDto = null;
 
-    public TabResponseUi(){
+    public TabResponseUI(){
         setLayout(new MigLayout("insets 10 5 10 10", "[grow,fill]", ""));
 
         add(statusResponseUI, "width 100%");

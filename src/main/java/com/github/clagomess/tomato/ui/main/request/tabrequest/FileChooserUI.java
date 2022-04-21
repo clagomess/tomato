@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.ui.request.tabrequest;
+package com.github.clagomess.tomato.ui.main.request.tabrequest;
 
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;

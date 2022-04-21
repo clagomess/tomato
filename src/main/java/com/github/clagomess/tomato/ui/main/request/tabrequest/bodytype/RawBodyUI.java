@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.ui.request.tabrequest.bodytype;
+package com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype;
 
 import com.github.clagomess.tomato.enums.ContentTypeEnum;
 import com.github.clagomess.tomato.factory.EditorFactory;

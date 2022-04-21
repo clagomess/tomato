@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.ui.request.tabresponse;
+package com.github.clagomess.tomato.ui.main.request.tabresponse;
 
 import com.github.clagomess.tomato.constant.ColorConstant;
 import com.github.clagomess.tomato.dto.ResponseDto;

@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.ui.collection;
+package com.github.clagomess.tomato.ui.main.collection;
 
 import com.github.clagomess.tomato.Main;
 import com.github.clagomess.tomato.dto.RequestDto;
@@ -9,10 +9,10 @@ import javax.swing.tree.TreePath;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class CollectionTreeMouseListener extends MouseAdapter {
+public class CollectionTreeMouseListenerUI extends MouseAdapter {
     private final JTree tree;
 
-    public CollectionTreeMouseListener(JTree tree) {
+    public CollectionTreeMouseListenerUI(JTree tree) {
         this.tree = tree;
     }
 

@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.ui.collection;
+package com.github.clagomess.tomato.ui.main.collection;
 
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.factory.IconFactory;
@@ -8,7 +8,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 
-public class CollectionTreeCellRender extends DefaultTreeCellRenderer {
+public class CollectionTreeCellRenderUI extends DefaultTreeCellRenderer {
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         Object userObject = ((DefaultMutableTreeNode) value).getUserObject();

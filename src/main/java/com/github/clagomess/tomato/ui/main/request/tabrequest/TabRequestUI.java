@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.ui.request.tabrequest;
+package com.github.clagomess.tomato.ui.main.request.tabrequest;
 
 import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
 import com.github.clagomess.tomato.dto.CollectionDto;
@@ -9,9 +9,9 @@ import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.service.HttpService;
-import com.github.clagomess.tomato.ui.request.tabrequest.bodytype.MultiPartFormUI;
-import com.github.clagomess.tomato.ui.request.tabrequest.bodytype.RawBodyUI;
-import com.github.clagomess.tomato.ui.request.tabresponse.TabResponseUi;
+import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.MultiPartFormUI;
+import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
+import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.RawBodyUI;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -21,9 +21,9 @@ import java.util.Arrays;
 
 @Getter
 @Setter
-public class TabRequestUi extends JPanel {
+public class TabRequestUI extends JPanel {
     private final RequestDto requestDto;
-    private final TabResponseUi tabResponseUi;
+    private final TabResponseUI tabResponseUi;
 
     private final JLabel lblRequestName = new JLabel("FOO - API / /api/get/test");
     private final JComboBox<HttpMethodEnum> cbHttpMethod = new JComboBox<>();
@@ -32,7 +32,7 @@ public class TabRequestUi extends JPanel {
     private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
     private final RequestKeyValueTableUI tblHeader = new RequestKeyValueTableUI("Header", "Value");
 
-    public TabRequestUi(RequestDto requestDto, TabResponseUi tabResponseUi){
+    public TabRequestUI(RequestDto requestDto, TabResponseUI tabResponseUi){
         this.requestDto = requestDto;
         this.tabResponseUi = tabResponseUi;
 

@@ -1,8 +1,8 @@
-package com.github.clagomess.tomato.ui.request.tabrequest.bodytype;
+package com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype;
 
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
-import com.github.clagomess.tomato.ui.request.tabrequest.FileChooserUI;
+import com.github.clagomess.tomato.ui.main.request.tabrequest.FileChooserUI;
 import com.github.clagomess.tomato.util.ComponentUtil;
 import lombok.Getter;
 import lombok.Setter;
