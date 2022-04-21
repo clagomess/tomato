@@ -25,6 +25,7 @@ public class RequestUI extends JTabbedPane {
 
         UIPublisherUtil.getInstance().getSwitchWorkspaceFIList().add(w -> {
             removeAll();
+            tabTitles.clear();
             addNewTab(new RequestDto());
         });
     }
@@ -33,19 +34,20 @@ public class RequestUI extends JTabbedPane {
         // remove "+" tab
         if(indexOfTab(ADD_TAB_TITLE) != -1) removeTabAt(indexOfTab(ADD_TAB_TITLE));
 
-        // add new
-        String uniqueTitle = getUniqueTabTitle(dto.getName());
-        addTab(uniqueTitle, getTabContent(dto));
-        addTabOptions(uniqueTitle, dto.getMethod());
-        tabTitles.add(uniqueTitle);
-        addTab(ADD_TAB_TITLE, new JPanel());
-        setSelectedIndex(getTabCount() -2);
-    }
-
-    public JSplitPane getTabContent(RequestDto dto){
+        // tab content
         TabResponseUI tabResponseUi = new TabResponseUI();
         TabRequestUI tabRequestUi = new TabRequestUI(dto, tabResponseUi);
-        return new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabRequestUi, tabResponseUi);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabRequestUi, tabResponseUi);
+
+        // add new
+        String uniqueTitle = getUniqueTabTitle(dto.getName());
+        addTab(uniqueTitle, splitPane);
+        addTabOptions(uniqueTitle, dto.getMethod());
+        tabTitles.add(uniqueTitle);
+
+        // add "+" tab
+        addTab(ADD_TAB_TITLE, new JPanel());
+        setSelectedIndex(getTabCount() -2);
     }
 
     private String getUniqueTabTitle(String tabTitle){
