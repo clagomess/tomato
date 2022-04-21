@@ -20,13 +20,7 @@ public class DataService {
     @Setter
     private WorkspaceDto currentWorkspace;
 
-    private DataService(){
-        try {
-            startLoad(); //@TODO: não deve ficar aqui
-        }catch (Throwable e){
-            log.error(DataService.class.getName(), e); //@TODO: melhorar e colocar um failback
-        }
-    }
+    private DataService(){}
     private static final DataService instance = new DataService();
     public synchronized static DataService getInstance(){
         return instance;
@@ -122,6 +116,8 @@ public class DataService {
     }
 
     private <T> T readFile(String filepath, TypeReference<T> type) throws IOException {
+        if(!new File(filepath).isFile()) return null;
+
         StringBuilder sb = new StringBuilder();
         try(BufferedReader br = new BufferedReader(new FileReader(filepath))) {
             int value;
@@ -135,9 +131,8 @@ public class DataService {
 
     protected List<WorkspaceDto> readAllContent() throws IOException {
         String workspaceFile = getTomatoDir("data") + File.separator + "workspaces.json";
-        if(!new File(workspaceFile).isFile()) return new ArrayList<>();
-
         List<WorkspaceDto> workspaces = readFile(workspaceFile, new TypeReference<List<WorkspaceDto>>(){});
+        if(workspaces == null) return null;
 
         for(WorkspaceDto workspace : workspaces){
             File workspaceDir = new File(getWorkspaceDir(workspace.getId()));
@@ -163,7 +158,7 @@ public class DataService {
             // getenvs
             String environmentFilename = workspaceDir + File.separator + "environments.json";
             List<EnvironmentDto> environmentList = readFile(environmentFilename, new TypeReference<List<EnvironmentDto>>(){});
-            workspace.setEnvironments(environmentList);
+            if(environmentList != null) workspace.setEnvironments(environmentList);
         }
 
         return workspaces;
@@ -173,15 +168,19 @@ public class DataService {
         this.workspaces = readAllContent();
         this.configuration = readFile(getTomatoHomeDir() + File.separator + "tomato.config.json", new TypeReference<TomatoConfigDto>(){});
 
+        if(this.configuration == null){
+            this.configuration = new TomatoConfigDto();
+        }
+
         if(this.workspaces == null || this.workspaces.isEmpty()){
             this.workspaces = Collections.singletonList(new WorkspaceDto());
-            //saveWorkspace(this.workspaces);
+            saveWorkspace(this.workspaces);
         }
 
         if(StringUtils.isBlank(this.configuration.getCurrentWorkspaceId())){
             this.currentWorkspace = this.workspaces.get(0);
             this.configuration.setCurrentWorkspaceId(this.workspaces.get(0).getId());
-            //this.saveTomatoConfig(this.configuration);
+            this.saveTomatoConfig(this.configuration);
         }else{
             this.currentWorkspace = this.workspaces.stream()
                     .filter(item -> item.getId().equals(this.configuration.getCurrentWorkspaceId()))

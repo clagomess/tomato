@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class WorkspaceDto extends TomatoMetadataDto {
-    private String name;
+    private String name = "Pomodoro";
 
     @JsonIgnore
     private List<CollectionDto> collections = new ArrayList<>();
