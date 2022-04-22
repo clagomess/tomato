@@ -31,6 +31,7 @@ public class TabRequestUI extends JPanel {
     private final JButton btnSendRequest = new JButton("Send");
     private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
     private final RequestKeyValueTableUI tblHeader = new RequestKeyValueTableUI("Header", "Value");
+    private final RequestKeyValueTableUI tblCookie = new RequestKeyValueTableUI("Key", "Value");
     private BodyTypeUI bodyTypeUI;
 
     public TabRequestUI(RequestDto requestDto, TabResponseUI tabResponseUi){
@@ -50,6 +51,7 @@ public class TabRequestUI extends JPanel {
         JTabbedPane tpRequest = new JTabbedPane();
         tpRequest.addTab("Body", getBody());
         tpRequest.addTab("Header", tblHeader);
+        tpRequest.addTab("Cookie", tblCookie);
 
         add(tpRequest, "span, height 100%");
 
@@ -73,13 +75,13 @@ public class TabRequestUI extends JPanel {
     }
 
     private RequestDto getNewDtoFromUI(){
-        RequestDto dto = new RequestDto(); //@TODO: clone
+        RequestDto dto = new RequestDto();
         dto.setId(requestDto.getId());
         dto.setName(lblRequestName.getText());
         dto.setMethod((HttpMethodEnum) cbHttpMethod.getSelectedItem());
         dto.setUrl(txtRequestUrl.getText());
         dto.setHeaders(tblHeader.getNewListDtoFromUI());
-        dto.setCookies(new ArrayList<>()); //@TODO: implements getNewDtoFromUI cookies
+        dto.setCookies(tblCookie.getNewListDtoFromUI());
         dto.setBody(bodyTypeUI.getNewDtoFromUI());
 
         return dto;
