@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype;
 
 import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.FileChooserUI;
 import com.github.clagomess.tomato.util.ComponentUtil;
@@ -11,6 +12,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
@@ -75,12 +77,37 @@ public class MultiPartFormUI extends JPanel implements BodyTypeUI {
 
     @Override
     public RequestDto.Body getNewDtoFromUI() {
-        return null; //@TODO: implements
+        RequestDto.Body body = new RequestDto.Body();
+        body.setBodyType(BodyTypeEnum.MULTIPART_FORM);
+
+        List<RequestDto.MultiPartFormItem> multiPartFormList = componentRowList.stream()
+                .map(item -> {
+                    RequestDto.MultiPartFormItem dto = new RequestDto.MultiPartFormItem();
+                    dto.setType((KeyValueTypeEnum) item.cbType.getSelectedItem());
+                    dto.setSelected(item.cbSelected.isSelected());
+                    dto.setId(item.id);
+                    dto.setKey(item.txtKey.getText());
+
+                    if(item.cValue instanceof JTextField) {
+                        dto.setValue(((JTextField) item.cValue).getText());
+                    }
+
+                    if(item.cValue instanceof FileChooserUI){
+                        dto.setValue(((FileChooserUI) item.cValue).getSelectedFile().getAbsolutePath());
+                    }
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        body.setMultiPartForm(multiPartFormList);
+        return body;
     }
 
     @Getter
     @Setter
     private static class ComponentRowDto {
+        private String id;
         private JComboBox<KeyValueTypeEnum> cbType;
         private JTextField txtKey = new JTextField();
         private JComponent cValue;
@@ -88,6 +115,7 @@ public class MultiPartFormUI extends JPanel implements BodyTypeUI {
         private JButton btnRemove = new JButton("x"); //@TODO: change to trash icon;
 
         public ComponentRowDto(RequestDto.MultiPartFormItem item){
+            id = item.getId();
             cbType = new JComboBox<>();
             cbType.addItem(TEXT);
             cbType.addItem(FILE);

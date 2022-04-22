@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype;
 
 import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.ContentTypeEnum;
 import com.github.clagomess.tomato.factory.EditorFactory;
 import net.miginfocom.swing.MigLayout;
@@ -35,6 +36,9 @@ public class RawBodyUI extends JPanel implements BodyTypeUI {
 
     @Override
     public RequestDto.Body getNewDtoFromUI() {
-        return null; //@TODO: implements
+        RequestDto.Body body = new RequestDto.Body();
+        body.setBodyType(BodyTypeEnum.RAW);
+        body.setRaw(textArea.getText());
+        return body;
     }
 }

@@ -16,6 +16,7 @@ import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @Getter
@@ -78,7 +79,7 @@ public class TabRequestUI extends JPanel {
         dto.setMethod((HttpMethodEnum) cbHttpMethod.getSelectedItem());
         dto.setUrl(txtRequestUrl.getText());
         dto.setHeaders(tblHeader.getNewListDtoFromUI());
-        dto.setCookies(null); //@TODO: implements getNewDtoFromUI cookies
+        dto.setCookies(new ArrayList<>()); //@TODO: implements getNewDtoFromUI cookies
         dto.setBody(bodyTypeUI.getNewDtoFromUI());
 
         return dto;

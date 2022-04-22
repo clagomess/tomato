@@ -6,6 +6,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.LinkedList;
 import java.util.List;
 
 @Getter
@@ -51,7 +52,17 @@ public class RequestKeyValueTableUI extends JPanel {
     }
 
     public List<RequestDto.KeyValueItem> getNewListDtoFromUI(){
-        //@TODO: implements
-        return null;
+        List<RequestDto.KeyValueItem> result = new LinkedList<>();
+
+        for(int i = 0; i < model.getRowCount(); i++){
+            RequestDto.KeyValueItem dto = new RequestDto.KeyValueItem();
+            // dto.setId(); //@TODO: isso é importante
+            dto.setSelected((Boolean) model.getValueAt(i, 0));
+            dto.setKey((String) model.getValueAt(i, 1));
+            dto.setValue((String) model.getValueAt(i, 2));
+            result.add(dto);
+        }
+
+        return result;
     }
 }

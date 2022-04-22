@@ -10,7 +10,7 @@ import java.io.File;
 public class FileChooserUI extends JPanel {
     private final JTextField txtFilepath = new JTextField();
     private final JButton btnSelect = new JButton("Select");
-    private File selectedFile;
+    protected File selectedFile;
 
     public FileChooserUI() {
         setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill]", ""));
