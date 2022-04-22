@@ -15,7 +15,7 @@ import java.util.List;
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 
-public class MultiPartFormUI extends JPanel {
+public class MultiPartFormUI extends JPanel implements BodyTypeUI {
     private final List<ComponentRowDto> componentRowList = new ArrayList<>();
     private final JButton btnAddNew = new JButton("Add New");
 
@@ -71,6 +71,11 @@ public class MultiPartFormUI extends JPanel {
         add(componentDto.getCbSelected());
         add(componentDto.getBtnRemove(), "wrap");
         add(btnAddNew, "span"); //@TODO: verificar scrolllayout
+    }
+
+    @Override
+    public RequestDto.Body getNewDtoFromUI() {
+        return null; //@TODO: implements
     }
 
     @Getter

@@ -9,9 +9,8 @@ import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.service.HttpService;
-import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.MultiPartFormUI;
+import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.*;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
-import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.RawBodyUI;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -31,6 +30,7 @@ public class TabRequestUI extends JPanel {
     private final JButton btnSendRequest = new JButton("Send");
     private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
     private final RequestKeyValueTableUI tblHeader = new RequestKeyValueTableUI("Header", "Value");
+    private BodyTypeUI bodyTypeUI;
 
     public TabRequestUI(RequestDto requestDto, TabResponseUI tabResponseUi){
         this.requestDto = requestDto;
@@ -71,8 +71,17 @@ public class TabRequestUI extends JPanel {
         txtRequestUrl.setText(requestDto.getUrl());
     }
 
-    private void fillRequestDtoFromUI(){
-        requestDto.setUrl(txtRequestUrl.getText()); // //@TODO: não fazer dessa forma, pois está atualizando na arvore. criar um novo objeto
+    private RequestDto getNewDtoFromUI(){
+        RequestDto dto = new RequestDto(); //@TODO: clone
+        dto.setId(requestDto.getId());
+        dto.setName(lblRequestName.getText());
+        dto.setMethod((HttpMethodEnum) cbHttpMethod.getSelectedItem());
+        dto.setUrl(txtRequestUrl.getText());
+        dto.setHeaders(tblHeader.getNewListDtoFromUI());
+        dto.setCookies(null); //@TODO: implements getNewDtoFromUI cookies
+        dto.setBody(bodyTypeUI.getNewDtoFromUI());
+
+        return dto;
     }
 
     public JPanel getBody(){
@@ -86,8 +95,9 @@ public class TabRequestUI extends JPanel {
             JRadioButton rbBodyType = new JRadioButton(item.getDescription());
             rbBodyType.setSelected(item == BodyTypeEnum.NO_BODY);
             rbBodyType.addActionListener(l -> {
+                bodyTypeUI = getBodyType(item);
                 bodyPanel.remove(1);
-                bodyPanel.add(getBodyType(item), "height 100%");
+                bodyPanel.add((JComponent) bodyTypeUI, "height 100%");
                 bodyPanel.revalidate();
                 bodyPanel.repaint();
             });
@@ -96,35 +106,36 @@ public class TabRequestUI extends JPanel {
             pRadioBodyType.add(rbBodyType);
         });
 
+        bodyTypeUI = getBodyType(BodyTypeEnum.NO_BODY);
         bodyPanel.add(pRadioBodyType, "wrap");
-        bodyPanel.add(getBodyType(BodyTypeEnum.NO_BODY), "height 100%");
+        bodyPanel.add((JComponent) bodyTypeUI, "height 100%");
 
         return bodyPanel;
     }
 
-    private JComponent getBodyType(BodyTypeEnum bodyType){
+    private BodyTypeUI getBodyType(BodyTypeEnum bodyType){
         switch (bodyType){
             case MULTIPART_FORM:
                 return new MultiPartFormUI();
             case URL_ENCODED_FORM:
-                return new RequestKeyValueTableUI("Key", "Value");
+                return new UrlEncodedFormUI("Key", "Value");
             case RAW:
                 return new RawBodyUI();
             case BINARY:
-                return new FileChooserUI();
+                return new BinaryUI();
             default:
-                return new JPanel();
+                return new NoBodyUI();
         }
     }
 
     public void btnSendRequestAction(){
         btnSendRequest.setEnabled(false);
-        fillRequestDtoFromUI();
         tabResponseUi.reset();
+        RequestDto dto = getNewDtoFromUI();
 
         new Thread(() -> {
             try {
-                ResponseDto responseDto = new HttpService().perform(requestDto);
+                ResponseDto responseDto = new HttpService().perform(dto);
                 tabResponseUi.update(responseDto);
             } catch (Throwable e) {
                 DialogFactory.createDialogException(this, e);
@@ -135,7 +146,7 @@ public class TabRequestUI extends JPanel {
     }
 
     public void btnSaveRequestAction(){
-        fillRequestDtoFromUI();
+        RequestDto dto = getNewDtoFromUI();
         CollectionDto collection = DataService.getInstance().getCollectionByResquestId(requestDto.getId());
         if(collection == null){
             // @TODO: prompt diolog when new
@@ -146,8 +157,10 @@ public class TabRequestUI extends JPanel {
             DataService.getInstance().saveRequest(
                     DataService.getInstance().getCurrentWorkspace().getId(),
                     collection.getId(),
-                    requestDto
+                    dto
             );
+            //@TODO: atualizar na arvore
+            //@TODO: atulizar na ui
         }catch (Throwable e){
             DialogFactory.createDialogException(this, e);
         }
