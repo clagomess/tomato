@@ -46,6 +46,9 @@ public class CollectionUI extends JPanel {
         // data
         setData(DataService.getInstance().getCurrentWorkspace());
         UIPublisherUtil.getInstance().getSwitchWorkspaceFIList().add((this::setData));
+        UIPublisherUtil.getInstance().getSaveRequestFIList().add(dto -> {
+            setCollections(DataService.getInstance().getCurrentWorkspace().getCollections());
+        });
     }
 
     private void setData(WorkspaceDto currentWorkspace){

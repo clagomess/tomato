@@ -1,6 +1,8 @@
 package com.github.clagomess.tomato.util;
 
+import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.WorkspaceDto;
+import com.github.clagomess.tomato.fi.SaveRequestFI;
 import com.github.clagomess.tomato.fi.SwitchWorkspaceFI;
 import com.github.clagomess.tomato.fi.TabRequestModificationHintFI;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.TabRequestUI;
@@ -28,5 +30,10 @@ public final class UIPublisherUtil {
                 value.hintModification();
             }
         });
+    }
+
+    private final List<SaveRequestFI> saveRequestFIList = new ArrayList<>();
+    public void notifySaveRequest(RequestDto dto){
+        saveRequestFIList.forEach(item -> item.saveRequest(dto));
     }
 }

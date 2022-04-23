@@ -9,20 +9,21 @@ import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.service.HttpService;
+import com.github.clagomess.tomato.ui.RequestSaveUI;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.*;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
+import com.github.clagomess.tomato.util.UIPublisherUtil;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 @Getter
 @Setter
 public class TabRequestUI extends JPanel {
-    private final RequestDto requestDto;
+    private RequestDto requestDto;
     private final TabResponseUI tabResponseUi;
 
     private final JLabel lblRequestName = new JLabel("FOO - API / /api/get/test");
@@ -60,6 +61,11 @@ public class TabRequestUI extends JPanel {
         fillUIFromRequestDto();
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
+        UIPublisherUtil.getInstance().getSaveRequestFIList().add(dto -> { //@TODO: detruir quando remover tab
+           if(dto.getId().equals(requestDto.getId())) return;
+           this.requestDto = dto;
+           fillUIFromRequestDto();
+        });
     }
 
     private void fillUIFromRequestDto(){
@@ -149,10 +155,10 @@ public class TabRequestUI extends JPanel {
     }
 
     public void btnSaveRequestAction(){
-        RequestDto dto = getNewDtoFromUI();
+        this.requestDto = getNewDtoFromUI();
         CollectionDto collection = DataService.getInstance().getCollectionByResquestId(requestDto.getId());
         if(collection == null){
-            // @TODO: prompt diolog when new
+            new RequestSaveUI(this.requestDto);
             return;
         }
 
@@ -160,8 +166,9 @@ public class TabRequestUI extends JPanel {
             DataService.getInstance().saveRequest(
                     DataService.getInstance().getCurrentWorkspace().getId(),
                     collection.getId(),
-                    dto
+                    this.requestDto
             );
+            UIPublisherUtil.getInstance().notifySaveRequest(this.requestDto);
             //@TODO: atualizar na arvore
             //@TODO: atulizar na ui
         }catch (Throwable e){
