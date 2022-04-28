@@ -26,6 +26,7 @@ public class RequestUI extends JTabbedPane {
         UIPublisherUtil.getInstance().getSwitchWorkspaceFIList().add(w -> {
             removeAll();
             tabTitles.clear();
+            UIPublisherUtil.getInstance().getSaveRequestFIList().clear();
             addNewTab(new RequestDto());
         });
     }
@@ -80,6 +81,7 @@ public class RequestUI extends JTabbedPane {
             setSelectedIndex(0);
             tabTitles.remove(tabTitle);
             removeTabAt(index);
+            //@TODO: implements unsubscribe: UIPublisherUtil.getInstance().getSaveRequestFIList()
         });
     }
 }

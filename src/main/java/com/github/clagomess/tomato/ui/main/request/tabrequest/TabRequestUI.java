@@ -63,7 +63,6 @@ public class TabRequestUI extends JPanel {
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
         UIPublisherUtil.getInstance().getSaveRequestFIList().add(dto -> { //@TODO: detruir quando remover tab
            if(dto.getId().equals(requestDto.getId())) return;
-           this.requestDto = dto;
            fillUIFromRequestDto();
         });
     }
@@ -155,10 +154,10 @@ public class TabRequestUI extends JPanel {
     }
 
     public void btnSaveRequestAction(){
-        this.requestDto = getNewDtoFromUI();
-        CollectionDto collection = DataService.getInstance().getCollectionByResquestId(requestDto.getId());
+        RequestDto dto = getNewDtoFromUI();
+        CollectionDto collection = DataService.getInstance().getCollectionByResquestId(dto.getId());
         if(collection == null){
-            new RequestSaveUI(this.requestDto);
+            new RequestSaveUI(dto);
             return;
         }
 
@@ -166,9 +165,10 @@ public class TabRequestUI extends JPanel {
             DataService.getInstance().saveRequest(
                     DataService.getInstance().getCurrentWorkspace().getId(),
                     collection.getId(),
-                    this.requestDto
+                    dto
             );
-            UIPublisherUtil.getInstance().notifySaveRequest(this.requestDto);
+            collection.addOrReplaceRequest(dto);
+            UIPublisherUtil.getInstance().notifySaveRequest(dto);
             //@TODO: atualizar na arvore
             //@TODO: atulizar na ui
         }catch (Throwable e){

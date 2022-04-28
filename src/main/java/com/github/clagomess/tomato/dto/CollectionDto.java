@@ -21,7 +21,7 @@ public class CollectionDto extends TomatoMetadataDto {
 
     public void addOrReplaceRequest(RequestDto requestDto){
         if(requests.stream().anyMatch(item -> item.getId().equals(requestDto.getId()))){
-            /*requests.stream()
+            requests.stream()
                     .filter(item -> item.getId().equals(requestDto.getId()))
                     .findFirst()
                     .ifPresent(item -> {
@@ -30,7 +30,7 @@ public class CollectionDto extends TomatoMetadataDto {
                         } catch (IllegalAccessException | InvocationTargetException e) {
                             throw new RuntimeException(e);
                         }
-                    });*/
+                    });
         }else{
             requests.add(requestDto);
         }
