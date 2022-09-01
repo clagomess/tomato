@@ -26,7 +26,7 @@ public class CollectionDto extends TomatoMetadataDto {
                     .findFirst()
                     .ifPresent(item -> {
                         try {
-                            BeanUtils.copyProperties(item, requestDto);
+                            BeanUtils.copyProperties(item, requestDto); //@TODO: substituir por mapper
                         } catch (IllegalAccessException | InvocationTargetException e) {
                             throw new RuntimeException(e);
                         }
