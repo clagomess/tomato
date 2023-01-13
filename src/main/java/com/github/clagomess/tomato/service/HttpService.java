@@ -3,6 +3,9 @@ package com.github.clagomess.tomato.service;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.util.LoggerHandlerUtil;
+import jakarta.ws.rs.client.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.ssl.SSLContexts;
@@ -12,9 +15,6 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 import javax.net.ssl.SSLContext;
-import javax.ws.rs.client.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.File;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -91,7 +91,7 @@ public class HttpService {
             Response response;
             long requestTime = System.currentTimeMillis();
 
-            switch (dto.getMethod()){
+            switch (dto.getMethod()){  //@TODO: colocar try-closeable
                 case POST:
                     response = invocationBuilder.post(buildEntity(dto));
                     break;

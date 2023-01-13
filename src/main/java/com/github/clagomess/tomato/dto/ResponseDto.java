@@ -1,9 +1,9 @@
 package com.github.clagomess.tomato.dto;
 
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.NewCookie;
 import lombok.Data;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
