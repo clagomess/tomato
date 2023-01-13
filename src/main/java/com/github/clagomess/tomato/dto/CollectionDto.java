@@ -1,12 +1,11 @@
 package com.github.clagomess.tomato.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.clagomess.tomato.mapper.RequestDtoMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.beanutils.BeanUtils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +23,7 @@ public class CollectionDto extends TomatoMetadataDto {
             requests.stream()
                     .filter(item -> item.getId().equals(requestDto.getId()))
                     .findFirst()
-                    .ifPresent(item -> {
-                        try {
-                            BeanUtils.copyProperties(item, requestDto); //@TODO: substituir por mapper
-                        } catch (IllegalAccessException | InvocationTargetException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+                    .ifPresent(item -> RequestDtoMapper.INSTANCE.copy(item, requestDto));
         }else{
             requests.add(requestDto);
         }
