@@ -45,7 +45,7 @@ public class HttpServiceTest {
                         HttpResponse.response()
                                 .withStatusCode(200)
                                 .withContentType(MediaType.APPLICATION_JSON)
-                                .withBody("{\"foo\": \"bar\", \"true\", false, \"number\": 1}")
+                                .withBody("{\"foo\": \"bar\", \"true\": false, \"number\": 1}")
                 );
 
         RequestDto request = new RequestDto();

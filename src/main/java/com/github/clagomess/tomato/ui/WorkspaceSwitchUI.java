@@ -13,7 +13,7 @@ public class WorkspaceSwitchUI extends JFrame {
     private final JComboBox<WorkspaceDto> cbWorkspace = new JComboBox<>();
     private final JButton btnSwitch = new JButton("Switch");
 
-    public WorkspaceSwitchUI() {
+    public WorkspaceSwitchUI(Component parent) {
         setTitle("Switch Workspace");
         setIconImage(IconFactory.ICON_FAVICON.getImage());
 
@@ -29,6 +29,7 @@ public class WorkspaceSwitchUI extends JFrame {
         btnSwitch.addActionListener(l -> btnSwitchAction());
 
         add(panel);
+        setLocationRelativeTo(parent);
         setMinimumSize(new Dimension(300, 100));
         setResizable(false);
         pack();

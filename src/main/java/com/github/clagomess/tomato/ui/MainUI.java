@@ -43,7 +43,7 @@ public class MainUI extends JFrame {
 
         // workspace
         JMenu mWorkspace = new JMenu("Workspace");
-        mWorkspace.add(createMenuItem("Switch", l -> new WorkspaceSwitchUI()));
+        mWorkspace.add(createMenuItem("Switch", l -> new WorkspaceSwitchUI(this)));
         mWorkspace.add(createMenuItem("Edit Workspaces", l -> {})); //@TODO: impl. menu workspace.switch
         menuBar.add(mWorkspace);
 
