@@ -4,18 +4,12 @@ import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
 import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
-import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.ui.RequestSaveUI;
-import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.BinaryUI;
-import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.BodyTypeUI;
-import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.NoBodyUI;
-import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.RawBodyUI;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.keyvalue.KeyValueUI;
-import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.multipartform.MultiPartFormUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
 import com.github.clagomess.tomato.util.UIPublisherUtil;
 import lombok.Getter;
@@ -23,7 +17,6 @@ import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.util.Arrays;
 
 @Getter
 @Setter
@@ -38,7 +31,7 @@ public class TabRequestUI extends JPanel {
     private final JTextField txtRequestUrl = new JTextField();
     private final JButton btnSendRequest = new JButton("Send");
     private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
-    private BodyTypeUI bodyTypeUI;
+    private final ButtonGroup bgBodyType = new ButtonGroup();
 
     public TabRequestUI(RequestDto requestDto, TabResponseUI tabResponseUi){
         this.requestDto = requestDto;
@@ -47,6 +40,7 @@ public class TabRequestUI extends JPanel {
         // layout definitions
         setLayout(new MigLayout("insets 10 5 10 5", "[grow,fill]", ""));
 
+        // layout
         add(lblRequestName, "span");
         add(new JSeparator(JSeparator.HORIZONTAL), "span");
         add(cbHttpMethod);
@@ -55,71 +49,39 @@ public class TabRequestUI extends JPanel {
         add(btnSaveRequest, "wrap");
 
         JTabbedPane tpRequest = new JTabbedPane();
-        tpRequest.addTab("Body", getBody());
+        tpRequest.addTab("Body", new BodyUI(requestDto));
         tpRequest.addTab("Header", new KeyValueUI(requestDto.getHeaders()));
         tpRequest.addTab("Cookie", new KeyValueUI(requestDto.getCookies()));
-
         add(tpRequest, "span, height 100%");
 
-        // data handling
-        fillUIFromRequestDto();
+        // set values
+        lblRequestName.setText(getLabelRequestName());
+        cbHttpMethod.setSelectedItem(requestDto.getMethod());
+        txtRequestUrl.setText(requestDto.getUrl());
+        cbHttpMethod.setSelectedItem(requestDto.getMethod());
+
+        // listeners
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
         UIPublisherUtil.getInstance().getSaveRequestFIList().add(dto -> { //@TODO: detruir quando remover tab
            if(dto.getId().equals(requestDto.getId())) return;
-           fillUIFromRequestDto();
         });
+
+        // @TODO: add listener for: lblRequestName, cbHttpMethod, txtRequestUrl, cbHttpMethod
     }
 
-    private void fillUIFromRequestDto(){
-        CollectionDto collection = DataService.getInstance().getCollectionByResquestId(requestDto.getId());
+    private String getLabelRequestName(){
+        CollectionDto collection = DataService.getInstance()
+                .getCollectionByResquestId(requestDto.getId());
         if(collection == null){
-            lblRequestName.setText(requestDto.getName());
+            return requestDto.getName();
         }else {
-            lblRequestName.setText(String.format("%s - %s", collection.getName(), requestDto.getName())); //@TODO: modify UI
+            return String.format(
+                    "%s - %s",
+                    collection.getName(),
+                    requestDto.getName()
+            ); //@TODO: modify UI
         }
-
-        cbHttpMethod.setSelectedItem(requestDto.getMethod());
-        txtRequestUrl.setText(requestDto.getUrl());
-    }
-
-    public JPanel getBody(){
-        JPanel bodyPanel = new JPanel();
-        bodyPanel.setLayout(new MigLayout("insets 5 0 0 0", "[grow, fill]", ""));
-
-        ButtonGroup bgBodyType = new ButtonGroup();
-        JPanel pRadioBodyType = new JPanel(new MigLayout("insets 5 0 5 0"));
-
-        Arrays.stream(BodyTypeEnum.values()).forEach(item -> {
-            JRadioButton rbBodyType = new JRadioButton(item.getDescription());
-            rbBodyType.setSelected(item == BodyTypeEnum.NO_BODY);
-            rbBodyType.addActionListener(l -> {
-                bodyTypeUI = getBodyType(item);
-                bodyPanel.remove(1);
-                bodyPanel.add((JComponent) bodyTypeUI, "height 100%");
-                bodyPanel.revalidate();
-                bodyPanel.repaint();
-            });
-
-            bgBodyType.add(rbBodyType);
-            pRadioBodyType.add(rbBodyType);
-        });
-
-        bodyTypeUI = getBodyType(BodyTypeEnum.NO_BODY);
-        bodyPanel.add(pRadioBodyType, "wrap");
-        bodyPanel.add((JComponent) bodyTypeUI, "height 100%");
-
-        return bodyPanel;
-    }
-
-    private BodyTypeUI getBodyType(BodyTypeEnum bodyType){
-        return switch (bodyType) {
-            case MULTIPART_FORM -> new MultiPartFormUI(requestDto);
-            case URL_ENCODED_FORM -> new KeyValueUI(requestDto.getBody().getUrlEncodedForm());
-            case RAW -> new RawBodyUI();
-            case BINARY -> new BinaryUI();
-            default -> new NoBodyUI();
-        };
     }
 
     public void btnSendRequestAction(){
