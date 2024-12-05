@@ -10,7 +10,11 @@ import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.ui.RequestSaveUI;
-import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.*;
+import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.BinaryUI;
+import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.BodyTypeUI;
+import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.NoBodyUI;
+import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.RawBodyUI;
+import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.multipartform.MultiPartFormUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
 import com.github.clagomess.tomato.util.UIPublisherUtil;
@@ -34,8 +38,6 @@ public class TabRequestUI extends JPanel {
     private final JTextField txtRequestUrl = new JTextField();
     private final JButton btnSendRequest = new JButton("Send");
     private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
-    private final RequestKeyValueTableUI tblHeader = new RequestKeyValueTableUI("Header", "Value");
-    private final RequestKeyValueTableUI tblCookie = new RequestKeyValueTableUI("Key", "Value");
     private BodyTypeUI bodyTypeUI;
 
     public TabRequestUI(RequestDto requestDto, TabResponseUI tabResponseUi){
@@ -54,8 +56,8 @@ public class TabRequestUI extends JPanel {
 
         JTabbedPane tpRequest = new JTabbedPane();
         tpRequest.addTab("Body", getBody());
-        tpRequest.addTab("Header", tblHeader);
-        tpRequest.addTab("Cookie", tblCookie);
+        tpRequest.addTab("Header", new KeyValueUI(requestDto.getHeaders()));
+        tpRequest.addTab("Cookie", new KeyValueUI(requestDto.getCookies()));
 
         add(tpRequest, "span, height 100%");
 
@@ -113,7 +115,7 @@ public class TabRequestUI extends JPanel {
     private BodyTypeUI getBodyType(BodyTypeEnum bodyType){
         return switch (bodyType) {
             case MULTIPART_FORM -> new MultiPartFormUI(requestDto);
-            case URL_ENCODED_FORM -> new UrlEncodedFormUI("Key", "Value");
+            case URL_ENCODED_FORM -> new KeyValueUI(requestDto.getBody().getUrlEncodedForm());
             case RAW -> new RawBodyUI();
             case BINARY -> new BinaryUI();
             default -> new NoBodyUI();
