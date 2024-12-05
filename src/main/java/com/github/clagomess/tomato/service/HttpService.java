@@ -76,18 +76,24 @@ public class HttpService {
     }
 
     private static Entity<?> buildEntity(RequestDto dto){
-        switch (dto.getBody().getBodyType()){
-            case URL_ENCODED_FORM:
-                return Entity.form(dto.getBody().toUrlEncodedForm());
-            case MULTIPART_FORM:
-                return Entity.entity(dto.getBody().toMultiPartForm(), MediaType.TEXT_PLAIN_TYPE);
-            case RAW:
-                return Entity.entity(dto.getBody().getRaw(), dto.getBody().getBodyContentType());
-            case BINARY:
-                return Entity.entity(new File(dto.getBody().getBinaryFilePath()), dto.getBody().getBodyContentType());
-            default:
-                return Entity.text(null);
-        }
+        return switch (dto.getBody().getBodyType()) {
+            case URL_ENCODED_FORM -> Entity.form(
+                    dto.getBody().toUrlEncodedForm()
+            );
+            case MULTIPART_FORM -> Entity.entity(
+                    dto.getBody().toMultiPartForm(),
+                    MediaType.TEXT_PLAIN_TYPE
+            );
+            case RAW -> Entity.entity(
+                    dto.getBody().getRaw(),
+                    dto.getBody().getBodyContentType()
+            );
+            case BINARY -> Entity.entity(
+                    new File(dto.getBody().getBinaryFilePath()),
+                    dto.getBody().getBodyContentType()
+            );
+            default -> Entity.text(null);
+        };
     }
 
     public ResponseDto perform(RequestDto dto){
@@ -131,16 +137,11 @@ public class HttpService {
     }
 
     private Response performRequest(Invocation.Builder invocationBuilder, RequestDto dto){
-        switch (dto.getMethod()){
-            case POST:
-                return invocationBuilder.post(buildEntity(dto));
-            case PUT:
-                return invocationBuilder.put(buildEntity(dto));
-            case DELETE:
-                return invocationBuilder.delete();
-            case GET:
-            default:
-                return invocationBuilder.get();
-        }
+        return switch (dto.getMethod()) {
+            case POST -> invocationBuilder.post(buildEntity(dto));
+            case PUT -> invocationBuilder.put(buildEntity(dto));
+            case DELETE -> invocationBuilder.delete();
+            default -> invocationBuilder.get();
+        };
     }
 }
