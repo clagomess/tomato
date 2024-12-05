@@ -13,28 +13,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RequestUI extends JTabbedPane {
-    private final String ADD_TAB_TITLE = "+";
     private final List<String> tabTitles = new ArrayList<>();
 
     public RequestUI(){
+        addNewPlusTab();
+
         addChangeListener(e -> {
-            if(getSelectedIndex() != indexOfTab(ADD_TAB_TITLE) || getSelectedIndex() == -1) return;
-            addNewTab(new RequestDto());
+            if(getTabCount() == 1) setSelectedIndex(-1);
+            if(getSelectedIndex() == getTabCount() - 1) setSelectedIndex(getTabCount() - 2);
         });
-        addNewTab(new RequestDto()); //@TODO: melhorar
 
         UIPublisherUtil.getInstance().getSwitchWorkspaceFIList().add(w -> {
-            removeAll();
+            tabTitles.forEach(tabTitle -> removeTabAt(indexOfTab(tabTitle)));
             tabTitles.clear();
+
             UIPublisherUtil.getInstance().getSaveRequestFIList().clear();
+        });
+    }
+
+    private void addNewPlusTab(){
+        addTab("+", new JPanel());
+        setSelectedIndex(-1);
+
+        JButton btnPlus = new JButton("+");
+
+        setTabComponentAt(indexOfTab("+"), btnPlus);
+
+        btnPlus.addActionListener(l -> {
             addNewTab(new RequestDto());
         });
     }
 
     public void addNewTab(RequestDto dto){
-        // remove "+" tab
-        if(indexOfTab(ADD_TAB_TITLE) != -1) removeTabAt(indexOfTab(ADD_TAB_TITLE));
-
         // tab content
         TabResponseUI tabResponseUi = new TabResponseUI();
         TabRequestUI tabRequestUi = new TabRequestUI(dto, tabResponseUi);
@@ -42,12 +52,10 @@ public class RequestUI extends JTabbedPane {
 
         // add new
         String uniqueTitle = getUniqueTabTitle(dto.getName());
-        addTab(uniqueTitle, splitPane);
+        insertTab(uniqueTitle, null, splitPane, null, getTabCount() - 1);
         addTabOptions(uniqueTitle, dto.getMethod());
         tabTitles.add(uniqueTitle);
 
-        // add "+" tab
-        addTab(ADD_TAB_TITLE, new JPanel());
         setSelectedIndex(getTabCount() -2);
     }
 
@@ -77,10 +85,8 @@ public class RequestUI extends JTabbedPane {
         setTabComponentAt(indexOfTab(tabTitle), pnlTab);
 
         btnClose.addActionListener(l -> {
-            int index = indexOfTab(tabTitle);
-            setSelectedIndex(0);
+            removeTabAt(indexOfTab(tabTitle));
             tabTitles.remove(tabTitle);
-            removeTabAt(index);
             //@TODO: implements unsubscribe: UIPublisherUtil.getInstance().getSaveRequestFIList()
         });
     }
