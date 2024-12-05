@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.keyvalue;
 
 import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.ui.component.ListenableTextFieldComponent;
 import com.github.clagomess.tomato.util.ComponentUtil;
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
@@ -19,8 +20,8 @@ class RowComponent extends JPanel {
     private final RequestDto.KeyValueItem item;
 
     private final JCheckBox cbSelected = new JCheckBox();
-    private final JTextField txtKey = new JTextField();
-    private final JTextField txtValue = new JTextField();
+    private final ListenableTextFieldComponent txtKey = new ListenableTextFieldComponent();
+    private final ListenableTextFieldComponent txtValue = new ListenableTextFieldComponent();
     private final JButton btnRemove = new JButton("x"); //@TODO: change to trash icon;
 
     public RowComponent(
@@ -43,8 +44,8 @@ class RowComponent extends JPanel {
 
         // listeners
         cbSelected.addActionListener(l -> cbSelectedOnChange());
-        txtKey.addActionListener(l -> txtKeyOnChange());
-        txtValue.addActionListener(l -> txtValueOnChange());
+        txtKey.addOnChange(item::setKey);
+        txtValue.addOnChange(item::setValue);
         btnRemove.addActionListener(l -> btnRemoveAction());
 
         // layout
@@ -62,14 +63,6 @@ class RowComponent extends JPanel {
     private void cbSelectedOnChange(){
         item.setSelected(cbSelected.isSelected());
         setEnabled(cbSelected.isSelected());
-    }
-
-    private void txtKeyOnChange(){
-        item.setKey(txtKey.getText());
-    }
-
-    private void txtValueOnChange(){
-        item.setKey(txtKey.getText());
     }
 
     private void btnRemoveAction(){

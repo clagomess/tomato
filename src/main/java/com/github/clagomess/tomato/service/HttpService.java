@@ -82,7 +82,7 @@ public class HttpService {
             );
             case MULTIPART_FORM -> Entity.entity(
                     dto.getBody().toMultiPartForm(),
-                    MediaType.TEXT_PLAIN_TYPE
+                    MediaType.MULTIPART_FORM_DATA_TYPE
             );
             case RAW -> Entity.entity(
                     dto.getBody().getRaw(),

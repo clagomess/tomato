@@ -25,6 +25,7 @@ public class CollectionTreeMouseListenerUI extends MouseAdapter {
 
             if(selectedNode.getUserObject() instanceof RequestDto){
                 RequestDto dto = (RequestDto) selectedNode.getUserObject();
+                // @TODO: passar clone do DTO, para não sujar o que está na arvore
                 Main.mainUi.getRequestUi().addNewTab(dto);
             }
         }

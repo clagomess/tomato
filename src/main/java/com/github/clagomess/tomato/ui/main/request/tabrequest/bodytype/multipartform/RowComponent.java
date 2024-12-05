@@ -24,7 +24,7 @@ class RowComponent extends JPanel {
     private final JComboBox<KeyValueTypeEnum> cbType = new JComboBox<>(
             KeyValueTypeEnum.values()
     );
-    private final JTextField txtKey = new JTextField();
+    private final ListenableTextFieldComponent txtKey = new ListenableTextFieldComponent();
     private JComponent cValue;
     private final JCheckBox cbSelected = new JCheckBox();
     private final JButton btnRemove = new JButton("x"); //@TODO: change to trash icon;
@@ -50,7 +50,7 @@ class RowComponent extends JPanel {
 
         // listeners
         cbType.addActionListener(l -> cbTypeOnChange());
-        txtKey.addActionListener(l -> txtKeyOnChange());
+        txtKey.addOnChange(item::setKey);
         cbSelected.addActionListener(l -> cbSelectedOnChange());
         btnRemove.addActionListener(l -> btnRemoveAction());
 
@@ -78,10 +78,6 @@ class RowComponent extends JPanel {
         add(cValue, index);
         revalidate();
         repaint();
-    }
-
-    private void txtKeyOnChange(){
-        item.setKey(txtKey.getText());
     }
 
     private void cbSelectedOnChange(){

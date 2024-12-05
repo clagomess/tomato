@@ -9,6 +9,7 @@ import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.ui.RequestSaveUI;
+import com.github.clagomess.tomato.ui.component.ListenableTextFieldComponent;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
 import com.github.clagomess.tomato.util.UIPublisherUtil;
@@ -28,7 +29,7 @@ public class TabRequestUI extends JPanel {
     private final JComboBox<HttpMethodEnum> cbHttpMethod = new JComboBox<>(
             HttpMethodEnum.values()
     );
-    private final JTextField txtRequestUrl = new JTextField();
+    private final ListenableTextFieldComponent txtRequestUrl = new ListenableTextFieldComponent();
     private final JButton btnSendRequest = new JButton("Send");
     private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
     private final ButtonGroup bgBodyType = new ButtonGroup();
@@ -58,16 +59,15 @@ public class TabRequestUI extends JPanel {
         lblRequestName.setText(getLabelRequestName());
         cbHttpMethod.setSelectedItem(requestDto.getMethod());
         txtRequestUrl.setText(requestDto.getUrl());
-        cbHttpMethod.setSelectedItem(requestDto.getMethod());
 
         // listeners
+        cbHttpMethod.addActionListener(l -> cbHttpMethodOnChange());
+        txtRequestUrl.addOnChange(requestDto::setUrl);
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
         UIPublisherUtil.getInstance().getSaveRequestFIList().add(dto -> { //@TODO: detruir quando remover tab
            if(dto.getId().equals(requestDto.getId())) return;
         });
-
-        // @TODO: add listener for: lblRequestName, cbHttpMethod, txtRequestUrl, cbHttpMethod
     }
 
     private String getLabelRequestName(){
@@ -82,6 +82,10 @@ public class TabRequestUI extends JPanel {
                     requestDto.getName()
             ); //@TODO: modify UI
         }
+    }
+
+    private void cbHttpMethodOnChange(){
+        requestDto.setMethod((HttpMethodEnum) cbHttpMethod.getSelectedItem());
     }
 
     public void btnSendRequestAction(){
