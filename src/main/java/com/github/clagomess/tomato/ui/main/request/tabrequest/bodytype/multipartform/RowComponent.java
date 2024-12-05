@@ -16,7 +16,7 @@ import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 
 @Getter
 @Setter
-public class RowComponent extends JPanel {
+class RowComponent extends JPanel {
     private final Container parent;
     private final RequestDto requestDto;
     private final RequestDto.MultiPartFormItem item;
@@ -55,11 +55,15 @@ public class RowComponent extends JPanel {
         btnRemove.addActionListener(l -> btnRemoveAction());
 
         // layout
-        setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill]", ""));
-        add(cbType);
-        add(txtKey);
-        add(cValue);
-        add(cbSelected);
+        setLayout(new MigLayout(
+                "insets 0 0 0 0",
+                "[][][][grow, fill][]",
+                ""
+        ));
+        add(cbSelected, "width 25:25:25");
+        add(cbType, "width 70:70:70");
+        add(txtKey, "width 100:100:100");
+        add(cValue, "width 100%");
         add(btnRemove, "wrap");
     }
 
@@ -67,9 +71,11 @@ public class RowComponent extends JPanel {
         item.setType((KeyValueTypeEnum) cbType.getSelectedItem());
 
         int index = ComponentUtil.getComponentIndex(this, cValue);
-
         remove(index);
-        add(createCValue(item.getType(), item.getValue()), index);
+
+        cValue = createCValue(item.getType(), item.getValue());
+
+        add(cValue, index);
         revalidate();
         repaint();
     }

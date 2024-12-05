@@ -11,6 +11,7 @@ import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.ui.RequestSaveUI;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.*;
+import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.multipartform.MultiPartFormUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
 import com.github.clagomess.tomato.util.UIPublisherUtil;
 import lombok.Getter;
