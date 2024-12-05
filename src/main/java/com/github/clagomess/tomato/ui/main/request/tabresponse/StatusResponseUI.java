@@ -6,6 +6,10 @@ import com.github.clagomess.tomato.factory.DialogFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 public class StatusResponseUI extends JPanel {
     public StatusResponseUI(){
@@ -26,14 +30,23 @@ public class StatusResponseUI extends JPanel {
             return;
         }
 
-        add(createContainer(getHttpStatusColor(dto.getHttpResponse().getStatus()), String.format(
-                "%s %s",
-                dto.getHttpResponse().getStatus(),
-                dto.getHttpResponse().getStatusReason()
-        )));
+        add(createContainer(getHttpStatusColor(
+                dto.getHttpResponse().getStatus()),
+                String.format(
+                    "%s %s",
+                    dto.getHttpResponse().getStatus(),
+                    dto.getHttpResponse().getStatusReason()
+                )
+        ));
 
-        add(createContainer(Color.GRAY, String.format("%ss", dto.getHttpResponse().getRequestTime()))); //@TODO: format ms
-        add(createContainer(Color.GRAY, String.format("%sKB", dto.getHttpResponse().getBodySize()))); //@TODO: format KB
+        add(createContainer(
+                Color.GRAY,
+                formatResponseTime(dto.getHttpResponse().getRequestTime())
+        ));
+        add(createContainer(
+                Color.GRAY,
+                formatResponseBodySize(dto.getHttpResponse().getBodySize())
+        ));
 
         revalidate();
         repaint();
@@ -56,5 +69,27 @@ public class StatusResponseUI extends JPanel {
         panel.add(label);
 
         return panel;
+    }
+
+    protected String formatResponseTime(long duration){
+        if(duration <= 1000) return duration + "ms";
+
+        return Duration.of(duration, ChronoUnit.MILLIS)
+                .toString()
+                .substring(2)
+                .replaceAll("(\\d[HMS])(?!$)", "$1 ")
+                .toLowerCase();
+    }
+
+    protected String formatResponseBodySize(long size){
+        if(size <= 1024) return size + "B";
+
+        if(size <= Math.pow(1024, 2)){
+            return new BigDecimal(size / 1024)
+                    .setScale(2, RoundingMode.HALF_UP) + "KB";
+        }
+
+        return new BigDecimal(size / Math.pow(1024, 2))
+                .setScale(2, RoundingMode.HALF_UP) + "MB";
     }
 }
