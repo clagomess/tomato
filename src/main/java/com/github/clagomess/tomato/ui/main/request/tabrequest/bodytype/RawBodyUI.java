@@ -34,7 +34,7 @@ public class RawBodyUI extends JPanel implements BodyTypeUI {
         textArea.setSyntaxEditingStyle(contentType.getSyntaxStyle());
     }
 
-    @Override
+//    @Override
     public RequestDto.Body getNewDtoFromUI() {
         RequestDto.Body body = new RequestDto.Body();
         body.setBodyType(BodyTypeEnum.RAW);

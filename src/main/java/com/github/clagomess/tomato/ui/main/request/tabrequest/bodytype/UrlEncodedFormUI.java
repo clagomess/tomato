@@ -9,7 +9,6 @@ public class UrlEncodedFormUI extends RequestKeyValueTableUI implements BodyType
         super(keyColumnLabel, valueColumnLabel);
     }
 
-    @Override
     public RequestDto.Body getNewDtoFromUI() {
         RequestDto.Body body = new RequestDto.Body();
         body.setBodyType(BodyTypeEnum.URL_ENCODED_FORM);

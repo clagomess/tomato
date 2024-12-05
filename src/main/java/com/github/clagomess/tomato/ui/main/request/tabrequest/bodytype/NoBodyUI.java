@@ -6,7 +6,7 @@ import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import javax.swing.*;
 
 public class NoBodyUI extends JPanel implements BodyTypeUI {
-    @Override
+//    @Override
     public RequestDto.Body getNewDtoFromUI() {
         RequestDto.Body body = new RequestDto.Body();
         body.setBodyType(BodyTypeEnum.NO_BODY);

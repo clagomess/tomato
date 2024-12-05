@@ -27,7 +27,9 @@ public class TabRequestUI extends JPanel {
     private final TabResponseUI tabResponseUi;
 
     private final JLabel lblRequestName = new JLabel("FOO - API / /api/get/test");
-    private final JComboBox<HttpMethodEnum> cbHttpMethod = new JComboBox<>();
+    private final JComboBox<HttpMethodEnum> cbHttpMethod = new JComboBox<>(
+            HttpMethodEnum.values()
+    );
     private final JTextField txtRequestUrl = new JTextField();
     private final JButton btnSendRequest = new JButton("Send");
     private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
@@ -57,7 +59,6 @@ public class TabRequestUI extends JPanel {
         add(tpRequest, "span, height 100%");
 
         // data handling
-        Arrays.stream(HttpMethodEnum.values()).forEach(cbHttpMethod::addItem);
         fillUIFromRequestDto();
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
@@ -77,19 +78,6 @@ public class TabRequestUI extends JPanel {
 
         cbHttpMethod.setSelectedItem(requestDto.getMethod());
         txtRequestUrl.setText(requestDto.getUrl());
-    }
-
-    private RequestDto getNewDtoFromUI(){
-        RequestDto dto = new RequestDto();
-        dto.setId(requestDto.getId());
-        dto.setName(lblRequestName.getText());
-        dto.setMethod((HttpMethodEnum) cbHttpMethod.getSelectedItem());
-        dto.setUrl(txtRequestUrl.getText());
-        dto.setHeaders(tblHeader.getNewListDtoFromUI());
-        dto.setCookies(tblCookie.getNewListDtoFromUI());
-        dto.setBody(bodyTypeUI.getNewDtoFromUI());
-
-        return dto;
     }
 
     public JPanel getBody(){
@@ -122,28 +110,22 @@ public class TabRequestUI extends JPanel {
     }
 
     private BodyTypeUI getBodyType(BodyTypeEnum bodyType){
-        switch (bodyType){
-            case MULTIPART_FORM:
-                return new MultiPartFormUI();
-            case URL_ENCODED_FORM:
-                return new UrlEncodedFormUI("Key", "Value");
-            case RAW:
-                return new RawBodyUI();
-            case BINARY:
-                return new BinaryUI();
-            default:
-                return new NoBodyUI();
-        }
+        return switch (bodyType) {
+            case MULTIPART_FORM -> new MultiPartFormUI(requestDto);
+            case URL_ENCODED_FORM -> new UrlEncodedFormUI("Key", "Value");
+            case RAW -> new RawBodyUI();
+            case BINARY -> new BinaryUI();
+            default -> new NoBodyUI();
+        };
     }
 
     public void btnSendRequestAction(){
         btnSendRequest.setEnabled(false);
         tabResponseUi.reset();
-        RequestDto dto = getNewDtoFromUI();
 
         new Thread(() -> {
             try {
-                ResponseDto responseDto = HttpService.getInstance().perform(dto);
+                ResponseDto responseDto = HttpService.getInstance().perform(requestDto);
                 tabResponseUi.update(responseDto);
             } catch (Throwable e) {
                 DialogFactory.createDialogException(this, e);
@@ -154,10 +136,9 @@ public class TabRequestUI extends JPanel {
     }
 
     public void btnSaveRequestAction(){
-        RequestDto dto = getNewDtoFromUI();
-        CollectionDto collection = DataService.getInstance().getCollectionByResquestId(dto.getId());
+        CollectionDto collection = DataService.getInstance().getCollectionByResquestId(requestDto.getId());
         if(collection == null){
-            new RequestSaveUI(dto);
+            new RequestSaveUI(requestDto);
             return;
         }
 
@@ -165,10 +146,10 @@ public class TabRequestUI extends JPanel {
             DataService.getInstance().saveRequest(
                     DataService.getInstance().getCurrentWorkspace().getId(),
                     collection.getId(),
-                    dto
+                    requestDto
             );
-            collection.addOrReplaceRequest(dto);
-            UIPublisherUtil.getInstance().notifySaveRequest(dto);
+            collection.addOrReplaceRequest(requestDto);
+            UIPublisherUtil.getInstance().notifySaveRequest(requestDto);
             //@TODO: atualizar na arvore
             //@TODO: atulizar na ui
         }catch (Throwable e){

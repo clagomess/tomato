@@ -41,7 +41,7 @@ public class RequestDto extends TomatoMetadataDto {
         private String raw;
         private String binaryFilePath;
         private List<KeyValueItem> urlEncodedForm;
-        private List<MultiPartFormItem> multiPartForm;
+        private List<MultiPartFormItem> multiPartForm = new ArrayList<>();
 
         public FormDataMultiPart toMultiPartForm(){
             FormDataMultiPart form = new FormDataMultiPart();

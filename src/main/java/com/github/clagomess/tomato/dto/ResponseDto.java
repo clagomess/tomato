@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Data
 public class ResponseDto {
-    private String requestId;
+    private String requestId; //@TODO: mudar para UUID
     private LocalDateTime createTime = LocalDateTime.now();
 
     private boolean requestStatus = false;
