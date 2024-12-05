@@ -5,8 +5,8 @@ import lombok.Getter;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
+@Getter
 public class LoggerHandlerUtil extends Handler {
-    @Getter
     private final StringBuilder logText = new StringBuilder();
 
     @Override
@@ -15,7 +15,9 @@ public class LoggerHandlerUtil extends Handler {
     }
 
     @Override
-    public void flush() {}
+    public void flush() {
+        logText.delete(0, logText.length());
+    }
 
     @Override
     public void close() throws SecurityException {}

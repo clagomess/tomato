@@ -143,7 +143,7 @@ public class TabRequestUI extends JPanel {
 
         new Thread(() -> {
             try {
-                ResponseDto responseDto = new HttpService().perform(dto);
+                ResponseDto responseDto = HttpService.getInstance().perform(dto);
                 tabResponseUi.update(responseDto);
             } catch (Throwable e) {
                 DialogFactory.createDialogException(this, e);

@@ -3,7 +3,10 @@ package com.github.clagomess.tomato.service;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.util.LoggerHandlerUtil;
-import jakarta.ws.rs.client.*;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
@@ -16,17 +19,18 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 import javax.net.ssl.SSLContext;
 import java.io.File;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Slf4j
 public class HttpService {
-    private final LoggerHandlerUtil loggerHandler = new LoggerHandlerUtil();
+    private static final HttpService instance = new HttpService();
+    public synchronized static HttpService getInstance(){
+        return instance;
+    }
 
-    private ClientConfig getClientConfig(){
+    private final Client client;
+    private HttpService() {
         ClientConfig config = new ClientConfig();
         config.property(ClientProperties.FOLLOW_REDIRECTS, true);
         config.property(ClientProperties.CONNECT_TIMEOUT, 1000 * 10);
@@ -40,24 +44,35 @@ public class HttpService {
 //            config.property(ClientProperties.PROXY_PASSWORD, restParam.getProxy().getPassword());
 //        }
 
-        return config;
+        ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+        clientBuilder.withConfig(config);
+        clientBuilder.sslContext(getSslContext());
+
+        client = clientBuilder.build();
     }
 
+    private final LoggerHandlerUtil loggerHandler = new LoggerHandlerUtil();
     private LoggingFeature getLogging(){
         Logger logger = Logger.getLogger(this.getClass().getName());
         logger.addHandler(loggerHandler);
-        return new LoggingFeature(logger, Level.INFO, LoggingFeature.Verbosity.PAYLOAD_TEXT, null);
+
+        return new LoggingFeature(
+                logger,
+                Level.INFO,
+                LoggingFeature.Verbosity.PAYLOAD_TEXT,
+                null
+        );
     }
 
-    private SSLContext getSslContext() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
-        return SSLContexts.custom().loadTrustMaterial(null, (TrustStrategy) (x509Certificates, authType) -> true).build();
-    }
-
-    private Client getClient() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
-        ClientBuilder clientBuilder = ClientBuilder.newBuilder();
-        clientBuilder.withConfig(getClientConfig());
-        clientBuilder.sslContext(getSslContext());
-        return clientBuilder.build();
+    private static SSLContext getSslContext() {
+        try {
+            return SSLContexts.custom().loadTrustMaterial(
+                    null,
+                    (TrustStrategy) (x509Certificates, authType) -> true
+            ).build();
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     private static Entity<?> buildEntity(RequestDto dto){
@@ -79,8 +94,7 @@ public class HttpService {
         ResponseDto result = new ResponseDto(dto.getId());
 
         try {
-            WebTarget webTarget = getClient().target(dto.getUrl());
-            Invocation.Builder invocationBuilder = webTarget.request();
+            Invocation.Builder invocationBuilder = client.target(dto.getUrl()).request();
 
             // set headers
             invocationBuilder.headers(dto.toMultivaluedMapHeaders());
@@ -88,46 +102,45 @@ public class HttpService {
             // set cookies
             dto.getCookies().forEach(item -> invocationBuilder.cookie(item.getKey(), item.getValue()));
 
-            Response response;
+            loggerHandler.flush();
             long requestTime = System.currentTimeMillis();
 
-            switch (dto.getMethod()){  //@TODO: colocar try-closeable
-                case POST:
-                    response = invocationBuilder.post(buildEntity(dto));
-                    break;
-                case PUT:
-                    response = invocationBuilder.put(buildEntity(dto));
-                    break;
-                case DELETE:
-                    response = invocationBuilder.delete();
-                    break;
-                case GET:
-                default:
-                    response = invocationBuilder.get();
-                    break;
+            try(Response response = performRequest(invocationBuilder, dto)){
+                var resultHttp = new ResponseDto.Response();
+                resultHttp.setRequestTime(System.currentTimeMillis() - requestTime);
+
+                resultHttp.setBody(response.readEntity(byte[].class));
+                resultHttp.setBodySize(resultHttp.getBody().length);
+                resultHttp.setStatus(response.getStatus());
+                resultHttp.setStatusReason(response.getStatusInfo().getReasonPhrase());
+                resultHttp.setHeaders(response.getStringHeaders());
+                resultHttp.setCookies(response.getCookies());
+                resultHttp.setContentType(response.getMediaType());
+
+                result.setRequestStatus(true);
+                result.setHttpResponse(resultHttp);
             }
-            requestTime = System.currentTimeMillis() - requestTime;
-
-            byte[] responseContent = response.readEntity(byte[].class);
-
-            result.setHttpResponse(new ResponseDto.Response());
-            result.getHttpResponse().setRequestTime(requestTime);
-            result.getHttpResponse().setBodySize(responseContent.length);
-            result.getHttpResponse().setStatus(response.getStatus());
-            result.getHttpResponse().setStatusReason(response.getStatusInfo().getReasonPhrase());
-            result.getHttpResponse().setHeaders(response.getStringHeaders());
-            result.getHttpResponse().setCookies(response.getCookies());
-            result.getHttpResponse().setContentType(response.getMediaType());
-            result.getHttpResponse().setBody(responseContent);
-
-            result.setRequestStatus(true);
         } catch (Throwable e) {
             result.setRequestMessage(e.getMessage());
-            log.error(HttpService.class.getName(), e);
+            log.error(log.getName(), e);
         } finally {
             result.setRequestDebug(loggerHandler.getLogText().toString());
         }
 
         return result;
+    }
+
+    private Response performRequest(Invocation.Builder invocationBuilder, RequestDto dto){
+        switch (dto.getMethod()){
+            case POST:
+                return invocationBuilder.post(buildEntity(dto));
+            case PUT:
+                return invocationBuilder.put(buildEntity(dto));
+            case DELETE:
+                return invocationBuilder.delete();
+            case GET:
+            default:
+                return invocationBuilder.get();
+        }
     }
 }

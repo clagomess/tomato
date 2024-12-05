@@ -17,6 +17,7 @@ import java.util.Collections;
 
 public class HttpServiceTest {
     private static ClientAndServer mockServer;
+    private final HttpService httpService = HttpService.getInstance();
 
     @BeforeAll
     public static void setup(){
@@ -52,7 +53,6 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/get_response_json");
         request.setMethod(HttpMethodEnum.GET);
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
 
         Assertions.assertTrue(response.isRequestStatus());
@@ -83,7 +83,6 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/get_response_binary");
         request.setMethod(HttpMethodEnum.GET);
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
 
         Assertions.assertTrue(response.isRequestStatus());
@@ -114,7 +113,6 @@ public class HttpServiceTest {
         request.setMethod(HttpMethodEnum.GET);
         request.setHeaders(Collections.singletonList(new RequestDto.KeyValueItem("foo", "bar")));
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
     }
@@ -138,7 +136,6 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/get_headers");
         request.setMethod(HttpMethodEnum.GET);
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
         Assertions.assertTrue(response.getHttpResponse().getHeaders().keySet().stream().anyMatch("foo"::equals));
@@ -161,7 +158,6 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/follow_redirect");
         request.setMethod(HttpMethodEnum.GET);
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
         Assertions.assertEquals("hello", response.getHttpResponse().getBodyAsString());
@@ -173,7 +169,6 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8110/");
         request.setMethod(HttpMethodEnum.GET);
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
 
         Assertions.assertNull(response.getHttpResponse());
@@ -198,7 +193,6 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/conection_drop");
         request.setMethod(HttpMethodEnum.GET);
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
 
         Assertions.assertNull(response.getHttpResponse());
@@ -227,7 +221,6 @@ public class HttpServiceTest {
         request.setMethod(HttpMethodEnum.GET);
         request.getCookies().add(new RequestDto.KeyValueItem("foo", "bar"));
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
     }
@@ -251,7 +244,6 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/get_cookie");
         request.setMethod(HttpMethodEnum.GET);
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
         Assertions.assertEquals("bar", response.getHttpResponse().getCookies().get("foo"));
@@ -282,7 +274,6 @@ public class HttpServiceTest {
         request.getBody().setBodyType(BodyTypeEnum.URL_ENCODED_FORM);
         request.getBody().setUrlEncodedForm(Collections.singletonList(new RequestDto.KeyValueItem("foo", "bar")));
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
     }
@@ -306,7 +297,6 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/get_with_query_param?foo=bar");
         request.setMethod(HttpMethodEnum.GET);
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
     }
@@ -331,7 +321,6 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/get_with_response_500");
         request.setMethod(HttpMethodEnum.GET);
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(500, response.getHttpResponse().getStatus());
         Assertions.assertEquals("hello", response.getHttpResponse().getBodyAsString());
@@ -381,7 +370,6 @@ public class HttpServiceTest {
         request.getBody().setBodyContentType("application/json");
         request.getBody().setRaw("{\"foo\": \"bar\"}");
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
     }
@@ -409,7 +397,6 @@ public class HttpServiceTest {
         request.getBody().setBodyContentType("application/octet-stream");
         request.getBody().setBinaryFilePath(".gitignore");
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
     }
@@ -438,7 +425,6 @@ public class HttpServiceTest {
         request.getBody().setBodyContentType("application/json");
         request.getBody().setRaw("{\"foo\": \"bar\"}");
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
     }
@@ -461,7 +447,6 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/delete");
         request.setMethod(HttpMethodEnum.DELETE);
 
-        HttpService httpService = new HttpService();
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
     }

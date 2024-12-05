@@ -78,7 +78,7 @@ public class TabResponseUI extends JPanel {
             String syntax = EditorFactory.createSyntaxStyleFromContentType(
                     responseDto.getHttpResponse().getContentType().toString()
             );
-            txtPreview.setSyntaxEditingStyle(syntax);
+            txtPreview.setSyntaxEditingStyle(syntax); //@TODO: crash com frequencia
         }
 
         statusResponseUI.update(responseDto);
