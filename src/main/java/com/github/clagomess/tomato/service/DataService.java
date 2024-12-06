@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.*;
+import com.github.clagomess.tomato.exception.DirectoryCreateException;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,43 +36,62 @@ public class DataService {
         return optCollection.orElse(null);
     }
 
-    protected String getTomatoHomeDir(){
-        String path = System.getProperty("user.home") + File.separator + ".tomato";
-        File file = new File(path);
-        if(!file.isDirectory() && !file.mkdir()){
-            throw new RuntimeException("Error on create tomato home dir at: " + path);
+    protected File getTomatoHomeDir(){
+        File homeDir = new File(System.getProperty("user.home"), ".tomato");
+
+        if(!homeDir.isDirectory() && !homeDir.mkdir()){
+            throw new DirectoryCreateException(homeDir);
         }
 
-        return path;
+        return homeDir;
     }
 
-    protected String getTomatoDir(String dirPath){
-        String home = getTomatoHomeDir();
+    protected File getTomatoDataDir(){
+        File dataDir = new File(
+                getTomatoHomeDir(),
+                "data"
+        );
 
-        String absoluteDirPath = home + File.separator + dirPath;
-        File file = new File(absoluteDirPath);
-        if(!file.isDirectory() && !file.mkdirs()){
-            throw new RuntimeException("Error on create tomato dir at: " + absoluteDirPath);
+        if(!dataDir.isDirectory() && !dataDir.mkdir()){
+            throw new DirectoryCreateException(dataDir);
         }
 
-        return absoluteDirPath;
+        return dataDir;
     }
 
-    private String getWorkspaceDir(UUID workspaceId){
-        return getTomatoDir(String.format(
-                "data%sworkspace_%s",
-                File.separator, workspaceId
-        ));
+    private File getWorkspaceDir(UUID workspaceId){
+        File workspaceDir = new File(
+                getTomatoDataDir(),
+                String.format(
+                        "workspace_%s",
+                        workspaceId
+                )
+        );
+
+        if(!workspaceDir.isDirectory() && !workspaceDir.mkdir()){
+            throw new DirectoryCreateException(workspaceDir);
+        }
+
+        return workspaceDir;
     }
 
-    private String getCollectionDir(UUID workspaceId, UUID collectionId){
-        return getTomatoDir(String.format(
-                "data%sworkspace_%s%scollection_%s",
-                File.separator, workspaceId, File.separator, collectionId
-        ));
+    private File getCollectionDir(UUID workspaceId, UUID collectionId){
+        File collectionDir = new File(
+                getWorkspaceDir(workspaceId),
+                String.format(
+                        "collection_%s",
+                        collectionId
+                )
+        );
+
+        if(!collectionDir.isDirectory() && !collectionDir.mkdir()){
+            throw new DirectoryCreateException(collectionDir);
+        }
+
+        return collectionDir;
     }
 
-    private void writeFile(String filepath, Object content) throws IOException {
+    private void writeFile(File filepath, Object content) throws IOException {
         log.info("WRITE: {}", filepath);
 
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(filepath))) {
@@ -81,10 +101,10 @@ public class DataService {
         }
     }
 
-    public void writeFile(File file, byte[] content) throws IOException {
-        log.info("WRITE: {}", file.getAbsolutePath());
+    public void writeFile(File filepath, byte[] content) throws IOException {
+        log.info("WRITE: {}", filepath);
 
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(filepath))) {
             int i = 0;
             while (i < content.length) {
                 bw.write(content[i]); //@TODO: performance issue
@@ -93,21 +113,32 @@ public class DataService {
         }
     }
 
-    protected void saveTomatoConfig(TomatoConfigDto config) throws IOException {
-        String homeDir = getTomatoHomeDir();
-        writeFile(homeDir + File.separator + "tomato.config.json", config);
+    protected void saveConfig(TomatoConfigDto config) throws IOException {
+        writeFile(new File(
+                getTomatoHomeDir(),
+                "tomato.config.json"
+        ), config);
     }
 
     protected void saveWorkspace(List<WorkspaceDto> workspaces) throws IOException {
-        String dataDir = getTomatoDir("data");
-        writeFile(dataDir + File.separator + "workspaces.json", workspaces);
+        writeFile(new File(
+                getTomatoDataDir(),
+                "workspaces.json"
+        ), workspaces);
     }
 
     protected void saveCollection(
             UUID workspaceId,
             CollectionDto collection
     ) throws IOException {
-        String collectionFilename = getWorkspaceDir(workspaceId) + File.separator + "collection_" + collection.getId() + ".json";
+        File collectionFilename = new File(
+                getCollectionDir(workspaceId, collection.getId()),
+                String.format(
+                        "collection_%s.json",
+                        collection.getId()
+                )
+        );
+
         writeFile(collectionFilename, collection);
     }
 
@@ -115,7 +146,11 @@ public class DataService {
             UUID workspaceId,
             List<EnvironmentDto> environments
     ) throws IOException {
-        String environmentsFilename = getWorkspaceDir(workspaceId) + File.separator + "environments.json";
+        File environmentsFilename = new File(
+                getWorkspaceDir(workspaceId),
+                "environments.json"
+        );
+
         writeFile(environmentsFilename, environments);
     }
 
@@ -124,63 +159,98 @@ public class DataService {
             UUID collectionId,
             RequestDto request
     ) throws IOException {
-        String collectionDir = getCollectionDir(workspaceId, collectionId);
-        String requestFilename = collectionDir + File.separator + "request_" + request.getId() + ".json";
+        File requestFilename = new File(
+                getCollectionDir(workspaceId, collectionId),
+                String.format(
+                        "request_%s.json",
+                        request.getId()
+                )
+        );
+
         writeFile(requestFilename, request);
     }
 
-    private <T> T readFile(String filepath, TypeReference<T> type) throws IOException {
-        if(!new File(filepath).isFile()) return null;
+    private <T> Optional<T> readFile(File filepath, TypeReference<T> type) throws IOException {
         log.info("READ: {}", filepath);
 
+        if(!filepath.isFile()) return Optional.empty();
+
         try(BufferedReader br = new BufferedReader(new FileReader(filepath))) {
-            return ObjectMapperUtil.getInstance()
-                    .readValue(br, type);
+            return Optional.of(
+                    ObjectMapperUtil.getInstance()
+                            .readValue(br, type)
+            );
         }
     }
 
     protected List<WorkspaceDto> readAllContent() throws IOException {
-        String workspaceFile = getTomatoDir("data") + File.separator + "workspaces.json";
-        List<WorkspaceDto> workspaces = readFile(workspaceFile, new TypeReference<List<WorkspaceDto>>(){});
-        if(workspaces == null) return null;
+        File workspaceFile = new File(
+                getTomatoDataDir(),
+                "workspaces.json"
+        );
 
-        for(WorkspaceDto workspace : workspaces){
-            File workspaceDir = new File(getWorkspaceDir(workspace.getId()));
+        Optional<List<WorkspaceDto>> workspaces = readFile(
+                workspaceFile,
+                new TypeReference<List<WorkspaceDto>>(){}
+        );
+        if(workspaces.isEmpty()) return List.of();
+
+        for(WorkspaceDto workspace : workspaces.get()){
+            File workspaceDir = getWorkspaceDir(workspace.getId());
             if(!workspaceDir.isDirectory()) continue;
 
             for(File collectionFile : Objects.requireNonNull(workspaceDir.listFiles())){
                 if(!collectionFile.isFile() || !collectionFile.getName().startsWith("collection")) continue;
-                CollectionDto collection = readFile(collectionFile.getAbsolutePath(), new TypeReference<CollectionDto>(){});
+                Optional<CollectionDto> collection = readFile(
+                        collectionFile,
+                        new TypeReference<CollectionDto>(){}
+                );
+                if(collection.isEmpty()) continue;
 
                 // get requests
-                File collectionDir = new File(getCollectionDir(workspace.getId(), collection.getId()));
+                File collectionDir = getCollectionDir(
+                        workspace.getId(),
+                        collection.get().getId()
+                );
                 if(!collectionDir.isDirectory()) continue;
                 for(File requestFile : Objects.requireNonNull(collectionDir.listFiles())){
                     if(!requestFile.isFile() || !requestFile.getName().startsWith("request")) continue;
-                    RequestDto request = readFile(requestFile.getAbsolutePath(), new TypeReference<RequestDto>(){});
-                    collection.getRequests().add(request);
+                    Optional<RequestDto> request = readFile(
+                            requestFile,
+                            new TypeReference<RequestDto>(){}
+                    );
+                    if(request.isEmpty()) continue;
+                    collection.get().getRequests().add(request.get());
                 }
 
                 // add collection
-                workspace.getCollections().add(collection);
+                workspace.getCollections().add(collection.get());
             }
 
             // getenvs
-            String environmentFilename = workspaceDir + File.separator + "environments.json";
-            List<EnvironmentDto> environmentList = readFile(environmentFilename, new TypeReference<List<EnvironmentDto>>(){});
-            if(environmentList != null) workspace.setEnvironments(environmentList);
+            File environmentFilename = new File(
+                    workspaceDir,
+                    "environments.json"
+            );
+
+            readFile(
+                    environmentFilename,
+                    new TypeReference<List<EnvironmentDto>>(){}
+            ).ifPresent(workspace::setEnvironments);
         }
 
-        return workspaces;
+        return workspaces.get();
     }
 
     public void startLoad() throws IOException {
         this.workspaces = readAllContent();
-        this.configuration = readFile(getTomatoHomeDir() + File.separator + "tomato.config.json", new TypeReference<TomatoConfigDto>(){});
-
-        if(this.configuration == null){
-            this.configuration = new TomatoConfigDto();
-        }
+        this.configuration = readFile(
+                new File(
+                        getTomatoHomeDir(),
+                        "tomato.config.json"
+                ),
+                new TypeReference<TomatoConfigDto>(){}
+        ).orElse(new TomatoConfigDto());
 
         if(this.workspaces == null || this.workspaces.isEmpty()){
             this.workspaces = Collections.singletonList(new WorkspaceDto());
@@ -190,7 +260,7 @@ public class DataService {
         if(this.configuration.getCurrentWorkspaceId() == null){
             this.currentWorkspace = this.workspaces.get(0);
             this.configuration.setCurrentWorkspaceId(this.workspaces.get(0).getId());
-            this.saveTomatoConfig(this.configuration);
+            this.saveConfig(this.configuration);
         }else{
             this.currentWorkspace = this.workspaces.stream()
                     .filter(item -> item.getId().equals(this.configuration.getCurrentWorkspaceId()))

@@ -40,15 +40,15 @@ public class DataServiceTest {
     }
 
     @Test
-    public void getTomatoDir(){
-        Assertions.assertNotNull(DataService.getInstance().getTomatoDir("data"));
+    public void getTomatoDataDir(){
+        Assertions.assertNotNull(DataService.getInstance().getTomatoDataDir());
     }
 
     @Test
-    public void saveTomatoConfig() throws IOException {
+    public void saveConfig() throws IOException {
         val dto = new TomatoConfigDto();
         dto.setCurrentWorkspaceId(workspace.getId());
-        DataService.getInstance().saveTomatoConfig(dto);
+        DataService.getInstance().saveConfig(dto);
     }
 
     @Test
