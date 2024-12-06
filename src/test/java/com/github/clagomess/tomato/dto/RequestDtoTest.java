@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -31,7 +31,7 @@ public class RequestDtoTest {
 
     @Test
     public void toJson() throws JsonProcessingException {
-        String val = new ObjectMapper().writeValueAsString(getFilledDto());
+        String val = ObjectMapperUtil.getInstance().writeValueAsString(getFilledDto());
         log.info("{}", val);
     }
 

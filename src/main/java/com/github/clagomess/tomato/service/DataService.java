@@ -1,12 +1,11 @@
 package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.clagomess.tomato.dto.*;
+import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.*;
@@ -26,7 +25,7 @@ public class DataService {
         return instance;
     }
 
-    public CollectionDto getCollectionByResquestId(String requestId) {
+    public CollectionDto getCollectionByResquestId(UUID requestId) {
         Optional<CollectionDto> optCollection = currentWorkspace.getCollections().stream()
                 .filter(collection ->
                         collection.getRequests().stream()
@@ -58,14 +57,14 @@ public class DataService {
         return absoluteDirPath;
     }
 
-    private String getWorkspaceDir(String workspaceId){
+    private String getWorkspaceDir(UUID workspaceId){
         return getTomatoDir(String.format(
                 "data%sworkspace_%s",
                 File.separator, workspaceId
         ));
     }
 
-    private String getCollectionDir(String workspaceId, String collectionId){
+    private String getCollectionDir(UUID workspaceId, UUID collectionId){
         return getTomatoDir(String.format(
                 "data%sworkspace_%s%scollection_%s",
                 File.separator, workspaceId, File.separator, collectionId
@@ -73,17 +72,22 @@ public class DataService {
     }
 
     private void writeFile(String filepath, Object content) throws IOException {
-        String jsonContent = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(content);
+        log.info("WRITE: {}", filepath);
+
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(filepath))) {
-            bw.write(jsonContent);
+            ObjectMapperUtil.getInstance()
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValue(bw, content);
         }
     }
 
     public void writeFile(File file, byte[] content) throws IOException {
+        log.info("WRITE: {}", file.getAbsolutePath());
+
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             int i = 0;
             while (i < content.length) {
-                bw.write(content[i]);
+                bw.write(content[i]); //@TODO: performance issue
                 i++;
             }
         }
@@ -99,17 +103,27 @@ public class DataService {
         writeFile(dataDir + File.separator + "workspaces.json", workspaces);
     }
 
-    protected void saveCollection(String workspaceId, CollectionDto collection) throws IOException {
+    protected void saveCollection(
+            UUID workspaceId,
+            CollectionDto collection
+    ) throws IOException {
         String collectionFilename = getWorkspaceDir(workspaceId) + File.separator + "collection_" + collection.getId() + ".json";
         writeFile(collectionFilename, collection);
     }
 
-    protected void saveEnvironment(String workspaceId, List<EnvironmentDto> environments) throws IOException {
+    protected void saveEnvironment(
+            UUID workspaceId,
+            List<EnvironmentDto> environments
+    ) throws IOException {
         String environmentsFilename = getWorkspaceDir(workspaceId) + File.separator + "environments.json";
         writeFile(environmentsFilename, environments);
     }
 
-    public void saveRequest(String workspaceId, String collectionId, RequestDto request) throws IOException {
+    public void saveRequest(
+            UUID workspaceId,
+            UUID collectionId,
+            RequestDto request
+    ) throws IOException {
         String collectionDir = getCollectionDir(workspaceId, collectionId);
         String requestFilename = collectionDir + File.separator + "request_" + request.getId() + ".json";
         writeFile(requestFilename, request);
@@ -117,16 +131,12 @@ public class DataService {
 
     private <T> T readFile(String filepath, TypeReference<T> type) throws IOException {
         if(!new File(filepath).isFile()) return null;
+        log.info("READ: {}", filepath);
 
-        StringBuilder sb = new StringBuilder();
         try(BufferedReader br = new BufferedReader(new FileReader(filepath))) {
-            int value;
-            while ((value = br.read()) != -1) {
-                sb.append((char) value);
-            }
+            return ObjectMapperUtil.getInstance()
+                    .readValue(br, type);
         }
-
-        return new ObjectMapper().readValue(sb.toString(), type);
     }
 
     protected List<WorkspaceDto> readAllContent() throws IOException {
@@ -177,7 +187,7 @@ public class DataService {
             saveWorkspace(this.workspaces);
         }
 
-        if(StringUtils.isBlank(this.configuration.getCurrentWorkspaceId())){
+        if(this.configuration.getCurrentWorkspaceId() == null){
             this.currentWorkspace = this.workspaces.get(0);
             this.configuration.setCurrentWorkspaceId(this.workspaces.get(0).getId());
             this.saveTomatoConfig(this.configuration);

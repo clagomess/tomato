@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.UUID;
 
 public class DataServiceTest {
     private static WorkspaceDto workspace;
@@ -28,7 +29,7 @@ public class DataServiceTest {
 
     @Test
     public void getCollectionNameByResquestId(){
-        String requestId = workspace.getCollections().get(0).getRequests().get(0).getId();
+        UUID requestId = workspace.getCollections().get(0).getRequests().get(0).getId();
         val result = DataService.getInstance().getCollectionByResquestId(requestId);
         Assertions.assertEquals(workspace.getCollections().get(0).getName(), result);
     }
