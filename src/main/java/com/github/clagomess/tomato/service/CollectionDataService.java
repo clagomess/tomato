@@ -60,7 +60,7 @@ public class CollectionDataService {
                 }).filter(Objects::nonNull);
     }
 
-    public Stream<CollectionTreeDto> getWorkspaceCollectionTree(
+    public Optional<CollectionTreeDto> getWorkspaceCollectionTree(
             String workspaceId
     ) throws IOException {
         File workspaceDir = new File(
@@ -68,8 +68,12 @@ public class CollectionDataService {
                 String.format("workspace-%s", workspaceId)
         );
 
-        if(!workspaceDir.isDirectory()) return Stream.empty();
+        if(!workspaceDir.isDirectory()) return Optional.empty();
 
-        return getCollectionTree(null, workspaceDir);
+        CollectionTreeDto root = new CollectionTreeDto();
+        root.setChildren(getCollectionTree(null, workspaceDir));
+        root.setRequests(requestDataService.getRequestList(workspaceDir));
+
+        return Optional.of(root);
     }
 }

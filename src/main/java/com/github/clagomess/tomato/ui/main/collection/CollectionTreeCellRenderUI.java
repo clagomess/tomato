@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
-import com.github.clagomess.tomato.dto.RequestDto;
+import com.formdev.flatlaf.icons.FlatFileViewDirectoryIcon;
+import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.factory.IconFactory;
 
 import javax.swing.*;
@@ -10,15 +11,32 @@ import java.awt.*;
 
 public class CollectionTreeCellRenderUI extends DefaultTreeCellRenderer {
     @Override
-    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+    public Component getTreeCellRendererComponent(
+            JTree tree,
+            Object value,
+            boolean sel,
+            boolean expanded,
+            boolean leaf,
+            int row,
+            boolean hasFocus
+    ) {
         Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
 
-        if(userObject instanceof RequestDto){
-            RequestDto dto = (RequestDto) userObject;
+        if(userObject instanceof CollectionTreeDto.Request dto){
+            return new JLabel(
+                    dto.getName(),
+                    IconFactory.createHttpMethodIcon(dto.getMethod()),
+                    SwingConstants.LEFT
 
-            JLabel label = new JLabel(dto.getName());
-            label.setIcon(IconFactory.createHttpMethodIcon(dto.getMethod()));
-            return label;
+            );
+        }
+
+        if(userObject instanceof CollectionTreeDto dto){
+            return new JLabel(
+                    dto.getName(),
+                    new FlatFileViewDirectoryIcon(),
+                    SwingConstants.LEFT
+            );
         }
 
         return super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
