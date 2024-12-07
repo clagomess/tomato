@@ -1,9 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.tabresponse;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
-import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.factory.EditorFactory;
-import com.github.clagomess.tomato.service.DataService;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -11,7 +9,6 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.io.IOException;
 
 @Getter
 public class TabResponseUI extends JPanel {
@@ -88,6 +85,7 @@ public class TabResponseUI extends JPanel {
         JFileChooser file = new JFileChooser();
         file.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
+        /*
         if(file.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
             try {
                 DataService.getInstance().writeFile(file.getSelectedFile(), responseDto.getHttpResponse().getBody());
@@ -95,5 +93,7 @@ public class TabResponseUI extends JPanel {
                 DialogFactory.createDialogException(this, e);
             }
         }
+
+         */
     }
 }

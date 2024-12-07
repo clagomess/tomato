@@ -2,14 +2,14 @@ package com.github.clagomess.tomato.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Setter
 @Getter
-public abstract class TomatoMetadataDto {
-    private UUID id = UUID.randomUUID();
+public abstract class MetadataDto {
+    private String id = RandomStringUtils.randomAlphanumeric(8);
     private LocalDateTime createTime = LocalDateTime.now();
     private LocalDateTime updateTime = LocalDateTime.now();
 }

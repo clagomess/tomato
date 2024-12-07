@@ -1,0 +1,16 @@
+{
+  "id" : "0b3cAtrM",
+  "name" : "New Request",
+  "method" : "GET",
+  "url" : "http://google.com.br",
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "bodyType" : "NO_BODY",
+    "bodyContentType" : null,
+    "raw" : null,
+    "binaryFilePath" : null,
+    "urlEncodedForm" : null,
+    "multiPartForm" : null
+  }
+}

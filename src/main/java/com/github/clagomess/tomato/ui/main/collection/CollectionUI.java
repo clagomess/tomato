@@ -4,7 +4,6 @@ import com.github.clagomess.tomato.constant.ColorConstant;
 import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.EnvironmentDto;
 import com.github.clagomess.tomato.dto.WorkspaceDto;
-import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.util.UIPublisherUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,17 +43,20 @@ public class CollectionUI extends JPanel {
         add(scrollPane, "height 100%");
 
         // data
-        setData(DataService.getInstance().getCurrentWorkspace());
+        /* @TODO: check setData(DataService.getInstance().getCurrentWorkspace());*/
         UIPublisherUtil.getInstance().getSwitchWorkspaceFIList().add((this::setData));
+        /* @TODO: check
         UIPublisherUtil.getInstance().getSaveRequestFIList().add(dto -> {
             setCollections(DataService.getInstance().getCurrentWorkspace().getCollections());
         });
+
+         */
     }
 
     private void setData(WorkspaceDto currentWorkspace){
         lblCurrentWorkspace.setText(currentWorkspace.getName());
-        setCollections(currentWorkspace.getCollections());
-        setEnvironments(currentWorkspace.getEnvironments());
+//        setCollections(currentWorkspace.getCollections()); @TODO: check
+//        setEnvironments(currentWorkspace.getEnvironments()); @TODO: check
     }
 
     private void setCollections(List<CollectionDto> collections){

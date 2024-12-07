@@ -4,7 +4,6 @@ import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.factory.IconFactory;
-import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.util.UIPublisherUtil;
 import net.miginfocom.swing.MigLayout;
 
@@ -37,8 +36,11 @@ public class RequestSaveUI extends JFrame {
         setVisible(true);
 
         // set data
+        /* @TODO: check
         DataService.getInstance().getCurrentWorkspace().getCollections()
                 .forEach(cbCollection::addItem);
+
+         */
         txtName.setText(dto.getName());
         btnSave.addActionListener(l -> btnSaveAction());
     }
@@ -48,11 +50,13 @@ public class RequestSaveUI extends JFrame {
         this.requestDto.setName(this.txtName.getText());
 
         try {
+            /* @TODO: check
             DataService.getInstance().saveRequest(
                     DataService.getInstance().getCurrentWorkspace().getId(),
                     ((CollectionDto) cbCollection.getSelectedItem()).getId(),
                     this.requestDto
             );
+             */
 
             ((CollectionDto) cbCollection.getSelectedItem()).addOrReplaceRequest(this.requestDto);
 

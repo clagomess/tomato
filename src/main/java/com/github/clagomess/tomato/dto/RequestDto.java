@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class RequestDto extends TomatoMetadataDto {
+public class RequestDto extends MetadataDto {
     private String name = "New Request";
     private HttpMethodEnum method = HttpMethodEnum.GET;
     private String url;
@@ -62,7 +62,7 @@ public class RequestDto extends TomatoMetadataDto {
     @Data
     @NoArgsConstructor
     @EqualsAndHashCode(callSuper = true)
-    public static class KeyValueItem extends TomatoMetadataDto {
+    public static class KeyValueItem extends MetadataDto {
         private boolean selected = true;
         private String key;
         private String value;

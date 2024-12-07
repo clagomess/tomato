@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class CollectionDto extends TomatoMetadataDto {
+public class CollectionDto extends MetadataDto {
     private String name;
 
     @JsonIgnore

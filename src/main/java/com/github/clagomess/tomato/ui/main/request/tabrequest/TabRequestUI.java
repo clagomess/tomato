@@ -1,14 +1,11 @@
 package com.github.clagomess.tomato.ui.main.request.tabrequest;
 
 import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
-import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.DialogFactory;
-import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.service.HttpService;
-import com.github.clagomess.tomato.ui.RequestSaveUI;
 import com.github.clagomess.tomato.ui.component.ListenableTextFieldComponent;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
@@ -71,6 +68,7 @@ public class TabRequestUI extends JPanel {
     }
 
     private String getLabelRequestName(){
+        /* @TODO: check
         CollectionDto collection = DataService.getInstance()
                 .getCollectionByResquestId(requestDto.getId());
         if(collection == null){
@@ -82,6 +80,8 @@ public class TabRequestUI extends JPanel {
                     requestDto.getName()
             ); //@TODO: modify UI
         }
+         */
+        return null;
     }
 
     private void cbHttpMethodOnChange(){
@@ -105,7 +105,8 @@ public class TabRequestUI extends JPanel {
     }
 
     public void btnSaveRequestAction(){
-        CollectionDto collection = DataService.getInstance().getCollectionByResquestId(requestDto.getId());
+        /* @TODO: check
+        checkCollectionDto collection = DataService.getInstance().getCollectionByResquestId(requestDto.getId());
         if(collection == null){
             new RequestSaveUI(requestDto);
             return;
@@ -124,6 +125,7 @@ public class TabRequestUI extends JPanel {
         }catch (Throwable e){
             DialogFactory.createDialogException(this, e);
         }
+        */
 
         // @TODO: remove unsaved-hint
     }

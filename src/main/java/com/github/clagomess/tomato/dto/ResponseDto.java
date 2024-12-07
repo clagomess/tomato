@@ -8,11 +8,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Data
 public class ResponseDto {
-    private UUID requestId;
+    private String requestId;
     private LocalDateTime createTime = LocalDateTime.now();
 
     private boolean requestStatus = false;
@@ -20,7 +19,7 @@ public class ResponseDto {
     private String requestDebug;
     private Response httpResponse;
 
-    public ResponseDto(UUID requestId) {
+    public ResponseDto(String requestId) {
         this.requestId = requestId;
     }
 

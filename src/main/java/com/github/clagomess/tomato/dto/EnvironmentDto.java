@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class EnvironmentDto extends TomatoMetadataDto {
+public class EnvironmentDto extends MetadataDto {
     private String name = "New Environment";
     private List<Env> envs = new ArrayList<>();
 
@@ -19,7 +19,7 @@ public class EnvironmentDto extends TomatoMetadataDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @EqualsAndHashCode(callSuper = true)
-    public static class Env extends TomatoMetadataDto {
+    public static class Env extends MetadataDto {
         private String key;
         private String value;
     }
