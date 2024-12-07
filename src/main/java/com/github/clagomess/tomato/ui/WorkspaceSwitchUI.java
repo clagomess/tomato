@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.ui;
 
 import com.github.clagomess.tomato.dto.WorkspaceDto;
 import com.github.clagomess.tomato.factory.IconFactory;
-import com.github.clagomess.tomato.util.UIPublisherUtil;
+import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -41,8 +41,11 @@ public class WorkspaceSwitchUI extends JFrame {
     private void btnSwitchAction(){
         btnSwitch.setEnabled(false);
         WorkspaceDto selected = (WorkspaceDto) cbWorkspace.getSelectedItem();
-        /* @TODO: checkDataService.getInstance().setCurrentWorkspace(selected);*/
-        UIPublisherUtil.getInstance().notifySwitchWorkspaceSubscribers(selected);
+
+        WorkspacePublisher.getInstance()
+                .getOnSwitch()
+                .publish(selected);
+
         setVisible(false);
         dispose();
     }

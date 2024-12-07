@@ -2,12 +2,14 @@ package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.RequestDto;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -20,6 +22,15 @@ public class RequestDataService {
 
     private final DataService dataService = DataService.getInstance();
 
+    public Optional<RequestDto> load(
+            CollectionTreeDto.Request request
+    ) throws IOException {
+        return dataService.readFile(
+                request.getPath(),
+                new TypeReference<>() {}
+        );
+    }
+
     protected Stream<CollectionTreeDto.Request> getRequestList(
             File basepath
     ){
@@ -28,10 +39,17 @@ public class RequestDataService {
                 .filter(item -> item.getName().startsWith("request-"))
                 .map(item -> {
                     try {
-                        return dataService.readFile(
+                        Optional<CollectionTreeDto.Request> result = dataService.readFile(
                                 item,
-                                new TypeReference<CollectionTreeDto.Request>(){}
-                        ).orElse(null);
+                                new TypeReference<>() {}
+                        );
+
+                        if(result.isPresent()){
+                            result.get().setPath(item);
+                            return result.get();
+                        }else{
+                            return null;
+                        }
                     } catch (IOException e) {
                         log.error(e.getMessage(), e);
                         return null;

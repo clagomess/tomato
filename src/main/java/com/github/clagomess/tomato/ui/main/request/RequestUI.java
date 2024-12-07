@@ -2,18 +2,26 @@ package com.github.clagomess.tomato.ui.main.request;
 
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
+import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.factory.IconFactory;
+import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.WorkspacePublisher;
+import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.TabRequestUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
-import com.github.clagomess.tomato.util.UIPublisherUtil;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RequestUI extends JTabbedPane {
     private final List<String> tabTitles = new ArrayList<>();
+
+    private final RequestDataService requestDataService = RequestDataService.getInstance();
+    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
+    private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public RequestUI(){
         addNewPlusTab();
@@ -23,11 +31,17 @@ public class RequestUI extends JTabbedPane {
             if(getSelectedIndex() == getTabCount() - 1) setSelectedIndex(getTabCount() - 2);
         });
 
-        UIPublisherUtil.getInstance().getSwitchWorkspaceFIList().add(w -> {
+        workspacePublisher.getOnSwitch().addListener(event -> {
             tabTitles.forEach(tabTitle -> removeTabAt(indexOfTab(tabTitle)));
             tabTitles.clear();
+        });
 
-            UIPublisherUtil.getInstance().getSaveRequestFIList().clear();
+        requestPublisher.getOnLoad().addListener(event -> {
+            try {
+                requestDataService.load(event).ifPresent(this::addNewTab);
+            } catch (IOException e) {
+                DialogFactory.createDialogException(this, e);
+            }
         });
     }
 
@@ -87,7 +101,6 @@ public class RequestUI extends JTabbedPane {
         btnClose.addActionListener(l -> {
             removeTabAt(indexOfTab(tabTitle));
             tabTitles.remove(tabTitle);
-            //@TODO: implements unsubscribe: UIPublisherUtil.getInstance().getSaveRequestFIList()
         });
     }
 }

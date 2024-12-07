@@ -85,7 +85,12 @@ public class CollectionDataServiceTest {
             var result = collectionDSMock.getWorkspaceCollectionTree(
                     "nPUaq0TC"
             );
-            Assertions.assertThat(result).hasSize(1);
+
+            Assertions.assertThat(result.orElseThrow().getChildren())
+                    .hasSize(1);
+
+            Assertions.assertThat(result.orElseThrow().getRequests())
+                    .hasSize(1);
         }
     }
 }

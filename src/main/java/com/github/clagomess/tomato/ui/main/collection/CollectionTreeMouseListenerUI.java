@@ -1,7 +1,9 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
-import com.github.clagomess.tomato.Main;
+import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.publisher.RequestPublisher;
+import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -9,12 +11,10 @@ import javax.swing.tree.TreePath;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+@RequiredArgsConstructor
 public class CollectionTreeMouseListenerUI extends MouseAdapter {
     private final JTree tree;
-
-    public CollectionTreeMouseListenerUI(JTree tree) {
-        this.tree = tree;
-    }
+    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -23,10 +23,8 @@ public class CollectionTreeMouseListenerUI extends MouseAdapter {
         if (selRow != -1 && e.getClickCount() == 2 && selPath != null) {
             DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selPath.getLastPathComponent();
 
-            if(selectedNode.getUserObject() instanceof RequestDto){
-                RequestDto dto = (RequestDto) selectedNode.getUserObject();
-                // @TODO: passar clone do DTO, para não sujar o que está na arvore
-                Main.mainUi.getRequestUi().addNewTab(dto);
+            if(selectedNode.getUserObject() instanceof CollectionTreeDto.Request dto){
+                requestPublisher.getOnLoad().publish(dto);
             }
         }
     }

@@ -9,7 +9,6 @@ import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.ui.component.ListenableTextFieldComponent;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
-import com.github.clagomess.tomato.util.UIPublisherUtil;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -62,9 +61,6 @@ public class TabRequestUI extends JPanel {
         txtRequestUrl.addOnChange(requestDto::setUrl);
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
-        UIPublisherUtil.getInstance().getSaveRequestFIList().add(dto -> { //@TODO: detruir quando remover tab
-           if(dto.getId().equals(requestDto.getId())) return;
-        });
     }
 
     private String getLabelRequestName(){

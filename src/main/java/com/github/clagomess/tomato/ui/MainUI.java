@@ -3,13 +3,11 @@ package com.github.clagomess.tomato.ui;
 import com.github.clagomess.tomato.factory.IconFactory;
 import com.github.clagomess.tomato.ui.main.collection.CollectionUI;
 import com.github.clagomess.tomato.ui.main.request.RequestUI;
-import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-@Getter
 public class MainUI extends JFrame {
     private final CollectionUI collectionUi;
     private final RequestUI requestUi;

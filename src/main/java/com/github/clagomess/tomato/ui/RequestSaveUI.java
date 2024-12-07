@@ -4,7 +4,6 @@ import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.factory.IconFactory;
-import com.github.clagomess.tomato.util.UIPublisherUtil;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -62,7 +61,6 @@ public class RequestSaveUI extends JFrame {
 
             setVisible(false);
             dispose();
-            UIPublisherUtil.getInstance().notifySaveRequest(this.requestDto);
         } catch (Throwable e){
             DialogFactory.createDialogException(this, e);
         } finally {
