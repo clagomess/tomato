@@ -6,9 +6,8 @@ import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.factory.IconFactory;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.service.RequestDataService;
-import com.github.clagomess.tomato.service.WorkspaceDataService;
+import com.github.clagomess.tomato.ui.component.CollectionComboBoxComponent;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -18,10 +17,8 @@ public class RequestSaveUI extends JFrame {
     private final RequestDto requestDto;
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
-    private final JComboBox<CollectionTreeDto> cbCollection = new JComboBox<>();
+    private final CollectionComboBoxComponent cbCollection = new CollectionComboBoxComponent();
 
-    private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
-    private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
     private final RequestDataService requestDataService = RequestDataService.getInstance();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
@@ -45,19 +42,8 @@ public class RequestSaveUI extends JFrame {
         setVisible(true);
 
         // set data
-        SwingUtilities.invokeLater(this::setCbCollectionItens);
         txtName.setText(dto.getName());
         btnSave.addActionListener(l -> btnSaveAction());
-    }
-
-    private void setCbCollectionItens() {
-        try {
-            collectionDataService.getWorkspaceCollectionTree()
-                    .flattened()
-                    .forEach(cbCollection::addItem);
-        } catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
-        }
     }
 
     private void btnSaveAction(){
@@ -65,7 +51,7 @@ public class RequestSaveUI extends JFrame {
         this.requestDto.setName(this.txtName.getText());
 
         try {
-            CollectionTreeDto parent = (CollectionTreeDto) cbCollection.getSelectedItem();
+            CollectionTreeDto parent = cbCollection.getSelectedItem();
             if(parent == null) throw new Exception("Parent is null");
 
             var filePath = requestDataService.save(

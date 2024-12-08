@@ -30,6 +30,12 @@ public class CollectionTreeDto {
     public Stream<CollectionTreeDto> flattened() {
         return Stream.concat(
                 Stream.of(this),
-                children.flatMap(CollectionTreeDto::flattened));
+                children.flatMap(CollectionTreeDto::flattened)
+        );
+    }
+
+    public String flattenedParentString() {
+        if(parent == null) return name;
+        return parent.flattenedParentString() + " / " + name;
     }
 }

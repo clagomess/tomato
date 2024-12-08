@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class CollectionTreeDtoTest {
     @Test
     public void flattened() {
@@ -39,5 +41,22 @@ public class CollectionTreeDtoTest {
         var result = root.flattened().toList();
 
         Assertions.assertThat(result).hasSize(6);
+    }
+
+    @Test
+    public void flattenedParentString(){
+        var root = new CollectionTreeDto(){{setName("ROOT");}};
+        var level1 = new CollectionTreeDto(){{
+            setName("LEVEL 1");
+            setParent(root);
+        }};
+        var level2 = new CollectionTreeDto(){{
+            setName("LEVEL 2");
+            setParent(level1);
+        }};
+
+        assertEquals("ROOT", root.flattenedParentString());
+        assertEquals("ROOT / LEVEL 1", level1.flattenedParentString());
+        assertEquals("ROOT / LEVEL 1 / LEVEL 2", level2.flattenedParentString());
     }
 }
