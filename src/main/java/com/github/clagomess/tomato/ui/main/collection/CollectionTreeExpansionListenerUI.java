@@ -1,14 +1,17 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.publisher.RequestPublisher;
 
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import java.util.Collections;
 
 public class CollectionTreeExpansionListenerUI implements TreeExpansionListener {
     private final DefaultTreeModel treeModel;
+    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public CollectionTreeExpansionListenerUI(DefaultTreeModel treeModel) {
         this.treeModel = treeModel;
@@ -48,6 +51,23 @@ public class CollectionTreeExpansionListenerUI implements TreeExpansionListener 
 
         collectionTree.getRequests().forEach(request -> {
             parent.add(new DefaultMutableTreeNode(request));
+        });
+
+        requestPublisher.getOnSave().addListener(event -> {
+            if(!collectionTree.getId().equals(event.getParent().getId())){
+                return;
+            }
+
+            Collections.list(parent.children()).stream()
+                    .map(item -> (DefaultMutableTreeNode) item)
+                    .filter(item -> item.getUserObject() instanceof CollectionTreeDto.Request)
+                    .filter(item -> ((CollectionTreeDto.Request) item.getUserObject())
+                            .getId().equals(event.getId())
+                    )
+                    .forEach(parent::remove);
+
+            parent.add(new DefaultMutableTreeNode(event));
+            treeModel.reload(parent);
         });
     }
 }
