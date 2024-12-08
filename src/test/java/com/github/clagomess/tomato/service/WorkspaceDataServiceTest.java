@@ -25,7 +25,33 @@ public class WorkspaceDataServiceTest {
     }
 
     @Test
-    public void saveWorkspace_whenDirNotExists_CreateAndWriteDto() throws IOException {
+    public void getWorkspaceDirectory_whenNotExists_create() throws IOException {
+        DataService dataServiceMock = Mockito.mock(DataService.class);
+        Mockito.when(dataServiceMock.getDataDir())
+                .thenReturn(mockDataDir);
+
+
+        try(var msDataService = Mockito.mockStatic(DataService.class)) {
+            msDataService.when(() -> DataService.getInstance()).thenReturn(dataServiceMock);
+
+            WorkspaceDataService workspaceDSMock = Mockito.mock(
+                    WorkspaceDataService.class,
+                    Mockito.withSettings().useConstructor()
+            );
+            Mockito.doCallRealMethod()
+                    .when(workspaceDSMock)
+                    .getWorkspaceDirectory(Mockito.any());
+
+            var result =workspaceDSMock.getWorkspaceDirectory(
+                    RandomStringUtils.randomAlphanumeric(8)
+            );
+
+            Assertions.assertThat(result).isDirectory();
+        }
+    }
+
+    @Test
+    public void saveWorkspace_whenNotExists_CreateAndWriteDto() throws IOException {
         DataService dataServiceMock = Mockito.mock(DataService.class);
         Mockito.when(dataServiceMock.getDataDir())
                 .thenReturn(mockDataDir);
@@ -40,6 +66,8 @@ public class WorkspaceDataServiceTest {
                     WorkspaceDataService.class,
                     Mockito.withSettings().useConstructor()
             );
+            Mockito.when(workspaceDSMock.getWorkspaceDirectory(Mockito.any()))
+                    .thenCallRealMethod();
             Mockito.doCallRealMethod()
                     .when(workspaceDSMock)
                     .saveWorkspace(Mockito.any());
@@ -82,6 +110,8 @@ public class WorkspaceDataServiceTest {
                     WorkspaceDataService.class,
                     Mockito.withSettings().useConstructor()
             );
+            Mockito.when(workspaceDSMock.getWorkspaceDirectory(Mockito.any()))
+                    .thenCallRealMethod();
             Mockito.doCallRealMethod()
                     .when(workspaceDSMock)
                     .saveWorkspace(Mockito.any());
@@ -89,7 +119,9 @@ public class WorkspaceDataServiceTest {
                     .thenCallRealMethod();
 
             Assertions.assertThat(workspaceDSMock.listWorkspaces())
-                    .isNotEmpty();
+                    .isNotEmpty()
+                    .allMatch(item -> item.getPath().isDirectory())
+            ;
         }
     }
 

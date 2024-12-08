@@ -26,4 +26,10 @@ public class CollectionTreeDto {
         private File path;
         private CollectionTreeDto parent;
     }
+
+    public Stream<CollectionTreeDto> flattened() {
+        return Stream.concat(
+                Stream.of(this),
+                children.flatMap(CollectionTreeDto::flattened));
+    }
 }

@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.WorkspaceDto;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -21,6 +22,7 @@ public class CollectionDataService {
 
     private final DataService dataService = DataService.getInstance();
     private final RequestDataService requestDataService = RequestDataService.getInstance();
+    private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
 
     protected Stream<CollectionTreeDto> getCollectionTree(
             CollectionTreeDto parent,
@@ -42,14 +44,14 @@ public class CollectionDataService {
 
                         optResult.ifPresent(result -> {
                             result.setParent(parent);
-                            result.setPath(basepath);
+                            result.setPath(item);
                             result.setChildren(getCollectionTree(
                                     result,
-                                    new File(basepath, item.getName())
+                                    item
                             ));
                             result.setRequests(requestDataService.getRequestList(
                                     result,
-                                    basepath
+                                    item
                             ));
                         });
 
@@ -61,20 +63,16 @@ public class CollectionDataService {
                 }).filter(Objects::nonNull);
     }
 
-    public Optional<CollectionTreeDto> getWorkspaceCollectionTree(
-            String workspaceId
-    ) throws IOException {
-        File workspaceDir = new File(
-                dataService.getDataDir(),
-                String.format("workspace-%s", workspaceId)
-        );
-
-        if(!workspaceDir.isDirectory()) return Optional.empty();
+    public CollectionTreeDto getWorkspaceCollectionTree() throws IOException {
+        WorkspaceDto workspace = workspaceDataService.getDataSessionWorkspace();
 
         CollectionTreeDto root = new CollectionTreeDto();
-        root.setChildren(getCollectionTree(null, workspaceDir));
-        root.setRequests(requestDataService.getRequestList(null, workspaceDir));
+        root.setId(workspace.getId());
+        root.setName(workspace.getName());
+        root.setPath(workspace.getPath());
+        root.setChildren(getCollectionTree(root, root.getPath()));
+        root.setRequests(requestDataService.getRequestList(root, root.getPath()));
 
-        return Optional.of(root);
+        return root;
     }
 }

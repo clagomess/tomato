@@ -1,13 +1,14 @@
 package com.github.clagomess.tomato.ui;
 
-import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.factory.IconFactory;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.service.RequestDataService;
+import com.github.clagomess.tomato.service.WorkspaceDataService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -17,7 +18,12 @@ public class RequestSaveUI extends JFrame {
     private final RequestDto requestDto;
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
-    private final JComboBox<CollectionDto> cbCollection = new JComboBox<>();
+    private final JComboBox<CollectionTreeDto> cbCollection = new JComboBox<>();
+
+    private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
+    private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
+    private final RequestDataService requestDataService = RequestDataService.getInstance();
+    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestSaveUI(RequestDto dto){
         this.requestDto = dto;
@@ -39,13 +45,19 @@ public class RequestSaveUI extends JFrame {
         setVisible(true);
 
         // set data
-        /* @TODO: check
-        DataService.getInstance().getCurrentWorkspace().getCollections()
-                .forEach(cbCollection::addItem);
-
-         */
+        SwingUtilities.invokeLater(this::setCbCollectionItens);
         txtName.setText(dto.getName());
         btnSave.addActionListener(l -> btnSaveAction());
+    }
+
+    private void setCbCollectionItens() {
+        try {
+            collectionDataService.getWorkspaceCollectionTree()
+                    .flattened()
+                    .forEach(cbCollection::addItem);
+        } catch (Throwable e){
+            DialogFactory.createDialogException(this, e);
+        }
     }
 
     private void btnSaveAction(){
@@ -53,26 +65,21 @@ public class RequestSaveUI extends JFrame {
         this.requestDto.setName(this.txtName.getText());
 
         try {
-            /* @TODO: check
-            DataService.getInstance().saveRequest(
-                    DataService.getInstance().getCurrentWorkspace().getId(),
-                    ((CollectionDto) cbCollection.getSelectedItem()).getId(),
-                    this.requestDto
-            );
-             */
+            CollectionTreeDto parent = (CollectionTreeDto) cbCollection.getSelectedItem();
+            if(parent == null) throw new Exception("Parent is null");
 
-            var filePath = RequestDataService.getInstance()
-                    .save(null, requestDto); //@TODO: check
+            var filePath = requestDataService.save(
+                    parent.getPath(),
+                    requestDto
+            );
 
             CollectionTreeDto.Request requestHead = RequestMapper.INSTANCE.toRequestHead(
                     requestDto,
-                    null, //@TODO: check
+                    parent,
                     filePath
             );
 
-            RequestPublisher.getInstance()
-                    .getOnSave()
-                    .publish(requestHead);
+            requestPublisher.getOnSave().publish(requestHead);
 
             setVisible(false);
             dispose();

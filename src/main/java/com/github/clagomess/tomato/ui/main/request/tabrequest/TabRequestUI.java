@@ -75,7 +75,7 @@ public class TabRequestUI extends JPanel {
     }
 
     private String getLabelRequestName(){
-        if(requestHeadDto.getParent() == null){
+        if(requestHeadDto == null || requestHeadDto.getParent() == null){
             return requestDto.getName();
         }else {
             return String.format(

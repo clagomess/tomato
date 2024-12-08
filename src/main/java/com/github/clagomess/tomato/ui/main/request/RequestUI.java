@@ -16,7 +16,6 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class RequestUI extends JTabbedPane {
     private final List<String> tabTitles = new ArrayList<>();

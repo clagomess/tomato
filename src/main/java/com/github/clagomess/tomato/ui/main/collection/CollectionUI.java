@@ -2,7 +2,6 @@ package com.github.clagomess.tomato.ui.main.collection;
 
 import com.github.clagomess.tomato.constant.ColorConstant;
 import com.github.clagomess.tomato.dto.EnvironmentDto;
-import com.github.clagomess.tomato.dto.WorkspaceDto;
 import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.service.WorkspaceDataService;
@@ -64,13 +63,8 @@ public class CollectionUI extends JPanel {
 
     private void loadCurrentWorkspace(){
         try {
-            WorkspaceDto workspace = workspaceDataService.getDataSessionWorkspace();
-            lblCurrentWorkspace.setText(workspace.getName());
-
-            collectionDataService.getWorkspaceCollectionTree(workspace.getId())
-                    .ifPresent(item ->
-                            collectionTreeExpansionListenerUI.createLeaf(rootNode, item)
-                    );
+            var rootCollection = collectionDataService.getWorkspaceCollectionTree();
+            collectionTreeExpansionListenerUI.createLeaf(rootNode, rootCollection);
 
             this.treeModel.reload();
 

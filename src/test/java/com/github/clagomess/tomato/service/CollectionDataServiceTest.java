@@ -1,12 +1,14 @@
 package com.github.clagomess.tomato.service;
 
-import org.apache.commons.lang3.RandomStringUtils;
+import com.github.clagomess.tomato.dto.WorkspaceDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CollectionDataServiceTest {
     private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
@@ -46,64 +48,32 @@ public class CollectionDataServiceTest {
     }
 
     @Test
-    public void getWorkspaceCollectionTree_whenInvalidDirectory_returnEmpty() throws IOException {
-        DataService dataServiceMock = Mockito.mock(DataService.class);
-        Mockito.when(dataServiceMock.getDataDir())
-                .thenReturn(new File("xyz"));
+    public void getWorkspaceCollectionTree() throws IOException {
+        WorkspaceDto workspaceDto = new WorkspaceDto();
+        workspaceDto.setId("nPUaq0TC");
+        workspaceDto.setName("ROOT");
+        workspaceDto.setPath(new File("target"));
 
-        try(var msDataService = Mockito.mockStatic(DataService.class)) {
-            msDataService.when(() -> DataService.getInstance()).thenReturn(dataServiceMock);
+        WorkspaceDataService workspaceDataServiceMock = Mockito.mock(WorkspaceDataService.class);
+        Mockito.when(workspaceDataServiceMock.getDataSessionWorkspace())
+                .thenReturn(workspaceDto);
 
-            CollectionDataService collectionDSMock = Mockito.mock(
-                    CollectionDataService.class,
-                    Mockito.withSettings().useConstructor()
-            );
-            Mockito.when(collectionDSMock.getWorkspaceCollectionTree(Mockito.any()))
-                    .thenCallRealMethod();
-
-            var result = collectionDSMock.getWorkspaceCollectionTree(
-                    RandomStringUtils.randomAlphanumeric(8)
-            );
-            Assertions.assertThat(result).isEmpty();
-        }
-    }
-
-    @Test
-    public void getWorkspaceCollectionTree_whenValidDirectory_returnTree() throws IOException {
-        DataService dataServiceMock = Mockito.mock(DataService.class);
-        Mockito.when(dataServiceMock.getDataDir())
-                .thenReturn(testHome);
-        Mockito.when(dataServiceMock.listFiles(Mockito.any()))
-                .thenCallRealMethod();
-        Mockito.when(dataServiceMock.readFile(Mockito.any(), Mockito.any()))
-                .thenCallRealMethod();
-
-
-        try(var msDataService = Mockito.mockStatic(DataService.class)) {
-            msDataService.when(() -> DataService.getInstance()).thenReturn(dataServiceMock);
+        try(var msWorkspaceDataService = Mockito.mockStatic(WorkspaceDataService.class)) {
+            msWorkspaceDataService.when(() -> WorkspaceDataService.getInstance())
+                    .thenReturn(workspaceDataServiceMock);
 
             CollectionDataService collectionDSMock = Mockito.mock(
                     CollectionDataService.class,
                     Mockito.withSettings().useConstructor()
             );
-            Mockito.when(collectionDSMock.getCollectionTree(Mockito.any(), Mockito.any()))
-                    .thenCallRealMethod();
-            Mockito.when(collectionDSMock.getWorkspaceCollectionTree(Mockito.any()))
+            Mockito.when(collectionDSMock.getWorkspaceCollectionTree())
                     .thenCallRealMethod();
 
-            var result = collectionDSMock.getWorkspaceCollectionTree(
-                    "nPUaq0TC"
-            );
+            var result = collectionDSMock.getWorkspaceCollectionTree();
 
-            Assertions.assertThat(result.orElseThrow().getChildren())
-                    .hasSize(1)
-                    .allMatch(item -> item.getParent() == null)
-            ;
-
-            Assertions.assertThat(result.orElseThrow().getRequests())
-                    .hasSize(1)
-                    .allMatch(item -> item.getParent() == null)
-            ;
+            assertEquals("nPUaq0TC", result.getId());
+            assertEquals("ROOT", result.getName());
+            Assertions.assertThat(result.getPath()).isDirectory();
         }
     }
 }

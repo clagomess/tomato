@@ -24,18 +24,21 @@ public class WorkspaceDataService {
     private final DataService dataService = DataService.getInstance();
     private final DataSessionDataService dataSessionDataService = DataSessionDataService.getInstance();
 
-    protected void saveWorkspace(WorkspaceDto dto) throws IOException {
+    protected File getWorkspaceDirectory(String id) throws IOException {
         File workspaceDir = new File(
                 dataService.getDataDir(),
-                String.format(
-                        "workspace-%s",
-                        dto.getId()
-                )
+                String.format("workspace-%s", id)
         );
 
         if(!workspaceDir.isDirectory() && !workspaceDir.mkdirs()) {
             throw new DirectoryCreateException(workspaceDir);
         }
+
+        return workspaceDir;
+    }
+
+    protected void saveWorkspace(WorkspaceDto dto) throws IOException {
+        File workspaceDir = getWorkspaceDirectory(dto.getId());
 
         dataService.writeFile(new File(
                 workspaceDir,
@@ -74,7 +77,12 @@ public class WorkspaceDataService {
                                 new TypeReference<>() {}
                         );
 
-                        return optResult.orElse(null);
+                        if(optResult.isPresent()){
+                            optResult.get().setPath(item);
+                            return optResult.get();
+                        }
+
+                        return null;
                     } catch (IOException e) {
                         log.error(e.getMessage(), e);
                         return null;
