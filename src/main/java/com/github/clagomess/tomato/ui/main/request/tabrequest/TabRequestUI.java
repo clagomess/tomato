@@ -12,6 +12,7 @@ import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.RequestSaveUI;
 import com.github.clagomess.tomato.ui.component.ListenableTextFieldComponent;
+import com.github.clagomess.tomato.ui.component.RequestNameTextFieldComponent;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
 import lombok.Getter;
@@ -27,7 +28,7 @@ public class TabRequestUI extends JPanel {
     private final RequestDto requestDto;
     private final TabResponseUI tabResponseUi;
 
-    private final JLabel lblRequestName = new JLabel("FOO - API / /api/get/test");
+    private final RequestNameTextFieldComponent txtRequestName = new RequestNameTextFieldComponent();
     private final JComboBox<HttpMethodEnum> cbHttpMethod = new JComboBox<>(
             HttpMethodEnum.values()
     );
@@ -49,7 +50,7 @@ public class TabRequestUI extends JPanel {
         setLayout(new MigLayout("insets 10 5 10 5", "[grow,fill]", ""));
 
         // layout
-        add(lblRequestName, "span");
+        add(txtRequestName, "span");
         add(new JSeparator(JSeparator.HORIZONTAL), "span");
         add(cbHttpMethod);
         add(txtRequestUrl, "width 100%");
@@ -63,27 +64,16 @@ public class TabRequestUI extends JPanel {
         add(tpRequest, "span, height 100%");
 
         // set values
-        lblRequestName.setText(getLabelRequestName());
+        txtRequestName.setText(requestHeadDto, requestDto);
         cbHttpMethod.setSelectedItem(requestDto.getMethod());
         txtRequestUrl.setText(requestDto.getUrl());
 
         // listeners
         cbHttpMethod.addActionListener(l -> cbHttpMethodOnChange());
         txtRequestUrl.addOnChange(requestDto::setUrl);
+        txtRequestName.addOnChange(requestDto::setName);
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
-    }
-
-    private String getLabelRequestName(){
-        if(requestHeadDto == null || requestHeadDto.getParent() == null){
-            return requestDto.getName();
-        }else {
-            return String.format(
-                    "%s - %s",
-                    requestHeadDto.getParent().getName(),
-                    requestDto.getName()
-            ); //@TODO: modify UI
-        }
     }
 
     private void cbHttpMethodOnChange(){
