@@ -22,6 +22,20 @@ public class DataService {
         return instance;
     }
 
+    protected File createDirectoryIfNotExists(File path){
+        if(path.isDirectory()){
+            log.info("DIR: {}", path);
+            return path;
+        }
+
+        if(!path.mkdirs()){
+            throw new DirectoryCreateException(path);
+        }
+
+        log.info("MKDIR: {}", path);
+        return path;
+    }
+
     protected <T> Optional<T> readFile(File filepath, TypeReference<T> type) throws IOException {
         log.info("READ: {}", filepath);
 
@@ -51,14 +65,10 @@ public class DataService {
     }
 
     protected File getHomeDir(){
-        File homeDir = new File(System.getProperty("user.home"), ".tomato");
-        log.info("HOME-DIR: {}", homeDir);
-
-        if(!homeDir.isDirectory() && !homeDir.mkdir()){
-            throw new DirectoryCreateException(homeDir);
-        }
-
-        return homeDir;
+        return createDirectoryIfNotExists(new File(
+                System.getProperty("user.home"),
+                ".tomato"
+        ));
     }
 
     protected ConfigurationDto getConfiguration() throws IOException {
@@ -88,13 +98,9 @@ public class DataService {
     }
 
     protected File getDataDir() throws IOException {
-        File dataDir = getConfiguration().getDataDirectory();
-
-        if(!dataDir.isDirectory() && !dataDir.mkdir()){
-            throw new DirectoryCreateException(dataDir);
-        }
-
-        return dataDir;
+        return createDirectoryIfNotExists(
+                getConfiguration().getDataDirectory()
+        );
     }
 
     protected File[] listFiles(File basepath){

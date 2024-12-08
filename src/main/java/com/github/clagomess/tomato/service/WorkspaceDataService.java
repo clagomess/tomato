@@ -3,7 +3,6 @@ package com.github.clagomess.tomato.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.DataSessionDto;
 import com.github.clagomess.tomato.dto.WorkspaceDto;
-import com.github.clagomess.tomato.exception.DirectoryCreateException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -25,16 +24,10 @@ public class WorkspaceDataService {
     private final DataSessionDataService dataSessionDataService = DataSessionDataService.getInstance();
 
     protected File getWorkspaceDirectory(String id) throws IOException {
-        File workspaceDir = new File(
+        return dataService.createDirectoryIfNotExists(new File(
                 dataService.getDataDir(),
                 String.format("workspace-%s", id)
-        );
-
-        if(!workspaceDir.isDirectory() && !workspaceDir.mkdirs()) {
-            throw new DirectoryCreateException(workspaceDir);
-        }
-
-        return workspaceDir;
+        ));
     }
 
     protected void saveWorkspace(WorkspaceDto dto) throws IOException {
