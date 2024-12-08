@@ -2,15 +2,12 @@ package com.github.clagomess.tomato.ui.main.request;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
-import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.DialogFactory;
-import com.github.clagomess.tomato.factory.IconFactory;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.TabRequestUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
-import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -18,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RequestUI extends JTabbedPane {
-    private final List<String> tabTitles = new ArrayList<>();
+    private final List<String> tabsId = new ArrayList<>();
 
     private final RequestDataService requestDataService = RequestDataService.getInstance();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
@@ -33,8 +30,8 @@ public class RequestUI extends JTabbedPane {
         });
 
         workspacePublisher.getOnSwitch().addListener(event -> {
-            tabTitles.forEach(tabTitle -> removeTabAt(indexOfTab(tabTitle)));
-            tabTitles.clear();
+            tabsId.forEach(tabId -> removeTabAt(indexOfTab(tabId)));
+            tabsId.clear();
         });
 
         requestPublisher.getOnLoad().addListener(event -> {
@@ -78,42 +75,20 @@ public class RequestUI extends JTabbedPane {
         );
 
         // add new
-        String uniqueTitle = getUniqueTabTitle(request.getName());
-        insertTab(uniqueTitle, null, splitPane, null, getTabCount() - 1);
-        addTabOptions(uniqueTitle, request.getMethod());
-        tabTitles.add(uniqueTitle);
+        insertTab(request.getId(), null, splitPane, null, getTabCount() - 1);
+        setupTabTitle(request);
 
         setSelectedIndex(getTabCount() -2);
     }
 
-    private String getUniqueTabTitle(String tabTitle){
-        String newTabTitle = tabTitle;
-        int numNewTab = 1;
-
-        while (tabTitles.contains(newTabTitle)){
-            newTabTitle = tabTitle + " - " + numNewTab;
-            numNewTab++;
-        }
-
-        return newTabTitle;
-    }
-
-    private void addTabOptions(String tabTitle, HttpMethodEnum httpMethod){
-        JPanel pnlTab = new JPanel(new MigLayout("insets 0 0 0 0"));
-        pnlTab.setOpaque(false);
-
-        JButton btnClose = new JButton("x");
-        btnClose.setBorder(BorderFactory.createEmptyBorder());
-
-        pnlTab.add(new JLabel(IconFactory.createHttpMethodIcon(httpMethod)));
-        pnlTab.add(new JLabel(tabTitle));
-        pnlTab.add(btnClose);
-
-        setTabComponentAt(indexOfTab(tabTitle), pnlTab);
-
-        btnClose.addActionListener(l -> {
-            removeTabAt(indexOfTab(tabTitle));
-            tabTitles.remove(tabTitle);
+    private void setupTabTitle(RequestDto requestDto){
+        var tabTitle = new TabTitleUI(requestDto);
+        tabTitle.onClose(l -> {
+            removeTabAt(indexOfTab(requestDto.getId()));
+            tabsId.remove(requestDto.getId());
         });
+
+        setTabComponentAt(indexOfTab(requestDto.getId()), tabTitle);
+        tabsId.add(requestDto.getId());
     }
 }
