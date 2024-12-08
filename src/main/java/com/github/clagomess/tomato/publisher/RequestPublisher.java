@@ -12,4 +12,5 @@ public class RequestPublisher {
     }
 
     private final BasePublisher<CollectionTreeDto.Request> onLoad = new BasePublisher<>();
+    private final BasePublisher<CollectionTreeDto.Request> onSave = new BasePublisher<>();
 }

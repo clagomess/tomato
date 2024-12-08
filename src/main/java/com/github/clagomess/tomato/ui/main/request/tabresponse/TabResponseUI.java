@@ -75,7 +75,7 @@ public class TabResponseUI extends JPanel {
             String syntax = EditorFactory.createSyntaxStyleFromContentType(
                     responseDto.getHttpResponse().getContentType().toString()
             );
-            txtPreview.setSyntaxEditingStyle(syntax); //@TODO: crash com frequencia
+            txtPreview.setSyntaxEditingStyle(syntax); //@TODO: crash com frequencia: Error: pushback value was too large
         }
 
         statusResponseUI.update(responseDto);

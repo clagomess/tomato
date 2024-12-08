@@ -1,11 +1,15 @@
 package com.github.clagomess.tomato.service;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.RequestDto;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RequestDataServiceTest {
     private final RequestDataService requestDataService = RequestDataService.getInstance();
@@ -28,8 +32,17 @@ public class RequestDataServiceTest {
     }
 
     @Test
+    public void save_whenBasePathIsDirectory_createNewFile() throws IOException {
+        var mockHome = new File("target", "home-" + RandomStringUtils.randomAlphanumeric(8));
+        assertTrue(mockHome.mkdirs());
+
+        var result = requestDataService.save(mockHome, new RequestDto());
+        Assertions.assertThat(result).isFile();
+    }
+
+    @Test
     public void getRequestList_whenHasResult_return(){
-        var result = requestDataService.getRequestList(new File(
+        var result = requestDataService.getRequestList(null, new File(
                 testHome,
                 "workspace-nPUaq0TC"
         ));

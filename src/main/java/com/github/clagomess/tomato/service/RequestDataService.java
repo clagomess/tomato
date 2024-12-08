@@ -31,7 +31,23 @@ public class RequestDataService {
         );
     }
 
+    public File save(File basepath, RequestDto request) throws IOException {
+        if(basepath.isDirectory()){
+            var file = new File(basepath, String.format(
+                    "request-%s.json",
+                    request.getId()
+            ));
+
+            dataService.writeFile(file, request);
+            return file;
+        }else{
+            dataService.writeFile(basepath, request);
+            return basepath;
+        }
+    }
+
     protected Stream<CollectionTreeDto.Request> getRequestList(
+            CollectionTreeDto parent,
             File basepath
     ){
         return Arrays.stream(dataService.listFiles(basepath))
@@ -45,6 +61,7 @@ public class RequestDataService {
                         );
 
                         if(result.isPresent()){
+                            result.get().setParent(parent);
                             result.get().setPath(item);
                             return result.get();
                         }else{

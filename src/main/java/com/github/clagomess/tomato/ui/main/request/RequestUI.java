@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.ui.main.request;
 
+import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.DialogFactory;
@@ -15,6 +16,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RequestUI extends JTabbedPane {
     private final List<String> tabTitles = new ArrayList<>();
@@ -38,7 +40,8 @@ public class RequestUI extends JTabbedPane {
 
         requestPublisher.getOnLoad().addListener(event -> {
             try {
-                requestDataService.load(event).ifPresent(this::addNewTab);
+                requestDataService.load(event)
+                        .ifPresent(item -> addNewTab(event, item));
             } catch (IOException e) {
                 DialogFactory.createDialogException(this, e);
             }
@@ -54,20 +57,31 @@ public class RequestUI extends JTabbedPane {
         setTabComponentAt(indexOfTab("+"), btnPlus);
 
         btnPlus.addActionListener(l -> {
-            addNewTab(new RequestDto());
+            addNewTab(null, new RequestDto());
         });
     }
 
-    public void addNewTab(RequestDto dto){
+    public void addNewTab(
+            CollectionTreeDto.Request requestHead,
+            RequestDto request
+    ){
         // tab content
         TabResponseUI tabResponseUi = new TabResponseUI();
-        TabRequestUI tabRequestUi = new TabRequestUI(dto, tabResponseUi);
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabRequestUi, tabResponseUi);
+        TabRequestUI tabRequestUi = new TabRequestUI(
+                requestHead,
+                request,
+                tabResponseUi
+        );
+        JSplitPane splitPane = new JSplitPane(
+                JSplitPane.HORIZONTAL_SPLIT,
+                tabRequestUi,
+                tabResponseUi
+        );
 
         // add new
-        String uniqueTitle = getUniqueTabTitle(dto.getName());
+        String uniqueTitle = getUniqueTabTitle(request.getName());
         insertTab(uniqueTitle, null, splitPane, null, getTabCount() - 1);
-        addTabOptions(uniqueTitle, dto.getMethod());
+        addTabOptions(uniqueTitle, request.getMethod());
         tabTitles.add(uniqueTitle);
 
         setSelectedIndex(getTabCount() -2);

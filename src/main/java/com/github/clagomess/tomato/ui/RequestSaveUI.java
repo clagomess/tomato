@@ -1,9 +1,13 @@
 package com.github.clagomess.tomato.ui;
 
 import com.github.clagomess.tomato.dto.CollectionDto;
+import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.factory.IconFactory;
+import com.github.clagomess.tomato.mapper.RequestMapper;
+import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.service.RequestDataService;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -57,7 +61,18 @@ public class RequestSaveUI extends JFrame {
             );
              */
 
-            ((CollectionDto) cbCollection.getSelectedItem()).addOrReplaceRequest(this.requestDto);
+            var filePath = RequestDataService.getInstance()
+                    .save(null, requestDto); //@TODO: check
+
+            CollectionTreeDto.Request requestHead = RequestMapper.INSTANCE.toRequestHead(
+                    requestDto,
+                    null, //@TODO: check
+                    filePath
+            );
+
+            RequestPublisher.getInstance()
+                    .getOnSave()
+                    .publish(requestHead);
 
             setVisible(false);
             dispose();

@@ -83,9 +83,4 @@ public class RequestDto extends MetadataDto {
             super(key, value);
         }
     }
-
-    @Override
-    public String toString() {
-        return name;
-    }
 }

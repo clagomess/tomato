@@ -24,5 +24,6 @@ public class CollectionTreeDto {
         private HttpMethodEnum method;
         private String name;
         private File path;
+        private CollectionTreeDto parent;
     }
 }

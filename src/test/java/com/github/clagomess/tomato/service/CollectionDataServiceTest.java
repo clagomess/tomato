@@ -20,7 +20,7 @@ public class CollectionDataServiceTest {
         var result = collectionDataService.getCollectionTree(null, new File(
                 testHome,
                 "workspace-nPUaq0TC"
-        ));
+        )).toList();
 
         Assertions.assertThat(result)
                 .hasSize(1)
@@ -34,6 +34,15 @@ public class CollectionDataServiceTest {
                 .allMatch(item -> item.getChildren() != null)
                 .allMatch(item -> item.getRequests() != null)
         ;
+
+        collectionDataService.getCollectionTree(null, new File(
+                testHome,
+                "workspace-nPUaq0TC"
+        )).toList().get(0).getRequests().toList();
+
+        var parent = result.get(0);
+        Assertions.assertThat(parent.getRequests())
+                .allMatch(item -> item.getParent() == parent);
     }
 
     @Test
@@ -87,10 +96,14 @@ public class CollectionDataServiceTest {
             );
 
             Assertions.assertThat(result.orElseThrow().getChildren())
-                    .hasSize(1);
+                    .hasSize(1)
+                    .allMatch(item -> item.getParent() == null)
+            ;
 
             Assertions.assertThat(result.orElseThrow().getRequests())
-                    .hasSize(1);
+                    .hasSize(1)
+                    .allMatch(item -> item.getParent() == null)
+            ;
         }
     }
 }

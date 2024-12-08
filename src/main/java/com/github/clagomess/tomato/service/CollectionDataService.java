@@ -48,6 +48,7 @@ public class CollectionDataService {
                                     new File(basepath, item.getName())
                             ));
                             result.setRequests(requestDataService.getRequestList(
+                                    result,
                                     basepath
                             ));
                         });
@@ -72,7 +73,7 @@ public class CollectionDataService {
 
         CollectionTreeDto root = new CollectionTreeDto();
         root.setChildren(getCollectionTree(null, workspaceDir));
-        root.setRequests(requestDataService.getRequestList(workspaceDir));
+        root.setRequests(requestDataService.getRequestList(null, workspaceDir));
 
         return Optional.of(root);
     }

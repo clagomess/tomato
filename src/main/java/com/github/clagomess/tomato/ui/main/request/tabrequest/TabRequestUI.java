@@ -1,11 +1,16 @@
 package com.github.clagomess.tomato.ui.main.request.tabrequest;
 
 import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
+import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.factory.DialogFactory;
+import com.github.clagomess.tomato.mapper.RequestMapper;
+import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.service.HttpService;
+import com.github.clagomess.tomato.service.RequestDataService;
+import com.github.clagomess.tomato.ui.RequestSaveUI;
 import com.github.clagomess.tomato.ui.component.ListenableTextFieldComponent;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
@@ -18,7 +23,8 @@ import javax.swing.*;
 @Getter
 @Setter
 public class TabRequestUI extends JPanel {
-    private RequestDto requestDto;
+    private final CollectionTreeDto.Request requestHeadDto;
+    private final RequestDto requestDto;
     private final TabResponseUI tabResponseUi;
 
     private final JLabel lblRequestName = new JLabel("FOO - API / /api/get/test");
@@ -30,7 +36,12 @@ public class TabRequestUI extends JPanel {
     private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
     private final ButtonGroup bgBodyType = new ButtonGroup();
 
-    public TabRequestUI(RequestDto requestDto, TabResponseUI tabResponseUi){
+    public TabRequestUI(
+            CollectionTreeDto.Request requestHeadDto,
+            RequestDto requestDto,
+            TabResponseUI tabResponseUi
+    ){
+        this.requestHeadDto = requestHeadDto;
         this.requestDto = requestDto;
         this.tabResponseUi = tabResponseUi;
 
@@ -64,20 +75,15 @@ public class TabRequestUI extends JPanel {
     }
 
     private String getLabelRequestName(){
-        /* @TODO: check
-        CollectionDto collection = DataService.getInstance()
-                .getCollectionByResquestId(requestDto.getId());
-        if(collection == null){
+        if(requestHeadDto.getParent() == null){
             return requestDto.getName();
         }else {
             return String.format(
                     "%s - %s",
-                    collection.getName(),
+                    requestHeadDto.getParent().getName(),
                     requestDto.getName()
             ); //@TODO: modify UI
         }
-         */
-        return null;
     }
 
     private void cbHttpMethodOnChange(){
@@ -101,28 +107,25 @@ public class TabRequestUI extends JPanel {
     }
 
     public void btnSaveRequestAction(){
-        /* @TODO: check
-        checkCollectionDto collection = DataService.getInstance().getCollectionByResquestId(requestDto.getId());
-        if(collection == null){
+        if(requestHeadDto == null){
             new RequestSaveUI(requestDto);
             return;
         }
 
         try {
-            DataService.getInstance().saveRequest(
-                    DataService.getInstance().getCurrentWorkspace().getId(),
-                    collection.getId(),
+            RequestDataService.getInstance()
+                    .save(requestHeadDto.getPath(), requestDto);
+
+            RequestMapper.INSTANCE.toRequestHead(
+                    requestHeadDto,
                     requestDto
             );
-            collection.addOrReplaceRequest(requestDto);
-            UIPublisherUtil.getInstance().notifySaveRequest(requestDto);
-            //@TODO: atualizar na arvore
-            //@TODO: atulizar na ui
+
+            RequestPublisher.getInstance()
+                    .getOnSave()
+                    .publish(requestHeadDto);
         }catch (Throwable e){
             DialogFactory.createDialogException(this, e);
         }
-        */
-
-        // @TODO: remove unsaved-hint
     }
 }
