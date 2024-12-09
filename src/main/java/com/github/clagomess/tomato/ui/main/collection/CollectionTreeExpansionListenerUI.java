@@ -10,6 +10,7 @@ import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.Collections;
+import java.util.Optional;
 
 public class CollectionTreeExpansionListenerUI implements TreeExpansionListener {
     private final DefaultTreeModel treeModel;
@@ -51,28 +52,56 @@ public class CollectionTreeExpansionListenerUI implements TreeExpansionListener 
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(collection);
             node.add(new DefaultMutableTreeNode("loading"));
             parent.add(node);
-
-            collectionPublisher.getOnSave().addListener(event -> {
-                if(!collection.getId().equals(event.getId())){
-                    return;
-                }
-
-                parent.remove(node); // @TODO: só funciona na primeira interação
-                var collectionReplace = collectionDataService.getCollectionTree(
-                        collectionTree,
-                        collectionTree.getPath()
-                ).findFirst().orElseThrow();
-                var replaceNode = new DefaultMutableTreeNode(collectionReplace);
-                replaceNode.add(new DefaultMutableTreeNode("loading"));
-                parent.add(replaceNode);
-                treeModel.reload(parent);
-            });
         });
 
         collectionTree.getRequests().forEach(request -> {
             parent.add(new DefaultMutableTreeNode(request));
         });
 
+        collectionAddOnSaveListener(parent, collectionTree);
+        requestAddOnSaveListener(parent, collectionTree);
+    }
+
+    private void collectionAddOnSaveListener(
+            DefaultMutableTreeNode parent,
+            CollectionTreeDto collectionTree
+    ){
+        collectionPublisher.getOnSave().addListener(event -> {
+            if(!collectionTree.getId().equals(event.getParent().getId())){
+                return;
+            }
+
+            Optional<DefaultMutableTreeNode> children = Collections.list(parent.children()).stream()
+                    .map(item -> (DefaultMutableTreeNode) item)
+                    .filter(item -> item.getUserObject() instanceof CollectionTreeDto)
+                    .filter(item -> ((CollectionTreeDto) item.getUserObject())
+                            .getId().equals(event.getId())
+                    ).findFirst();
+
+            if(children.isEmpty()) return;
+
+            parent.remove(children.get());
+
+            var collection = collectionDataService.getCollectionTree(
+                            collectionTree,
+                            collectionTree.getPath()
+                    )
+                    .filter(item -> item.getId().equals(event.getId()))
+                    .findFirst()
+                    .orElseThrow();
+
+            DefaultMutableTreeNode node = new DefaultMutableTreeNode(collection);
+            node.add(new DefaultMutableTreeNode("loading"));
+            parent.add(node);
+
+            treeModel.reload(parent);
+        });
+    }
+
+    private void requestAddOnSaveListener(
+            DefaultMutableTreeNode parent,
+            CollectionTreeDto collectionTree
+    ){
         requestPublisher.getOnSave().addListener(event -> {
             if(!collectionTree.getId().equals(event.getParent().getId())){
                 return;

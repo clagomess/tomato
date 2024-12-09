@@ -64,6 +64,7 @@ public class CollectionUI extends JPanel {
     private void loadCurrentWorkspace(){
         try {
             var rootCollection = collectionDataService.getWorkspaceCollectionTree();
+            lblCurrentWorkspace.setText(rootCollection.getName());
             rootNode.setUserObject(rootCollection);
             collectionTreeExpansionListenerUI.createLeaf(rootNode, rootCollection);
 

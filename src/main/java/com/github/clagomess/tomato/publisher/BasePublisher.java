@@ -1,21 +1,37 @@
 package com.github.clagomess.tomato.publisher;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
-public class BasePublisher<A> {
-    private final List<OnChangeFI<A>> listners = new ArrayList<>();
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-    public void addListener(OnChangeFI<A> listener) {
-        listners.add(listener);
+@Slf4j
+public class BasePublisher<T> {
+    private final Map<UUID, OnChangeFI<T>> listeners = new HashMap<>();
+
+    public UUID addListener(OnChangeFI<T> listener) {
+        var uuid = UUID.randomUUID();
+        log.debug("addListener: {}", uuid);
+        listeners.put(uuid, listener);
+        return uuid;
     }
 
-    public void publish(A event){
-        listners.forEach(item -> item.change(event));
+    public void removeListener(UUID uuid) {
+        log.debug("removeListener: {}", uuid);
+        listeners.remove(uuid);
+    }
+
+    public void publish(T event){
+        log.debug("Publishing: {}", event);
+        listeners.forEach((key, value) -> {
+            log.debug("-> trigger: {}", key);
+            value.change(event);
+        });
     }
 
     @FunctionalInterface
-    public interface OnChangeFI<A> {
-        void change(A event);
+    public interface OnChangeFI<T> {
+        void change(T event);
     }
 }
