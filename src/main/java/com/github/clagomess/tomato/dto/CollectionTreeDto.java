@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.stream.Stream;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CollectionTreeDto {
     private String id;
     private String name;

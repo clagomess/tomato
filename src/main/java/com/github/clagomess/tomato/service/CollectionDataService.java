@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.WorkspaceDto;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,37 @@ public class CollectionDataService {
     private final RequestDataService requestDataService = RequestDataService.getInstance();
     private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
 
-    protected Stream<CollectionTreeDto> getCollectionTree(
+    private File getCollectionFilePath(File collectionDir, String id){
+        return new File(collectionDir, String.format(
+                "collection-%s.json",
+                id
+        ));
+    }
+
+    public Optional<CollectionDto> load(CollectionTreeDto collection) throws IOException {
+        return dataService.readFile(getCollectionFilePath(
+                collection.getPath(),
+                collection.getId()
+        ), new TypeReference<>(){});
+    }
+
+    public File save(File basepath, CollectionDto collection) throws IOException {
+        var collectionDir = dataService.createDirectoryIfNotExists(new File(
+                basepath,
+                String.format("collection-%s", collection.getId())
+        ));
+
+        var collectionFile = getCollectionFilePath(
+                collectionDir,
+                collection.getId()
+        );
+
+        dataService.writeFile(collectionFile, collection);
+
+        return collectionFile;
+    }
+
+    public Stream<CollectionTreeDto> getCollectionTree(
             CollectionTreeDto parent,
             File basepath
     ){
@@ -35,10 +66,7 @@ public class CollectionDataService {
                     String id = item.getName().replace("collection-", "");
                     try {
                         Optional<CollectionTreeDto> optResult = dataService.readFile(
-                                new File(
-                                        item,
-                                        String.format("collection-%s.json", id)
-                                ),
+                                getCollectionFilePath(item, id),
                                 new TypeReference<>() {}
                         );
 

@@ -1,7 +1,9 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.service.CollectionDataService;
 
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -11,7 +13,9 @@ import java.util.Collections;
 
 public class CollectionTreeExpansionListenerUI implements TreeExpansionListener {
     private final DefaultTreeModel treeModel;
+    private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
+    private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
 
     public CollectionTreeExpansionListenerUI(DefaultTreeModel treeModel) {
         this.treeModel = treeModel;
@@ -47,6 +51,22 @@ public class CollectionTreeExpansionListenerUI implements TreeExpansionListener 
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(collection);
             node.add(new DefaultMutableTreeNode("loading"));
             parent.add(node);
+
+            collectionPublisher.getOnSave().addListener(event -> {
+                if(!collection.getId().equals(event.getId())){
+                    return;
+                }
+
+                parent.remove(node); // @TODO: só funciona na primeira interação
+                var collectionReplace = collectionDataService.getCollectionTree(
+                        collectionTree,
+                        collectionTree.getPath()
+                ).findFirst().orElseThrow();
+                var replaceNode = new DefaultMutableTreeNode(collectionReplace);
+                replaceNode.add(new DefaultMutableTreeNode("loading"));
+                parent.add(replaceNode);
+                treeModel.reload(parent);
+            });
         });
 
         collectionTree.getRequests().forEach(request -> {

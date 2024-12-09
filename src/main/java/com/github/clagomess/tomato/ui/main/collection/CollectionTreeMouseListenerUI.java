@@ -2,6 +2,8 @@ package com.github.clagomess.tomato.ui.main.collection;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.ui.CollectionRenameUI;
+import com.github.clagomess.tomato.ui.RequestRenameUI;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
@@ -51,8 +53,12 @@ public class CollectionTreeMouseListenerUI extends MouseAdapter {
         popup.add(new JMenuItem("Open"){{
             addActionListener(e -> requestPublisher.getOnLoad().publish(dto));
         }});
+        popup.add(new JMenuItem("Open Detached"));
+        popup.addSeparator();
         popup.add(new JMenuItem("Move"));
-        popup.add(new JMenuItem("Rename"));
+        popup.add(new JMenuItem("Rename"){{
+            addActionListener(e -> new RequestRenameUI(tree, dto));
+        }});
         popup.addSeparator();
         popup.add(new JMenuItem("Delete"));
         popup.show(e.getComponent(), e.getX(), e.getY());
@@ -64,7 +70,9 @@ public class CollectionTreeMouseListenerUI extends MouseAdapter {
     ){
         JPopupMenu popup = new JPopupMenu();
         popup.add(new JMenuItem("Move"));
-        popup.add(new JMenuItem("Rename"));
+        popup.add(new JMenuItem("Rename"){{
+            addActionListener(e -> new CollectionRenameUI(tree, dto));
+        }});
         popup.addSeparator();
         popup.add(new JMenuItem("Delete"));
         popup.show(e.getComponent(), e.getX(), e.getY());
