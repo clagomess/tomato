@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.main.request.tabrequest;
 
 import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.RequestChangeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
@@ -36,6 +37,9 @@ public class TabRequestUI extends JPanel {
     private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
     private final ButtonGroup bgBodyType = new ButtonGroup();
 
+    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
+    private final RequestChangeDto requestChangeDto;
+
     public TabRequestUI(
             CollectionTreeDto.Request requestHeadDto,
             RequestDto requestDto,
@@ -44,6 +48,7 @@ public class TabRequestUI extends JPanel {
         this.requestHeadDto = requestHeadDto;
         this.requestDto = requestDto;
         this.tabResponseUi = tabResponseUi;
+        this.requestChangeDto = new RequestChangeDto(requestHeadDto, requestDto);
 
         // layout definitions
         setLayout(new MigLayout("insets 10 5 10 5", "[grow,fill]", ""));
@@ -70,6 +75,7 @@ public class TabRequestUI extends JPanel {
         // listeners
         cbHttpMethod.addActionListener(l -> requestDto.setMethod((HttpMethodEnum) cbHttpMethod.getSelectedItem()));
         txtRequestUrl.addOnChange(requestDto::setUrl);
+        txtRequestUrl.addOnChange(e -> requestChangeDto.setActualHashCode(requestDto));
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
     }
@@ -92,7 +98,7 @@ public class TabRequestUI extends JPanel {
 
     public void btnSaveRequestAction(){
         if(requestHeadDto == null){
-            new RequestSaveUI(requestDto);
+            new RequestSaveUI(requestDto, requestChangeDto);
             return;
         }
 
@@ -105,9 +111,8 @@ public class TabRequestUI extends JPanel {
                     requestDto
             );
 
-            RequestPublisher.getInstance()
-                    .getOnSave()
-                    .publish(requestHeadDto);
+            requestPublisher.getOnSave().publish(requestHeadDto);
+            requestChangeDto.reset(requestDto);
         }catch (Throwable e){
             DialogFactory.createDialogException(this, e);
         }

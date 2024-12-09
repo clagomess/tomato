@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.request;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.RequestChangeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
@@ -15,6 +16,7 @@ import java.awt.*;
 
 public class RequestSaveUI extends JFrame {
     private final RequestDto requestDto;
+    private final RequestChangeDto requestChangeDto;
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
     private final CollectionComboBox cbCollection = new CollectionComboBox();
@@ -22,8 +24,12 @@ public class RequestSaveUI extends JFrame {
     private final RequestDataService requestDataService = RequestDataService.getInstance();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
-    public RequestSaveUI(RequestDto dto){
+    public RequestSaveUI(
+            RequestDto dto,
+            RequestChangeDto requestChangeDto
+    ){
         this.requestDto = dto;
+        this.requestChangeDto = requestChangeDto;
 
         setTitle("Save Request");
         setIconImage(IconFactory.ICON_FAVICON.getImage());
@@ -66,6 +72,7 @@ public class RequestSaveUI extends JFrame {
             );
 
             requestPublisher.getOnSave().publish(requestHead);
+            requestChangeDto.reset(requestDto);
 
             setVisible(false);
             dispose();

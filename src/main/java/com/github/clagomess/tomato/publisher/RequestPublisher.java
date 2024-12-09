@@ -13,4 +13,7 @@ public class RequestPublisher {
 
     private final BasePublisher<CollectionTreeDto.Request> onLoad = new BasePublisher<>();
     private final BasePublisher<CollectionTreeDto.Request> onSave = new BasePublisher<>();
+
+    public record ChangeEvent(String id, boolean change){};
+    private final BasePublisher<ChangeEvent> onChange = new BasePublisher<>();
 }
