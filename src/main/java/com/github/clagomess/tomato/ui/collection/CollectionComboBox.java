@@ -1,16 +1,16 @@
-package com.github.clagomess.tomato.ui.component;
+package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
-import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.service.CollectionDataService;
+import com.github.clagomess.tomato.ui.component.DialogFactory;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CollectionComboBoxComponent extends JComboBox<CollectionTreeDto> {
+public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
     private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
 
-    public CollectionComboBoxComponent() {
+    public CollectionComboBox() {
         setRenderer(new HierarchyRenderer());
         SwingUtilities.invokeLater(this::addItens);
     }

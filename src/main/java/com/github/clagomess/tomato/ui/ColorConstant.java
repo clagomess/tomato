@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.constant;
+package com.github.clagomess.tomato.ui;
 
 import java.awt.*;
 

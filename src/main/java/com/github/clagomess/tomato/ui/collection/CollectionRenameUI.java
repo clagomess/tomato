@@ -1,15 +1,15 @@
-package com.github.clagomess.tomato.ui;
+package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.CollectionDto;
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
-import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.service.CollectionDataService;
-import com.github.clagomess.tomato.ui.component.RenameComponent;
+import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.NameUI;
 
 import java.awt.*;
 
-public class CollectionRenameUI extends RenameComponent {
+public class CollectionRenameUI extends NameUI {
     private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 

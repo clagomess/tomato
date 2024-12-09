@@ -2,8 +2,8 @@ package com.github.clagomess.tomato.ui.main.collection;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.ui.CollectionRenameUI;
-import com.github.clagomess.tomato.ui.RequestRenameUI;
+import com.github.clagomess.tomato.ui.collection.CollectionRenameUI;
+import com.github.clagomess.tomato.ui.request.RequestRenameUI;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;

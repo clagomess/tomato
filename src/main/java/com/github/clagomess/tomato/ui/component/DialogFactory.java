@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.factory;
+package com.github.clagomess.tomato.ui.component;
 
 import lombok.extern.slf4j.Slf4j;
 

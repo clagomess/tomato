@@ -1,8 +1,9 @@
 package com.github.clagomess.tomato.ui;
 
-import com.github.clagomess.tomato.factory.IconFactory;
+import com.github.clagomess.tomato.ui.component.IconFactory;
 import com.github.clagomess.tomato.ui.main.collection.CollectionUI;
 import com.github.clagomess.tomato.ui.main.request.RequestUI;
+import com.github.clagomess.tomato.ui.workspace.WorkspaceSwitchUI;
 
 import javax.swing.*;
 import java.awt.*;

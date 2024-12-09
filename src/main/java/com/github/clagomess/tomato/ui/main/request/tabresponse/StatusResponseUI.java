@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.ui.main.request.tabresponse;
 
-import com.github.clagomess.tomato.constant.ColorConstant;
 import com.github.clagomess.tomato.dto.ResponseDto;
-import com.github.clagomess.tomato.factory.DialogFactory;
+import com.github.clagomess.tomato.ui.ColorConstant;
+import com.github.clagomess.tomato.ui.component.DialogFactory;
 
 import javax.swing.*;
 import java.awt.*;

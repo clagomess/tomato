@@ -1,10 +1,10 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
-import com.github.clagomess.tomato.constant.ColorConstant;
 import com.github.clagomess.tomato.dto.EnvironmentDto;
-import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.service.WorkspaceDataService;
+import com.github.clagomess.tomato.ui.ColorConstant;
+import com.github.clagomess.tomato.ui.component.DialogFactory;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;

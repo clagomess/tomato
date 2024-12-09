@@ -7,7 +7,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
-import static com.github.clagomess.tomato.factory.IconFactory.createHttpMethodIcon;
+import static com.github.clagomess.tomato.ui.component.IconFactory.createHttpMethodIcon;
 
 public class TabTitleUI extends JPanel {
     private final JLabel httpMethod = new JLabel();

@@ -1,16 +1,17 @@
-package com.github.clagomess.tomato.ui.component;
+package com.github.clagomess.tomato.ui.main.request.tabrequest;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.ui.component.ListenableTextField;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class RequestNameTextFieldComponent extends JPanel {
+public class RequestNameTextField extends JPanel {
     private final JLabel parent = new JLabel();
-    private final ListenableTextFieldComponent txtRequestName = new ListenableTextFieldComponent();
+    private final ListenableTextField txtRequestName = new ListenableTextField();
 
-    public RequestNameTextFieldComponent(){
+    public RequestNameTextField(){
         setLayout(new FlowLayout(FlowLayout.LEFT));
         add(parent);
         add(txtRequestName);
@@ -27,7 +28,7 @@ public class RequestNameTextFieldComponent extends JPanel {
         txtRequestName.setText(requestDto.getName());
     }
 
-    public void addOnChange(ListenableTextFieldComponent.OnChangeFI value){
+    public void addOnChange(ListenableTextField.OnChangeFI value){
         txtRequestName.addOnChange(value);
     }
 }

@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.tabresponse;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
-import com.github.clagomess.tomato.factory.EditorFactory;
+import com.github.clagomess.tomato.ui.component.EditorFactory;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;

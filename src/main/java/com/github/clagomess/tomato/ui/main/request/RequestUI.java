@@ -2,10 +2,10 @@ package com.github.clagomess.tomato.ui.main.request;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
-import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.RequestDataService;
+import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.TabRequestUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
 

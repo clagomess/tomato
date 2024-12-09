@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.util;
+package com.github.clagomess.tomato.ui.component;
 
 import javax.swing.*;
 import java.awt.*;

@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.ContentTypeEnum;
-import com.github.clagomess.tomato.factory.EditorFactory;
+import com.github.clagomess.tomato.ui.component.EditorFactory;
 import net.miginfocom.swing.MigLayout;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 

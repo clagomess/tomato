@@ -1,16 +1,15 @@
 package com.github.clagomess.tomato.ui.component;
 
-import com.github.clagomess.tomato.factory.IconFactory;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class RenameComponent extends JFrame {
+public abstract class NameUI extends JFrame {
     protected final JButton btnSave = new JButton("Save");
     protected final JTextField txtName = new JTextField();
 
-    public RenameComponent(Component parent){
+    public NameUI(Component parent){
         setTitle("Rename");
         setIconImage(IconFactory.ICON_FAVICON.getImage());
         setMinimumSize(new Dimension(300, 100));

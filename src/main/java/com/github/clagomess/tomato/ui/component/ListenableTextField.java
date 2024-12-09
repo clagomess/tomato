@@ -6,10 +6,10 @@ import javax.swing.event.DocumentListener;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ListenableTextFieldComponent extends JTextField {
+public class ListenableTextField extends JTextField {
     private final List<OnChangeFI> onChangeList = new LinkedList<>();
 
-    public ListenableTextFieldComponent() {
+    public ListenableTextField() {
         getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {

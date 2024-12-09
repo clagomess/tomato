@@ -5,16 +5,15 @@ import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
-import com.github.clagomess.tomato.factory.DialogFactory;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.service.RequestDataService;
-import com.github.clagomess.tomato.ui.RequestSaveUI;
-import com.github.clagomess.tomato.ui.component.ListenableTextFieldComponent;
-import com.github.clagomess.tomato.ui.component.RequestNameTextFieldComponent;
+import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.tabresponse.TabResponseUI;
+import com.github.clagomess.tomato.ui.request.RequestSaveUI;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -28,11 +27,11 @@ public class TabRequestUI extends JPanel {
     private final RequestDto requestDto;
     private final TabResponseUI tabResponseUi;
 
-    private final RequestNameTextFieldComponent txtRequestName = new RequestNameTextFieldComponent();
+    private final RequestNameTextField txtRequestName = new RequestNameTextField();
     private final JComboBox<HttpMethodEnum> cbHttpMethod = new JComboBox<>(
             HttpMethodEnum.values()
     );
-    private final ListenableTextFieldComponent txtRequestUrl = new ListenableTextFieldComponent();
+    private final ListenableTextField txtRequestUrl = new ListenableTextField();
     private final JButton btnSendRequest = new JButton("Send");
     private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
     private final ButtonGroup bgBodyType = new ButtonGroup();

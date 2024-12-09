@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.ui.main.collection;
 
 import com.formdev.flatlaf.icons.FlatFileViewDirectoryIcon;
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
-import com.github.clagomess.tomato.factory.IconFactory;
+import com.github.clagomess.tomato.ui.component.IconFactory;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

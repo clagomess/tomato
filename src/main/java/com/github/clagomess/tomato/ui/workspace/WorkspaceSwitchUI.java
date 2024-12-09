@@ -1,8 +1,8 @@
-package com.github.clagomess.tomato.ui;
+package com.github.clagomess.tomato.ui.workspace;
 
 import com.github.clagomess.tomato.dto.WorkspaceDto;
-import com.github.clagomess.tomato.factory.IconFactory;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
+import com.github.clagomess.tomato.ui.component.IconFactory;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

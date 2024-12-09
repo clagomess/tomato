@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.keyvalue;
 
 import com.github.clagomess.tomato.dto.RequestDto;
-import com.github.clagomess.tomato.ui.component.ListenableTextFieldComponent;
-import com.github.clagomess.tomato.util.ComponentUtil;
+import com.github.clagomess.tomato.ui.component.ComponentUtil;
+import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +20,8 @@ class RowComponent extends JPanel {
     private final RequestDto.KeyValueItem item;
 
     private final JCheckBox cbSelected = new JCheckBox();
-    private final ListenableTextFieldComponent txtKey = new ListenableTextFieldComponent();
-    private final ListenableTextFieldComponent txtValue = new ListenableTextFieldComponent();
+    private final ListenableTextField txtKey = new ListenableTextField();
+    private final ListenableTextField txtValue = new ListenableTextField();
     private final JButton btnRemove = new JButton("x"); //@TODO: change to trash icon;
 
     public RowComponent(

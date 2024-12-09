@@ -2,9 +2,9 @@ package com.github.clagomess.tomato.ui.main.request.tabrequest.bodytype.multipar
 
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
-import com.github.clagomess.tomato.ui.component.FileChooserComponent;
-import com.github.clagomess.tomato.ui.component.ListenableTextFieldComponent;
-import com.github.clagomess.tomato.util.ComponentUtil;
+import com.github.clagomess.tomato.ui.component.ComponentUtil;
+import com.github.clagomess.tomato.ui.component.FileChooser;
+import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -24,7 +24,7 @@ class RowComponent extends JPanel {
     private final JComboBox<KeyValueTypeEnum> cbType = new JComboBox<>(
             KeyValueTypeEnum.values()
     );
-    private final ListenableTextFieldComponent txtKey = new ListenableTextFieldComponent();
+    private final ListenableTextField txtKey = new ListenableTextField();
     private JComponent cValue;
     private final JCheckBox cbSelected = new JCheckBox();
     private final JButton btnRemove = new JButton("x"); //@TODO: change to trash icon;
@@ -94,12 +94,12 @@ class RowComponent extends JPanel {
 
     public JComponent createCValue(KeyValueTypeEnum type, String value){
         if(type == TEXT){
-            var textField = new ListenableTextFieldComponent();
+            var textField = new ListenableTextField();
             textField.setText(value);
             textField.addOnChange(item::setValue);
             return textField;
         }else{
-            var fileChooser = new FileChooserComponent();
+            var fileChooser = new FileChooser();
             // @TODO: set file
             fileChooser.addOnChange(file -> item.setValue(file.getAbsolutePath()));
             return fileChooser;

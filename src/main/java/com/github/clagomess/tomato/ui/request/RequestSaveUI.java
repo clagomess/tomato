@@ -1,13 +1,13 @@
-package com.github.clagomess.tomato.ui;
+package com.github.clagomess.tomato.ui.request;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
-import com.github.clagomess.tomato.factory.DialogFactory;
-import com.github.clagomess.tomato.factory.IconFactory;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.service.RequestDataService;
-import com.github.clagomess.tomato.ui.component.CollectionComboBoxComponent;
+import com.github.clagomess.tomato.ui.collection.CollectionComboBox;
+import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.IconFactory;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -17,7 +17,7 @@ public class RequestSaveUI extends JFrame {
     private final RequestDto requestDto;
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
-    private final CollectionComboBoxComponent cbCollection = new CollectionComboBoxComponent();
+    private final CollectionComboBox cbCollection = new CollectionComboBox();
 
     private final RequestDataService requestDataService = RequestDataService.getInstance();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();

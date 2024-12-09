@@ -9,13 +9,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Getter
-public class FileChooserComponent extends JPanel {
+public class FileChooser extends JPanel {
     private final List<OnChangeFI> onChangeList = new LinkedList<>();
     private final JTextField txtFilepath = new JTextField();
     private final JButton btnSelect = new JButton("Select");
     protected File selectedFile;
 
-    public FileChooserComponent() {
+    public FileChooser() {
         setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill]", ""));
 
         add(txtFilepath, "width 100%");

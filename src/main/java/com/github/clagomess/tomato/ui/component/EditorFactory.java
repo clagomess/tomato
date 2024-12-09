@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.factory;
+package com.github.clagomess.tomato.ui.component;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;

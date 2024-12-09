@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.factory;
 
+import com.github.clagomess.tomato.ui.component.EditorFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
