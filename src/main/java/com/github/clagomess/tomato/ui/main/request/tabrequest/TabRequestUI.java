@@ -68,15 +68,10 @@ public class TabRequestUI extends JPanel {
         txtRequestUrl.setText(requestDto.getUrl());
 
         // listeners
-        cbHttpMethod.addActionListener(l -> cbHttpMethodOnChange());
+        cbHttpMethod.addActionListener(l -> requestDto.setMethod((HttpMethodEnum) cbHttpMethod.getSelectedItem()));
         txtRequestUrl.addOnChange(requestDto::setUrl);
-        txtRequestName.addOnChange(requestDto::setName);
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
-    }
-
-    private void cbHttpMethodOnChange(){
-        requestDto.setMethod((HttpMethodEnum) cbHttpMethod.getSelectedItem());
     }
 
     public void btnSendRequestAction(){

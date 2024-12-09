@@ -2,19 +2,24 @@ package com.github.clagomess.tomato.ui.main.request.tabrequest;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
-import com.github.clagomess.tomato.ui.component.ListenableTextField;
+import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.service.WorkspaceDataService;
+import com.github.clagomess.tomato.ui.component.DialogFactory;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class RequestNameTextField extends JPanel {
     private final JLabel parent = new JLabel();
-    private final ListenableTextField txtRequestName = new ListenableTextField();
+    private final JLabel lblRequestName = new JLabel();
+    private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
+    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestNameTextField(){
         setLayout(new FlowLayout(FlowLayout.LEFT));
         add(parent);
-        add(txtRequestName);
+        add(new JLabel(" / "));
+        add(lblRequestName);
     }
 
     public void setText(
@@ -23,12 +28,21 @@ public class RequestNameTextField extends JPanel {
     ){
         if(requestHeadDto != null && requestHeadDto.getParent() != null){
             parent.setText(requestHeadDto.getParent().flattenedParentString());
+        }else{
+            try {
+                parent.setText(workspaceDataService.getDataSessionWorkspace().getName());
+            } catch (Throwable e) {
+                DialogFactory.createDialogException(this, e);
+            }
         }
 
-        txtRequestName.setText(requestDto.getName());
-    }
+        lblRequestName.setText(requestDto.getName());
 
-    public void addOnChange(ListenableTextField.OnChangeFI value){
-        txtRequestName.addOnChange(value);
+        requestPublisher.getOnSave().addListener(event -> {
+            if(!event.getId().equals(requestDto.getId())) return;
+
+            parent.setText(event.getParent().flattenedParentString());
+            lblRequestName.setText(event.getName());
+        });
     }
 }
