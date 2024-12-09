@@ -11,9 +11,9 @@ public class RequestPublisher {
         return instance;
     }
 
-    private final BasePublisher<CollectionTreeDto.Request> onLoad = new BasePublisher<>();
-    private final BasePublisher<CollectionTreeDto.Request> onSave = new BasePublisher<>();
+    private final NoKeyPublisher<CollectionTreeDto.Request> onLoad = new NoKeyPublisher<>();
+    private final NoKeyPublisher<CollectionTreeDto.Request> onSave = new NoKeyPublisher<>();
 
     public record ChangeEvent(String id, boolean change){};
-    private final BasePublisher<ChangeEvent> onChange = new BasePublisher<>();
+    private final NoKeyPublisher<ChangeEvent> onChange = new NoKeyPublisher<>();
 }

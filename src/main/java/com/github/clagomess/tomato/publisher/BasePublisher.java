@@ -1,37 +1,35 @@
 package com.github.clagomess.tomato.publisher;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-public class BasePublisher<T> {
-    private final Map<UUID, OnChangeFI<T>> listeners = new HashMap<>();
-
-    public UUID addListener(OnChangeFI<T> listener) {
-        var uuid = UUID.randomUUID();
-        log.debug("addListener: {}", uuid);
-        listeners.put(uuid, listener);
-        return uuid;
-    }
+abstract class BasePublisher<K, T> {
+    protected final List<Listener<K, T>> listeners = new LinkedList<>();
 
     public void removeListener(UUID uuid) {
-        log.debug("removeListener: {}", uuid);
-        listeners.remove(uuid);
-    }
-
-    public void publish(T event){
-        log.debug("Publishing: {}", event);
-        listeners.forEach((key, value) -> {
-            log.debug("-> trigger: {}", key);
-            value.change(event);
-        });
+        log.debug("RemoveListener: {}", uuid);
+        listeners.removeIf(listener -> listener.uuid.equals(uuid));
     }
 
     @FunctionalInterface
     public interface OnChangeFI<T> {
         void change(T event);
+    }
+
+    @Getter
+    protected static class Listener<K, T> {
+        private final UUID uuid = UUID.randomUUID();
+        private final K key;
+        private final OnChangeFI<T> runnable;
+
+        public Listener(K key, OnChangeFI<T> runnable) {
+            this.key = key;
+            this.runnable = runnable;
+        }
     }
 }

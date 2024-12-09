@@ -11,5 +11,5 @@ public class WorkspacePublisher {
         return instance;
     }
 
-    private final BasePublisher<WorkspaceDto> onSwitch = new BasePublisher<>();
+    private final NoKeyPublisher<WorkspaceDto> onSwitch = new NoKeyPublisher<>();
 }
