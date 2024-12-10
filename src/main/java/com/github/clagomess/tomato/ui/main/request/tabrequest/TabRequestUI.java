@@ -132,4 +132,8 @@ public class TabRequestUI extends JPanel {
             DialogFactory.createDialogException(this, e);
         }
     }
+
+    public void dispose(){
+        txtRequestName.dispose();
+    }
 }

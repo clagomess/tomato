@@ -12,8 +12,14 @@ abstract class BasePublisher<K, T> {
     protected final List<Listener<K, T>> listeners = new LinkedList<>();
 
     public void removeListener(UUID uuid) {
-        log.debug("RemoveListener: {}", uuid);
-        listeners.removeIf(listener -> listener.uuid.equals(uuid));
+        listeners.removeIf(listener -> {
+            if(listener.uuid.equals(uuid)){
+                log.debug("RemoveListener: {}", uuid);
+                return true;
+            }else{
+                return false;
+            }
+        });
     }
 
     @FunctionalInterface

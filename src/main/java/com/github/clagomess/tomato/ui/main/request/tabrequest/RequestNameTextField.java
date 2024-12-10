@@ -8,11 +8,16 @@ import com.github.clagomess.tomato.ui.component.DialogFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class RequestNameTextField extends JPanel {
     private final JLabel parent = new JLabel();
     private final JLabel lblRequestName = new JLabel();
     private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
+
+    private final List<UUID> listenerUuid = new ArrayList<>(0);
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestNameTextField(){
@@ -38,9 +43,15 @@ public class RequestNameTextField extends JPanel {
 
         lblRequestName.setText(requestDto.getName());
 
-        requestPublisher.getOnSave().addListener(requestDto.getId(), event -> {
+        listenerUuid.add(requestPublisher.getOnSave().addListener(requestDto.getId(), event -> {
             parent.setText(event.getParent().flattenedParentString());
             lblRequestName.setText(event.getName());
+        }));
+    }
+
+    public void dispose(){
+        listenerUuid.forEach(uuid -> {
+            requestPublisher.getOnSave().removeListener(uuid);
         });
     }
 }

@@ -82,16 +82,17 @@ public class RequestUI extends JTabbedPane {
 
         // add new
         insertTab(request.getId(), null, splitPane, null, getTabCount() - 1);
-        setupTabTitle(request);
+        setupTabTitle(request, tabRequestUi::dispose);
 
         setSelectedIndex(getTabCount() -2);
     }
 
-    private void setupTabTitle(RequestDto requestDto){
+    private void setupTabTitle(RequestDto requestDto, Runnable dispose){
         var tabTitle = new TabTitleUI(requestDto);
         tabTitle.onClose(l -> {
             removeTabAt(indexOfTab(requestDto.getId()));
             tabsId.remove(requestDto.getId());
+            dispose.run();
         });
 
         setTabComponentAt(indexOfTab(requestDto.getId()), tabTitle);
