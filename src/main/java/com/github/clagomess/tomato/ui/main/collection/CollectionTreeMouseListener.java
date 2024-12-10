@@ -20,8 +20,13 @@ public class CollectionTreeMouseListener extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent e) {
         int selRow = tree.getRowForLocation(e.getX(), e.getY());
-        TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
 
+        if(e.getButton() == 3 && selRow == -1) {
+            showDefaultPopupMenu(e);
+            return;
+        }
+
+        TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
         if(selRow == -1 || selPath == null) return;
 
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selPath.getLastPathComponent();
@@ -45,6 +50,15 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         }
     }
 
+    private void showDefaultPopupMenu(MouseEvent e) {
+        JPopupMenu popup = new JPopupMenu();
+        popup.add(new JMenuItem("New Request"){{
+            addActionListener(e -> requestPublisher.getOnNew().publish(true));
+        }});
+        popup.add(new JMenuItem("New Collection")); //@TODO: implement
+        popup.show(e.getComponent(), e.getX(), e.getY());
+    }
+
     private void showRequestPopUpMenu(
             MouseEvent e,
             CollectionTreeDto.Request dto
@@ -53,14 +67,14 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         popup.add(new JMenuItem("Open"){{
             addActionListener(e -> requestPublisher.getOnLoad().publish(dto));
         }});
-        popup.add(new JMenuItem("Open Detached"));
+        popup.add(new JMenuItem("Open Detached")); //@TODO: implement
         popup.addSeparator();
-        popup.add(new JMenuItem("Move"));
+        popup.add(new JMenuItem("Move")); //@TODO: implement
         popup.add(new JMenuItem("Rename"){{
             addActionListener(e -> new RequestRenameUI(tree, dto));
         }});
         popup.addSeparator();
-        popup.add(new JMenuItem("Delete"));
+        popup.add(new JMenuItem("Delete")); //@TODO: implement
         popup.show(e.getComponent(), e.getX(), e.getY());
     }
 
@@ -69,12 +83,16 @@ public class CollectionTreeMouseListener extends MouseAdapter {
             CollectionTreeDto dto
     ){
         JPopupMenu popup = new JPopupMenu();
-        popup.add(new JMenuItem("Move"));
+        popup.add(new JMenuItem("Move")); //@TODO: implement
         popup.add(new JMenuItem("Rename"){{
             addActionListener(e -> new CollectionRenameUI(tree, dto));
         }});
         popup.addSeparator();
-        popup.add(new JMenuItem("Delete"));
+        popup.add(new JMenuItem("New Collection")); //@TODO: implement
+        popup.add(new JMenuItem("Import")); //@TODO: implement
+        popup.add(new JMenuItem("Export")); //@TODO: implement
+        popup.addSeparator();
+        popup.add(new JMenuItem("Delete")); //@TODO: implement
         popup.show(e.getComponent(), e.getX(), e.getY());
     }
 }

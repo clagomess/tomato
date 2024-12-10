@@ -31,44 +31,60 @@ public class MainUI extends JFrame {
         pack();
     }
 
-    private JMenuItem createMenuItem(String label, ActionListener action){
-        JMenuItem menu = new JMenuItem(label);
-        menu.addActionListener(action);
-        return menu;
-    }
-
     public JMenuBar getMenu(){
         JMenuBar menuBar = new JMenuBar();
 
         // workspace
-        JMenu mWorkspace = new JMenu("Workspace");
-        mWorkspace.add(createMenuItem("Switch", l -> new WorkspaceSwitchUI(this)));
-        mWorkspace.add(createMenuItem("Edit Workspaces", l -> {})); //@TODO: impl. menu workspace.switch
-        menuBar.add(mWorkspace);
+        menuBar.add(new JMenu("Workspace"){{
+            add(new JMenuItem("Switch"){{
+                addActionListener(l -> new WorkspaceSwitchUI(this));
+            }});
+            add(new JMenuItem("New Workspace"){{
+                addActionListener(l -> {}); //@TODO: Implements
+            }});
+            add(new JMenuItem("Edit Workspaces"){{
+                addActionListener(l -> {}); //@TODO: Implements
+            }});
+        }});
 
         // collection
-        JMenu mCollection = new JMenu("Collection");
-        mCollection.add(createMenuItem("Edit Collections", l -> {})); //@TODO: impl. menu Collection.switch
-        mCollection.add(createMenuItem("Import", l -> {})); //@TODO: impl. menu Collection.switch
-        mCollection.add(createMenuItem("Export", l -> {})); //@TODO: impl. menu Collection.switch
-        menuBar.add(mCollection);
+        menuBar.add(new JMenu("Collection"){{
+            add(new JMenuItem("Edit Collections"){{
+                addActionListener(l -> {}); //@TODO: Implements
+            }});
+            add(new JMenuItem("New Collection"){{
+                addActionListener(l -> {}); //@TODO: Implements
+            }});
+            add(new JMenuItem("Import"){{
+                addActionListener(l -> {}); //@TODO: Implements
+            }});
+            add(new JMenuItem("Export"){{
+                addActionListener(l -> {}); //@TODO: Implements
+            }});
+        }});
 
         // environment
-        JMenu mEnviroment = new JMenu("Environment");
-        mEnviroment.add(createMenuItem("Edit Environments", l -> {})); //@TODO: impl. menu Environment.switch
-        mEnviroment.add(createMenuItem("Import", l -> {})); //@TODO: impl. menu Environment.switch
-        mEnviroment.add(createMenuItem("Export", l -> {})); //@TODO: impl. menu Environment.switch
-        menuBar.add(mEnviroment);
+        menuBar.add(new JMenu("Environment"){{
+            add(new JMenuItem("Edit Environments"){{
+                addActionListener(l -> {}); //@TODO: Implements
+            }});
+            add(new JMenuItem("Import"){{
+                addActionListener(l -> {}); //@TODO: Implements
+            }});
+            add(new JMenuItem("Export"){{
+                addActionListener(l -> {}); //@TODO: Implements
+            }});
+        }});
 
         // about
-        JMenu mSettings = new JMenu("Settings");
-        mSettings.addActionListener(l -> {}); //@TODO: impl. menu Settings
-        menuBar.add(mSettings);
-
-        // about
-        JMenu mAbout = new JMenu("About");
-        mAbout.addActionListener(l -> {}); //@TODO: impl. menu About
-        menuBar.add(mAbout);
+        menuBar.add(new JMenu("Settings"){{
+            add(new JMenuItem("Configuration"){{
+                addActionListener(l -> {}); //@TODO: Implements
+            }});
+            add(new JMenuItem("About"){{
+                addActionListener(l -> {}); //@TODO: Implements
+            }});
+        }});
 
         return menuBar;
     }
