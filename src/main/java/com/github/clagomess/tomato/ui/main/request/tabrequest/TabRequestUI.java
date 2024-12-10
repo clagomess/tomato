@@ -104,10 +104,14 @@ public class TabRequestUI extends JPanel {
 
     public void btnSaveRequestAction(){
         if(requestHeadDto == null){
-            new RequestSaveUI(requestDto, (requestHead -> {
-                this.requestHeadDto = requestHead;
-                requestChangeDto.reset(requestDto);
-            }));
+            new RequestSaveUI(
+                    this,
+                    requestDto,
+                    requestHead -> {
+                        this.requestHeadDto = requestHead;
+                        requestChangeDto.reset(requestDto);
+                    }
+            );
             return;
         }
 

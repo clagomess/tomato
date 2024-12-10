@@ -24,6 +24,7 @@ public class RequestSaveUI extends JFrame {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestSaveUI(
+            Component parent,
             RequestDto dto,
             OnSaveFI onSaveListener
     ){
@@ -32,6 +33,8 @@ public class RequestSaveUI extends JFrame {
 
         setTitle("Save Request");
         setIconImage(IconFactory.ICON_FAVICON.getImage());
+        setMinimumSize(new Dimension(300, 100));
+        setResizable(false);
 
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel("Request Name"), "wrap");
@@ -41,9 +44,9 @@ public class RequestSaveUI extends JFrame {
         panel.add(btnSave, "align right");
 
         add(panel);
-        setMinimumSize(new Dimension(300, 100));
-        setResizable(false);
+
         pack();
+        setLocationRelativeTo(parent);
         setVisible(true);
 
         // set data
