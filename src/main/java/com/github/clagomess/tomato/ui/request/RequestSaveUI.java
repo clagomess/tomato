@@ -18,7 +18,7 @@ public class RequestSaveUI extends JFrame {
     private final OnSaveFI onSaveListener;
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
-    private final CollectionComboBox cbCollection = new CollectionComboBox();
+    private final CollectionComboBox cbCollection = new CollectionComboBox(null);
 
     private final RequestDataService requestDataService = RequestDataService.getInstance();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();

@@ -57,7 +57,7 @@ public class CollectionTreeMouseListener extends MouseAdapter {
             addActionListener(e -> requestPublisher.getOnOpenNew().publish(true));
         }});
         popup.add(new JMenuItem("New Collection"){{
-            addActionListener(e -> new CollectionNewUI());
+            addActionListener(ae -> new CollectionNewUI(e.getComponent(), null));
         }});
         popup.show(e.getComponent(), e.getX(), e.getY());
     }
@@ -92,7 +92,7 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         }});
         popup.addSeparator();
         popup.add(new JMenuItem("New Collection"){{
-            addActionListener(e -> new CollectionNewUI());
+            addActionListener(ae -> new CollectionNewUI(e.getComponent(), dto));
         }});
         popup.add(new JMenuItem("Import")); //@TODO: implement
         popup.add(new JMenuItem("Export")); //@TODO: implement

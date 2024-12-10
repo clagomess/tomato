@@ -32,12 +32,13 @@ public class MainUI extends JFrame {
     }
 
     public JMenuBar getMenu(){
+        var mainUI = this;
         JMenuBar menuBar = new JMenuBar();
 
         // workspace
         menuBar.add(new JMenu("Workspace"){{
             add(new JMenuItem("Switch"){{
-                addActionListener(l -> new WorkspaceSwitchUI(this));
+                addActionListener(l -> new WorkspaceSwitchUI(mainUI));
             }});
             add(new JMenuItem("New Workspace"){{
                 addActionListener(l -> {}); //@TODO: Implements
@@ -53,7 +54,7 @@ public class MainUI extends JFrame {
                 addActionListener(l -> {}); //@TODO: Implements
             }});
             add(new JMenuItem("New Collection"){{
-                addActionListener(l -> new CollectionNewUI());
+                addActionListener(l -> new CollectionNewUI(mainUI, null));
             }});
             add(new JMenuItem("Import"){{
                 addActionListener(l -> {}); //@TODO: Implements

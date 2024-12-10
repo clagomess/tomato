@@ -14,14 +14,21 @@ import java.awt.*;
 public class CollectionNewUI extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
-    private final CollectionComboBox cbCollectionParent = new CollectionComboBox();
+    private final CollectionComboBox cbCollectionParent;
 
     private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
-    public CollectionNewUI(){
+    public CollectionNewUI(
+            Component parent,
+            CollectionTreeDto selectedCollectionTreeParent
+    ){
         setTitle("New Collection");
         setIconImage(IconFactory.ICON_FAVICON.getImage());
+        setMinimumSize(new Dimension(300, 100));
+        setResizable(false);
+
+        cbCollectionParent = new CollectionComboBox(selectedCollectionTreeParent);
 
         JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel("Name"), "wrap");
@@ -31,9 +38,9 @@ public class CollectionNewUI extends JFrame {
         panel.add(btnSave, "align right");
 
         add(panel);
-        setMinimumSize(new Dimension(300, 100));
-        setResizable(false);
+
         pack();
+        setLocationRelativeTo(parent);
         setVisible(true);
 
         // set data

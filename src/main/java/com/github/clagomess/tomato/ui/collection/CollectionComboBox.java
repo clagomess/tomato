@@ -10,16 +10,20 @@ import java.awt.*;
 public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
     private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
 
-    public CollectionComboBox() {
+    public CollectionComboBox(CollectionTreeDto selectedCollectionTree) {
         setRenderer(new HierarchyRenderer());
-        SwingUtilities.invokeLater(this::addItens);
+        SwingUtilities.invokeLater(() -> addItens(selectedCollectionTree));
     }
 
-    private void addItens() {
+    private void addItens(CollectionTreeDto selectedCollectionTree) {
         try {
             collectionDataService.getWorkspaceCollectionTree()
                     .flattened()
                     .forEach(this::addItem);
+
+            if(selectedCollectionTree != null){
+                setSelectedItem(selectedCollectionTree);
+            }
         } catch (Throwable e){
             DialogFactory.createDialogException(this, e);
         }
@@ -39,6 +43,7 @@ public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
                 boolean isSelected,
                 boolean cellHasFocus
         ) {
+            if(value == null) return new JLabel("Empty");
             return new JLabel(((CollectionTreeDto) value).flattenedParentString());
         }
     }

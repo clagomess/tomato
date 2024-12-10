@@ -62,8 +62,13 @@ public class TabRequestUI extends JPanel {
         add(btnSaveRequest, "wrap");
 
         JTabbedPane tpRequest = new JTabbedPane();
+        //@TODO: add requestChangeDto
         tpRequest.addTab("Body", new BodyUI(requestDto));
+        //@TODO: add requestChangeDto
+        //@TODO: add count
         tpRequest.addTab("Header", new KeyValueUI(requestDto.getHeaders()));
+        //@TODO: add requestChangeDto
+        //@TODO: add count
         tpRequest.addTab("Cookie", new KeyValueUI(requestDto.getCookies()));
         add(tpRequest, "span, height 100%");
 
@@ -74,6 +79,7 @@ public class TabRequestUI extends JPanel {
 
         // listeners
         cbHttpMethod.addActionListener(l -> requestDto.setMethod((HttpMethodEnum) cbHttpMethod.getSelectedItem()));
+        cbHttpMethod.addActionListener(l -> requestChangeDto.setActualHashCode(requestDto));
         txtRequestUrl.addOnChange(requestDto::setUrl);
         txtRequestUrl.addOnChange(e -> requestChangeDto.setActualHashCode(requestDto));
         btnSendRequest.addActionListener(l -> btnSendRequestAction());

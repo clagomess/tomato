@@ -24,7 +24,7 @@ public class DataService {
 
     protected File createDirectoryIfNotExists(File path){
         if(path.isDirectory()){
-            log.info("DIR: {}", path);
+            log.debug("DIR: {}", path);
             return path;
         }
 
@@ -32,12 +32,12 @@ public class DataService {
             throw new DirectoryCreateException(path);
         }
 
-        log.info("MKDIR: {}", path);
+        log.debug("MKDIR: {}", path);
         return path;
     }
 
     protected <T> Optional<T> readFile(File filepath, TypeReference<T> type) throws IOException {
-        log.info("READ: {}", filepath);
+        log.debug("READ: {}", filepath);
 
         if(!filepath.isFile()) return Optional.empty();
 
