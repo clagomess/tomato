@@ -11,5 +11,6 @@ public class CollectionPublisher {
         return instance;
     }
 
+    private final KeyPublisher<String, CollectionTreeDto> onInsert = new KeyPublisher<>();
     private final KeyPublisher<String, CollectionTreeDto> onSave = new KeyPublisher<>();
 }

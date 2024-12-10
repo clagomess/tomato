@@ -18,8 +18,8 @@ public class CollectionDataServiceTest {
     ).getFile());
 
     @Test
-    public void getCollectionTree_whenHasResult_return(){
-        var result = collectionDataService.getCollectionTree(null, new File(
+    public void getCollectionChildrenTree_whenHasResult_return(){
+        var result = collectionDataService.getCollectionChildrenTree(null, new File(
                 testHome,
                 "workspace-nPUaq0TC"
         )).toList();
@@ -37,7 +37,7 @@ public class CollectionDataServiceTest {
                 .allMatch(item -> item.getRequests() != null)
         ;
 
-        collectionDataService.getCollectionTree(null, new File(
+        collectionDataService.getCollectionChildrenTree(null, new File(
                 testHome,
                 "workspace-nPUaq0TC"
         )).toList().get(0).getRequests().toList();

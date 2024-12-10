@@ -1,20 +1,20 @@
 package com.github.clagomess.tomato.ui;
 
+import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
 import com.github.clagomess.tomato.ui.component.IconFactory;
-import com.github.clagomess.tomato.ui.main.collection.CollectionUI;
+import com.github.clagomess.tomato.ui.main.collection.CollectionTreeUI;
 import com.github.clagomess.tomato.ui.main.request.RequestUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceSwitchUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class MainUI extends JFrame {
-    private final CollectionUI collectionUi;
+    private final CollectionTreeUI collectionTreeUi;
     private final RequestUI requestUi;
 
     public MainUI(){
-        this.collectionUi = new CollectionUI();
+        this.collectionTreeUi = new CollectionTreeUI();
         this.requestUi = new RequestUI();
 
         setTitle("Tomato");
@@ -24,7 +24,7 @@ public class MainUI extends JFrame {
         setJMenuBar(getMenu());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, collectionUi, requestUi);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, collectionTreeUi, requestUi);
         splitPane.setDividerLocation(200);
 
         add(splitPane);
@@ -53,7 +53,7 @@ public class MainUI extends JFrame {
                 addActionListener(l -> {}); //@TODO: Implements
             }});
             add(new JMenuItem("New Collection"){{
-                addActionListener(l -> {}); //@TODO: Implements
+                addActionListener(l -> new CollectionNewUI());
             }});
             add(new JMenuItem("Import"){{
                 addActionListener(l -> {}); //@TODO: Implements

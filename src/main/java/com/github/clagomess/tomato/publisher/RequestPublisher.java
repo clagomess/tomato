@@ -11,7 +11,7 @@ public class RequestPublisher {
         return instance;
     }
 
-    private final NoKeyPublisher<Boolean> onNew = new NoKeyPublisher<>();
+    private final NoKeyPublisher<Boolean> onOpenNew = new NoKeyPublisher<>();
     private final NoKeyPublisher<CollectionTreeDto.Request> onLoad = new NoKeyPublisher<>();
     private final KeyPublisher<String, CollectionTreeDto.Request> onSave = new KeyPublisher<>();
     private final KeyPublisher<String, Boolean> onChange = new KeyPublisher<>();

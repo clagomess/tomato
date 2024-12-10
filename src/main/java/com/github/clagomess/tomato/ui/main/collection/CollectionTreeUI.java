@@ -18,7 +18,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CollectionUI extends JPanel {
+public class CollectionTreeUI extends JPanel {
     private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
     private final DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
     private final JTree tree = new JTree(treeModel);
@@ -30,7 +30,7 @@ public class CollectionUI extends JPanel {
     private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
     private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
 
-    public CollectionUI() {
+    public CollectionTreeUI() {
         setLayout(new MigLayout("insets 10 10 10 5", "[grow, fill]", ""));
         tree.setRootVisible(false);
         tree.setShowsRootHandles(true);

@@ -10,7 +10,6 @@ import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.Collections;
-import java.util.Optional;
 
 public class CollectionTreeExpansionListener implements TreeExpansionListener {
     private final DefaultTreeModel treeModel;
@@ -56,10 +55,26 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
             collectionAddOnSaveListener(parent, collection);
         });
 
+        collectionAddOnInsertListener(parent, collectionTree.getId());
+
         collectionTree.getRequests().forEach(request -> {
             parent.add(new DefaultMutableTreeNode(request));
 
             requestAddOnSaveListener(parent, request.getId());
+        });
+    }
+
+    private void collectionAddOnInsertListener(
+            DefaultMutableTreeNode parent,
+            String parentId
+    ){
+        collectionPublisher.getOnInsert().addListener(parentId, event -> {
+            // @TODO: parent on close needs new stream children
+            DefaultMutableTreeNode node = new DefaultMutableTreeNode(event);
+            node.add(new DefaultMutableTreeNode("loading"));
+            parent.add(node);
+
+            treeModel.reload(parent);
         });
     }
 
@@ -68,24 +83,19 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
             CollectionTreeDto collectionTree
     ){
         collectionPublisher.getOnSave().addListener(collectionTree.getId(), event -> {
-            Optional<DefaultMutableTreeNode> children = Collections.list(parent.children()).stream()
+            Collections.list(parent.children()).stream()
                     .map(item -> (DefaultMutableTreeNode) item)
                     .filter(item -> item.getUserObject() instanceof CollectionTreeDto)
                     .filter(item -> ((CollectionTreeDto) item.getUserObject())
                             .getId().equals(event.getId())
-                    ).findFirst();
-
-            if(children.isEmpty()) return;
-
-            parent.remove(children.get());
-
-            var collection = collectionDataService.getCollectionTree(
-                            collectionTree.getParent(),
-                            collectionTree.getParent().getPath()
                     )
-                    .filter(item -> item.getId().equals(event.getId()))
                     .findFirst()
-                    .orElseThrow();
+                    .ifPresent(parent::remove);
+
+            var collection = collectionDataService.getCollectionRootTree(
+                    collectionTree.getParent(),
+                    event.getId()
+            );
 
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(collection);
             node.add(new DefaultMutableTreeNode("loading"));

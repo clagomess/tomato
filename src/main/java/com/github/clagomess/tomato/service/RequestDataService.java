@@ -47,10 +47,9 @@ public class RequestDataService {
     }
 
     protected Stream<CollectionTreeDto.Request> getRequestList(
-            CollectionTreeDto parent,
-            File basepath
+            CollectionTreeDto collectionParent
     ){
-        return Arrays.stream(dataService.listFiles(basepath))
+        return Arrays.stream(dataService.listFiles(collectionParent.getPath()))
                 .filter(File::isFile)
                 .filter(item -> item.getName().startsWith("request-"))
                 .map(item -> {
@@ -61,7 +60,7 @@ public class RequestDataService {
                         );
 
                         if(result.isPresent()){
-                            result.get().setParent(parent);
+                            result.get().setParent(collectionParent);
                             result.get().setPath(item);
                             return result.get();
                         }else{

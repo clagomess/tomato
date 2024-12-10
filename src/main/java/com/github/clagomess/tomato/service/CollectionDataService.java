@@ -39,9 +39,16 @@ public class CollectionDataService {
         ), new TypeReference<>(){});
     }
 
-    public File save(File basepath, CollectionDto collection) throws IOException {
+    /**
+     * @param parentPath example: workspace-xyz/
+     * @param collection will write into workspace-xyz/<b>collection-zzz/collection-zzz.json</b>
+     */
+    public void save(
+            File parentPath,
+            CollectionDto collection
+    ) throws IOException {
         var collectionDir = dataService.createDirectoryIfNotExists(new File(
-                basepath,
+                parentPath,
                 String.format("collection-%s", collection.getId())
         ));
 
@@ -51,15 +58,12 @@ public class CollectionDataService {
         );
 
         dataService.writeFile(collectionFile, collection);
-
-        return collectionFile;
     }
 
-    public Stream<CollectionTreeDto> getCollectionTree(
-            CollectionTreeDto parent,
-            File basepath
+    public Stream<CollectionTreeDto> getCollectionChildrenTree(
+            CollectionTreeDto collectionStart
     ){
-        return Arrays.stream(dataService.listFiles(basepath))
+        return Arrays.stream(dataService.listFiles(collectionStart.getPath()))
                 .filter(File::isDirectory)
                 .filter(item -> item.getName().startsWith("collection"))
                 .map(item -> {
@@ -71,15 +75,13 @@ public class CollectionDataService {
                         );
 
                         optResult.ifPresent(result -> {
-                            result.setParent(parent);
+                            result.setParent(collectionStart);
                             result.setPath(item);
-                            result.setChildren(getCollectionTree(
-                                    result,
-                                    item
+                            result.setChildren(getCollectionChildrenTree(
+                                    result
                             ));
                             result.setRequests(requestDataService.getRequestList(
-                                    result,
-                                    item
+                                    result
                             ));
                         });
 
@@ -91,6 +93,18 @@ public class CollectionDataService {
                 }).filter(Objects::nonNull);
     }
 
+    public CollectionTreeDto getCollectionRootTree(
+            CollectionTreeDto parent,
+            String id
+    ){
+        return getCollectionChildrenTree(
+                parent
+        )
+                .filter(item -> item.getId().equals(id))
+                .findFirst()
+                .orElseThrow();
+    }
+
     public CollectionTreeDto getWorkspaceCollectionTree() throws IOException {
         WorkspaceDto workspace = workspaceDataService.getDataSessionWorkspace();
 
@@ -98,8 +112,8 @@ public class CollectionDataService {
         root.setId(workspace.getId());
         root.setName(workspace.getName());
         root.setPath(workspace.getPath());
-        root.setChildren(getCollectionTree(root, root.getPath()));
-        root.setRequests(requestDataService.getRequestList(root, root.getPath()));
+        root.setChildren(getCollectionChildrenTree(root));
+        root.setRequests(requestDataService.getRequestList(root));
 
         return root;
     }

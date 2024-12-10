@@ -34,7 +34,7 @@ public class RequestUI extends JTabbedPane {
             tabsId.clear();
         });
 
-        requestPublisher.getOnNew().addListener(event -> {
+        requestPublisher.getOnOpenNew().addListener(event -> {
             addNewTab(null, new RequestDto());
         });
 
