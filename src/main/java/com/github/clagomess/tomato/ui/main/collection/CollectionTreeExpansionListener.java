@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 
+import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -32,9 +33,11 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
             return;
         }
 
-        node.removeAllChildren();
-        createLeaf(node, (CollectionTreeDto) node.getUserObject());
-        treeModel.reload(node);
+        SwingUtilities.invokeLater(() -> {
+            node.removeAllChildren();
+            createLeaf(node, (CollectionTreeDto) node.getUserObject());
+            treeModel.reload(node);
+        });
     }
 
     @Override

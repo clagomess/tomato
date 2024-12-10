@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.publisher;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
@@ -30,13 +31,15 @@ public class KeyPublisher<K, T> extends BasePublisher<K, T> {
         noConcurrentList.stream()
                 .filter(item -> Objects.equals(item.getKey(), key))
                 .forEach(listener -> {
-                    log.debug(
-                            "-> trigger: {} - {}",
-                            listener.getUuid(),
-                            listener.getKey()
-                    );
+                    SwingUtilities.invokeLater(() -> {
+                        log.debug(
+                                "-> trigger: {} - {}",
+                                listener.getUuid(),
+                                listener.getKey()
+                        );
 
-                    listener.getRunnable().change(event);
+                        listener.getRunnable().change(event);
+                    });
                 });
 
         noConcurrentList.clear();
