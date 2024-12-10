@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
 import com.github.clagomess.tomato.dto.EnvironmentDto;
+import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.service.WorkspaceDataService;
 import com.github.clagomess.tomato.ui.ColorConstant;
@@ -29,6 +30,7 @@ public class CollectionTreeUI extends JPanel {
 
     private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
     private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
+    private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public CollectionTreeUI() {
         setLayout(new MigLayout("insets 10 10 10 5", "[grow, fill]", ""));
@@ -52,13 +54,10 @@ public class CollectionTreeUI extends JPanel {
 
         // data
         SwingUtilities.invokeLater(this::loadCurrentWorkspace);
-//        UIPublisherUtil.getInstance().getSwitchWorkspaceFIList().add((this::setData));
-        /* @TODO: check
-        UIPublisherUtil.getInstance().getSaveRequestFIList().add(dto -> {
-            setCollections(DataService.getInstance().getCurrentWorkspace().getCollections());
+        workspacePublisher.getOnSwitch().addListener(event -> {
+            rootNode.removeAllChildren();
+            loadCurrentWorkspace();
         });
-
-         */
     }
 
     private void loadCurrentWorkspace(){

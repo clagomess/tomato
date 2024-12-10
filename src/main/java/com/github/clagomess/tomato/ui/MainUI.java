@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
 import com.github.clagomess.tomato.ui.component.IconFactory;
 import com.github.clagomess.tomato.ui.main.collection.CollectionTreeUI;
 import com.github.clagomess.tomato.ui.main.request.RequestUI;
+import com.github.clagomess.tomato.ui.workspace.WorkspaceNewUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceSwitchUI;
 
 import javax.swing.*;
@@ -41,7 +42,7 @@ public class MainUI extends JFrame {
                 addActionListener(l -> new WorkspaceSwitchUI(mainUI));
             }});
             add(new JMenuItem("New Workspace"){{
-                addActionListener(l -> {}); //@TODO: Implements
+                addActionListener(l -> new WorkspaceNewUI(mainUI));
             }});
             add(new JMenuItem("Edit Workspaces"){{
                 addActionListener(l -> {}); //@TODO: Implements

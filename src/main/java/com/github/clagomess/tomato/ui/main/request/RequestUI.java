@@ -32,6 +32,7 @@ public class RequestUI extends JTabbedPane {
         workspacePublisher.getOnSwitch().addListener(event -> {
             tabsId.forEach(tabId -> removeTabAt(indexOfTab(tabId)));
             tabsId.clear();
+            // @TODO: dispose tabs
         });
 
         requestPublisher.getOnOpenNew().addListener(event -> {

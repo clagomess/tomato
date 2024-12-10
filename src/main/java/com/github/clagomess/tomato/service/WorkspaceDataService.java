@@ -30,7 +30,7 @@ public class WorkspaceDataService {
         ));
     }
 
-    protected void saveWorkspace(WorkspaceDto dto) throws IOException {
+    public void saveWorkspace(WorkspaceDto dto) throws IOException {
         File workspaceDir = getWorkspaceDirectory(dto.getId());
 
         dataService.writeFile(new File(
