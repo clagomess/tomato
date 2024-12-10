@@ -3,7 +3,6 @@ package com.github.clagomess.tomato.ui.main.collection;
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.service.CollectionDataService;
 
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -15,7 +14,6 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
     private final DefaultTreeModel treeModel;
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
-    private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
 
     public CollectionTreeExpansionListener(DefaultTreeModel treeModel) {
         this.treeModel = treeModel;
@@ -44,82 +42,79 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
     }
 
     public void createLeaf(
-            DefaultMutableTreeNode parent,
+            DefaultMutableTreeNode parentNode,
             CollectionTreeDto collectionTree
     ){
         collectionTree.getChildren().forEach(collection -> {
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(collection);
             node.add(new DefaultMutableTreeNode("loading"));
-            parent.add(node);
+            parentNode.add(node);
 
-            collectionAddOnSaveListener(parent, collection);
+            collectionAddOnSaveListener(node, new CollectionPublisher.ParentCollectionId(
+                    collection.getId()
+            ));
         });
-
-        collectionAddOnInsertListener(parent, collectionTree.getId());
 
         collectionTree.getRequests().forEach(request -> {
-            parent.add(new DefaultMutableTreeNode(request));
+            parentNode.add(new DefaultMutableTreeNode(request));
 
-            requestAddOnSaveListener(parent, request.getId());
+            requestAddOnUpdateListener(parentNode, new RequestPublisher.RequestKey(
+                    collectionTree.getId(),
+                    request.getId()
+            ));
         });
-    }
 
-    private void collectionAddOnInsertListener(
-            DefaultMutableTreeNode parent,
-            String parentId
-    ){
-        collectionPublisher.getOnInsert().addListener(parentId, event -> {
-            // @TODO: parent on close needs new stream children
-            DefaultMutableTreeNode node = new DefaultMutableTreeNode(event);
-            node.add(new DefaultMutableTreeNode("loading"));
-            parent.add(node);
+        collectionAddOnSaveListener(parentNode, new CollectionPublisher.ParentCollectionId(
+                collectionTree.getId()
+        ));
+        requestAddOnInsertListener(parentNode, new RequestPublisher.ParentCollectionId(
+                collectionTree.getId()
+        ));
 
-            treeModel.reload(parent);
-        });
     }
 
     private void collectionAddOnSaveListener(
-            DefaultMutableTreeNode parent,
-            CollectionTreeDto collectionTree
+            DefaultMutableTreeNode parentNode,
+            CollectionPublisher.ParentCollectionId parentCollectionId
     ){
-        collectionPublisher.getOnSave().addListener(collectionTree.getId(), event -> {
-            Collections.list(parent.children()).stream()
-                    .map(item -> (DefaultMutableTreeNode) item)
-                    .filter(item -> item.getUserObject() instanceof CollectionTreeDto)
-                    .filter(item -> ((CollectionTreeDto) item.getUserObject())
-                            .getId().equals(event.getId())
-                    )
-                    .findFirst()
-                    .ifPresent(parent::remove);
-
-            var collection = collectionDataService.getCollectionRootTree(
-                    collectionTree.getParent(),
-                    event.getId()
-            );
-
-            DefaultMutableTreeNode node = new DefaultMutableTreeNode(collection);
-            node.add(new DefaultMutableTreeNode("loading"));
-            parent.add(node);
-
-            treeModel.reload(parent);
+        collectionPublisher.getOnSave().removeListener(parentCollectionId);
+        collectionPublisher.getOnSave().addListener(parentCollectionId, event -> {
+            parentNode.removeAllChildren();
+            createLeaf(parentNode, event.getParent());
+            treeModel.reload(parentNode);
         });
     }
 
-    private void requestAddOnSaveListener(
-            DefaultMutableTreeNode parent,
-            String id
+    private void requestAddOnInsertListener(
+            DefaultMutableTreeNode parentNode,
+            RequestPublisher.ParentCollectionId parentCollectionId
     ){
-        requestPublisher.getOnSave().addListener(id, event -> {
-            Collections.list(parent.children()).stream()
-                    .map(item -> (DefaultMutableTreeNode) item)
-                    .filter(item -> item.getUserObject() instanceof CollectionTreeDto.Request)
-                    .filter(item -> ((CollectionTreeDto.Request) item.getUserObject())
-                            .getId().equals(event.getId())
-                    )
-                    .forEach(parent::remove);
+        requestPublisher.getOnInsert().removeListener(parentCollectionId);
+        requestPublisher.getOnInsert().addListener(parentCollectionId, event -> {
+            parentNode.add(new DefaultMutableTreeNode(event));
+            treeModel.reload(parentNode);
+        });
+    }
 
-            parent.add(new DefaultMutableTreeNode(event));
-            treeModel.reload(parent);
+    private void requestAddOnUpdateListener(
+            DefaultMutableTreeNode parentNode,
+            RequestPublisher.RequestKey key
+    ){
+        requestPublisher.getOnUpdate().removeListener(key);
+        requestPublisher.getOnUpdate().addListener(key, event -> {
+            Collections.list(parentNode.children()).stream()
+                    .map(item -> (DefaultMutableTreeNode) item)
+                    .filter(item -> {
+                        if(item.getUserObject() instanceof CollectionTreeDto.Request dto){
+                            return dto.getId().equals(event.getId());
+                        }
+
+                        return false;
+                    })
+                    .forEach(parentNode::remove);
+
+            parentNode.add(new DefaultMutableTreeNode(event));
+            treeModel.reload(parentNode);
         });
     }
 }

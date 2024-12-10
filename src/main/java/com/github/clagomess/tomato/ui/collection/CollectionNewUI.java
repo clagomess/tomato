@@ -58,10 +58,8 @@ public class CollectionNewUI extends JFrame {
                     dto.getId()
             );
 
-            collectionPublisher.getOnInsert().publish(
-                    parent.getId(),
-                    collectionTree
-            );
+            var key = new CollectionPublisher.ParentCollectionId(parent.getId());
+            collectionPublisher.getOnSave().publish(key, collectionTree);
 
             setVisible(false);
             dispose();

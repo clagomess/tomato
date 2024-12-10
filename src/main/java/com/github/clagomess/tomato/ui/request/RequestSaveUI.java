@@ -1,7 +1,6 @@
 package com.github.clagomess.tomato.ui.request;
 
 import com.github.clagomess.tomato.dto.CollectionTreeDto;
-import com.github.clagomess.tomato.dto.RequestChangeDto;
 import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
@@ -16,7 +15,7 @@ import java.awt.*;
 
 public class RequestSaveUI extends JFrame {
     private final RequestDto requestDto;
-    private final RequestChangeDto requestChangeDto;
+    private final OnSaveFI onSaveListener;
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
     private final CollectionComboBox cbCollection = new CollectionComboBox();
@@ -26,10 +25,10 @@ public class RequestSaveUI extends JFrame {
 
     public RequestSaveUI(
             RequestDto dto,
-            RequestChangeDto requestChangeDto
+            OnSaveFI onSaveListener
     ){
         this.requestDto = dto;
-        this.requestChangeDto = requestChangeDto;
+        this.onSaveListener = onSaveListener;
 
         setTitle("Save Request");
         setIconImage(IconFactory.ICON_FAVICON.getImage());
@@ -71,11 +70,10 @@ public class RequestSaveUI extends JFrame {
                     filePath
             );
 
-            requestPublisher.getOnSave().publish(
-                    requestHead.getId(),
-                    requestHead
-            );
-            requestChangeDto.reset(requestDto);
+            var key = new RequestPublisher.ParentCollectionId(parent.getId());
+            requestPublisher.getOnInsert().publish(key, requestHead);
+            requestPublisher.getOnSave().publish(requestHead.getId(), requestHead);
+            onSaveListener.reponse(requestHead);
 
             setVisible(false);
             dispose();
@@ -84,5 +82,10 @@ public class RequestSaveUI extends JFrame {
         } finally {
             btnSave.setEnabled(true);
         }
+    }
+
+    @FunctionalInterface
+    public interface OnSaveFI {
+        void reponse(CollectionTreeDto.Request requestHead);
     }
 }

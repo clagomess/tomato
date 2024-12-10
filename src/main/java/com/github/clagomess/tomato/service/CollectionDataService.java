@@ -77,12 +77,8 @@ public class CollectionDataService {
                         optResult.ifPresent(result -> {
                             result.setParent(collectionStart);
                             result.setPath(item);
-                            result.setChildren(getCollectionChildrenTree(
-                                    result
-                            ));
-                            result.setRequests(requestDataService.getRequestList(
-                                    result
-                            ));
+                            result.setChildren(this::getCollectionChildrenTree);
+                            result.setRequests(requestDataService::getRequestList);
                         });
 
                         return optResult.orElse(null);
@@ -112,8 +108,8 @@ public class CollectionDataService {
         root.setId(workspace.getId());
         root.setName(workspace.getName());
         root.setPath(workspace.getPath());
-        root.setChildren(getCollectionChildrenTree(root));
-        root.setRequests(requestDataService.getRequestList(root));
+        root.setChildren(this::getCollectionChildrenTree);
+        root.setRequests(requestDataService::getRequestList);
 
         return root;
     }

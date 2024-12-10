@@ -46,7 +46,7 @@ public class RequestDataService {
         }
     }
 
-    protected Stream<CollectionTreeDto.Request> getRequestList(
+    public Stream<CollectionTreeDto.Request> getRequestList(
             CollectionTreeDto collectionParent
     ){
         return Arrays.stream(dataService.listFiles(collectionParent.getPath()))

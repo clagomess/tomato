@@ -13,10 +13,17 @@ public class CollectionTreeDto {
     private String id;
     private String name;
     private File path;
-    private Stream<Request> requests = Stream.empty();
-
     private CollectionTreeDto parent;
-    private Stream<CollectionTreeDto> children = Stream.empty();
+    private BuildStreamFI<CollectionTreeDto> children = parent -> Stream.empty();
+    private BuildStreamFI<Request> requests = parent -> Stream.empty();
+
+    public Stream<CollectionTreeDto> getChildren() {
+        return children.build(this);
+    }
+
+    public Stream<Request> getRequests() {
+        return requests.build(this);
+    }
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -31,12 +38,17 @@ public class CollectionTreeDto {
     public Stream<CollectionTreeDto> flattened() {
         return Stream.concat(
                 Stream.of(this),
-                children.flatMap(CollectionTreeDto::flattened)
+                getChildren().flatMap(CollectionTreeDto::flattened)
         );
     }
 
     public String flattenedParentString() {
         if(parent == null) return name;
         return parent.flattenedParentString() + " / " + name;
+    }
+
+    @FunctionalInterface
+    public interface BuildStreamFI<T> {
+        Stream<T> build(CollectionTreeDto parent);
     }
 }

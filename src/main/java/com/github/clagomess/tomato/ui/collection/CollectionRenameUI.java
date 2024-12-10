@@ -31,15 +31,15 @@ public class CollectionRenameUI extends NameUI {
                     .orElseThrow();
 
             collectionDto.setName(this.txtName.getText());
-            collectionTree.setName(this.txtName.getText());
 
             collectionDataService.save(
                     collectionTree.getParent().getPath(),
                     collectionDto
             );
 
+            var key = new CollectionPublisher.ParentCollectionId(collectionTree.getParent().getId());
             collectionPublisher.getOnSave().publish(
-                    collectionTree.getId(),
+                    key,
                     collectionTree
             );
 

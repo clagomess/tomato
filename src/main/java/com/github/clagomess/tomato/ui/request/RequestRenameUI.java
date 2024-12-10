@@ -38,10 +38,12 @@ public class RequestRenameUI extends NameUI {
                     requestDto
             );
 
-            requestPublisher.getOnSave().publish(
-                    requestHead.getId(),
-                    requestHead
+            var key = new RequestPublisher.RequestKey(
+                    requestHead.getParent().getId(),
+                    requestHead.getId()
             );
+            requestPublisher.getOnUpdate().publish(key, requestHead);
+            requestPublisher.getOnSave().publish(requestHead.getId(), requestHead);
 
             setVisible(false);
             dispose();

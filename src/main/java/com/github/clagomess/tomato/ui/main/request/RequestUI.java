@@ -65,6 +65,8 @@ public class RequestUI extends JTabbedPane {
             CollectionTreeDto.Request requestHead,
             RequestDto request
     ){
+        // @TODO: verificar se a request já foi aberta, está com comportamento estranho
+
         // tab content
         TabResponseUI tabResponseUi = new TabResponseUI();
         TabRequestUI tabRequestUi = new TabRequestUI(

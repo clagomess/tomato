@@ -24,7 +24,7 @@ import javax.swing.*;
 @Getter
 @Setter
 public class TabRequestUI extends JPanel {
-    private final CollectionTreeDto.Request requestHeadDto;
+    private CollectionTreeDto.Request requestHeadDto;
     private final RequestDto requestDto;
     private final TabResponseUI tabResponseUi;
 
@@ -98,7 +98,10 @@ public class TabRequestUI extends JPanel {
 
     public void btnSaveRequestAction(){
         if(requestHeadDto == null){
-            new RequestSaveUI(requestDto, requestChangeDto);
+            new RequestSaveUI(requestDto, (requestHead -> {
+                this.requestHeadDto = requestHead;
+                requestChangeDto.reset(requestDto);
+            }));
             return;
         }
 
@@ -111,10 +114,13 @@ public class TabRequestUI extends JPanel {
                     requestDto
             );
 
-            requestPublisher.getOnSave().publish(
-                    requestHeadDto.getId(),
-                    requestHeadDto
+            var key = new RequestPublisher.RequestKey(
+                    requestHeadDto.getParent().getId(),
+                    requestHeadDto.getId()
             );
+
+            requestPublisher.getOnUpdate().publish(key, requestHeadDto);
+            requestPublisher.getOnSave().publish(requestHeadDto.getId(), requestHeadDto);
             requestChangeDto.reset(requestDto);
         }catch (Throwable e){
             DialogFactory.createDialogException(this, e);
