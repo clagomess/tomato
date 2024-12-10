@@ -13,7 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 @RequiredArgsConstructor
-public class CollectionTreeMouseListenerUI extends MouseAdapter {
+public class CollectionTreeMouseListener extends MouseAdapter {
     private final JTree tree;
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 

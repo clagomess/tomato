@@ -22,7 +22,7 @@ public class CollectionUI extends JPanel {
     private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
     private final DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
     private final JTree tree = new JTree(treeModel);
-    private final CollectionTreeExpansionListenerUI collectionTreeExpansionListenerUI = new CollectionTreeExpansionListenerUI(treeModel);
+    private final CollectionTreeExpansionListener collectionTreeExpansionListener = new CollectionTreeExpansionListener(treeModel);
 
     private final JComboBox<EnvironmentDto> cbEnvironment = new JComboBox<>();
     private final JLabel lblCurrentWorkspace = new JLabel();
@@ -34,10 +34,10 @@ public class CollectionUI extends JPanel {
         setLayout(new MigLayout("insets 10 10 10 5", "[grow, fill]", ""));
         tree.setRootVisible(false);
         tree.setShowsRootHandles(true);
-        tree.setCellRenderer(new CollectionTreeCellRenderUI());
+        tree.setCellRenderer(new CollectionTreeCellRender());
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        tree.addMouseListener(new CollectionTreeMouseListenerUI(tree));
-        tree.addTreeExpansionListener(collectionTreeExpansionListenerUI);
+        tree.addMouseListener(new CollectionTreeMouseListener(tree));
+        tree.addTreeExpansionListener(collectionTreeExpansionListener);
 
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -66,7 +66,7 @@ public class CollectionUI extends JPanel {
             var rootCollection = collectionDataService.getWorkspaceCollectionTree();
             lblCurrentWorkspace.setText(rootCollection.getName());
             rootNode.setUserObject(rootCollection);
-            collectionTreeExpansionListenerUI.createLeaf(rootNode, rootCollection);
+            collectionTreeExpansionListener.createLeaf(rootNode, rootCollection);
 
             this.treeModel.reload();
 

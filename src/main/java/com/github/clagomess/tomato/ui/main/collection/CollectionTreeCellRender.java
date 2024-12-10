@@ -9,7 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 
-public class CollectionTreeCellRenderUI extends DefaultTreeCellRenderer {
+public class CollectionTreeCellRender extends DefaultTreeCellRenderer {
     @Override
     public Component getTreeCellRendererComponent(
             JTree tree,

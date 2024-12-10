@@ -12,13 +12,13 @@ import javax.swing.tree.DefaultTreeModel;
 import java.util.Collections;
 import java.util.Optional;
 
-public class CollectionTreeExpansionListenerUI implements TreeExpansionListener {
+public class CollectionTreeExpansionListener implements TreeExpansionListener {
     private final DefaultTreeModel treeModel;
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
     private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
 
-    public CollectionTreeExpansionListenerUI(DefaultTreeModel treeModel) {
+    public CollectionTreeExpansionListener(DefaultTreeModel treeModel) {
         this.treeModel = treeModel;
     }
 
