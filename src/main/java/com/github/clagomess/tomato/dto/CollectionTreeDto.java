@@ -13,10 +13,10 @@ public class CollectionTreeDto {
     private String id;
     private String name;
     private File path;
-    private Stream<Request> requests;
+    private Stream<Request> requests = Stream.empty();
 
     private CollectionTreeDto parent;
-    private Stream<CollectionTreeDto> children;
+    private Stream<CollectionTreeDto> children = Stream.empty();
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)

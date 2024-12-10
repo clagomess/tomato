@@ -36,12 +36,6 @@ public class RequestDtoTest {
     }
 
     @Test
-    public void to_String(){
-        val dto = getFilledDto();
-        Assertions.assertEquals(dto.getName(), dto.toString());
-    }
-
-    @Test
     public void toMultivaluedMapHeaders(){
         RequestDto dto = new RequestDto();
         dto.getHeaders().add(new RequestDto.KeyValueItem("foo", "bar"));

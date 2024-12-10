@@ -11,5 +11,5 @@ public class CollectionPublisher {
         return instance;
     }
 
-    private final NoKeyPublisher<CollectionTreeDto> onSave = new NoKeyPublisher<>();
+    private final KeyPublisher<String, CollectionTreeDto> onSave = new KeyPublisher<>();
 }

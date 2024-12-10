@@ -71,7 +71,10 @@ public class RequestSaveUI extends JFrame {
                     filePath
             );
 
-            requestPublisher.getOnSave().publish(requestHead);
+            requestPublisher.getOnSave().publish(
+                    requestHead.getId(),
+                    requestHead
+            );
             requestChangeDto.reset(requestDto);
 
             setVisible(false);

@@ -111,7 +111,10 @@ public class TabRequestUI extends JPanel {
                     requestDto
             );
 
-            requestPublisher.getOnSave().publish(requestHeadDto);
+            requestPublisher.getOnSave().publish(
+                    requestHeadDto.getId(),
+                    requestHeadDto
+            );
             requestChangeDto.reset(requestDto);
         }catch (Throwable e){
             DialogFactory.createDialogException(this, e);

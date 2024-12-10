@@ -27,6 +27,8 @@ public class WorkspaceDataServiceTest {
     @Test
     public void getWorkspaceDirectory_whenNotExists_create() throws IOException {
         DataService dataServiceMock = Mockito.mock(DataService.class);
+        Mockito.when(dataServiceMock.createDirectoryIfNotExists(Mockito.any()))
+                .thenCallRealMethod();
         Mockito.when(dataServiceMock.getDataDir())
                 .thenReturn(mockDataDir);
 
@@ -55,6 +57,8 @@ public class WorkspaceDataServiceTest {
         DataService dataServiceMock = Mockito.mock(DataService.class);
         Mockito.when(dataServiceMock.getDataDir())
                 .thenReturn(mockDataDir);
+        Mockito.when(dataServiceMock.createDirectoryIfNotExists(Mockito.any()))
+                .thenCallRealMethod();
         Mockito.doCallRealMethod()
                 .when(dataServiceMock)
                 .writeFile(Mockito.any(), Mockito.any());
@@ -98,6 +102,8 @@ public class WorkspaceDataServiceTest {
         Mockito.when(dataServiceMock.listFiles(Mockito.any()))
                 .thenCallRealMethod();
         Mockito.when(dataServiceMock.readFile(Mockito.any(), Mockito.any()))
+                .thenCallRealMethod();
+        Mockito.when(dataServiceMock.createDirectoryIfNotExists(Mockito.any()))
                 .thenCallRealMethod();
         Mockito.doCallRealMethod()
                 .when(dataServiceMock)

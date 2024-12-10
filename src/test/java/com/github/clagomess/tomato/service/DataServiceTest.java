@@ -106,6 +106,8 @@ public class DataServiceTest {
         DataService dataServiceMock = Mockito.mock(DataService.class);
         Mockito.when(dataServiceMock.getConfiguration())
                 .thenReturn(dto);
+        Mockito.when(dataServiceMock.createDirectoryIfNotExists(Mockito.any()))
+                .thenCallRealMethod();
         Mockito.when(dataServiceMock.getDataDir())
                 .thenCallRealMethod();
 

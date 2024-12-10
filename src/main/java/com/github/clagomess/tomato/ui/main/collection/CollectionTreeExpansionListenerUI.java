@@ -52,25 +52,22 @@ public class CollectionTreeExpansionListenerUI implements TreeExpansionListener 
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(collection);
             node.add(new DefaultMutableTreeNode("loading"));
             parent.add(node);
+
+            collectionAddOnSaveListener(parent, collection);
         });
 
         collectionTree.getRequests().forEach(request -> {
             parent.add(new DefaultMutableTreeNode(request));
-        });
 
-        collectionAddOnSaveListener(parent, collectionTree);
-        requestAddOnSaveListener(parent, collectionTree);
+            requestAddOnSaveListener(parent, request.getId());
+        });
     }
 
     private void collectionAddOnSaveListener(
             DefaultMutableTreeNode parent,
             CollectionTreeDto collectionTree
     ){
-        collectionPublisher.getOnSave().addListener(event -> {
-            if(!collectionTree.getId().equals(event.getParent().getId())){
-                return;
-            }
-
+        collectionPublisher.getOnSave().addListener(collectionTree.getId(), event -> {
             Optional<DefaultMutableTreeNode> children = Collections.list(parent.children()).stream()
                     .map(item -> (DefaultMutableTreeNode) item)
                     .filter(item -> item.getUserObject() instanceof CollectionTreeDto)
@@ -83,8 +80,8 @@ public class CollectionTreeExpansionListenerUI implements TreeExpansionListener 
             parent.remove(children.get());
 
             var collection = collectionDataService.getCollectionTree(
-                            collectionTree,
-                            collectionTree.getPath()
+                            collectionTree.getParent(),
+                            collectionTree.getParent().getPath()
                     )
                     .filter(item -> item.getId().equals(event.getId()))
                     .findFirst()
@@ -100,13 +97,9 @@ public class CollectionTreeExpansionListenerUI implements TreeExpansionListener 
 
     private void requestAddOnSaveListener(
             DefaultMutableTreeNode parent,
-            CollectionTreeDto collectionTree
+            String id
     ){
-        requestPublisher.getOnSave().addListener(event -> {
-            if(!collectionTree.getId().equals(event.getParent().getId())){
-                return;
-            }
-
+        requestPublisher.getOnSave().addListener(id, event -> {
             Collections.list(parent.children()).stream()
                     .map(item -> (DefaultMutableTreeNode) item)
                     .filter(item -> item.getUserObject() instanceof CollectionTreeDto.Request)

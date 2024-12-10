@@ -12,8 +12,6 @@ public class RequestPublisher {
     }
 
     private final NoKeyPublisher<CollectionTreeDto.Request> onLoad = new NoKeyPublisher<>();
-    private final NoKeyPublisher<CollectionTreeDto.Request> onSave = new NoKeyPublisher<>();
-
-    public record ChangeEvent(String id, boolean change){};
-    private final NoKeyPublisher<ChangeEvent> onChange = new NoKeyPublisher<>();
+    private final KeyPublisher<String, CollectionTreeDto.Request> onSave = new KeyPublisher<>();
+    private final KeyPublisher<String, Boolean> onChange = new KeyPublisher<>();
 }

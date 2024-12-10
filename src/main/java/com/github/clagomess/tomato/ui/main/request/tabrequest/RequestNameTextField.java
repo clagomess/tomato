@@ -38,9 +38,7 @@ public class RequestNameTextField extends JPanel {
 
         lblRequestName.setText(requestDto.getName());
 
-        requestPublisher.getOnSave().addListener(event -> {
-            if(!event.getId().equals(requestDto.getId())) return;
-
+        requestPublisher.getOnSave().addListener(requestDto.getId(), event -> {
             parent.setText(event.getParent().flattenedParentString());
             lblRequestName.setText(event.getName());
         });

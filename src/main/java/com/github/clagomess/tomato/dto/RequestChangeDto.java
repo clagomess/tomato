@@ -15,17 +15,14 @@ public class RequestChangeDto {
     public void reset(RequestDto dto){
         this.currentHashCode = dto.hashCode();
         this.actualHashCode = dto.hashCode();
-        requestPublisher.getOnChange().publish(new RequestPublisher.ChangeEvent(
-                dto.getId(),
-                false
-        ));
+        requestPublisher.getOnChange().publish(dto.getId(), false);
     }
 
     public void setActualHashCode(RequestDto dto){
         this.actualHashCode = dto.hashCode();
-        requestPublisher.getOnChange().publish(new RequestPublisher.ChangeEvent(
+        requestPublisher.getOnChange().publish(
                 dto.getId(),
                 currentHashCode != actualHashCode
-        ));
+        );
     }
 }

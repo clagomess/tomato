@@ -38,7 +38,10 @@ public class CollectionRenameUI extends NameUI {
                     collectionDto
             );
 
-            collectionPublisher.getOnSave().publish(collectionTree);
+            collectionPublisher.getOnSave().publish(
+                    collectionTree.getId(),
+                    collectionTree
+            );
 
             setVisible(false);
             dispose();

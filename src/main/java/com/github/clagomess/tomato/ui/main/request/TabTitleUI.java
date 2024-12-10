@@ -33,17 +33,15 @@ public class TabTitleUI extends JPanel {
         httpMethod.setIcon(createHttpMethodIcon(requestDto.getMethod()));
         title.setText(requestDto.getName());
 
-        requestPublisher.getOnSave().addListener(event -> {
-            if(!requestDto.getId().equals(event.getId())) return;
+        requestPublisher.getOnSave().addListener(requestDto.getId(), event -> {
             httpMethod.setIcon(createHttpMethodIcon(event.getMethod()));
             title.setText(event.getName());
         });
 
-        requestPublisher.getOnChange().addListener(event -> {
-            if(!event.id().equals(requestDto.getId())) return;
-
-            changeIcon.setText(event.change() ? "*" : "o");
-        });
+        requestPublisher.getOnChange().addListener(
+                requestDto.getId(),
+                event -> changeIcon.setText(event ? "*" : "o")
+        );
     }
 
     public void onClose(ActionListener listener) {
