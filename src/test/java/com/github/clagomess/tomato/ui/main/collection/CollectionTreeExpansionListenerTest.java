@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
-import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 

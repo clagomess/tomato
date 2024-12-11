@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.workspace;
 
-import com.github.clagomess.tomato.dto.WorkspaceDto;
+import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.DataSessionDataService;
 import com.github.clagomess.tomato.service.WorkspaceDataService;

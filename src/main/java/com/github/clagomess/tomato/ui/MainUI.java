@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.ui;
 import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
 import com.github.clagomess.tomato.ui.component.IconFactory;
 import com.github.clagomess.tomato.ui.main.collection.CollectionTreeUI;
-import com.github.clagomess.tomato.ui.main.request.RequestUI;
+import com.github.clagomess.tomato.ui.main.request.RequestTabPaneUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceNewUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceSwitchUI;
 
@@ -11,13 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainUI extends JFrame {
-    private final CollectionTreeUI collectionTreeUi;
-    private final RequestUI requestUi;
-
     public MainUI(){
-        this.collectionTreeUi = new CollectionTreeUI();
-        this.requestUi = new RequestUI();
-
         setTitle("Tomato");
         setIconImage(IconFactory.ICON_FAVICON.getImage());
         setVisible(true);
@@ -25,7 +19,11 @@ public class MainUI extends JFrame {
         setJMenuBar(getMenu());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, collectionTreeUi, requestUi);
+        JSplitPane splitPane = new JSplitPane(
+                JSplitPane.HORIZONTAL_SPLIT,
+                new CollectionTreeUI(),
+                new RequestTabPaneUI()
+        );
         splitPane.setDividerLocation(200);
 
         add(splitPane);

@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.publisher;
 
-import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
+import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import lombok.Getter;
 
 @Getter
@@ -13,13 +14,13 @@ public class RequestPublisher {
 
     // for tab
     private final NoKeyPublisher<Boolean> onOpenNew = new NoKeyPublisher<>();
-    private final NoKeyPublisher<CollectionTreeDto.Request> onLoad = new NoKeyPublisher<>();
-    private final KeyPublisher<String, CollectionTreeDto.Request> onSave = new KeyPublisher<>();
-    private final KeyPublisher<String, Boolean> onChange = new KeyPublisher<>();
+    private final NoKeyPublisher<RequestHeadDto> onLoad = new NoKeyPublisher<>();
+    private final KeyPublisher<String, RequestHeadDto> onSave = new KeyPublisher<>();
+    private final KeyPublisher<TabKey, Boolean> onStaging = new KeyPublisher<>();
 
     // for collection tree
-    private final KeyPublisher<ParentCollectionId, CollectionTreeDto.Request> onInsert = new KeyPublisher<>();
-    private final KeyPublisher<RequestKey, CollectionTreeDto.Request> onUpdate = new KeyPublisher<>();
+    private final KeyPublisher<ParentCollectionId, RequestHeadDto> onInsert = new KeyPublisher<>();
+    private final KeyPublisher<RequestKey, RequestHeadDto> onUpdate = new KeyPublisher<>();
 
     public record RequestKey(String parentCollectionId, String requestId){}
     public record ParentCollectionId(String parentCollectionId){}

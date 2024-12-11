@@ -1,7 +1,8 @@
 package com.github.clagomess.tomato.mapper;
 
-import com.github.clagomess.tomato.dto.CollectionTreeDto;
-import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -16,7 +17,7 @@ public interface RequestMapper {
     @Mapping(target = "path", ignore = true)
     @Mapping(target = "parent", ignore = true)
     void toRequestHead(
-            @MappingTarget CollectionTreeDto.Request target,
+            @MappingTarget RequestHeadDto target,
             RequestDto source
     );
 
@@ -25,7 +26,7 @@ public interface RequestMapper {
     @Mapping(target = "name", source = "request.name")
     @Mapping(target = "path", source = "path")
     @Mapping(target = "parent", source = "parent")
-    CollectionTreeDto.Request toRequestHead(
+    RequestHeadDto toRequestHead(
             RequestDto request,
             CollectionTreeDto parent,
             File path

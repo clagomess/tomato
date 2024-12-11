@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.publisher;
 
-import com.github.clagomess.tomato.dto.WorkspaceDto;
+import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import lombok.Getter;
 
 @Getter

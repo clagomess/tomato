@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.service;
 
-import com.github.clagomess.tomato.dto.RequestDto;
 import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import org.junit.jupiter.api.AfterAll;

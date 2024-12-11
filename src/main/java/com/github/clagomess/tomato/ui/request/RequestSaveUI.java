@@ -1,7 +1,8 @@
 package com.github.clagomess.tomato.ui.request;
 
-import com.github.clagomess.tomato.dto.CollectionTreeDto;
-import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.service.RequestDataService;
@@ -67,7 +68,7 @@ public class RequestSaveUI extends JFrame {
                     requestDto
             );
 
-            CollectionTreeDto.Request requestHead = RequestMapper.INSTANCE.toRequestHead(
+            RequestHeadDto requestHead = RequestMapper.INSTANCE.toRequestHead(
                     requestDto,
                     parent,
                     filePath
@@ -89,6 +90,6 @@ public class RequestSaveUI extends JFrame {
 
     @FunctionalInterface
     public interface OnSaveFI {
-        void reponse(CollectionTreeDto.Request requestHead);
+        void reponse(RequestHeadDto requestHead);
     }
 }

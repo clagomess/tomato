@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.request;
 
-import com.github.clagomess.tomato.dto.CollectionTreeDto;
-import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
@@ -15,7 +15,7 @@ public class RequestRenameUI extends NameUI {
 
     public RequestRenameUI(
             Component parent,
-            CollectionTreeDto.Request requestHead
+            RequestHeadDto requestHead
     ) {
         super(parent);
         setTitle("Rename Request");
@@ -23,7 +23,7 @@ public class RequestRenameUI extends NameUI {
         btnSave.addActionListener(l -> btnSaveAction(requestHead));
     }
 
-    private void btnSaveAction(CollectionTreeDto.Request requestHead){
+    private void btnSaveAction(RequestHeadDto requestHead){
         btnSave.setEnabled(false);
 
         try {

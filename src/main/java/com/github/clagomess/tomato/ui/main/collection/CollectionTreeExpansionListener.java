@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
-import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 
@@ -29,7 +30,7 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
             return;
         }
 
-        if(firstChild.getUserObject() instanceof CollectionTreeDto.Request){
+        if(firstChild.getUserObject() instanceof RequestHeadDto){
             return;
         }
 
@@ -108,7 +109,7 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
             Collections.list(parentNode.children()).stream()
                     .map(item -> (DefaultMutableTreeNode) item)
                     .filter(item -> {
-                        if(item.getUserObject() instanceof CollectionTreeDto.Request dto){
+                        if(item.getUserObject() instanceof RequestHeadDto dto){
                             return dto.getId().equals(event.getId());
                         }
 

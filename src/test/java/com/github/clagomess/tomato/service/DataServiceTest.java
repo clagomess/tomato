@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.clagomess.tomato.dto.ConfigurationDto;
+import com.github.clagomess.tomato.dto.data.ConfigurationDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;

@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
-import com.github.clagomess.tomato.dto.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.service.WorkspaceDataService;

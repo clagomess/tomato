@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
-import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
 import com.github.clagomess.tomato.ui.collection.CollectionRenameUI;
@@ -33,13 +34,13 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selPath.getLastPathComponent();
 
         if (e.getButton() == 1 && e.getClickCount() == 2 &&
-                selectedNode.getUserObject() instanceof CollectionTreeDto.Request dto) {
+                selectedNode.getUserObject() instanceof RequestHeadDto dto) {
             requestPublisher.getOnLoad().publish(dto);
             return;
         }
 
         if(e.getButton() == 3 &&
-                selectedNode.getUserObject() instanceof CollectionTreeDto.Request dto){
+                selectedNode.getUserObject() instanceof RequestHeadDto dto){
             showRequestPopUpMenu(e, dto);
             return;
         }
@@ -64,7 +65,7 @@ public class CollectionTreeMouseListener extends MouseAdapter {
 
     private void showRequestPopUpMenu(
             MouseEvent e,
-            CollectionTreeDto.Request dto
+            RequestHeadDto dto
     ){
         JPopupMenu popup = new JPopupMenu();
         popup.add(new JMenuItem("Open"){{

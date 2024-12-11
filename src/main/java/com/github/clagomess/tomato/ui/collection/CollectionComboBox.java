@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.collection;
 
-import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 

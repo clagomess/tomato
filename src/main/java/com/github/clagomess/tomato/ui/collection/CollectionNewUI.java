@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.collection;
 
-import com.github.clagomess.tomato.dto.CollectionDto;
-import com.github.clagomess.tomato.dto.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.data.CollectionDto;
+import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;

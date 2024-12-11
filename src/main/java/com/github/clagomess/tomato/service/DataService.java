@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.clagomess.tomato.dto.ConfigurationDto;
-import com.github.clagomess.tomato.dto.MetadataDto;
+import com.github.clagomess.tomato.dto.data.ConfigurationDto;
+import com.github.clagomess.tomato.dto.data.MetadataDto;
 import com.github.clagomess.tomato.exception.DirectoryCreateException;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.Getter;

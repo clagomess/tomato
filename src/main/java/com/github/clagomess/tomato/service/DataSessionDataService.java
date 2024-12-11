@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.clagomess.tomato.dto.DataSessionDto;
+import com.github.clagomess.tomato.dto.data.DataSessionDto;
 
 import java.io.File;
 import java.io.IOException;

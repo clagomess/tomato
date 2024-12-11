@@ -1,8 +1,9 @@
 package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.clagomess.tomato.dto.CollectionTreeDto;
-import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -23,7 +24,7 @@ public class RequestDataService {
     private final DataService dataService = DataService.getInstance();
 
     public Optional<RequestDto> load(
-            CollectionTreeDto.Request request
+            RequestHeadDto request
     ) throws IOException {
         return dataService.readFile(
                 request.getPath(),
@@ -46,7 +47,7 @@ public class RequestDataService {
         }
     }
 
-    public Stream<CollectionTreeDto.Request> getRequestList(
+    public Stream<RequestHeadDto> getRequestList(
             CollectionTreeDto collectionParent
     ){
         return Arrays.stream(dataService.listFiles(collectionParent.getPath()))
@@ -54,7 +55,7 @@ public class RequestDataService {
                 .filter(item -> item.getName().startsWith("request-"))
                 .map(item -> {
                     try {
-                        Optional<CollectionTreeDto.Request> result = dataService.readFile(
+                        Optional<RequestHeadDto> result = dataService.readFile(
                                 item,
                                 new TypeReference<>() {}
                         );

@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request;
 
-import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import net.miginfocom.swing.MigLayout;
 
@@ -24,6 +25,7 @@ public class TabTitleUI extends JPanel {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public TabTitleUI(
+            TabKey tabKey,
             RequestDto requestDto
     ){
         setLayout(new MigLayout("insets 0 0 0 0"));
@@ -42,8 +44,8 @@ public class TabTitleUI extends JPanel {
             title.setText(event.getName());
         }));
 
-        listenerUuid.add(requestPublisher.getOnChange().addListener(
-                requestDto.getId(),
+        listenerUuid.add(requestPublisher.getOnStaging().addListener(
+                tabKey,
                 event -> changeIcon.setText(event ? "*" : "o")
         ));
     }
@@ -56,7 +58,7 @@ public class TabTitleUI extends JPanel {
     public void dispose(){
         listenerUuid.forEach(uuid -> {
             requestPublisher.getOnSave().removeListener(uuid);
-            requestPublisher.getOnChange().removeListener(uuid);
+            requestPublisher.getOnStaging().removeListener(uuid);
         });
     }
 }

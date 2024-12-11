@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.service;
 
-import com.github.clagomess.tomato.dto.DataSessionDto;
-import com.github.clagomess.tomato.dto.WorkspaceDto;
+import com.github.clagomess.tomato.dto.data.DataSessionDto;
+import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

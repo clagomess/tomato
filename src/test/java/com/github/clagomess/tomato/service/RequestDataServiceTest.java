@@ -1,7 +1,6 @@
 package com.github.clagomess.tomato.service;
 
-import com.github.clagomess.tomato.dto.CollectionTreeDto;
-import com.github.clagomess.tomato.dto.RequestDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ public class RequestDataServiceTest {
 
     @Test
     public void load() throws IOException {
-        var request = new CollectionTreeDto.Request();
+        var request = new RequestHeadDto();
         request.setPath(new File(
                 testHome,
                 "workspace-nPUaq0TC/request-G4A3BCPq.json"

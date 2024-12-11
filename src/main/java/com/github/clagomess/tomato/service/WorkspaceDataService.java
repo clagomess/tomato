@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.clagomess.tomato.dto.DataSessionDto;
-import com.github.clagomess.tomato.dto.WorkspaceDto;
+import com.github.clagomess.tomato.dto.data.DataSessionDto;
+import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
