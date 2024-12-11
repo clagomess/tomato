@@ -1,6 +1,5 @@
 package com.github.clagomess.tomato.ui.main.request.left;
 
-import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
@@ -12,6 +11,7 @@ import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
+import com.github.clagomess.tomato.ui.component.svgicon.BxSaveIcon;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.right.ResponseTabContent;
 import com.github.clagomess.tomato.ui.request.RequestSaveUI;
@@ -34,7 +34,7 @@ public class RequestTabContentUI extends JPanel {
     );
     private final ListenableTextField txtRequestUrl = new ListenableTextField();
     private final JButton btnSendRequest = new JButton("Send");
-    private final JButton btnSaveRequest = new JButton(new FlatFileViewFloppyDriveIcon());
+    private final JButton btnSaveRequest = new JButton(new BxSaveIcon());
     private final ButtonGroup bgBodyType = new ButtonGroup();
 
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
