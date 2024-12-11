@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RequestTabPaneUI extends JTabbedPane {
-    private final List<String> tabsId = new ArrayList<>();
+    private final List<Tab> tabs = new ArrayList<>();
 
     private final RequestDataService requestDataService = RequestDataService.getInstance();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
@@ -28,9 +29,7 @@ public class RequestTabPaneUI extends JTabbedPane {
         });
 
         workspacePublisher.getOnSwitch().addListener(event -> {
-            tabsId.forEach(tabId -> removeTabAt(indexOfTab(tabId)));
-            tabsId.clear();
-            // @TODO: dispose tabs
+            new ArrayList<>(tabs).forEach(this::removeTab);
         });
 
         requestPublisher.getOnOpenNew().addListener(event -> {
@@ -78,16 +77,37 @@ public class RequestTabPaneUI extends JTabbedPane {
 
         // setup tab title
         var tabTitle = new TabTitleUI(requestSplitPaneUI.getKey(), requestDto);
-        tabTitle.onClose(l -> {
-            removeTabAt(indexOfTab(tabId));
-            tabsId.remove(tabId);
-            requestSplitPaneUI.getRequestContent().dispose();
-        });
+        tabTitle.onClose(l -> removeTab(requestSplitPaneUI.getKey()));
 
         setTabComponentAt(indexOfTab(tabId), tabTitle);
-        tabsId.add(tabId);
+        tabs.add(new Tab(
+                requestSplitPaneUI.getKey(),
+                tabTitle,
+                requestSplitPaneUI
+        ));
 
         // select
         setSelectedIndex(getTabCount() -2);
     }
+
+    private void removeTab(Tab tab){
+        var tabId = tab.tabKey().getUuid().toString();
+        removeTabAt(indexOfTab(tabId));
+        tab.tabTitleUI().dispose();
+        tab.tabContent().getRequestContent().dispose();
+        tabs.remove(tab);
+    }
+
+    private void removeTab(TabKey tabKey){
+        tabs.stream()
+                .filter(tab -> tab.tabKey().equals(tabKey))
+                .findFirst()
+                .ifPresent(this::removeTab);
+    }
+
+    private record Tab(
+            TabKey tabKey,
+            TabTitleUI tabTitleUI,
+            RequestSplitPaneUI tabContent
+    ) { }
 }
