@@ -1,6 +1,8 @@
 package com.github.clagomess.tomato.service;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -41,10 +43,13 @@ public class RequestDataServiceTest {
 
     @Test
     public void getRequestList_whenHasResult_return(){
-        var result = requestDataService.getRequestList(null, new File(
+        var collectionParent = new CollectionTreeDto();
+        collectionParent.setPath(new File(
                 testHome,
                 "workspace-nPUaq0TC"
         ));
+
+        var result = requestDataService.getRequestList(collectionParent);
 
         Assertions.assertThat(result)
                 .hasSize(1)

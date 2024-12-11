@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.service;
 
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
+import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,10 +20,13 @@ public class CollectionDataServiceTest {
 
     @Test
     public void getCollectionChildrenTree_whenHasResult_return(){
-        var result = collectionDataService.getCollectionChildrenTree(null, new File(
+        var collectionStart = new CollectionTreeDto();
+        collectionStart.setPath(new File(
                 testHome,
                 "workspace-nPUaq0TC"
-        )).toList();
+        ));
+
+        var result = collectionDataService.getCollectionChildrenTree(collectionStart).toList();
 
         Assertions.assertThat(result)
                 .hasSize(1)
@@ -37,10 +41,7 @@ public class CollectionDataServiceTest {
                 .allMatch(item -> item.getRequests() != null)
         ;
 
-        collectionDataService.getCollectionChildrenTree(null, new File(
-                testHome,
-                "workspace-nPUaq0TC"
-        )).toList().get(0).getRequests().toList();
+        collectionDataService.getCollectionChildrenTree(collectionStart).toList().get(0).getRequests().toList();
 
         var parent = result.get(0);
         Assertions.assertThat(parent.getRequests())

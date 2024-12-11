@@ -13,24 +13,21 @@ public class CollectionTreeDtoTest {
     public void flattened() {
         var root = new CollectionTreeDto(){{
             setName("ROOT");
-            setChildren(Stream.of(
+            setChildren(parent -> Stream.of(
                     new CollectionTreeDto(){{
                         setName("LEVEL 1 - A");
-                        setChildren(Stream.empty());
                     }},
                     new CollectionTreeDto(){{
                         setName("LEVEL 1 - B");
-                        setChildren(Stream.of(
+                        setChildren(parent -> Stream.of(
                                 new CollectionTreeDto(){{
                                     setName("LEVEL 2 - A");
-                                    setChildren(Stream.empty());
                                 }},
                                 new CollectionTreeDto(){{
                                     setName("LEVEL 2 - B");
-                                    setChildren(Stream.of(
+                                    setChildren(parent -> Stream.of(
                                             new CollectionTreeDto(){{
                                                 setName("LEVEL 3 - A");
-                                                setChildren(Stream.empty());
                                             }}
                                     ));
                                 }}
