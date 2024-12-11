@@ -23,14 +23,13 @@ public class WorkspaceSwitchUI extends JFrame {
         setMinimumSize(new Dimension(300, 100));
         setResizable(false);
 
-        JPanel panel = new JPanel(new MigLayout("", "[grow, fill]"));
+        JPanel panel = new JPanel(new MigLayout());
         panel.add(new JLabel("Select workspace:"), "wrap");
-        panel.add(cbWorkspace, "wrap");
-        JPanel pButton = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        pButton.add(btnSwitch);
-        panel.add(pButton);
+        panel.add(cbWorkspace, "width 100%, wrap");
+        panel.add(btnSwitch, "align right");
         add(panel);
 
+        getRootPane().setDefaultButton(btnSwitch);
 
         // data
         btnSwitch.addActionListener(l -> btnSwitchAction());

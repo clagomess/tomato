@@ -19,8 +19,9 @@ public abstract class NameUI extends JFrame {
         panel.add(new JLabel("Name"), "wrap");
         panel.add(txtName, "width 100%, wrap");
         panel.add(btnSave, "align right");
-
         add(panel);
+
+        getRootPane().setDefaultButton(btnSave);
 
         pack();
         setLocationRelativeTo(parent);

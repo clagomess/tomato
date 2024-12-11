@@ -36,8 +36,9 @@ public class CollectionNewUI extends JFrame {
         panel.add(new JLabel("Parent"), "wrap");
         panel.add(cbCollectionParent, "width 100%, wrap");
         panel.add(btnSave, "align right");
-
         add(panel);
+
+        getRootPane().setDefaultButton(btnSave);
 
         pack();
         setLocationRelativeTo(parent);
