@@ -23,7 +23,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
         SwingUtilities.invokeLater(() -> {
             try {
                 var theme = Theme.load(getClass().getResourceAsStream(
-                        "/org/fife/ui/rsyntaxtextarea/themes/dark.xml"
+                        "trsyntax-textarea-theme.xml"
                 ));
 
                 theme.apply(this);
