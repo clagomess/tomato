@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.ui.component;
 
+import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ public abstract class NameUI extends JFrame {
 
     public NameUI(Component parent){
         setTitle("Rename");
-        setIconImage(IconFactory.ICON_FAVICON.getImage());
+        setIconImage(new FaviconImageIcon().getImage());
         setMinimumSize(new Dimension(300, 100));
         setResizable(false);
 

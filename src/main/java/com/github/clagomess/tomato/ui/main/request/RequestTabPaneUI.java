@@ -7,6 +7,7 @@ import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -50,7 +51,7 @@ public class RequestTabPaneUI extends JTabbedPane {
         addTab("+", new JPanel());
         setSelectedIndex(-1);
 
-        JButton btnPlus = new JButton("+");
+        JButton btnPlus = new JButton(new BxPlusIcon());
 
         setTabComponentAt(indexOfTab("+"), btnPlus);
 

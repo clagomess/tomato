@@ -8,7 +8,7 @@ import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.collection.CollectionComboBox;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
-import com.github.clagomess.tomato.ui.component.IconFactory;
+import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -33,7 +33,7 @@ public class RequestSaveUI extends JFrame {
         this.onSaveListener = onSaveListener;
 
         setTitle("Save Request");
-        setIconImage(IconFactory.ICON_FAVICON.getImage());
+        setIconImage(new FaviconImageIcon().getImage());
         setMinimumSize(new Dimension(300, 100));
         setResizable(false);
 

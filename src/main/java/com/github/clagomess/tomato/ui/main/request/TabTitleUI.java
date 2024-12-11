@@ -3,21 +3,25 @@ package com.github.clagomess.tomato.ui.main.request;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxXIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.github.clagomess.tomato.ui.component.IconFactory.createHttpMethodIcon;
-
 public class TabTitleUI extends JPanel {
-    private final JLabel changeIcon = new JLabel("-");
+    private final BxsCircleIcon iconHasChanged = new BxsCircleIcon(Color.ORANGE);
+    private final BxsCircleIcon iconHasNotChanged = new BxsCircleIcon(Color.GRAY);
+
+    private final JLabel changeIcon = new JLabel();
     private final JLabel httpMethod = new JLabel();
     private final JLabel title = new JLabel();
-    private final JButton btnClose = new JButton("x"){{
+    private final JButton btnClose = new JButton(new BxXIcon()){{
         setBorder(BorderFactory.createEmptyBorder());
     }};
 
@@ -36,17 +40,17 @@ public class TabTitleUI extends JPanel {
         add(btnClose);
 
         // set data
-        httpMethod.setIcon(createHttpMethodIcon(requestDto.getMethod()));
+        httpMethod.setIcon(requestDto.getMethod().getIcon());
         title.setText(requestDto.getName());
 
         listenerUuid.add(requestPublisher.getOnSave().addListener(requestDto.getId(), event -> {
-            httpMethod.setIcon(createHttpMethodIcon(event.getMethod()));
+            httpMethod.setIcon(event.getMethod().getIcon());
             title.setText(event.getName());
         }));
 
         listenerUuid.add(requestPublisher.getOnStaging().addListener(
                 tabKey,
-                event -> changeIcon.setText(event ? "*" : "o")
+                event -> changeIcon.setIcon(event ? iconHasChanged : iconHasNotChanged)
         ));
     }
 

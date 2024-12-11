@@ -1,9 +1,8 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
-import com.formdev.flatlaf.icons.FlatFileViewDirectoryIcon;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.ui.component.IconFactory;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsFolderIcon;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -26,7 +25,7 @@ public class CollectionTreeCellRender extends DefaultTreeCellRenderer {
         if(userObject instanceof RequestHeadDto dto){
             return new JLabel(
                     dto.getName(),
-                    IconFactory.createHttpMethodIcon(dto.getMethod()),
+                    dto.getMethod().getIcon(),
                     SwingConstants.LEFT
 
             );
@@ -35,7 +34,7 @@ public class CollectionTreeCellRender extends DefaultTreeCellRenderer {
         if(userObject instanceof CollectionTreeDto dto){
             return new JLabel(
                     dto.getName(),
-                    new FlatFileViewDirectoryIcon(),
+                    new BxsFolderIcon(),
                     SwingConstants.LEFT
             );
         }

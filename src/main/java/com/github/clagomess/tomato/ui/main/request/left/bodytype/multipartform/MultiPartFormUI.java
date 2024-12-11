@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.left.bodytype.multipartform;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.BodyTypeUI;
 import net.miginfocom.swing.MigLayout;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class MultiPartFormUI extends JPanel implements BodyTypeUI {
     private final RequestDto requestDto;
-    private final JButton btnAddNew = new JButton("+");
+    private final JButton btnAddNew = new JButton(new BxPlusIcon());
 
     public MultiPartFormUI(RequestDto requestDto){
         this.requestDto = requestDto;

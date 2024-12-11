@@ -4,14 +4,13 @@ import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
-import com.github.clagomess.tomato.ui.component.svgicon.BxSaveIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSaveIcon;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.right.ResponseTabContent;
 import com.github.clagomess.tomato.ui.request.RequestSaveUI;
@@ -29,9 +28,7 @@ public class RequestTabContentUI extends JPanel {
     private final ResponseTabContent responseTabContent;
 
     private final RequestNameTextField txtRequestName = new RequestNameTextField();
-    private final JComboBox<HttpMethodEnum> cbHttpMethod = new JComboBox<>(
-            HttpMethodEnum.values()
-    );
+    private final HttpMethodComboBox cbHttpMethod = new HttpMethodComboBox();
     private final ListenableTextField txtRequestUrl = new ListenableTextField();
     private final JButton btnSendRequest = new JButton("Send");
     private final JButton btnSaveRequest = new JButton(new BxSaveIcon());
@@ -83,7 +80,7 @@ public class RequestTabContentUI extends JPanel {
         txtRequestUrl.setText(requestDto.getUrl());
 
         // listeners
-        cbHttpMethod.addActionListener(l -> requestDto.setMethod((HttpMethodEnum) cbHttpMethod.getSelectedItem()));
+        cbHttpMethod.addActionListener(l -> requestDto.setMethod(cbHttpMethod.getSelectedItem()));
         cbHttpMethod.addActionListener(l -> requestStagingMonitor.setActualHashCode(requestDto));
         txtRequestUrl.addOnChange(requestDto::setUrl);
         txtRequestUrl.addOnChange(e -> requestStagingMonitor.setActualHashCode(requestDto));

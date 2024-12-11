@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.ui.workspace;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.service.WorkspaceDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
-import com.github.clagomess.tomato.ui.component.IconFactory;
+import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -19,7 +19,7 @@ public class WorkspaceNewUI extends JFrame {
             Component parent
     ){
         setTitle("New Workspace");
-        setIconImage(IconFactory.ICON_FAVICON.getImage());
+        setIconImage(new FaviconImageIcon().getImage());
         setMinimumSize(new Dimension(300, 100));
         setResizable(false);
 

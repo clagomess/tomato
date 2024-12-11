@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -27,7 +28,7 @@ class RowComponent extends JPanel {
     private final ListenableTextField txtKey = new ListenableTextField();
     private JComponent cValue;
     private final JCheckBox cbSelected = new JCheckBox();
-    private final JButton btnRemove = new JButton("x"); //@TODO: change to trash icon;
+    private final JButton btnRemove = new JButton(new BxTrashIcon());
 
     public RowComponent(
             Container parent,

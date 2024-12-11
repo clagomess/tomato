@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
 import com.github.clagomess.tomato.ui.collection.CollectionRenameUI;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
 import com.github.clagomess.tomato.ui.request.RequestRenameUI;
 import lombok.RequiredArgsConstructor;
 
@@ -71,14 +72,14 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         popup.add(new JMenuItem("Open"){{
             addActionListener(e -> requestPublisher.getOnLoad().publish(dto));
         }});
-        popup.add(new JMenuItem("Open Detached")); //@TODO: implement
+        popup.add(new JMenuItem("Open Detached", new BxLinkExternalIcon())); //@TODO: implement
         popup.addSeparator();
-        popup.add(new JMenuItem("Move")); //@TODO: implement
+        popup.add(new JMenuItem("Move", new BxSortAlt2Icon())); //@TODO: implement
         popup.add(new JMenuItem("Rename"){{
             addActionListener(e -> new RequestRenameUI(tree, dto));
         }});
         popup.addSeparator();
-        popup.add(new JMenuItem("Delete")); //@TODO: implement
+        popup.add(new JMenuItem("Delete", new BxTrashIcon())); //@TODO: implement
         popup.show(e.getComponent(), e.getX(), e.getY());
     }
 
@@ -87,7 +88,7 @@ public class CollectionTreeMouseListener extends MouseAdapter {
             CollectionTreeDto dto
     ){
         JPopupMenu popup = new JPopupMenu();
-        popup.add(new JMenuItem("Move")); //@TODO: implement
+        popup.add(new JMenuItem("Move", new BxSortAlt2Icon())); //@TODO: implement
         popup.add(new JMenuItem("Rename"){{
             addActionListener(e -> new CollectionRenameUI(tree, dto));
         }});
@@ -95,10 +96,10 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         popup.add(new JMenuItem("New Collection"){{
             addActionListener(ae -> new CollectionNewUI(e.getComponent(), dto));
         }});
-        popup.add(new JMenuItem("Import")); //@TODO: implement
-        popup.add(new JMenuItem("Export")); //@TODO: implement
+        popup.add(new JMenuItem("Import", new BxImportIcon())); //@TODO: implement
+        popup.add(new JMenuItem("Export", new BxExportIcon())); //@TODO: implement
         popup.addSeparator();
-        popup.add(new JMenuItem("Delete")); //@TODO: implement
+        popup.add(new JMenuItem("Delete", new BxTrashIcon())); //@TODO: implement
         popup.show(e.getComponent(), e.getX(), e.getY());
     }
 }

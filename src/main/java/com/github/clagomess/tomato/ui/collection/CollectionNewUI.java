@@ -5,7 +5,7 @@ import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
-import com.github.clagomess.tomato.ui.component.IconFactory;
+import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -24,7 +24,7 @@ public class CollectionNewUI extends JFrame {
             CollectionTreeDto selectedCollectionTreeParent
     ){
         setTitle("New Collection");
-        setIconImage(IconFactory.ICON_FAVICON.getImage());
+        setIconImage(new FaviconImageIcon().getImage());
         setMinimumSize(new Dimension(300, 100));
         setResizable(false);
 

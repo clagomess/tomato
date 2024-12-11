@@ -13,7 +13,7 @@ import java.awt.*;
 import java.net.URL;
 import java.util.Objects;
 
-class SvgIcon implements Icon {
+public class SvgIcon implements Icon {
     private final int iconWidth;
     private final int iconHeight;
     private final SVGDocument document;

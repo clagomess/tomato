@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,7 @@ class RowComponent extends JPanel {
     private final JCheckBox cbSelected = new JCheckBox();
     private final ListenableTextField txtKey = new ListenableTextField();
     private final ListenableTextField txtValue = new ListenableTextField();
-    private final JButton btnRemove = new JButton("x"); //@TODO: change to trash icon;
+    private final JButton btnRemove = new JButton(new BxTrashIcon());
 
     public RowComponent(
             @Nonnull Container parent,
