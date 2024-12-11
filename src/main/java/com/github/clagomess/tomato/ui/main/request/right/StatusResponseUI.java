@@ -14,10 +14,18 @@ import java.time.temporal.ChronoUnit;
 public class StatusResponseUI extends JPanel {
     public StatusResponseUI(){
         setLayout(new FlowLayout(FlowLayout.LEFT));
+        add(createContainer(
+                Color.GRAY,
+                "Waiting response"
+        ));
     }
 
     public void reset(){
         removeAll();
+        add(createContainer(
+                Color.GRAY,
+                "Waiting response"
+        ));
         revalidate();
         repaint();
     }

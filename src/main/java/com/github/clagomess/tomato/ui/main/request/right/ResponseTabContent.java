@@ -1,20 +1,21 @@
 package com.github.clagomess.tomato.ui.main.request.right;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
-import com.github.clagomess.tomato.ui.component.EditorFactory;
+import com.github.clagomess.tomato.ui.component.RawTextArea;
+import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+@Slf4j
 @Getter
 public class ResponseTabContent extends JPanel {
-    private final JTextArea txtResponseRAW = EditorFactory.createRawTextViewer();
-    private final JTextArea txtHTTPDebug = EditorFactory.createRawTextViewer();
-    private final RSyntaxTextArea txtPreview = EditorFactory.getInstance().createEditor();
+    private final RawTextArea txtHTTPDebug = new RawTextArea();
+    private final TRSyntaxTextArea txtResponse = new TRSyntaxTextArea();
     private final StatusResponseUI statusResponseUI = new StatusResponseUI();
     private final JButton btnDownload = new JButton("Download");
 
@@ -27,10 +28,9 @@ public class ResponseTabContent extends JPanel {
         add(btnDownload, "wrap");
 
         JTabbedPane tpResponse = new JTabbedPane();
-        tpResponse.addTab("Preview", EditorFactory.createScroll(txtPreview));
-        tpResponse.addTab("RAW", EditorFactory.createScroll(txtResponseRAW));
+        tpResponse.addTab("Preview", TRSyntaxTextArea.createScroll(txtResponse));
         tpResponse.addTab("Header", getHeader());
-        tpResponse.addTab("Debug", EditorFactory.createScroll(txtHTTPDebug));
+        tpResponse.addTab("Debug", RawTextArea.createScroll(txtHTTPDebug));
         add(tpResponse, "span, height 100%");
 
         // configure
@@ -57,9 +57,8 @@ public class ResponseTabContent extends JPanel {
 
     public void reset(){
         btnDownload.setEnabled(false);
-        txtResponseRAW.setText("");
-        txtHTTPDebug.setText("");
-        txtPreview.setText("");
+        txtHTTPDebug.reset();
+        txtResponse.reset();
         statusResponseUI.reset();
     }
 
@@ -69,13 +68,8 @@ public class ResponseTabContent extends JPanel {
 
         if(responseDto.isRequestStatus()) {
             btnDownload.setEnabled(true);
-            txtResponseRAW.setText(responseDto.getHttpResponse().getBodyAsString());
-            txtPreview.setText(responseDto.getHttpResponse().getBodyAsString());
-
-            String syntax = EditorFactory.createSyntaxStyleFromContentType(
-                    responseDto.getHttpResponse().getContentType().toString()
-            );
-            txtPreview.setSyntaxEditingStyle(syntax); //@TODO: crash com frequencia: Error: pushback value was too large
+            txtResponse.setText(responseDto.getHttpResponse().getBodyAsString());
+            txtResponse.setSyntaxStyle(responseDto.getHttpResponse().getContentType());
         }
 
         statusResponseUI.update(responseDto);
@@ -85,7 +79,7 @@ public class ResponseTabContent extends JPanel {
         JFileChooser file = new JFileChooser();
         file.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-        /*
+        /* @TODO: check
         if(file.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
             try {
                 DataService.getInstance().writeFile(file.getSelectedFile(), responseDto.getHttpResponse().getBody());
