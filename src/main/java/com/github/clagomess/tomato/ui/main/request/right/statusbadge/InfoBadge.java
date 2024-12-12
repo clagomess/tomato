@@ -1,0 +1,17 @@
+package com.github.clagomess.tomato.ui.main.request.right.statusbadge;
+
+import com.github.clagomess.tomato.ui.ColorConstant;
+
+import javax.swing.*;
+
+public class InfoBadge extends JPanel {
+    public InfoBadge(String message) {
+        var color = ColorConstant.GRAY_MATCH;
+
+        setBackground(color.background());
+
+        var label = new JLabel(message);
+        label.setForeground(color.foreground());
+        add(label);
+    }
+}
