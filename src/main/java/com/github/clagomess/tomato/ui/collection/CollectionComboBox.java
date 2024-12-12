@@ -43,8 +43,19 @@ public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
                 boolean isSelected,
                 boolean cellHasFocus
         ) {
-            if(value == null) return new JLabel("Empty");
-            return new JLabel(((CollectionTreeDto) value).flattenedParentString());
+            JLabel label = (JLabel) super.getListCellRendererComponent(
+                    list,
+                    value,
+                    index,
+                    isSelected,
+                    cellHasFocus
+            );
+
+            if(value != null) {
+                label.setText(((CollectionTreeDto) value).flattenedParentString());
+            }
+
+            return label;
         }
     }
 }

@@ -80,10 +80,14 @@ public class RequestTabContentUI extends JPanel {
         txtRequestUrl.setText(requestDto.getUrl());
 
         // listeners
-        cbHttpMethod.addActionListener(l -> requestDto.setMethod(cbHttpMethod.getSelectedItem()));
-        cbHttpMethod.addActionListener(l -> requestStagingMonitor.setActualHashCode(requestDto));
-        txtRequestUrl.addOnChange(requestDto::setUrl);
-        txtRequestUrl.addOnChange(e -> requestStagingMonitor.setActualHashCode(requestDto));
+        cbHttpMethod.addActionListener(l -> {
+            requestDto.setMethod(cbHttpMethod.getSelectedItem());
+            requestStagingMonitor.setActualHashCode(requestDto);
+        });
+        txtRequestUrl.addOnChange(value -> {
+            requestDto.setUrl(value);
+            requestStagingMonitor.setActualHashCode(requestDto);
+        });
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
     }

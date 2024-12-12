@@ -38,8 +38,19 @@ public class WorkspaceComboBox extends JComboBox<WorkspaceDto> {
                 boolean isSelected,
                 boolean cellHasFocus
         ) {
-            if(value == null) return new JLabel("Empty");
-            return new JLabel(((WorkspaceDto) value).getName());
+            JLabel label = (JLabel) super.getListCellRendererComponent(
+                    list,
+                    value,
+                    index,
+                    isSelected,
+                    cellHasFocus
+            );
+
+            if(value != null){
+                label.setText(((WorkspaceDto) value).getName());
+            }
+
+            return label;
         }
     }
 }

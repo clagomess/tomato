@@ -25,8 +25,20 @@ public class HttpMethodComboBox extends JComboBox<HttpMethodEnum> {
                 boolean isSelected,
                 boolean cellHasFocus
         ) {
-            if(value == null) return new JLabel("Empty");
-            return new JLabel(" ", ((HttpMethodEnum) value).getIcon(), SwingConstants.LEFT);
+            JLabel label = (JLabel) super.getListCellRendererComponent(
+                    list,
+                    value,
+                    index,
+                    isSelected,
+                    cellHasFocus
+            );
+
+            if(value != null){
+                label.setText(" ");
+                label.setIcon(((HttpMethodEnum) value).getIcon());
+            }
+
+            return label;
         }
     }
 }
