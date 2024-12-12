@@ -68,8 +68,8 @@ public class ResponseTabContent extends JPanel {
 
         if(responseDto.isRequestStatus()) {
             btnDownload.setEnabled(true);
-            txtResponse.setText(responseDto.getHttpResponse().getBodyAsString());
             txtResponse.setSyntaxStyle(responseDto.getHttpResponse().getContentType());
+            txtResponse.setText(responseDto.getHttpResponse().getBodyAsString());
         }
 
         statusResponseUI.update(responseDto);

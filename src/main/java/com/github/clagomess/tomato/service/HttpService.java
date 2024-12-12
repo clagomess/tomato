@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.service;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
-import com.github.clagomess.tomato.util.LoggerHandlerUtil;
+import com.github.clagomess.tomato.util.HttpLogCollectorUtil;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -20,7 +20,6 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Slf4j
 public class HttpService {
@@ -30,12 +29,18 @@ public class HttpService {
     }
 
     private final Client client;
+    private final HttpLogCollectorUtil httpLogCollectorUtil = new HttpLogCollectorUtil();
     private HttpService() {
         ClientConfig config = new ClientConfig();
         config.property(ClientProperties.FOLLOW_REDIRECTS, true);
         config.property(ClientProperties.CONNECT_TIMEOUT, 1000 * 10);
         config.register(MultiPartFeature.class);
-        config.register(getLogging());
+        config.register(new LoggingFeature(
+                httpLogCollectorUtil,
+                Level.INFO,
+                LoggingFeature.Verbosity.PAYLOAD_TEXT,
+                600
+        ));
 
 //        if(restParam.getProxy() != null){ //@TODO: impl. use of proxy
 //            config.connectorProvider(new ApacheConnectorProvider());
@@ -49,19 +54,6 @@ public class HttpService {
         clientBuilder.sslContext(getSslContext());
 
         client = clientBuilder.build();
-    }
-
-    private final LoggerHandlerUtil loggerHandler = new LoggerHandlerUtil();
-    private LoggingFeature getLogging(){
-        Logger logger = Logger.getLogger(this.getClass().getName());
-        logger.addHandler(loggerHandler);
-
-        return new LoggingFeature(
-                logger,
-                Level.INFO,
-                LoggingFeature.Verbosity.PAYLOAD_TEXT,
-                null
-        );
     }
 
     private static SSLContext getSslContext() {
@@ -108,7 +100,7 @@ public class HttpService {
             // set cookies
             dto.getCookies().forEach(item -> invocationBuilder.cookie(item.getKey(), item.getValue()));
 
-            loggerHandler.flush();
+            httpLogCollectorUtil.flush();
             long requestTime = System.currentTimeMillis();
 
             try(Response response = performRequest(invocationBuilder, dto)){
@@ -130,7 +122,7 @@ public class HttpService {
             result.setRequestMessage(e.getMessage());
             log.error(log.getName(), e);
         } finally {
-            result.setRequestDebug(loggerHandler.getLogText().toString());
+            result.setRequestDebug(httpLogCollectorUtil.getLogText().toString());
         }
 
         return result;

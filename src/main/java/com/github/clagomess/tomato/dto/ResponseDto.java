@@ -32,9 +32,10 @@ public class ResponseDto {
         private Map<String, List<String>> headers = new HashMap<>();
         private Map<String, String> cookies = new HashMap<>();
         private MediaType contentType;
-        private byte[] body;
+        private byte[] body; //@TODO: must be a File
 
         public String getBodyAsString(){
+            // @TODO: check charset, content-type (not-binary)
             return new String(body);
         }
 

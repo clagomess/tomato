@@ -56,6 +56,19 @@ public class StatusResponseUI extends JPanel {
                 formatResponseBodySize(dto.getHttpResponse().getBodySize())
         ));
 
+        var charset = dto.getHttpResponse()
+                .getContentType()
+                .getParameters()
+                .getOrDefault("charset", "UTF-8");
+        if(!"UTF-8".equalsIgnoreCase(charset)){
+            add(createContainer(
+                    Color.ORANGE,
+                    charset
+            ));
+        }
+
+        // @TODO: add content-type when not TEXT
+
         revalidate();
         repaint();
     }
