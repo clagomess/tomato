@@ -42,8 +42,9 @@ public class CollectionDataService {
     /**
      * @param parentPath example: workspace-xyz/
      * @param collection will write into workspace-xyz/<b>collection-zzz/collection-zzz.json</b>
+     * @return collectionDir
      */
-    public void save(
+    public File save(
             File parentPath,
             CollectionDto collection
     ) throws IOException {
@@ -58,6 +59,8 @@ public class CollectionDataService {
         );
 
         dataService.writeFile(collectionFile, collection);
+
+        return collectionDir;
     }
 
     public Stream<CollectionTreeDto> getCollectionChildrenTree(

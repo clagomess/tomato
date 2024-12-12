@@ -109,6 +109,12 @@
             <version>3.12.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>1.0.72</version>
+        </dependency>
+
         <!-- ######## SCOPE TEST ######## -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
