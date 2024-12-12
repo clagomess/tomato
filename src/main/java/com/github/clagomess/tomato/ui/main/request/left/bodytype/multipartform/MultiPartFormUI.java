@@ -6,7 +6,6 @@ import com.github.clagomess.tomato.ui.main.request.left.bodytype.BodyTypeUI;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.util.ArrayList;
 
 public class MultiPartFormUI extends JPanel implements BodyTypeUI {
     private final RequestDto requestDto;
@@ -14,9 +13,6 @@ public class MultiPartFormUI extends JPanel implements BodyTypeUI {
 
     public MultiPartFormUI(RequestDto requestDto){
         this.requestDto = requestDto;
-        if(this.requestDto.getBody().getMultiPartForm() == null){ //@TODO: ver na raiz, nunca nulo
-            this.requestDto.getBody().setMultiPartForm(new ArrayList<>());
-        }
 
         setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill]", ""));
 

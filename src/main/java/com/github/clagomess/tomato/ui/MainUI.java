@@ -28,7 +28,7 @@ public class MainUI extends JFrame {
                 new CollectionTreeUI(),
                 new RequestTabPaneUI()
         );
-        splitPane.setDividerLocation(200);
+        splitPane.setDividerLocation(250);
 
         add(splitPane);
         pack();

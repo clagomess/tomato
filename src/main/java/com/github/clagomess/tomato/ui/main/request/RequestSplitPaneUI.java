@@ -20,6 +20,7 @@ public class RequestSplitPaneUI extends JSplitPane {
             RequestDto request
     ) {
         super(JSplitPane.HORIZONTAL_SPLIT);
+        setDividerLocation(.5);
 
         this.key = new TabKey(request.getId());
         this.responseContent = new ResponseTabContent();

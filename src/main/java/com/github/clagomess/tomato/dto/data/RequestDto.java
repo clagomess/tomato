@@ -40,8 +40,16 @@ public class RequestDto extends MetadataDto {
         private String bodyContentType;
         private String raw;
         private String binaryFilePath;
-        private List<KeyValueItem> urlEncodedForm;
+        private List<KeyValueItem> urlEncodedForm  = new ArrayList<>();
         private List<MultiPartFormItem> multiPartForm = new ArrayList<>();
+
+        public List<KeyValueItem> getUrlEncodedForm() {
+            return urlEncodedForm == null ? new ArrayList<>() : urlEncodedForm;
+        }
+
+        public List<MultiPartFormItem> getMultiPartForm() {
+            return multiPartForm == null ? new ArrayList<>() : multiPartForm;
+        }
 
         public FormDataMultiPart toMultiPartForm(){
             FormDataMultiPart form = new FormDataMultiPart();
