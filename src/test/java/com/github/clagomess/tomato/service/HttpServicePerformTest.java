@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
+import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -13,10 +14,12 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.matchers.MatchType;
 import org.mockserver.model.*;
 
-import java.util.Arrays;
 import java.util.Collections;
 
-public class HttpServiceTest {
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class HttpServicePerformTest {
     private static ClientAndServer mockServer;
     private final HttpService httpService = HttpService.getInstance();
 
@@ -34,6 +37,11 @@ public class HttpServiceTest {
                                 .withContentType(MediaType.TEXT_PLAIN)
                                 .withBody("hello")
                 );
+    }
+
+    @AfterAll
+    public static void terminate(){
+        mockServer.stop();
     }
 
     @Test
@@ -58,16 +66,15 @@ public class HttpServiceTest {
 
         Assertions.assertTrue(response.isRequestStatus());
         Assertions.assertNull(response.getRequestMessage());
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
-        Assertions.assertEquals("OK", response.getHttpResponse().getStatusReason());
-        Assertions.assertEquals(42, response.getHttpResponse().getBodySize());
-        Assertions.assertEquals("application/json", response.getHttpResponse().getContentType().toString());
+        assertEquals(200, response.getHttpResponse().getStatus());
+        assertEquals("OK", response.getHttpResponse().getStatusReason());
+        assertEquals(42, response.getHttpResponse().getBodySize());
+        assertEquals("application/json", response.getHttpResponse().getContentType().toString());
         Assertions.assertNotNull(response.getRequestDebug());
     }
 
     @Test
     public void get_response_binary() {
-        //@TODO: test filedownload
         mockServer.when(
                         HttpRequest.request()
                                 .withMethod("GET")
@@ -88,10 +95,13 @@ public class HttpServiceTest {
 
         Assertions.assertTrue(response.isRequestStatus());
         Assertions.assertNull(response.getRequestMessage());
-        Assertions.assertEquals(4, response.getHttpResponse().getBodySize());
-        Assertions.assertEquals("application/pdf", response.getHttpResponse().getContentType().toString());
+        assertEquals(4, response.getHttpResponse().getBodySize());
+        assertEquals("application/pdf", response.getHttpResponse().getContentType().toString());
 
-        Assertions.assertTrue(Arrays.equals(new byte[]{0x25, 0x50, 0x44, 0x46}, response.getHttpResponse().getBody()));
+        assertArrayEquals(
+                new byte[]{0x25, 0x50, 0x44, 0x46},
+                response.getHttpResponse().getBody()
+        );
     }
 
     @Test
@@ -115,7 +125,7 @@ public class HttpServiceTest {
         request.setHeaders(Collections.singletonList(new RequestDto.KeyValueItem("foo", "bar")));
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+        assertEquals(200, response.getHttpResponse().getStatus());
     }
 
     @Test
@@ -138,7 +148,7 @@ public class HttpServiceTest {
         request.setMethod(HttpMethodEnum.GET);
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+        assertEquals(200, response.getHttpResponse().getStatus());
         Assertions.assertTrue(response.getHttpResponse().getHeaders().keySet().stream().anyMatch("foo"::equals));
     }
 
@@ -160,8 +170,8 @@ public class HttpServiceTest {
         request.setMethod(HttpMethodEnum.GET);
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
-        Assertions.assertEquals("hello", response.getHttpResponse().getBodyAsString());
+        assertEquals(200, response.getHttpResponse().getStatus());
+        assertEquals("hello", response.getHttpResponse().getBodyAsString());
     }
 
     @Test
@@ -223,7 +233,7 @@ public class HttpServiceTest {
         request.getCookies().add(new RequestDto.KeyValueItem("foo", "bar"));
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+        assertEquals(200, response.getHttpResponse().getStatus());
     }
 
     @Test
@@ -246,8 +256,8 @@ public class HttpServiceTest {
         request.setMethod(HttpMethodEnum.GET);
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
-        Assertions.assertEquals("bar", response.getHttpResponse().getCookies().get("foo"));
+        assertEquals(200, response.getHttpResponse().getStatus());
+        assertEquals("bar", response.getHttpResponse().getCookies().get("foo"));
     }
 
     @Test
@@ -276,7 +286,7 @@ public class HttpServiceTest {
         request.getBody().setUrlEncodedForm(Collections.singletonList(new RequestDto.KeyValueItem("foo", "bar")));
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+        assertEquals(200, response.getHttpResponse().getStatus());
     }
 
     @Test
@@ -299,10 +309,8 @@ public class HttpServiceTest {
         request.setMethod(HttpMethodEnum.GET);
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+        assertEquals(200, response.getHttpResponse().getStatus());
     }
-
-
 
     @Test
     public void get_with_response_500(){
@@ -323,8 +331,8 @@ public class HttpServiceTest {
         request.setMethod(HttpMethodEnum.GET);
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(500, response.getHttpResponse().getStatus());
-        Assertions.assertEquals("hello", response.getHttpResponse().getBodyAsString());
+        assertEquals(500, response.getHttpResponse().getStatus());
+        assertEquals("hello", response.getHttpResponse().getBodyAsString());
     }
 
     @Test
@@ -338,13 +346,50 @@ public class HttpServiceTest {
     }
 
     @Test
-    public void post_multpart_form(){
-        Assertions.fail("impl. test multpart form");
+    public void post_multipart_form(){
+        mockServer.when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/post_multipart_form")
+                ).respond(HttpResponse.response()
+                        .withStatusCode(200)
+                        .withContentType(MediaType.TEXT_PLAIN)
+                        .withBody("hello")
+                );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/post_multipart_form");
+        request.setMethod(HttpMethodEnum.POST);
+        request.setBody(new RequestDto.Body());
+        request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
+        request.getBody().getMultiPartForm().add(new RequestDto.KeyValueItem("foo", "bar"));
+
+        ResponseDto response = httpService.perform(request);
+        assertEquals(200, response.getHttpResponse().getStatus());
     }
 
     @Test
-    public void post_multpart_form_with_file(){
-        Assertions.fail("impl. multpart form with file");
+    public void post_multipart_form_with_file(){
+        mockServer.when(HttpRequest.request()
+                .withMethod("POST")
+                .withPath("/post_multipart_form_with_file")
+        ).respond(HttpResponse.response()
+                .withStatusCode(200)
+                .withContentType(MediaType.TEXT_PLAIN)
+                .withBody("hello")
+        );
+
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/post_multipart_form_with_file");
+        request.setMethod(HttpMethodEnum.POST);
+        request.setBody(new RequestDto.Body());
+        request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
+
+        var item = new RequestDto.KeyValueItem("foo", "bar");
+        item.setType(KeyValueTypeEnum.FILE);
+        request.getBody().getMultiPartForm().add(item);
+
+        ResponseDto response = httpService.perform(request);
+        assertEquals(200, response.getHttpResponse().getStatus());
     }
 
     @Test
@@ -374,7 +419,7 @@ public class HttpServiceTest {
         ));
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+        assertEquals(200, response.getHttpResponse().getStatus());
     }
 
     @Test
@@ -403,7 +448,7 @@ public class HttpServiceTest {
         ));
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+        assertEquals(200, response.getHttpResponse().getStatus());
     }
 
     @Test
@@ -433,7 +478,7 @@ public class HttpServiceTest {
         ));
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
+        assertEquals(200, response.getHttpResponse().getStatus());
     }
 
     @Test
@@ -455,11 +500,6 @@ public class HttpServiceTest {
         request.setMethod(HttpMethodEnum.DELETE);
 
         ResponseDto response = httpService.perform(request);
-        Assertions.assertEquals(200, response.getHttpResponse().getStatus());
-    }
-
-    @AfterAll
-    public static void terminate(){
-        mockServer.stop();
+        assertEquals(200, response.getHttpResponse().getStatus());
     }
 }

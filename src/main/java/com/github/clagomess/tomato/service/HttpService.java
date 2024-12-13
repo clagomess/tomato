@@ -19,6 +19,7 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 import javax.net.ssl.SSLContext;
+import java.io.File;
 import java.util.logging.Level;
 
 @Slf4j
@@ -83,7 +84,7 @@ public class HttpService {
                     body.getRaw().getType().getContentType()
             );
             case BINARY -> Entity.entity(
-                    body.getBinary().getFile(), //@TODO: load file!
+                    new File(body.getBinary().getFile()),
                     body.getBinary().getContentType()
             );
             default -> Entity.text(null);
