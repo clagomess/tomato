@@ -74,8 +74,6 @@ class RowComponent extends JPanel {
         add(txtKey, "width 100:100:100");
         add(cValue, "width 100%");
         add(btnRemove, "wrap");
-
-        //@TODO: impl requestChangeDto
     }
 
     private void cbTypeOnChange(){
