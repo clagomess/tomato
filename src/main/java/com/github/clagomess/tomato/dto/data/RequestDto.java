@@ -4,16 +4,12 @@ import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
-import jakarta.ws.rs.core.MultivaluedHashMap;
-import jakarta.ws.rs.core.MultivaluedMap;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -40,16 +36,6 @@ public class RequestDto extends MetadataDto {
     public List<KeyValueItem> getHeaders() {
         if(headers == null) headers = new ArrayList<>();
         return headers;
-    }
-
-    // @TODO: remove
-    public MultivaluedMap<String, Object> toMultivaluedMapHeaders(){
-        MultivaluedMap<String, Object> map = new MultivaluedHashMap<>();
-        headers.forEach(item -> {
-            map.put(item.getKey(), Collections.singletonList(item.getValue()));
-        });
-
-        return map;
     }
 
     @Data
@@ -83,23 +69,6 @@ public class RequestDto extends MetadataDto {
         public List<KeyValueItem> getMultiPartForm() {
             if(multiPartForm == null) multiPartForm = new ArrayList<>();
             return multiPartForm;
-        }
-
-        // @TODO: remove
-        public FormDataMultiPart toMultiPartForm(){
-            FormDataMultiPart form = new FormDataMultiPart();
-            multiPartForm.forEach(item -> form.field(item.getKey(), item.getValue()));
-            return form;
-        }
-
-        // @TODO: remove
-        public MultivaluedMap<String, String> toUrlEncodedForm(){
-            MultivaluedMap<String, String> map = new MultivaluedHashMap<>();
-            urlEncodedForm.forEach(item -> {
-                map.put(item.getKey(), Collections.singletonList(item.getValue()));
-            });
-
-            return map;
         }
     }
 

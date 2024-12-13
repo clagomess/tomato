@@ -1,6 +1,5 @@
-package com.github.clagomess.tomato.dto;
+package com.github.clagomess.tomato.dto.tree;
 
-import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

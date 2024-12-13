@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.service;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.util.HttpLogCollectorUtil;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -26,6 +27,8 @@ public class HttpService {
     public synchronized static HttpService getInstance(){
         return instance;
     }
+
+    private final RequestMapper mapper = RequestMapper.INSTANCE;
 
     private final Client client;
     private final HttpLogCollectorUtil httpLogCollectorUtil = new HttpLogCollectorUtil();
@@ -66,13 +69,13 @@ public class HttpService {
         }
     }
 
-    private static Entity<?> buildEntity(RequestDto.Body body){
+    private Entity<?> buildEntity(RequestDto.Body body){
         return switch (body.getType()) {
             case URL_ENCODED_FORM -> Entity.form(
-                    body.toUrlEncodedForm()
+                    mapper.toForm(body.getUrlEncodedForm())
             );
             case MULTIPART_FORM -> Entity.entity(
-                    body.toMultiPartForm(),
+                    mapper.toFormDataMultiPart(body.getMultiPartForm()),
                     MediaType.MULTIPART_FORM_DATA_TYPE
             );
             case RAW -> Entity.entity(
@@ -94,7 +97,7 @@ public class HttpService {
             Invocation.Builder invocationBuilder = client.target(dto.getUrl()).request();
 
             // set headers
-            invocationBuilder.headers(dto.toMultivaluedMapHeaders());
+            invocationBuilder.headers(mapper.toMultivaluedMap(dto.getHeaders()));
 
             // set cookies
             dto.getCookies().forEach(item -> invocationBuilder.cookie(item.getKey(), item.getValue()));

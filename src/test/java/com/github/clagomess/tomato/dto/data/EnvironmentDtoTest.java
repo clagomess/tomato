@@ -1,7 +1,6 @@
-package com.github.clagomess.tomato.dto;
+package com.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;

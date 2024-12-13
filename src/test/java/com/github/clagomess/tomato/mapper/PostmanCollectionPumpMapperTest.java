@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
+import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +25,7 @@ public class PostmanCollectionPumpMapperTest {
         RequestDto.Body result = pumpMapper.map(body);
 
         assertEquals(BodyTypeEnum.RAW, result.getType());
-        assertEquals("application/json", result.getRaw().getType());
+        assertEquals(RawBodyTypeEnum.JSON, result.getRaw().getType());
         assertEquals(body.getRaw(), result.getRaw().getRaw());
     }
 
