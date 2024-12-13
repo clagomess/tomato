@@ -13,7 +13,6 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.matchers.MatchType;
 import org.mockserver.model.*;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -400,7 +399,7 @@ public class HttpServiceTest {
         request.getBody().setType(BodyTypeEnum.BINARY);
         request.getBody().setBinary(new RequestDto.BinaryBody(
                 "application/octet-stream",
-                new File(".gitignore")
+                ".gitignore"
         ));
 
         ResponseDto response = httpService.perform(request);

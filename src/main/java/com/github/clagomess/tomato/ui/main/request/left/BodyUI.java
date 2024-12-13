@@ -58,8 +58,8 @@ public class BodyUI extends JPanel {
         return switch (bodyType) {
             case MULTIPART_FORM -> new MultiPartFormUI(requestDto); //@TODO: add requestChangeDto
             case URL_ENCODED_FORM -> new KeyValueUI(requestDto.getBody().getUrlEncodedForm()); //@TODO: add requestChangeDto
-            case RAW -> new RawBodyUI(requestDto, requestStagingMonitor); //@TODO: add requestChangeDto
-            case BINARY -> new BinaryUI(); //@TODO: add requestChangeDto
+            case RAW -> new RawBodyUI(requestDto, requestStagingMonitor);
+            case BINARY -> new BinaryUI(requestDto, requestStagingMonitor);
             default -> new NoBodyUI();
         };
     }

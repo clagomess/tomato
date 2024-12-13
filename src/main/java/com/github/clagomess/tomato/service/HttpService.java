@@ -80,7 +80,7 @@ public class HttpService {
                     dto.getBody().getRaw().getType().getContentType()
             );
             case BINARY -> Entity.entity(
-                    dto.getBody().getBinary().getFile(),
+                    dto.getBody().getBinary().getFile(), //@TODO: load file!
                     dto.getBody().getBinary().getContentType()
             );
             default -> Entity.text(null);

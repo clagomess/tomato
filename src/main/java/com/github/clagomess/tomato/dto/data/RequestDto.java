@@ -12,7 +12,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -71,6 +70,11 @@ public class RequestDto extends MetadataDto {
             return raw;
         }
 
+        public BinaryBody getBinary() {
+            if(binary == null) binary = new BinaryBody();
+            return binary;
+        }
+
         public List<KeyValueItem> getUrlEncodedForm() {
             if(urlEncodedForm == null) urlEncodedForm = new ArrayList<>();
             return urlEncodedForm;
@@ -111,8 +115,8 @@ public class RequestDto extends MetadataDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BinaryBody {
-        private String contentType;
-        private File file;
+        private String contentType = "application/octet-stream";
+        private String file;
     }
 
     @Data
