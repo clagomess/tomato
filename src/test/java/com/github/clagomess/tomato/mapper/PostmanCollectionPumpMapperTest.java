@@ -24,7 +24,7 @@ public class PostmanCollectionPumpMapperTest {
         RequestDto.Body result = pumpMapper.map(body);
 
         assertEquals(BodyTypeEnum.RAW, result.getType());
-        assertEquals("application/json", result.getRaw().getContentType());
+        assertEquals("application/json", result.getRaw().getType());
         assertEquals(body.getRaw(), result.getRaw().getRaw());
     }
 

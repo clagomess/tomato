@@ -64,8 +64,7 @@ public class RequestTabContentUI extends JPanel {
         add(btnSaveRequest, "wrap");
 
         JTabbedPane tpRequest = new JTabbedPane();
-        //@TODO: add requestChangeDto
-        tpRequest.addTab("Body", new BodyUI(requestDto));
+        tpRequest.addTab("Body", new BodyUI(requestDto, requestStagingMonitor));
         //@TODO: add requestChangeDto
         //@TODO: add count
         tpRequest.addTab("Header", new KeyValueUI(requestDto.getHeaders()));

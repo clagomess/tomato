@@ -101,7 +101,7 @@ class RowComponent extends JPanel {
             return textField;
         }else{
             var fileChooser = new FileChooser();
-            // @TODO: set file
+            fileChooser.setValue(value);
             fileChooser.addOnChange(file -> item.setValue(file.getAbsolutePath()));
             return fileChooser;
         }

@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
+import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -60,7 +61,7 @@ public interface PostmanCollectionPumpMapper {
                 source.getOptions() != null &&
                 source.getOptions().getRaw() != null) {
             if("json".equals(source.getOptions().getRaw().getLanguage())){
-                target.getRaw().setContentType("application/json");
+                target.getRaw().setType(RawBodyTypeEnum.JSON);
             }
         }
     }

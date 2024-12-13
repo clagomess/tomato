@@ -77,7 +77,7 @@ public class HttpService {
             );
             case RAW -> Entity.entity(
                     dto.getBody().getRaw().getRaw(),
-                    dto.getBody().getRaw().getContentType()
+                    dto.getBody().getRaw().getType().getContentType()
             );
             case BINARY -> Entity.entity(
                     dto.getBody().getBinary().getFile(),

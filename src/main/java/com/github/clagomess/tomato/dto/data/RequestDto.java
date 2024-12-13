@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.dto.data;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
+import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 import lombok.AllArgsConstructor;
@@ -65,6 +66,11 @@ public class RequestDto extends MetadataDto {
             return type;
         }
 
+        public RawBody getRaw() {
+            if(raw == null) raw = new RawBody();
+            return raw;
+        }
+
         public List<KeyValueItem> getUrlEncodedForm() {
             if(urlEncodedForm == null) urlEncodedForm = new ArrayList<>();
             return urlEncodedForm;
@@ -97,7 +103,7 @@ public class RequestDto extends MetadataDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class RawBody {
-        private String contentType;
+        private RawBodyTypeEnum type = RawBodyTypeEnum.TEXT;
         private String raw;
     }
 

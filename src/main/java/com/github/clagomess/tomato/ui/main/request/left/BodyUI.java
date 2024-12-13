@@ -15,10 +15,15 @@ import java.util.Arrays;
 
 public class BodyUI extends JPanel {
     private final RequestDto requestDto;
+    private final RequestStagingMonitor requestStagingMonitor;
     private final ButtonGroup bgBodyType = new ButtonGroup();
 
-    public BodyUI(RequestDto requestDto) {
+    public BodyUI(
+            RequestDto requestDto,
+            RequestStagingMonitor requestStagingMonitor
+    ) {
         this.requestDto = requestDto;
+        this.requestStagingMonitor = requestStagingMonitor;
 
         setLayout(new MigLayout(
                 "insets 5 0 0 0",
@@ -35,6 +40,7 @@ public class BodyUI extends JPanel {
             rbBodyType.addActionListener(l -> {
                 remove(1);
                 requestDto.getBody().setType(item);
+                requestStagingMonitor.setActualHashCode(requestDto);
                 add(getBodyType(item), "height 100%");
                 revalidate();
                 repaint();
@@ -50,10 +56,10 @@ public class BodyUI extends JPanel {
 
     private Component getBodyType(BodyTypeEnum bodyType){
         return switch (bodyType) {
-            case MULTIPART_FORM -> new MultiPartFormUI(requestDto);
-            case URL_ENCODED_FORM -> new KeyValueUI(requestDto.getBody().getUrlEncodedForm());
-            case RAW -> new RawBodyUI();
-            case BINARY -> new BinaryUI();
+            case MULTIPART_FORM -> new MultiPartFormUI(requestDto); //@TODO: add requestChangeDto
+            case URL_ENCODED_FORM -> new KeyValueUI(requestDto.getBody().getUrlEncodedForm()); //@TODO: add requestChangeDto
+            case RAW -> new RawBodyUI(requestDto, requestStagingMonitor); //@TODO: add requestChangeDto
+            case BINARY -> new BinaryUI(); //@TODO: add requestChangeDto
             default -> new NoBodyUI();
         };
     }

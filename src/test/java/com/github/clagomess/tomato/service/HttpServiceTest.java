@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
+import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -369,7 +370,7 @@ public class HttpServiceTest {
         request.setBody(new RequestDto.Body());
         request.getBody().setType(BodyTypeEnum.RAW);
         request.getBody().setRaw(new RequestDto.RawBody(
-                "application/json",
+                RawBodyTypeEnum.JSON,
                 "{\"foo\": \"bar\"}"
         ));
 
@@ -428,7 +429,7 @@ public class HttpServiceTest {
         request.setBody(new RequestDto.Body());
         request.getBody().setType(BodyTypeEnum.RAW);
         request.getBody().setRaw(new RequestDto.RawBody(
-                "application/json",
+                RawBodyTypeEnum.JSON,
                 "{\"foo\": \"bar\"}"
         ));
 

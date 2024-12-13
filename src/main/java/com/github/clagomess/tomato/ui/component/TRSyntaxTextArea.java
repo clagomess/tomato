@@ -7,12 +7,17 @@ import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
-import static jakarta.ws.rs.core.MediaType.TEXT_HTML_TYPE;
+import static jakarta.ws.rs.core.MediaType.*;
 
 public class TRSyntaxTextArea extends RSyntaxTextArea {
+    private final List<ListenableTextField.OnChangeFI> onChangeList = new LinkedList<>();
+
     public TRSyntaxTextArea() {
         setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
         setCodeFoldingEnabled(true);
@@ -31,6 +36,27 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
                 throw new RuntimeException(e);
             }
         });
+
+        getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            public void update(){
+                onChangeList.forEach(ch -> ch.change(getText()));
+            }
+        });
     }
 
     public void setSyntaxStyle(MediaType contentType){
@@ -44,7 +70,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
             return;
         }
 
-        if(contentType.isCompatible(APPLICATION_JSON_TYPE)) {
+        if(contentType.isCompatible(APPLICATION_XML_TYPE)) {
             setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
             return;
         }
@@ -58,6 +84,15 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
         }catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void addOnChange(ListenableTextField.OnChangeFI value){
+        onChangeList.add(value);
+    }
+
+    @FunctionalInterface
+    public interface OnChangeFI {
+        void change(String content);
     }
 
     public static RTextScrollPane createScroll(RSyntaxTextArea textArea){
