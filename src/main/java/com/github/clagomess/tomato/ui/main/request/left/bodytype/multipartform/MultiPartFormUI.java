@@ -3,13 +3,12 @@ package com.github.clagomess.tomato.ui.main.request.left.bodytype.multipartform;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
-import com.github.clagomess.tomato.ui.main.request.left.bodytype.BodyTypeUI;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.util.List;
 
-public class MultiPartFormUI extends JPanel implements BodyTypeUI {
+public class MultiPartFormUI extends JPanel {
     private final List<RequestDto.KeyValueItem> multiPartFormItems;
     private final RequestStagingMonitor requestStagingMonitor;
     private final JButton btnAddNew = new JButton(new BxPlusIcon());

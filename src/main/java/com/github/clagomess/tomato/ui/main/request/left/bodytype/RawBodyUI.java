@@ -10,7 +10,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 
 @Slf4j
-public class RawBodyUI extends JPanel implements BodyTypeUI {
+public class RawBodyUI extends JPanel {
     private final RequestDto.RawBody rawBody;
     private final RequestStagingMonitor requestStagingMonitor;
 

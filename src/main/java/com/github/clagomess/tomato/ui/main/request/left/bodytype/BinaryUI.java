@@ -8,7 +8,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 
-public class BinaryUI extends JPanel implements BodyTypeUI {
+public class BinaryUI extends JPanel {
     private final ListenableTextField contentType = new ListenableTextField();
     private final FileChooser fileChooser = new FileChooser();
 
