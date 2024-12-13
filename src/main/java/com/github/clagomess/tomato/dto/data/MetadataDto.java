@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of = {"id"})
 public abstract class MetadataDto {
     private String id = RandomStringUtils.randomAlphanumeric(8);
-    private LocalDateTime createTime = LocalDateTime.now();
-    private LocalDateTime updateTime = LocalDateTime.now();
+    private LocalDateTime createTime = LocalDateTime.now(); //@TODO: write in ISO
+    private LocalDateTime updateTime = LocalDateTime.now(); //@TODO: write in ISO
 }

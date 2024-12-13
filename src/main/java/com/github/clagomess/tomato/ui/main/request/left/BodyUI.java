@@ -30,11 +30,11 @@ public class BodyUI extends JPanel {
 
         Arrays.stream(BodyTypeEnum.values()).forEach(item -> {
             JRadioButton rbBodyType = new JRadioButton(item.getDescription());
-            rbBodyType.setSelected(item == requestDto.getBody().getBodyType());
+            rbBodyType.setSelected(item == requestDto.getBody().getType());
 
             rbBodyType.addActionListener(l -> {
                 remove(1);
-                requestDto.getBody().setBodyType(item);
+                requestDto.getBody().setType(item);
                 add(getBodyType(item), "height 100%");
                 revalidate();
                 repaint();
@@ -45,7 +45,7 @@ public class BodyUI extends JPanel {
         });
 
         add(pRadioBodyType, "wrap");
-        add(getBodyType(requestDto.getBody().getBodyType()), "height 100%");
+        add(getBodyType(requestDto.getBody().getType()), "height 100%");
     }
 
     private Component getBodyType(BodyTypeEnum bodyType){

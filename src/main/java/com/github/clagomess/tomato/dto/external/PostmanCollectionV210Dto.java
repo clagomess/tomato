@@ -84,6 +84,9 @@ public class PostmanCollectionV210Dto {
                     private String key;
                     private String value;
                     private String type;
+
+                    @JsonInclude(JsonInclude.Include.NON_NULL)
+                    private Boolean disabled;
                 }
 
                 @Data
@@ -92,6 +95,9 @@ public class PostmanCollectionV210Dto {
                     private String key;
                     private String type;
                     private String src;
+
+                    @JsonInclude(JsonInclude.Include.NON_NULL)
+                    private Boolean disabled;
                 }
 
                 @Data

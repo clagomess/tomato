@@ -1,0 +1,47 @@
+{
+  "info": {
+    "_postman_id": "e22339ab-6ef1-19c9-2674-e65dfc06f341",
+    "name": "tomato",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "1019385"
+  },
+  "item": [
+    {
+      "name": "/api/parametro",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"nomParametro\": \"VERSAO_ANDROID\",\r\n    \"vlrParametro\": \"1.0.0\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{urlSiscon}}/api/parametro",
+          "host": [
+            "{{urlSiscon}}"
+          ],
+          "path": [
+            "api",
+            "parametro"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

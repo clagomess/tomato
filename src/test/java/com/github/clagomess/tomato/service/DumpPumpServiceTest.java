@@ -12,7 +12,9 @@ public class DumpPumpServiceTest {
     @Test
     public void pumpPostmanCollection() throws IOException {
         var mockDataDir = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
-        var postmanCollection = new File("C:\\Users\\claudio\\Downloads\\SISCON-API.postman_collection.json");
+
+        var postmanCollection = new File(getClass().getResource("DumpPumpServiceTest/postman.collection.v2.1.0.json")
+                .getFile());
 
         dumpPumpService.pumpPostmanCollection(
                 mockDataDir,

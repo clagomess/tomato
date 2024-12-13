@@ -20,7 +20,7 @@ import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 class RowComponent extends JPanel {
     private final Container parent;
     private final RequestDto requestDto;
-    private final RequestDto.MultiPartFormItem item;
+    private final RequestDto.KeyValueItem item;
 
     private final JComboBox<KeyValueTypeEnum> cbType = new JComboBox<>(
             KeyValueTypeEnum.values()
@@ -33,7 +33,7 @@ class RowComponent extends JPanel {
     public RowComponent(
             Container parent,
             RequestDto requestDto,
-            RequestDto.MultiPartFormItem item
+            RequestDto.KeyValueItem item
     ){
         this.parent = parent;
         this.requestDto = requestDto;

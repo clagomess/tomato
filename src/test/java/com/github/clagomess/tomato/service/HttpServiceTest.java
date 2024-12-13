@@ -12,6 +12,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.matchers.MatchType;
 import org.mockserver.model.*;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -271,7 +272,7 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/post_urlencoded_form");
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new RequestDto.Body());
-        request.getBody().setBodyType(BodyTypeEnum.URL_ENCODED_FORM);
+        request.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
         request.getBody().setUrlEncodedForm(Collections.singletonList(new RequestDto.KeyValueItem("foo", "bar")));
 
         ResponseDto response = httpService.perform(request);
@@ -366,9 +367,11 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/post_raw");
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new RequestDto.Body());
-        request.getBody().setBodyType(BodyTypeEnum.RAW);
-        request.getBody().setBodyContentType("application/json");
-        request.getBody().setRaw("{\"foo\": \"bar\"}");
+        request.getBody().setType(BodyTypeEnum.RAW);
+        request.getBody().setRaw(new RequestDto.RawBody(
+                "application/json",
+                "{\"foo\": \"bar\"}"
+        ));
 
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
@@ -393,9 +396,11 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/post_binary");
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new RequestDto.Body());
-        request.getBody().setBodyType(BodyTypeEnum.BINARY);
-        request.getBody().setBodyContentType("application/octet-stream");
-        request.getBody().setBinaryFilePath(".gitignore");
+        request.getBody().setType(BodyTypeEnum.BINARY);
+        request.getBody().setBinary(new RequestDto.BinaryBody(
+                "application/octet-stream",
+                new File(".gitignore")
+        ));
 
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());
@@ -421,9 +426,11 @@ public class HttpServiceTest {
         request.setUrl("http://localhost:8500/put_raw");
         request.setMethod(HttpMethodEnum.PUT);
         request.setBody(new RequestDto.Body());
-        request.getBody().setBodyType(BodyTypeEnum.RAW);
-        request.getBody().setBodyContentType("application/json");
-        request.getBody().setRaw("{\"foo\": \"bar\"}");
+        request.getBody().setType(BodyTypeEnum.RAW);
+        request.getBody().setRaw(new RequestDto.RawBody(
+                "application/json",
+                "{\"foo\": \"bar\"}"
+        ));
 
         ResponseDto response = httpService.perform(request);
         Assertions.assertEquals(200, response.getHttpResponse().getStatus());

@@ -9,7 +9,7 @@ public class NoBodyUI extends JPanel implements BodyTypeUI {
 //    @Override
     public RequestDto.Body getNewDtoFromUI() {
         RequestDto.Body body = new RequestDto.Body();
-        body.setBodyType(BodyTypeEnum.NO_BODY);
+        body.setType(BodyTypeEnum.NO_BODY);
         return body;
     }
 }

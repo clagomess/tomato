@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.service;
 import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
-import com.github.clagomess.tomato.mapper.PumpMapper;
+import com.github.clagomess.tomato.mapper.PostmanCollectionPumpMapper;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
@@ -26,7 +26,7 @@ public class DumpPumpService {
     }
 
     private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
-    private final PumpMapper pumpMapper = PumpMapper.INSTANCE;
+    private final PostmanCollectionPumpMapper pumpMapper = PostmanCollectionPumpMapper.INSTANCE;
 
     private final JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
             SpecVersion.VersionFlag.V4

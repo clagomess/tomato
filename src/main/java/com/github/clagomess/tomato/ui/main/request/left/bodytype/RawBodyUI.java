@@ -35,8 +35,8 @@ public class RawBodyUI extends JPanel implements BodyTypeUI {
 //    @Override
     public RequestDto.Body getNewDtoFromUI() {
         RequestDto.Body body = new RequestDto.Body();
-        body.setBodyType(BodyTypeEnum.RAW);
-        body.setRaw(textArea.getText());
+        body.setType(BodyTypeEnum.RAW);
+//        body.setRaw(textArea.getText()); // @TODO: check
         return body;
     }
 }

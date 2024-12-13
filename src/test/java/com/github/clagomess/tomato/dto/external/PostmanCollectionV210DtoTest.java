@@ -20,6 +20,8 @@ public class PostmanCollectionV210DtoTest {
     @ValueSource(strings = {
             "auth.postman.collection.v2.1.0.json",
             "without-auth.postman.collection.v2.1.0.json",
+            "body-raw.postman.collection.v2.1.0.json",
+            "formdata-file.postman.collection.v2.1.0.json",
     })
     public void pumpDumpTest(String filename) throws IOException {
         var url = getClass().getResourceAsStream(String.format(

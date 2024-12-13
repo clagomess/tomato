@@ -8,8 +8,8 @@ public class BinaryUI extends FileChooser implements BodyTypeUI {
 //    @Override
     public RequestDto.Body getNewDtoFromUI() {
         RequestDto.Body body = new RequestDto.Body();
-        body.setBodyType(BodyTypeEnum.BINARY);
-        body.setBinaryFilePath(selectedFile.getAbsolutePath());
+        body.setType(BodyTypeEnum.BINARY);
+//        body.setBinaryFilePath(selectedFile.getAbsolutePath()); //@TODO: check
         return body;
     }
 }

@@ -19,13 +19,13 @@ public class RequestDtoTest {
         dto.setUrl("https://" + RandomStringUtils.randomAlphabetic(10));
         dto.getHeaders().add(new RequestDto.KeyValueItem(RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10)));
         dto.getCookies().add(new RequestDto.KeyValueItem(RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10)));
-        dto.getBody().setBodyContentType(RandomStringUtils.randomAlphabetic(10));
-        dto.getBody().setRaw(RandomStringUtils.randomAlphabetic(10));
-        dto.getBody().setBinaryFilePath(RandomStringUtils.randomAlphabetic(10));
+//        dto.getBody().setBodyContentType(RandomStringUtils.randomAlphabetic(10)); //@TODO: check
+//        dto.getBody().setRaw(RandomStringUtils.randomAlphabetic(10)); //@TODO: check
+//        dto.getBody().setBinaryFilePath(RandomStringUtils.randomAlphabetic(10)); // @TODO: check
         dto.getBody().setUrlEncodedForm(new ArrayList<>());
         dto.getBody().getUrlEncodedForm().add(new RequestDto.KeyValueItem(RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10)));
         dto.getBody().setMultiPartForm(new ArrayList<>());
-        dto.getBody().getMultiPartForm().add(new RequestDto.MultiPartFormItem(RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10)));
+        dto.getBody().getMultiPartForm().add(new RequestDto.KeyValueItem(RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10)));
 
         return dto;
     }
@@ -50,7 +50,7 @@ public class RequestDtoTest {
     public void Body_toMultiPartForm(){
         RequestDto.Body body = new RequestDto.Body();
         body.setMultiPartForm(new ArrayList<>());
-        body.getMultiPartForm().add(new RequestDto.MultiPartFormItem("foo", "bar"));
+        body.getMultiPartForm().add(new RequestDto.KeyValueItem("foo", "bar"));
 
         val form = body.toMultiPartForm();
 
@@ -61,7 +61,7 @@ public class RequestDtoTest {
     public void Body_toUrlEncodedForm(){
         RequestDto.Body body = new RequestDto.Body();
         body.setUrlEncodedForm(new ArrayList<>());
-        body.getUrlEncodedForm().add(new RequestDto.MultiPartFormItem("foo", "bar"));
+        body.getUrlEncodedForm().add(new RequestDto.KeyValueItem("foo", "bar"));
 
         val form = body.toUrlEncodedForm();
 

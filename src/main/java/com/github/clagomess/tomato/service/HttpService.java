@@ -18,7 +18,6 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 import javax.net.ssl.SSLContext;
-import java.io.File;
 import java.util.logging.Level;
 
 @Slf4j
@@ -68,7 +67,7 @@ public class HttpService {
     }
 
     private static Entity<?> buildEntity(RequestDto dto){
-        return switch (dto.getBody().getBodyType()) {
+        return switch (dto.getBody().getType()) {
             case URL_ENCODED_FORM -> Entity.form(
                     dto.getBody().toUrlEncodedForm()
             );
@@ -77,12 +76,12 @@ public class HttpService {
                     MediaType.MULTIPART_FORM_DATA_TYPE
             );
             case RAW -> Entity.entity(
-                    dto.getBody().getRaw(),
-                    dto.getBody().getBodyContentType()
+                    dto.getBody().getRaw().getRaw(),
+                    dto.getBody().getRaw().getContentType()
             );
             case BINARY -> Entity.entity(
-                    new File(dto.getBody().getBinaryFilePath()),
-                    dto.getBody().getBodyContentType()
+                    dto.getBody().getBinary().getFile(),
+                    dto.getBody().getBinary().getContentType()
             );
             default -> Entity.text(null);
         };

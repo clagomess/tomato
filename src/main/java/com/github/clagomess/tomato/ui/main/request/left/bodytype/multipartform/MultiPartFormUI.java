@@ -30,14 +30,14 @@ public class MultiPartFormUI extends JPanel implements BodyTypeUI {
         add(header, "width 100%, wrap");
 
         btnAddNew.addActionListener(l -> {
-            addRow(new RequestDto.MultiPartFormItem());
+            addRow(new RequestDto.KeyValueItem());
         });
 
         this.requestDto.getBody().getMultiPartForm()
                 .forEach(this::addRow);
     }
 
-    private void addRow(RequestDto.MultiPartFormItem item){
+    private void addRow(RequestDto.KeyValueItem item){
         add(new RowComponent(this, this.requestDto, item), "width 100%, wrap");
         revalidate();
         repaint();

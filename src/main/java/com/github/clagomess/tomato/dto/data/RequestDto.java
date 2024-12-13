@@ -5,11 +5,13 @@ import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +27,22 @@ public class RequestDto extends MetadataDto {
     private List<KeyValueItem> cookies = new ArrayList<>();
     private Body body = new Body();
 
+    public Body getBody() {
+        if(body == null) body = new Body();
+        return body;
+    }
+
+    public List<KeyValueItem> getCookies() {
+        if(cookies == null) cookies = new ArrayList<>();
+        return cookies;
+    }
+
+    public List<KeyValueItem> getHeaders() {
+        if(headers == null) headers = new ArrayList<>();
+        return headers;
+    }
+
+    // @TODO: remove
     public MultivaluedMap<String, Object> toMultivaluedMapHeaders(){
         MultivaluedMap<String, Object> map = new MultivaluedHashMap<>();
         headers.forEach(item -> {
@@ -36,27 +54,35 @@ public class RequestDto extends MetadataDto {
 
     @Data
     public static class Body {
-        private BodyTypeEnum bodyType = BodyTypeEnum.NO_BODY;
-        private String bodyContentType;
-        private String raw;
-        private String binaryFilePath;
+        private BodyTypeEnum type = BodyTypeEnum.NO_BODY;
+        private RawBody raw;
+        private BinaryBody binary;
         private List<KeyValueItem> urlEncodedForm  = new ArrayList<>();
-        private List<MultiPartFormItem> multiPartForm = new ArrayList<>();
+        private List<KeyValueItem> multiPartForm = new ArrayList<>();
+
+        public BodyTypeEnum getType() {
+            if(type == null) type = BodyTypeEnum.NO_BODY;
+            return type;
+        }
 
         public List<KeyValueItem> getUrlEncodedForm() {
-            return urlEncodedForm == null ? new ArrayList<>() : urlEncodedForm;
+            if(urlEncodedForm == null) urlEncodedForm = new ArrayList<>();
+            return urlEncodedForm;
         }
 
-        public List<MultiPartFormItem> getMultiPartForm() {
-            return multiPartForm == null ? new ArrayList<>() : multiPartForm;
+        public List<KeyValueItem> getMultiPartForm() {
+            if(multiPartForm == null) multiPartForm = new ArrayList<>();
+            return multiPartForm;
         }
 
+        // @TODO: remove
         public FormDataMultiPart toMultiPartForm(){
             FormDataMultiPart form = new FormDataMultiPart();
             multiPartForm.forEach(item -> form.field(item.getKey(), item.getValue()));
             return form;
         }
 
+        // @TODO: remove
         public MultivaluedMap<String, String> toUrlEncodedForm(){
             MultivaluedMap<String, String> map = new MultivaluedHashMap<>();
             urlEncodedForm.forEach(item -> {
@@ -69,26 +95,31 @@ public class RequestDto extends MetadataDto {
 
     @Data
     @NoArgsConstructor
-    @EqualsAndHashCode(callSuper = true)
-    public static class KeyValueItem extends MetadataDto {
-        private boolean selected = true;
-        private String key;
-        private String value;
-
-        public KeyValueItem(String key, String value) {
-            this.key = key;
-            this.value = value;
-        }
+    @AllArgsConstructor
+    public static class RawBody {
+        private String contentType;
+        private String raw;
     }
 
     @Data
     @NoArgsConstructor
-    @EqualsAndHashCode(callSuper = true)
-    public static class MultiPartFormItem extends KeyValueItem{
-        private KeyValueTypeEnum type = KeyValueTypeEnum.TEXT;
+    @AllArgsConstructor
+    public static class BinaryBody {
+        private String contentType;
+        private File file;
+    }
 
-        public MultiPartFormItem(String key, String value) {
-            super(key, value);
+    @Data
+    @NoArgsConstructor
+    public static class KeyValueItem {
+        private KeyValueTypeEnum type = KeyValueTypeEnum.TEXT;
+        private String key;
+        private String value;
+        private boolean selected = true;
+
+        public KeyValueItem(String key, String value) {
+            this.key = key;
+            this.value = value;
         }
     }
 }
