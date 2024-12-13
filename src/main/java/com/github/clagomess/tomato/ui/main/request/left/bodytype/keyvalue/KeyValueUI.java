@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
+import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.BodyTypeUI;
 import jakarta.annotation.Nonnull;
 import net.miginfocom.swing.MigLayout;
@@ -14,7 +15,8 @@ public class KeyValueUI extends JPanel implements BodyTypeUI {
     private final JButton btnAddNew = new JButton(new BxPlusIcon());
 
     public KeyValueUI(
-            @Nonnull List<RequestDto.KeyValueItem> list
+            @Nonnull List<RequestDto.KeyValueItem> list,
+            @Nonnull RequestStagingMonitor requestStagingMonitor
     ) {
         this.list = list;
 
@@ -37,6 +39,8 @@ public class KeyValueUI extends JPanel implements BodyTypeUI {
         });
 
         this.list.forEach(this::addRow);
+
+        //@TODO: impl requestChangeDto
     }
 
     private void addRow(RequestDto.KeyValueItem item){

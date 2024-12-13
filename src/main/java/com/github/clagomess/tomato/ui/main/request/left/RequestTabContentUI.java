@@ -64,13 +64,11 @@ public class RequestTabContentUI extends JPanel {
         add(btnSaveRequest, "wrap");
 
         JTabbedPane tpRequest = new JTabbedPane();
-        tpRequest.addTab("Body", new BodyUI(requestDto, requestStagingMonitor));
-        //@TODO: add requestChangeDto
+        tpRequest.addTab("Body", new BodyUI(requestDto.getBody(), requestStagingMonitor));
         //@TODO: add count
-        tpRequest.addTab("Header", new KeyValueUI(requestDto.getHeaders()));
-        //@TODO: add requestChangeDto
+        tpRequest.addTab("Header", new KeyValueUI(requestDto.getHeaders(), requestStagingMonitor));
         //@TODO: add count
-        tpRequest.addTab("Cookie", new KeyValueUI(requestDto.getCookies()));
+        tpRequest.addTab("Cookie", new KeyValueUI(requestDto.getCookies(), requestStagingMonitor));
         add(tpRequest, "span, height 100%");
 
         // set values
@@ -81,11 +79,11 @@ public class RequestTabContentUI extends JPanel {
         // listeners
         cbHttpMethod.addActionListener(l -> {
             requestDto.setMethod(cbHttpMethod.getSelectedItem());
-            requestStagingMonitor.setActualHashCode(requestDto);
+            requestStagingMonitor.update();
         });
         txtRequestUrl.addOnChange(value -> {
             requestDto.setUrl(value);
-            requestStagingMonitor.setActualHashCode(requestDto);
+            requestStagingMonitor.update();
         });
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
@@ -114,7 +112,7 @@ public class RequestTabContentUI extends JPanel {
                     requestDto,
                     requestHead -> {
                         this.requestHeadDto = requestHead;
-                        requestStagingMonitor.reset(requestDto);
+                        requestStagingMonitor.reset();
                     }
             );
             return;
@@ -136,7 +134,7 @@ public class RequestTabContentUI extends JPanel {
 
             requestPublisher.getOnUpdate().publish(key, requestHeadDto);
             requestPublisher.getOnSave().publish(requestHeadDto.getId(), requestHeadDto);
-            requestStagingMonitor.reset(requestDto);
+            requestStagingMonitor.reset();
         }catch (Throwable e){
             DialogFactory.createDialogException(this, e);
         }

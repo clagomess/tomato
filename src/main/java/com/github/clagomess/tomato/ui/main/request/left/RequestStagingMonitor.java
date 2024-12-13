@@ -7,7 +7,9 @@ import com.github.clagomess.tomato.publisher.RequestPublisher;
 
 public class RequestStagingMonitor {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
+
     private final TabKey tabKey;
+    private final RequestDto requestDto;
     private int currentHashCode;
     private int actualHashCode;
 
@@ -16,21 +18,20 @@ public class RequestStagingMonitor {
             RequestHeadDto requestHeadDto,
             RequestDto dto
     ) {
+        this.requestDto = dto;
         this.tabKey = tabKey;
         this.currentHashCode = requestHeadDto == null ? 0 : dto.hashCode();
         this.actualHashCode = dto.hashCode();
     }
 
-    // @TODO: impl. without dto
-    public void reset(RequestDto dto){
-        this.currentHashCode = dto.hashCode();
-        this.actualHashCode = dto.hashCode();
+    public void reset(){
+        this.currentHashCode = requestDto.hashCode();
+        this.actualHashCode = requestDto.hashCode();
         requestPublisher.getOnStaging().publish(tabKey, false);
     }
 
-    // @TODO: impl. without dto
-    public void setActualHashCode(RequestDto dto){
-        this.actualHashCode = dto.hashCode();
+    public void update(){
+        this.actualHashCode = requestDto.hashCode();
         requestPublisher.getOnStaging().publish(
                 tabKey,
                 currentHashCode != actualHashCode

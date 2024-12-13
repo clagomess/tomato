@@ -14,15 +14,15 @@ import java.awt.*;
 import java.util.Arrays;
 
 public class BodyUI extends JPanel {
-    private final RequestDto requestDto;
+    private final RequestDto.Body body;
     private final RequestStagingMonitor requestStagingMonitor;
     private final ButtonGroup bgBodyType = new ButtonGroup();
 
     public BodyUI(
-            RequestDto requestDto,
+            RequestDto.Body body,
             RequestStagingMonitor requestStagingMonitor
     ) {
-        this.requestDto = requestDto;
+        this.body = body;
         this.requestStagingMonitor = requestStagingMonitor;
 
         setLayout(new MigLayout(
@@ -35,13 +35,13 @@ public class BodyUI extends JPanel {
 
         Arrays.stream(BodyTypeEnum.values()).forEach(item -> {
             JRadioButton rbBodyType = new JRadioButton(item.getDescription());
-            rbBodyType.setSelected(item == requestDto.getBody().getType());
+            rbBodyType.setSelected(item == body.getType());
 
             rbBodyType.addActionListener(l -> {
                 remove(1);
-                requestDto.getBody().setType(item);
-                requestStagingMonitor.setActualHashCode(requestDto);
-                add(getBodyType(item), "height 100%");
+                body.setType(item);
+                requestStagingMonitor.update();
+                add(getBodyType(), "height 100%");
                 revalidate();
                 repaint();
             });
@@ -51,15 +51,27 @@ public class BodyUI extends JPanel {
         });
 
         add(pRadioBodyType, "wrap");
-        add(getBodyType(requestDto.getBody().getType()), "height 100%");
+        add(getBodyType(), "height 100%");
     }
 
-    private Component getBodyType(BodyTypeEnum bodyType){
-        return switch (bodyType) {
-            case MULTIPART_FORM -> new MultiPartFormUI(requestDto); //@TODO: add requestChangeDto
-            case URL_ENCODED_FORM -> new KeyValueUI(requestDto.getBody().getUrlEncodedForm()); //@TODO: add requestChangeDto
-            case RAW -> new RawBodyUI(requestDto, requestStagingMonitor);
-            case BINARY -> new BinaryUI(requestDto, requestStagingMonitor);
+    private Component getBodyType(){
+        return switch (body.getType()) {
+            case MULTIPART_FORM -> new MultiPartFormUI(
+                    body.getMultiPartForm(),
+                    requestStagingMonitor
+            );
+            case URL_ENCODED_FORM -> new KeyValueUI(
+                    body.getUrlEncodedForm(),
+                    requestStagingMonitor
+            );
+            case RAW -> new RawBodyUI(
+                    body.getRaw(),
+                    requestStagingMonitor
+            );
+            case BINARY -> new BinaryUI(
+                    body.getBinary(),
+                    requestStagingMonitor
+            );
             default -> new NoBodyUI();
         };
     }

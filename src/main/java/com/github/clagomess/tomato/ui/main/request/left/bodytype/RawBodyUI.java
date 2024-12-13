@@ -11,7 +11,7 @@ import javax.swing.*;
 
 @Slf4j
 public class RawBodyUI extends JPanel implements BodyTypeUI {
-    private final RequestDto requestDto;
+    private final RequestDto.RawBody rawBody;
     private final RequestStagingMonitor requestStagingMonitor;
 
     private final JComboBox<RawBodyTypeEnum> cbContentType = new JComboBox<>(
@@ -20,26 +20,25 @@ public class RawBodyUI extends JPanel implements BodyTypeUI {
     private final TRSyntaxTextArea textArea = new TRSyntaxTextArea();
 
     public RawBodyUI(
-            RequestDto requestDto,
+            RequestDto.RawBody rawBody,
             RequestStagingMonitor requestStagingMonitor
     ){
-        this.requestDto = requestDto;
+        this.rawBody = rawBody;
         this.requestStagingMonitor = requestStagingMonitor;
-        var raw = requestDto.getBody().getRaw();
 
         setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill]", ""));
 
-        cbContentType.setSelectedItem(raw.getType());
+        cbContentType.setSelectedItem(rawBody.getType());
         cbContentType.addActionListener(l -> cbContentTypeAction());
 
         add(cbContentType, "wrap");
         add(TRSyntaxTextArea.createScroll(textArea), "height 100%");
 
-        textArea.setSyntaxEditingStyle(raw.getType().getSyntaxStyle());
-        textArea.setText(raw.getRaw());
+        textArea.setSyntaxEditingStyle(rawBody.getType().getSyntaxStyle());
+        textArea.setText(rawBody.getRaw());
         textArea.addOnChange(value -> {
-            raw.setRaw(value);
-            requestStagingMonitor.setActualHashCode(requestDto);
+            rawBody.setRaw(value);
+            requestStagingMonitor.update();
         });
     }
 
@@ -47,7 +46,7 @@ public class RawBodyUI extends JPanel implements BodyTypeUI {
         RawBodyTypeEnum type = (RawBodyTypeEnum) cbContentType.getSelectedItem();
         if(type == null) return;
         textArea.setSyntaxEditingStyle(type.getSyntaxStyle());
-        requestDto.getBody().getRaw().setType(type);
-        requestStagingMonitor.setActualHashCode(requestDto);
+        rawBody.setType(type);
+        requestStagingMonitor.update();
     }
 }

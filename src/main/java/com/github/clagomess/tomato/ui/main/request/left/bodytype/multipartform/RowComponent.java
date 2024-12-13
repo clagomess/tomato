@@ -6,12 +6,14 @@ import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
+import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 
@@ -19,7 +21,7 @@ import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 @Setter
 class RowComponent extends JPanel {
     private final Container parent;
-    private final RequestDto requestDto;
+    private final List<RequestDto.KeyValueItem> multiPartFormItems;
     private final RequestDto.KeyValueItem item;
 
     private final JComboBox<KeyValueTypeEnum> cbType = new JComboBox<>(
@@ -32,15 +34,16 @@ class RowComponent extends JPanel {
 
     public RowComponent(
             Container parent,
-            RequestDto requestDto,
+            RequestStagingMonitor requestStagingMonitor,
+            List<RequestDto.KeyValueItem> multiPartFormItems,
             RequestDto.KeyValueItem item
     ){
         this.parent = parent;
-        this.requestDto = requestDto;
+        this.multiPartFormItems = multiPartFormItems;
         this.item = item;
 
-        if(!this.requestDto.getBody().getMultiPartForm().contains(this.item)){
-            this.requestDto.getBody().getMultiPartForm().add(this.item);
+        if(!this.multiPartFormItems.contains(this.item)){
+            this.multiPartFormItems.add(this.item);
         }
 
         // set values
@@ -66,6 +69,8 @@ class RowComponent extends JPanel {
         add(txtKey, "width 100:100:100");
         add(cValue, "width 100%");
         add(btnRemove, "wrap");
+
+        //@TODO: impl requestChangeDto
     }
 
     private void cbTypeOnChange(){
@@ -87,7 +92,7 @@ class RowComponent extends JPanel {
     }
 
     private void btnRemoveAction(){
-        requestDto.getBody().getMultiPartForm().remove(item);
+        multiPartFormItems.remove(item);
         parent.remove(ComponentUtil.getComponentIndex(parent, this));
         parent.revalidate();
         parent.repaint();

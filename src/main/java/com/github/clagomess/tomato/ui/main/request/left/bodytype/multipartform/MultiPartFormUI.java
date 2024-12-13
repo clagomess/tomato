@@ -2,17 +2,24 @@ package com.github.clagomess.tomato.ui.main.request.left.bodytype.multipartform;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
+import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.BodyTypeUI;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.util.List;
 
 public class MultiPartFormUI extends JPanel implements BodyTypeUI {
-    private final RequestDto requestDto;
+    private final List<RequestDto.KeyValueItem> multiPartFormItems;
+    private final RequestStagingMonitor requestStagingMonitor;
     private final JButton btnAddNew = new JButton(new BxPlusIcon());
 
-    public MultiPartFormUI(RequestDto requestDto){
-        this.requestDto = requestDto;
+    public MultiPartFormUI(
+            List<RequestDto.KeyValueItem> multiPartFormItems,
+            RequestStagingMonitor requestStagingMonitor
+    ){
+        this.multiPartFormItems = multiPartFormItems;
+        this.requestStagingMonitor = requestStagingMonitor;
 
         setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill]", ""));
 
@@ -31,14 +38,21 @@ public class MultiPartFormUI extends JPanel implements BodyTypeUI {
 
         btnAddNew.addActionListener(l -> {
             addRow(new RequestDto.KeyValueItem());
+            requestStagingMonitor.update();
         });
 
-        this.requestDto.getBody().getMultiPartForm()
-                .forEach(this::addRow);
+        this.multiPartFormItems.forEach(this::addRow);
     }
 
     private void addRow(RequestDto.KeyValueItem item){
-        add(new RowComponent(this, this.requestDto, item), "width 100%, wrap");
+        var row = new RowComponent(
+                this,
+                this.requestStagingMonitor,
+                this.multiPartFormItems,
+                item
+        );
+
+        add(row, "width 100%, wrap");
         revalidate();
         repaint();
     }

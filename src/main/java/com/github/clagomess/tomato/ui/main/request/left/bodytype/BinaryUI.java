@@ -13,23 +13,21 @@ public class BinaryUI extends JPanel implements BodyTypeUI {
     private final FileChooser fileChooser = new FileChooser();
 
     public BinaryUI(
-            RequestDto requestDto,
+            RequestDto.BinaryBody binaryBody,
             RequestStagingMonitor requestStagingMonitor
     ){
-        var binary = requestDto.getBody().getBinary();
-
         setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill]", ""));
 
-        contentType.setText(binary.getContentType());
+        contentType.setText(binaryBody.getContentType());
         contentType.addOnChange(value -> {
-            binary.setContentType(value);
-            requestStagingMonitor.setActualHashCode(requestDto);
+            binaryBody.setContentType(value);
+            requestStagingMonitor.update();
         });
 
-        fileChooser.setValue(binary.getFile());
+        fileChooser.setValue(binaryBody.getFile());
         fileChooser.addOnChange(value -> {
-            binary.setFile(value != null ? value.getAbsolutePath() : null);
-            requestStagingMonitor.setActualHashCode(requestDto);
+            binaryBody.setFile(value != null ? value.getAbsolutePath() : null);
+            requestStagingMonitor.update();
         });
 
         add(new JLabel("Content-Type:"), "wrap");
