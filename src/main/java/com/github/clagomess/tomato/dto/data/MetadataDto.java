@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.dto.data;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,10 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of = {"id"})
 public abstract class MetadataDto {
     private String id = RandomStringUtils.randomAlphanumeric(8);
-    private LocalDateTime createTime = LocalDateTime.now(); //@TODO: write in ISO
-    private LocalDateTime updateTime = LocalDateTime.now(); //@TODO: write in ISO
+
+    @JsonFormat(pattern = "uuuu-MM-dd'T'HH:mm:ss")
+    private LocalDateTime createTime = LocalDateTime.now();
+
+    @JsonFormat(pattern = "uuuu-MM-dd'T'HH:mm:ss")
+    private LocalDateTime updateTime = LocalDateTime.now();
 }
