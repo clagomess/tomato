@@ -21,6 +21,7 @@ import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 @Setter
 class RowComponent extends JPanel {
     private final Container parent;
+    private final RequestStagingMonitor requestStagingMonitor;
     private final List<RequestDto.KeyValueItem> multiPartFormItems;
     private final RequestDto.KeyValueItem item;
 
@@ -39,6 +40,7 @@ class RowComponent extends JPanel {
             RequestDto.KeyValueItem item
     ){
         this.parent = parent;
+        this.requestStagingMonitor = requestStagingMonitor;
         this.multiPartFormItems = multiPartFormItems;
         this.item = item;
 
@@ -54,7 +56,10 @@ class RowComponent extends JPanel {
 
         // listeners
         cbType.addActionListener(l -> cbTypeOnChange());
-        txtKey.addOnChange(item::setKey);
+        txtKey.addOnChange(value -> {
+            item.setKey(value);
+            requestStagingMonitor.update();
+        });
         cbSelected.addActionListener(l -> cbSelectedOnChange());
         btnRemove.addActionListener(l -> btnRemoveAction());
 
@@ -75,6 +80,7 @@ class RowComponent extends JPanel {
 
     private void cbTypeOnChange(){
         item.setType((KeyValueTypeEnum) cbType.getSelectedItem());
+        requestStagingMonitor.update();
 
         int index = ComponentUtil.getComponentIndex(this, cValue);
         remove(index);
@@ -88,11 +94,13 @@ class RowComponent extends JPanel {
 
     private void cbSelectedOnChange(){
         item.setSelected(cbSelected.isSelected());
+        requestStagingMonitor.update();
         setEnabled(cbSelected.isSelected());
     }
 
     private void btnRemoveAction(){
         multiPartFormItems.remove(item);
+        requestStagingMonitor.update();
         parent.remove(ComponentUtil.getComponentIndex(parent, this));
         parent.revalidate();
         parent.repaint();
@@ -102,12 +110,18 @@ class RowComponent extends JPanel {
         if(type == TEXT){
             var textField = new ListenableTextField();
             textField.setText(value);
-            textField.addOnChange(item::setValue);
+            textField.addOnChange(vl -> {
+                item.setValue(vl);
+                requestStagingMonitor.update();
+            });
             return textField;
         }else{
             var fileChooser = new FileChooser();
             fileChooser.setValue(value);
-            fileChooser.addOnChange(file -> item.setValue(file.getAbsolutePath()));
+            fileChooser.addOnChange(file -> {
+                item.setValue(file != null ? file.getAbsolutePath() : null);
+                requestStagingMonitor.update();
+            });
             return fileChooser;
         }
     }

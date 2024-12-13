@@ -12,6 +12,7 @@ import java.util.List;
 
 public class KeyValueUI extends JPanel implements BodyTypeUI {
     private final List<RequestDto.KeyValueItem> list;
+    private final RequestStagingMonitor requestStagingMonitor;
     private final JButton btnAddNew = new JButton(new BxPlusIcon());
 
     public KeyValueUI(
@@ -19,6 +20,7 @@ public class KeyValueUI extends JPanel implements BodyTypeUI {
             @Nonnull RequestStagingMonitor requestStagingMonitor
     ) {
         this.list = list;
+        this.requestStagingMonitor = requestStagingMonitor;
 
         setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill]", ""));
 
@@ -36,15 +38,21 @@ public class KeyValueUI extends JPanel implements BodyTypeUI {
 
         btnAddNew.addActionListener(l -> {
             addRow(new RequestDto.KeyValueItem());
+            requestStagingMonitor.update();
         });
 
         this.list.forEach(this::addRow);
-
-        //@TODO: impl requestChangeDto
     }
 
     private void addRow(RequestDto.KeyValueItem item){
-        add(new RowComponent(this, this.list, item), "width 100%, wrap");
+        var row = new RowComponent(
+                this,
+                this.requestStagingMonitor,
+                this.list,
+                item
+        );
+
+        add(row, "width 100%, wrap");
         revalidate();
         repaint();
     }

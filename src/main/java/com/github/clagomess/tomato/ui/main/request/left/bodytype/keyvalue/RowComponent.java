@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
+import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import java.util.List;
 @Setter
 class RowComponent extends JPanel {
     private final Container parent;
+    private final RequestStagingMonitor requestStagingMonitor;
     private final List<RequestDto.KeyValueItem> list;
     private final RequestDto.KeyValueItem item;
 
@@ -27,10 +29,12 @@ class RowComponent extends JPanel {
 
     public RowComponent(
             @Nonnull Container parent,
+            @Nonnull RequestStagingMonitor requestStagingMonitor,
             @Nonnull List<RequestDto.KeyValueItem> list,
             @Nonnull RequestDto.KeyValueItem item
     ){
         this.parent = parent;
+        this.requestStagingMonitor = requestStagingMonitor;
         this.list = list;
         this.item = item;
 
@@ -45,8 +49,14 @@ class RowComponent extends JPanel {
 
         // listeners
         cbSelected.addActionListener(l -> cbSelectedOnChange());
-        txtKey.addOnChange(item::setKey);
-        txtValue.addOnChange(item::setValue);
+        txtKey.addOnChange(value -> {
+            item.setKey(value);
+            requestStagingMonitor.update();
+        });
+        txtValue.addOnChange(value -> {
+            item.setValue(value);
+            requestStagingMonitor.update();
+        });
         btnRemove.addActionListener(l -> btnRemoveAction());
 
         // layout
@@ -64,10 +74,12 @@ class RowComponent extends JPanel {
     private void cbSelectedOnChange(){
         item.setSelected(cbSelected.isSelected());
         setEnabled(cbSelected.isSelected());
+        requestStagingMonitor.update();
     }
 
     private void btnRemoveAction(){
         list.remove(item);
+        requestStagingMonitor.update();
         parent.remove(ComponentUtil.getComponentIndex(parent, this));
         parent.revalidate();
         parent.repaint();

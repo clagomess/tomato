@@ -66,22 +66,22 @@ public class HttpService {
         }
     }
 
-    private static Entity<?> buildEntity(RequestDto dto){
-        return switch (dto.getBody().getType()) {
+    private static Entity<?> buildEntity(RequestDto.Body body){
+        return switch (body.getType()) {
             case URL_ENCODED_FORM -> Entity.form(
-                    dto.getBody().toUrlEncodedForm()
+                    body.toUrlEncodedForm()
             );
             case MULTIPART_FORM -> Entity.entity(
-                    dto.getBody().toMultiPartForm(),
+                    body.toMultiPartForm(),
                     MediaType.MULTIPART_FORM_DATA_TYPE
             );
             case RAW -> Entity.entity(
-                    dto.getBody().getRaw().getRaw(),
-                    dto.getBody().getRaw().getType().getContentType()
+                    body.getRaw().getRaw(),
+                    body.getRaw().getType().getContentType()
             );
             case BINARY -> Entity.entity(
-                    dto.getBody().getBinary().getFile(), //@TODO: load file!
-                    dto.getBody().getBinary().getContentType()
+                    body.getBinary().getFile(), //@TODO: load file!
+                    body.getBinary().getContentType()
             );
             default -> Entity.text(null);
         };
@@ -129,8 +129,8 @@ public class HttpService {
 
     private Response performRequest(Invocation.Builder invocationBuilder, RequestDto dto){
         return switch (dto.getMethod()) {
-            case POST -> invocationBuilder.post(buildEntity(dto));
-            case PUT -> invocationBuilder.put(buildEntity(dto));
+            case POST -> invocationBuilder.post(buildEntity(dto.getBody()));
+            case PUT -> invocationBuilder.put(buildEntity(dto.getBody()));
             case DELETE -> invocationBuilder.delete();
             default -> invocationBuilder.get();
         };
