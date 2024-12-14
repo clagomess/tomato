@@ -3,6 +3,10 @@ package com.github.clagomess.tomato.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.DataSessionDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
+import com.networknt.schema.JsonSchema;
+import com.networknt.schema.JsonSchemaFactory;
+import com.networknt.schema.SpecVersion;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -19,6 +23,17 @@ public class WorkspaceDataService {
     public synchronized static WorkspaceDataService getInstance(){
         return instance;
     }
+
+    private final JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
+            SpecVersion.VersionFlag.V7
+    );
+
+    @Getter
+    private final JsonSchema jsonSchema = factory.getSchema(
+            WorkspaceDto.class.getResourceAsStream(
+                    "workspace.schema.json"
+            )
+    );
 
     private final DataService dataService = DataService.getInstance();
     private final DataSessionDataService dataSessionDataService = DataSessionDataService.getInstance();

@@ -18,8 +18,7 @@ public class EnvironmentDto extends MetadataDto {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    @EqualsAndHashCode(callSuper = true)
-    public static class Env extends MetadataDto {
+    public static class Env {
         private String key;
         private String value;
     }

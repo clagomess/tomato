@@ -2,26 +2,27 @@ package com.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.clagomess.tomato.service.WorkspaceDataService;
+import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 @Slf4j
-public class WorkspaceDtoTest {
-    private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
+public class ConfigurationDtoTest {
+    private final DataService collectionDataService = DataService.getInstance();
     private final ObjectMapper mapper = ObjectMapperUtil.getInstance();
 
     @Test
     public void toJson() throws JsonProcessingException {
-        WorkspaceDto dto = new WorkspaceDto();
-        dto.setName(RandomStringUtils.randomAlphabetic(10));
+        ConfigurationDto dto = new ConfigurationDto();
+        dto.setDataDirectory(new File("aaaa"));
 
         var json = mapper.writeValueAsString(dto);
 
-        Assertions.assertThat(workspaceDataService.getJsonSchema().validate(
+        Assertions.assertThat(collectionDataService.getJsonSchema().validate(
                 mapper.readTree(json)
         )).isEmpty();
     }
