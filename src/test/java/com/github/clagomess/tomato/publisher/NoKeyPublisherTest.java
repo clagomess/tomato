@@ -1,6 +1,9 @@
 package com.github.clagomess.tomato.publisher;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import javax.swing.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
@@ -12,7 +15,18 @@ public class NoKeyPublisherTest {
             throw new RuntimeException("OK");
         });
 
-        assertThrowsExactly(RuntimeException.class, () -> doException.publish("opa"));
+        try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
+            msSwing.when(() -> SwingUtilities.invokeLater(Mockito.any()))
+                    .thenAnswer(answer -> {
+                        ((Runnable) answer.getArgument(0)).run();
+                        return null;
+                    });
+
+            assertThrowsExactly(
+                    RuntimeException.class,
+                    () -> doException.publish("opa")
+            );
+        }
     }
 
     @Test
@@ -22,9 +36,21 @@ public class NoKeyPublisherTest {
         var uuid = doException.addListener(event -> {
             throw new RuntimeException("OK");
         });
-        assertThrowsExactly(RuntimeException.class, () -> doException.publish("opa"));
 
-        doException.removeListener(uuid);
-        doException.publish("opa");
+        try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
+            msSwing.when(() -> SwingUtilities.invokeLater(Mockito.any()))
+                    .thenAnswer(answer -> {
+                        ((Runnable) answer.getArgument(0)).run();
+                        return null;
+                    });
+
+            assertThrowsExactly(
+                    RuntimeException.class,
+                    () -> doException.publish("opa")
+            );
+
+            doException.removeListener(uuid);
+            doException.publish("opa");
+        }
     }
 }
