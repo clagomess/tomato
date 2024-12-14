@@ -2,12 +2,15 @@ package com.github.clagomess.tomato.ui.main.request.right.statusbadge;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.ui.ColorConstant;
+import jakarta.ws.rs.core.MediaType;
 
 import javax.swing.*;
 
 public class CharsetBadge extends JPanel {
     public CharsetBadge(ResponseDto.Response response) {
-        var charset = getCharset(response);
+        if(response == null) return;
+
+        var charset = getCharset(response.getContentType());
         if("UTF-8".equalsIgnoreCase(charset)) return;
 
         var color = getColor(charset);
@@ -26,13 +29,15 @@ public class CharsetBadge extends JPanel {
         }
     }
 
-    protected String getCharset(ResponseDto.Response response){
-        if(response.getContentType() == null) return "No Content Type";
+    protected String getCharset(MediaType contentType){
+        if(contentType == null) return "No Content Type";
 
-        // @TODO: add content-type when not TEXT
+        if(!"text".equalsIgnoreCase(contentType.getType()) &&
+                !contentType.isCompatible(MediaType.APPLICATION_JSON_TYPE)){
+            return contentType.toString();
+        }
 
-        return response.getContentType()
-                .getParameters()
+        return contentType.getParameters()
                 .getOrDefault("charset", "UTF-8");
     }
 }

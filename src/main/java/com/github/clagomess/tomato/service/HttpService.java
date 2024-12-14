@@ -41,7 +41,7 @@ public class HttpService {
         config.register(new LoggingFeature(
                 httpLogCollectorUtil,
                 Level.INFO,
-                LoggingFeature.Verbosity.PAYLOAD_TEXT,
+                LoggingFeature.Verbosity.PAYLOAD_ANY,
                 600
         ));
 
