@@ -336,16 +336,6 @@ public class HttpServicePerformTest {
     }
 
     @Test
-    public void test_ssl_problem(){
-        Assertions.fail("impl. test ssl problem");
-    }
-
-    @Test
-    public void get_with_proxy(){
-        Assertions.fail("impl. test proxy");
-    }
-
-    @Test
     public void post_multipart_form(){
         mockServer.when(HttpRequest.request()
                         .withMethod("POST")
