@@ -27,11 +27,9 @@ public interface PostmanCollectionPumpMapper {
     @Mapping(target = "url", source = "request.url.raw")
     @Mapping(target = "method", source = "request.method")
     @Mapping(target = "headers", source = "request.header")
-    @Mapping(target = "cookies", ignore = true) //@TODO: check
+    @Mapping(target = "cookies", ignore = true)
     @Mapping(target = "body", source = "request.body")
     RequestDto toRequestDto(PostmanCollectionV210Dto.Item source);
-
-    // @TODO: new feature: impl. auth
 
     @Mapping(target = "type", ignore = true)
     @Mapping(target = "selected", ignore = true)
@@ -47,7 +45,7 @@ public interface PostmanCollectionPumpMapper {
 
     @Mapping(target = "type", source = "mode")
     @Mapping(target = "raw.raw", source = "raw")
-    @Mapping(target = "binary", ignore = true) //@TODO: check
+    @Mapping(target = "binary", ignore = true)
     @Mapping(target = "urlEncodedForm", source = "urlencoded")
     @Mapping(target = "multiPartForm", source = "formdata")
     RequestDto.Body map(PostmanCollectionV210Dto.Item.Request.Body source);

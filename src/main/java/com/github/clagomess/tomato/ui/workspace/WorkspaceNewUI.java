@@ -1,6 +1,8 @@
 package com.github.clagomess.tomato.ui.workspace;
 
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
+import com.github.clagomess.tomato.publisher.WorkspacePublisher;
+import com.github.clagomess.tomato.service.DataSessionDataService;
 import com.github.clagomess.tomato.service.WorkspaceDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
@@ -13,7 +15,9 @@ public class WorkspaceNewUI extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
 
+    private final DataSessionDataService dataSessionDataService = DataSessionDataService.getInstance();
     private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
+    private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public WorkspaceNewUI(
             Component parent
@@ -46,6 +50,12 @@ public class WorkspaceNewUI extends JFrame {
             WorkspaceDto dto = new WorkspaceDto();
             dto.setName(txtName.getText());
             workspaceDataService.saveWorkspace(dto);
+
+            var session = dataSessionDataService.getDataSession();
+            session.setWorkspaceId(dto.getId());
+            dataSessionDataService.saveDataSession(session);
+
+            workspacePublisher.getOnSwitch().publish(dto);
 
             setVisible(false);
             dispose();

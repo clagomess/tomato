@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.service.DumpPumpService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.FileChooser;
@@ -13,10 +14,13 @@ import java.awt.*;
 public class CollectionImportUI extends JFrame {
     private final JButton btnImport = new JButton("Import");
     private final FileChooser fileChooser = new FileChooser();
-    private final JComboBox<String> cbType = new JComboBox<>();
+    private final JComboBox<String> cbType = new JComboBox<>(new String[]{
+            "Postman Collection v2.1.0"
+    });
     private final CollectionComboBox cbCollectionParent;
 
     private final DumpPumpService dumpPumpService = DumpPumpService.getInstance();
+    private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionImportUI(
             Component parent,
@@ -61,7 +65,8 @@ public class CollectionImportUI extends JFrame {
                     fileChooser.getValue()
             );
 
-            // @TODO: impl refresh tree
+            var key = new CollectionPublisher.ParentCollectionId(parent.getParent().getId());
+            collectionPublisher.getOnSave().publish(key, parent);
 
             setVisible(false);
             dispose();
