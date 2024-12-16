@@ -66,7 +66,7 @@ public class DumpPumpService {
         pumpPostmanCollection(destination, itens);
     }
 
-    public void pumpPostmanCollection(
+    protected void pumpPostmanCollection(
             File destination,
             List<PostmanCollectionV210Dto.Item> itens
     ) throws IOException {

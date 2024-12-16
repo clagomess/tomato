@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.ui;
 
+import com.github.clagomess.tomato.ui.collection.CollectionImportUI;
 import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxExportIcon;
@@ -60,7 +61,7 @@ public class MainUI extends JFrame {
                 addActionListener(l -> new CollectionNewUI(mainUI, null));
             }});
             add(new JMenuItem("Import", new BxImportIcon()){{
-                addActionListener(l -> {}); //@TODO: Implements
+                addActionListener(l -> new CollectionImportUI(mainUI, null));
             }});
             add(new JMenuItem("Export", new BxExportIcon()){{
                 addActionListener(l -> {}); //@TODO: Implements
