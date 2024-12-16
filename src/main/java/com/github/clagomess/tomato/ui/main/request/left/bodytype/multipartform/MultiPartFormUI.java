@@ -6,6 +6,8 @@ import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
+import java.awt.*;
 import java.util.List;
 
 public class MultiPartFormUI extends JPanel {
@@ -23,10 +25,11 @@ public class MultiPartFormUI extends JPanel {
         setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill]", ""));
 
         JPanel header = new JPanel(new MigLayout(
-                "insets 0 0 0 0",
+                "insets 5 0 5 0",
                 "[][][][grow, fill][]",
                 ""
         ));
+        header.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
         header.add(new JLabel(), "width 25:25:25");
         header.add(new JLabel("Type"), "width 70:70:70");
         header.add(new JLabel("Key"), "width 100:100:100");
@@ -51,7 +54,7 @@ public class MultiPartFormUI extends JPanel {
                 item
         );
 
-        add(row, "width 100%, wrap");
+        add(row, "width 100%, wrap 0");
         revalidate();
         repaint();
     }

@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
+import java.awt.*;
 
 @Slf4j
 @Getter
@@ -30,9 +32,12 @@ public class ResponseTabContent extends JPanel {
         add(statusResponseUI, "width 100%");
         add(btnDownload, "wrap");
 
+        var hsp = new JScrollPane(tblResponseHeader.getTable());
+        hsp.setBorder(new MatteBorder(0, 1, 1, 1, Color.decode("#616365")));
+
         JTabbedPane tpResponse = new JTabbedPane();
         tpResponse.addTab("Preview", TRSyntaxTextArea.createScroll(txtResponse));
-        tpResponse.addTab("Header", new JScrollPane(tblResponseHeader.getTable()));
+        tpResponse.addTab("Header", hsp);
         tpResponse.addTab("Debug", RawTextArea.createScroll(txtHTTPDebug));
         add(tpResponse, "span, height 100%");
 

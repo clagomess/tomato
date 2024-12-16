@@ -11,7 +11,7 @@
     <!--<baseFont family="..." size="13"/>-->
 
     <!--  General editor colors. -->
-    <background color="293134" />
+    <background color="3c3f41" />
     <caret color="c1cbc2" />
     <selection useFG="false" bg="404E51" roundedEdges="false" />
     <currentLineHighlight color="2F393C" fade="false" />
@@ -27,8 +27,8 @@
     </secondaryLanguages>
 
     <!-- Gutter styling. -->
-    <gutterBorder color="81969A" />
-    <lineNumbers fg="81969A" currentFG="a9b7c6"/>
+    <gutterBorder color="616365" />
+    <lineNumbers fg="616365" currentFG="a9b7c6"/>
     <foldIndicator fg="6A8088" armedFg="a9b7c6" iconBg="2f383c" iconArmedBg="3f484c" />
     <iconRowHeader activeLineRange="3399ff" />
 

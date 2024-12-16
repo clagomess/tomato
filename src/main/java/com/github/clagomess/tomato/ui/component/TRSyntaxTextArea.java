@@ -7,8 +7,10 @@ import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +18,7 @@ import java.util.List;
 import static jakarta.ws.rs.core.MediaType.*;
 
 public class TRSyntaxTextArea extends RSyntaxTextArea {
-    private final List<ListenableTextField.OnChangeFI> onChangeList = new LinkedList<>();
+    private final List<OnChangeFI> onChangeList = new LinkedList<>();
 
     public TRSyntaxTextArea() {
         setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
@@ -86,7 +88,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
         }
     }
 
-    public void addOnChange(ListenableTextField.OnChangeFI value){
+    public void addOnChange(OnChangeFI value){
         onChangeList.add(value);
     }
 
@@ -97,7 +99,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
 
     public static RTextScrollPane createScroll(RSyntaxTextArea textArea){
         var sp = new RTextScrollPane(textArea);
-        sp.setBorder(BorderFactory.createEmptyBorder());
+        sp.setBorder(new MatteBorder(0, 1, 1, 1, Color.decode("#616365")));
         return sp;
     }
 }

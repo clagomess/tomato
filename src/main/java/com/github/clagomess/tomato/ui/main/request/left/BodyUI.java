@@ -10,6 +10,7 @@ import com.github.clagomess.tomato.ui.main.request.left.bodytype.multipartform.M
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.Arrays;
 
@@ -26,12 +27,17 @@ public class BodyUI extends JPanel {
         this.requestStagingMonitor = requestStagingMonitor;
 
         setLayout(new MigLayout(
-                "insets 5 0 0 0",
+                "insets 0 0 0 0",
                 "[grow, fill]",
                 ""
         ));
 
-        JPanel pRadioBodyType = new JPanel(new MigLayout("insets 5 0 5 0"));
+        JPanel pRadioBodyType = new JPanel(new MigLayout(
+                "insets 5 0 5 0",
+                "[]",
+                ""
+        ));
+        pRadioBodyType.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
 
         Arrays.stream(BodyTypeEnum.values()).forEach(item -> {
             JRadioButton rbBodyType = new JRadioButton(item.getDescription());
@@ -50,7 +56,7 @@ public class BodyUI extends JPanel {
             pRadioBodyType.add(rbBodyType);
         });
 
-        add(pRadioBodyType, "wrap");
+        add(pRadioBodyType, "wrap 0");
         add(getBodyType(), "height 100%");
     }
 

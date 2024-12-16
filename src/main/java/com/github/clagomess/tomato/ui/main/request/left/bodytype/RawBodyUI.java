@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
+import java.awt.*;
 
 @Slf4j
 public class RawBodyUI extends JPanel {
@@ -26,13 +28,15 @@ public class RawBodyUI extends JPanel {
         this.rawBody = rawBody;
         this.requestStagingMonitor = requestStagingMonitor;
 
-        setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill]", ""));
+        setLayout(new MigLayout("insets 5 0 0 0", "[grow, fill]", ""));
 
         cbContentType.setSelectedItem(rawBody.getType());
         cbContentType.addActionListener(l -> cbContentTypeAction());
 
         add(cbContentType, "wrap");
-        add(TRSyntaxTextArea.createScroll(textArea), "height 100%");
+        var sp = TRSyntaxTextArea.createScroll(textArea);
+        sp.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode("#616365")));
+        add(sp, "height 100%");
 
         textArea.setSyntaxEditingStyle(rawBody.getType().getSyntaxStyle());
         textArea.setText(rawBody.getRaw());

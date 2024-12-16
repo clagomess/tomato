@@ -19,7 +19,7 @@ public class SvgIcon implements Icon {
     private final SVGDocument document;
 
     public SvgIcon(String resourceName){
-        this(resourceName, 16, 16, UIManager.getColor("Objects.Grey"));
+        this(resourceName, 18, 18, UIManager.getColor("Objects.Grey"));
     }
 
     public SvgIcon(

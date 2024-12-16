@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class RequestNameTextField extends JPanel {
-    private final JLabel parent = new JLabel();
+    private final JLabel parent = new JLabel(){{
+        setForeground(Color.decode("#616365"));
+    }};
     private final JLabel lblRequestName = new JLabel();
     private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
 
@@ -23,7 +25,9 @@ public class RequestNameTextField extends JPanel {
     public RequestNameTextField(){
         setLayout(new FlowLayout(FlowLayout.LEFT));
         add(parent);
-        add(new JLabel(" / "));
+        add(new JLabel(" / "){{
+            setForeground(Color.decode("#616365"));
+        }});
         add(lblRequestName);
     }
 

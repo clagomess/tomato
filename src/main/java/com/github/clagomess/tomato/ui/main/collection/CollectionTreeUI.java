@@ -4,8 +4,8 @@ import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.service.WorkspaceDataService;
-import com.github.clagomess.tomato.ui.ColorConstant;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxHomeIcon;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -26,7 +26,7 @@ public class CollectionTreeUI extends JPanel {
     private final CollectionTreeExpansionListener collectionTreeExpansionListener = new CollectionTreeExpansionListener(treeModel);
 
     private final JComboBox<EnvironmentDto> cbEnvironment = new JComboBox<>();
-    private final JLabel lblCurrentWorkspace = new JLabel();
+    private final JLabel lblCurrentWorkspace = new JLabel(new BxHomeIcon());
 
     private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
     private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
@@ -43,12 +43,8 @@ public class CollectionTreeUI extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        JPanel pWorkspace = new JPanel();
-        pWorkspace.setLayout(new BorderLayout());
-        pWorkspace.add(lblCurrentWorkspace);
-        pWorkspace.setBackground(ColorConstant.GRAY);
 
-        add(pWorkspace, "wrap");
+        add(lblCurrentWorkspace, "wrap");
         add(getEnv(), "wrap");
         add(scrollPane, "height 100%");
 
