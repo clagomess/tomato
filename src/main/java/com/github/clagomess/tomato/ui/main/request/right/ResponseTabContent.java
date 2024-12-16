@@ -1,15 +1,15 @@
 package com.github.clagomess.tomato.ui.main.request.right;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.dto.table.ResponseHeaderTMDto;
 import com.github.clagomess.tomato.ui.component.RawTextArea;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
+import com.github.clagomess.tomato.ui.component.tablemanager.TableManagerUI;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 
 @Slf4j
 @Getter
@@ -17,6 +17,9 @@ public class ResponseTabContent extends JPanel {
     private final RawTextArea txtHTTPDebug = new RawTextArea();
     private final TRSyntaxTextArea txtResponse = new TRSyntaxTextArea();
     private final StatusResponseUI statusResponseUI = new StatusResponseUI();
+    private final TableManagerUI<ResponseHeaderTMDto> tblResponseHeader = new TableManagerUI<>(
+            ResponseHeaderTMDto.class
+    );
     private final JButton btnDownload = new JButton("Download");
 
     private ResponseDto responseDto = null;
@@ -29,30 +32,13 @@ public class ResponseTabContent extends JPanel {
 
         JTabbedPane tpResponse = new JTabbedPane();
         tpResponse.addTab("Preview", TRSyntaxTextArea.createScroll(txtResponse));
-        tpResponse.addTab("Header", getHeader());
+        tpResponse.addTab("Header", new JScrollPane(tblResponseHeader.getTable()));
         tpResponse.addTab("Debug", RawTextArea.createScroll(txtHTTPDebug));
         add(tpResponse, "span, height 100%");
 
         // configure
         btnDownload.addActionListener(l -> btnDownloadAction());
         btnDownload.setEnabled(false);
-    }
-
-    public Component getHeader(){
-        DefaultTableModel tblCameraDTM = new DefaultTableModel();
-
-        JTable table = new JTable(tblCameraDTM);
-        table.setFocusable(false);
-        table.setShowGrid(true);
-        tblCameraDTM.addColumn("Header");
-        tblCameraDTM.addColumn("Value");
-        tblCameraDTM.addRow(new String[]{"Content-Type", "application/json"});
-        tblCameraDTM.addRow(new String[]{"Origin", "localhost"});
-
-        JScrollPane spane = new JScrollPane();
-        spane.setViewportView(table);
-
-        return spane;
     }
 
     public void reset(){
@@ -70,6 +56,15 @@ public class ResponseTabContent extends JPanel {
             btnDownload.setEnabled(true);
             txtResponse.setSyntaxStyle(responseDto.getHttpResponse().getContentType());
             txtResponse.setText(responseDto.getHttpResponse().getBodyAsString());
+
+            tblResponseHeader.getModel().clear();
+            responseDto.getHttpResponse().getHeaders()
+                    .forEach((key, value) -> {
+                        tblResponseHeader.getModel().addRow(new ResponseHeaderTMDto(
+                                key,
+                                String.join(",", value)
+                        ));
+                    });
         }
 
         statusResponseUI.update(responseDto);
