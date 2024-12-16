@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.dto.data;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
@@ -51,22 +52,30 @@ public class RequestDto extends MetadataDto {
             return type;
         }
 
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         public RawBody getRaw() {
+            if(type != BodyTypeEnum.RAW) return null;
             if(raw == null) raw = new RawBody();
             return raw;
         }
 
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         public BinaryBody getBinary() {
+            if(type != BodyTypeEnum.BINARY) return null;
             if(binary == null) binary = new BinaryBody();
             return binary;
         }
 
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         public List<KeyValueItem> getUrlEncodedForm() {
+            if(type != BodyTypeEnum.URL_ENCODED_FORM) return null;
             if(urlEncodedForm == null) urlEncodedForm = new ArrayList<>();
             return urlEncodedForm;
         }
 
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         public List<KeyValueItem> getMultiPartForm() {
+            if(type != BodyTypeEnum.MULTIPART_FORM) return null;
             if(multiPartForm == null) multiPartForm = new ArrayList<>();
             return multiPartForm;
         }
