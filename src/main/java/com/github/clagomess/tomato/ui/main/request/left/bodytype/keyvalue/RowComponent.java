@@ -57,6 +57,7 @@ class RowComponent extends JPanel {
             item.setValue(value);
             requestStagingMonitor.update();
         });
+        // @TODO: add possibility to expand to new window
         btnRemove.addActionListener(l -> btnRemoveAction());
 
         // layout

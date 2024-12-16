@@ -87,7 +87,7 @@ public interface PostmanCollectionPumpMapper {
         target.setSelected(source.getDisabled() != null && !source.getDisabled());
     }
 
-    @Mapping(target = "value", source = "src")
+    @Mapping(target = "value", ignore = true)
     @Mapping(target = "selected", ignore = true)
     RequestDto.KeyValueItem map(PostmanCollectionV210Dto.Item.Request.Body.FormData source);
 
@@ -97,6 +97,12 @@ public interface PostmanCollectionPumpMapper {
             PostmanCollectionV210Dto.Item.Request.Body.FormData source
     ){
         target.setSelected(source.getDisabled() != null && !source.getDisabled());
+
+        if("file".equals(source.getType())){
+            target.setValue(source.getSrc());
+        }else{
+            target.setValue(source.getValue());
+        }
     }
 
     default KeyValueTypeEnum mapKeyType(String source){

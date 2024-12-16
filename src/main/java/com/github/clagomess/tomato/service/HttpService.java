@@ -132,6 +132,7 @@ public class HttpService {
     }
 
     private Response performRequest(Invocation.Builder invocationBuilder, RequestDto dto){
+        // @TODO: when buildEntity (URLENCODED, FORMDATA), remove declared Content-Type
         return switch (dto.getMethod()) {
             case POST -> invocationBuilder.post(buildEntity(dto.getBody()));
             case PUT -> invocationBuilder.put(buildEntity(dto.getBody()));

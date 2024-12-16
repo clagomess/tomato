@@ -47,13 +47,13 @@ public class PostmanCollectionPumpMapperTest {
         var item = new PostmanCollectionV210Dto.Item.Request.Body.FormData();
         item.setType("text");
         item.setKey("grant_type");
-        item.setSrc("password");
+        item.setValue("password");
         item.setDisabled(true);
 
         RequestDto.KeyValueItem result = pumpMapper.map(item);
         assertEquals(item.getKey(), result.getKey());
         assertEquals(KeyValueTypeEnum.TEXT, result.getType());
-        assertEquals(item.getSrc(), result.getValue());
+        assertEquals(item.getValue(), result.getValue());
         assertFalse(result.isSelected());
     }
 

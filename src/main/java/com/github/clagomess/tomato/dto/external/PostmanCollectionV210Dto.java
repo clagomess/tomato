@@ -95,6 +95,7 @@ public class PostmanCollectionV210Dto {
                     private String key;
                     private String type;
                     private String src;
+                    private String value;
 
                     @JsonInclude(JsonInclude.Include.NON_NULL)
                     private Boolean disabled;
