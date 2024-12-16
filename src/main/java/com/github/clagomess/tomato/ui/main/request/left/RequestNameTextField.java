@@ -32,7 +32,7 @@ public class RequestNameTextField extends JPanel {
             RequestDto requestDto
     ){
         if(requestHeadDto != null && requestHeadDto.getParent() != null){
-            parent.setText(requestHeadDto.getParent().flattenedParentString());
+            parent.setText(requestHeadDto.getParent().getFlattenedParentString());
         }else{
             try {
                 parent.setText(workspaceDataService.getDataSessionWorkspace().getName());
@@ -44,7 +44,7 @@ public class RequestNameTextField extends JPanel {
         lblRequestName.setText(requestDto.getName());
 
         listenerUuid.add(requestPublisher.getOnSave().addListener(requestDto.getId(), event -> {
-            parent.setText(event.getParent().flattenedParentString());
+            parent.setText(event.getParent().getFlattenedParentString());
             lblRequestName.setText(event.getName());
         }));
     }

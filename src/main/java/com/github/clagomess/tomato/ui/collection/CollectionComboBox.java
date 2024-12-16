@@ -52,7 +52,7 @@ public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
             );
 
             if(value != null) {
-                label.setText(((CollectionTreeDto) value).flattenedParentString());
+                label.setText(((CollectionTreeDto) value).getFlattenedParentString());
             }
 
             return label;

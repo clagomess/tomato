@@ -33,9 +33,9 @@ public class CollectionTreeDto {
         );
     }
 
-    public String flattenedParentString() {
+    public String getFlattenedParentString() {
         if(parent == null) return name;
-        return parent.flattenedParentString() + " / " + name;
+        return parent.getFlattenedParentString() + " / " + name;
     }
 
     @FunctionalInterface

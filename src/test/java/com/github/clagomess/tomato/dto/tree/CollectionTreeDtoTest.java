@@ -41,7 +41,7 @@ public class CollectionTreeDtoTest {
     }
 
     @Test
-    public void flattenedParentString(){
+    public void getFlattenedParentString(){
         var root = new CollectionTreeDto(){{setName("ROOT");}};
         var level1 = new CollectionTreeDto(){{
             setName("LEVEL 1");
@@ -52,8 +52,8 @@ public class CollectionTreeDtoTest {
             setParent(level1);
         }};
 
-        assertEquals("ROOT", root.flattenedParentString());
-        assertEquals("ROOT / LEVEL 1", level1.flattenedParentString());
-        assertEquals("ROOT / LEVEL 1 / LEVEL 2", level2.flattenedParentString());
+        assertEquals("ROOT", root.getFlattenedParentString());
+        assertEquals("ROOT / LEVEL 1", level1.getFlattenedParentString());
+        assertEquals("ROOT / LEVEL 1 / LEVEL 2", level2.getFlattenedParentString());
     }
 }
