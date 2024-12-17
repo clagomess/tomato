@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.EnvironmentDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
+import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditUI;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -29,6 +30,11 @@ public class EnvironmentComboBox extends JPanel {
         workspacePublisher.getOnSwitch().addListener(event -> addItens());
 
         // @TODO: combobox add event on change to set session selected
+
+        btnEdit.addActionListener(event -> SwingUtilities.invokeLater(() -> {
+            if(comboBox.getSelectedItem() == null) return;
+            new EnvironmentEditUI(this, comboBox.getSelectedItem());
+        }));
     }
 
     private void addItens() {
