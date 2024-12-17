@@ -1,0 +1,10 @@
+{
+  "id" : "7rZO7Z1T",
+  "createTime" : "2024-12-17T11:08:31",
+  "updateTime" : "2024-12-17T11:08:32",
+  "name" : "New Environment",
+  "envs" : [ {
+    "key" : "AAA",
+    "value" : "BBB"
+  } ]
+}
