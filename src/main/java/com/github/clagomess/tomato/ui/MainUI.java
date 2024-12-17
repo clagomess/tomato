@@ -54,9 +54,6 @@ public class MainUI extends JFrame {
 
         // collection
         menuBar.add(new JMenu("Collection"){{
-            add(new JMenuItem("Edit Collections"){{
-                addActionListener(l -> {}); //@TODO: Implements
-            }});
             add(new JMenuItem("New Collection"){{
                 addActionListener(l -> new CollectionNewUI(mainUI, null));
             }});

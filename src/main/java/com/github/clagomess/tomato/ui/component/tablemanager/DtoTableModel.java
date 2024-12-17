@@ -33,6 +33,11 @@ public class DtoTableModel<T> extends AbstractTableModel {
     }
 
     @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return true;
+    }
+
+    @Override
     public int getRowCount() {
         return data.size();
     }
