@@ -26,8 +26,8 @@ public class CollectionTreeUI extends JPanel {
     private final EnvironmentComboBox cbEnvironment = new EnvironmentComboBox();
     private final JLabel lblCurrentWorkspace = new JLabel(new BxHomeIcon());
 
-    private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
-    private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
+    private final WorkspaceDataService workspaceDataService = new WorkspaceDataService();
+    private final CollectionDataService collectionDataService = new CollectionDataService();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public CollectionTreeUI() {

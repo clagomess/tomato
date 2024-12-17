@@ -14,7 +14,7 @@ public class WorkspaceSwitchUI extends JFrame {
     private final WorkspaceComboBox cbWorkspace = new WorkspaceComboBox();
     private final JButton btnSwitch = new JButton("Switch");
 
-    private final DataSessionDataService dataSessionDataService = DataSessionDataService.getInstance();
+    private final DataSessionDataService dataSessionDataService = new DataSessionDataService();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public WorkspaceSwitchUI(Component parent) {

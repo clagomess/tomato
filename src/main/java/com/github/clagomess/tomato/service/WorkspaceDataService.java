@@ -3,10 +3,7 @@ package com.github.clagomess.tomato.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.DataSessionDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -17,26 +14,17 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
+@RequiredArgsConstructor
 public class WorkspaceDataService {
-    private WorkspaceDataService() {}
-    private static final WorkspaceDataService instance = new WorkspaceDataService();
-    public synchronized static WorkspaceDataService getInstance(){
-        return instance;
+    private final DataService dataService;
+    private final DataSessionDataService dataSessionDataService;
+
+    public WorkspaceDataService() {
+        this(
+                new DataService(),
+                new DataSessionDataService()
+        );
     }
-
-    private final JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
-            SpecVersion.VersionFlag.V7
-    );
-
-    @Getter
-    private final JsonSchema jsonSchema = factory.getSchema(
-            WorkspaceDto.class.getResourceAsStream(
-                    "workspace.schema.json"
-            )
-    );
-
-    private final DataService dataService = DataService.getInstance();
-    private final DataSessionDataService dataSessionDataService = DataSessionDataService.getInstance();
 
     protected File getWorkspaceDirectory(String id) throws IOException {
         return dataService.createDirectoryIfNotExists(new File(

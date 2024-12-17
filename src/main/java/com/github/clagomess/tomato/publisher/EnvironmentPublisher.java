@@ -5,11 +5,9 @@ import lombok.Getter;
 
 @Getter
 public class EnvironmentPublisher {
-    private EnvironmentPublisher() {}
+    @Getter
     private static final EnvironmentPublisher instance = new EnvironmentPublisher();
-    public synchronized static EnvironmentPublisher getInstance(){
-        return instance;
-    }
+    private EnvironmentPublisher() {}
 
     // for tab
     private final NoKeyPublisher<String> onInsert = new NoKeyPublisher<>();

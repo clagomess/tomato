@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class WorkspaceComboBox extends JComboBox<WorkspaceDto> {
-    private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
+    private final WorkspaceDataService workspaceDataService = new WorkspaceDataService();
 
     public WorkspaceComboBox() {
         setRenderer(new NameRenderer());

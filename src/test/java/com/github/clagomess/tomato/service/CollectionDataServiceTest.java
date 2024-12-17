@@ -12,7 +12,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CollectionDataServiceTest {
-    private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
+    private final CollectionDataService collectionDataService = new CollectionDataService();
 
     private final File testHome = new File(getClass().getResource(
             "DataServiceTest/home"
@@ -59,22 +59,16 @@ public class CollectionDataServiceTest {
         Mockito.when(workspaceDataServiceMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
-        try(var msWorkspaceDataService = Mockito.mockStatic(WorkspaceDataService.class)) {
-            msWorkspaceDataService.when(() -> WorkspaceDataService.getInstance())
-                    .thenReturn(workspaceDataServiceMock);
+        CollectionDataService collectionDS = new CollectionDataService(
+                new DataService(),
+                new RequestDataService(),
+                workspaceDataServiceMock
+        );
 
-            CollectionDataService collectionDSMock = Mockito.mock(
-                    CollectionDataService.class,
-                    Mockito.withSettings().useConstructor()
-            );
-            Mockito.when(collectionDSMock.getWorkspaceCollectionTree())
-                    .thenCallRealMethod();
+        var result = collectionDS.getWorkspaceCollectionTree();
 
-            var result = collectionDSMock.getWorkspaceCollectionTree();
-
-            assertEquals("nPUaq0TC", result.getId());
-            assertEquals("ROOT", result.getName());
-            Assertions.assertThat(result.getPath()).isDirectory();
-        }
+        assertEquals("nPUaq0TC", result.getId());
+        assertEquals("ROOT", result.getName());
+        Assertions.assertThat(result.getPath()).isDirectory();
     }
 }

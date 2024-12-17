@@ -19,7 +19,7 @@ public class CollectionImportUI extends JFrame {
     });
     private final CollectionComboBox cbCollectionParent;
 
-    private final DumpPumpService dumpPumpService = DumpPumpService.getInstance();
+    private final DumpPumpService dumpPumpService = new DumpPumpService();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionImportUI(

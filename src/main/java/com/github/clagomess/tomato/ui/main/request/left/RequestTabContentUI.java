@@ -35,6 +35,7 @@ public class RequestTabContentUI extends JPanel {
     private final ButtonGroup bgBodyType = new ButtonGroup();
 
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
+    private final RequestDataService requestDataService = new RequestDataService();
     private final RequestStagingMonitor requestStagingMonitor;
 
     public RequestTabContentUI(
@@ -119,8 +120,7 @@ public class RequestTabContentUI extends JPanel {
         }
 
         try {
-            RequestDataService.getInstance()
-                    .save(requestHeadDto.getPath(), requestDto);
+            requestDataService.save(requestHeadDto.getPath(), requestDto);
 
             RequestMapper.INSTANCE.toRequestHead(
                     requestHeadDto,

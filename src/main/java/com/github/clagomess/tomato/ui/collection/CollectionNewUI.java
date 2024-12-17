@@ -16,7 +16,7 @@ public class CollectionNewUI extends JFrame {
     private final JTextField txtName = new JTextField();
     private final CollectionComboBox cbCollectionParent;
 
-    private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
+    private final CollectionDataService collectionDataService = new CollectionDataService();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionNewUI(

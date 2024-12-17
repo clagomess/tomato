@@ -36,20 +36,13 @@ public class EnvironmentDataServiceTest {
         Mockito.when(workspaceDataServiceMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
-        try(var msWorkspaceDataService = Mockito.mockStatic(WorkspaceDataService.class)) {
-            msWorkspaceDataService.when(() -> WorkspaceDataService.getInstance())
-                    .thenReturn(workspaceDataServiceMock);
+        EnvironmentDataService environmentDS = new EnvironmentDataService(
+                new DataService(),
+                workspaceDataServiceMock
+        );
 
-            EnvironmentDataService environmentDSMock = Mockito.mock(
-                    EnvironmentDataService.class,
-                    Mockito.withSettings().useConstructor()
-            );
-            Mockito.when(environmentDSMock.getEnvironmentFile(Mockito.any()))
-                    .thenCallRealMethod();
-
-            var result = environmentDSMock.getEnvironmentFile("AAA");
-            Assertions.assertThat(result).hasFileName("environment-AAA.json");
-        }
+        var result = environmentDS.getEnvironmentFile("AAA");
+        Assertions.assertThat(result).hasFileName("environment-AAA.json");
     }
 
     @Test
@@ -61,22 +54,17 @@ public class EnvironmentDataServiceTest {
                 .when(dataServiceMock)
                 .readFile(Mockito.any(), Mockito.any());
 
-        try(var msDataService = Mockito.mockStatic(DataService.class)) {
-            msDataService.when(() -> DataService.getInstance())
-                    .thenReturn(dataServiceMock);
+        EnvironmentDataService environmentDSMock = Mockito.mock(
+                EnvironmentDataService.class,
+                Mockito.withSettings().useConstructor()
+        );
+        Mockito.when(environmentDSMock.getEnvironmentFile(Mockito.any()))
+                .thenReturn(envFile);
+        Mockito.when(environmentDSMock.load(Mockito.any()))
+                .thenCallRealMethod();
 
-            EnvironmentDataService environmentDSMock = Mockito.mock(
-                    EnvironmentDataService.class,
-                    Mockito.withSettings().useConstructor()
-            );
-            Mockito.when(environmentDSMock.getEnvironmentFile(Mockito.any()))
-                    .thenReturn(envFile);
-            Mockito.when(environmentDSMock.load(Mockito.any()))
-                    .thenCallRealMethod();
-
-            var result = environmentDSMock.load("7rZO7Z1T");
-            Assertions.assertThat(result).isNotEmpty();
-        }
+        var result = environmentDSMock.load("7rZO7Z1T");
+        Assertions.assertThat(result).isNotEmpty();
     }
 
     @Test
@@ -90,22 +78,17 @@ public class EnvironmentDataServiceTest {
                 .when(dataServiceMock)
                 .writeFile(Mockito.any(), Mockito.any());
 
-        try(var msDataService = Mockito.mockStatic(DataService.class)) {
-            msDataService.when(() -> DataService.getInstance())
-                    .thenReturn(dataServiceMock);
+        EnvironmentDataService environmentDSMock = Mockito.mock(
+                EnvironmentDataService.class,
+                Mockito.withSettings().useConstructor()
+        );
+        Mockito.when(environmentDSMock.getEnvironmentFile(Mockito.any()))
+                .thenReturn(envFile);
+        Mockito.when(environmentDSMock.save(Mockito.any()))
+                .thenCallRealMethod();
 
-            EnvironmentDataService environmentDSMock = Mockito.mock(
-                    EnvironmentDataService.class,
-                    Mockito.withSettings().useConstructor()
-            );
-            Mockito.when(environmentDSMock.getEnvironmentFile(Mockito.any()))
-                    .thenReturn(envFile);
-            Mockito.when(environmentDSMock.save(Mockito.any()))
-                    .thenCallRealMethod();
-
-            var result = environmentDSMock.save(environment);
-            Assertions.assertThat(result).isFile();
-        }
+        var result = environmentDSMock.save(environment);
+        Assertions.assertThat(result).isFile();
     }
 
     @Test
@@ -113,41 +96,16 @@ public class EnvironmentDataServiceTest {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(new File(testHome, "workspace-nPUaq0TC"));
 
-        DataService dataServiceMock = Mockito.mock(DataService.class);
-        Mockito.doCallRealMethod()
-                .when(dataServiceMock)
-                .listFiles(Mockito.any());
-        Mockito.doCallRealMethod()
-                .when(dataServiceMock)
-                .readFile(Mockito.any(), Mockito.any());
-
         WorkspaceDataService workspaceDataServiceMock = Mockito.mock(WorkspaceDataService.class);
         Mockito.when(workspaceDataServiceMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
-        try(
-                var msDataService = Mockito.mockStatic(DataService.class);
-                var msWorkspaceDataService = Mockito.mockStatic(WorkspaceDataService.class)
-        ) {
-            msDataService.when(() -> DataService.getInstance())
-                    .thenReturn(dataServiceMock);
-            msWorkspaceDataService.when(() -> WorkspaceDataService.getInstance())
-                    .thenReturn(workspaceDataServiceMock);
+        EnvironmentDataService environmentDS = new EnvironmentDataService(
+                new DataService(),
+                workspaceDataServiceMock
+        );
 
-            EnvironmentDataService environmentDSMock = Mockito.mock(
-                    EnvironmentDataService.class,
-                    Mockito.withSettings().useConstructor()
-            );
-            Mockito.doCallRealMethod()
-                    .when(environmentDSMock)
-                    .list();
-            Mockito.when(environmentDSMock.load(Mockito.any()))
-                    .thenCallRealMethod();
-            Mockito.when(environmentDSMock.getEnvironmentFile(Mockito.any()))
-                    .thenCallRealMethod();
-
-            var result = environmentDSMock.list();
-            Assertions.assertThat(result).isNotEmpty();
-        }
+        var result = environmentDS.list();
+        Assertions.assertThat(result).isNotEmpty();
     }
 }

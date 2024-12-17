@@ -15,7 +15,7 @@ public class EnvironmentComboBox extends JPanel {
     private final ComboBox comboBox = new ComboBox();
     private final JButton btnEdit = new JButton(new BxEditIcon());
 
-    private final EnvironmentDataService environmentDataService = EnvironmentDataService.getInstance();
+    private final EnvironmentDataService environmentDataService = new EnvironmentDataService();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
 

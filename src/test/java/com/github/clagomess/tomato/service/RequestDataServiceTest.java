@@ -13,7 +13,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RequestDataServiceTest {
-    private final RequestDataService requestDataService = RequestDataService.getInstance();
+    private final RequestDataService requestDataService = new RequestDataService();
 
 
     private final File testHome = new File(getClass().getResource(

@@ -3,10 +3,7 @@ package com.github.clagomess.tomato.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -17,26 +14,17 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
+@RequiredArgsConstructor
 public class EnvironmentDataService {
-    private EnvironmentDataService() {}
-    private static final EnvironmentDataService instance = new EnvironmentDataService();
-    public synchronized static EnvironmentDataService getInstance(){
-        return instance;
+    private final DataService dataService;
+    private final WorkspaceDataService workspaceDataService;
+
+    public EnvironmentDataService() {
+        this(
+                new DataService(),
+                new WorkspaceDataService()
+        );
     }
-
-    private final JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
-            SpecVersion.VersionFlag.V7
-    );
-
-    @Getter
-    private final JsonSchema jsonSchema = factory.getSchema(
-            EnvironmentDto.class.getResourceAsStream(
-                    "environment.schema.json"
-            )
-    );
-
-    private final DataService dataService = DataService.getInstance();
-    private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
 
     protected File getEnvironmentFile(String id) throws IOException {
         WorkspaceDto workspace = workspaceDataService.getDataSessionWorkspace();

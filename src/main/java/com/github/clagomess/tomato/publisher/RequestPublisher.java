@@ -6,11 +6,9 @@ import lombok.Getter;
 
 @Getter
 public class RequestPublisher {
-    private RequestPublisher() {}
+    @Getter
     private static final RequestPublisher instance = new RequestPublisher();
-    public synchronized static RequestPublisher getInstance(){
-        return instance;
-    }
+    private RequestPublisher() {}
 
     // for tab
     private final NoKeyPublisher<Boolean> onOpenNew = new NoKeyPublisher<>();

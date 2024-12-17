@@ -17,7 +17,7 @@ import java.util.List;
 public class RequestTabPaneUI extends JTabbedPane {
     private final List<Tab> tabs = new ArrayList<>();
 
-    private final RequestDataService requestDataService = RequestDataService.getInstance();
+    private final RequestDataService requestDataService = new RequestDataService();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 

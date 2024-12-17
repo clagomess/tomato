@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class DumpPumpServiceTest {
-    private final DumpPumpService dumpPumpService = DumpPumpService.getInstance();
+    private final DumpPumpService dumpPumpService = new DumpPumpService();
 
     @Test
     public void pumpPostmanCollection() throws IOException {

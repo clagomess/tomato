@@ -15,8 +15,8 @@ public class WorkspaceNewUI extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
 
-    private final DataSessionDataService dataSessionDataService = DataSessionDataService.getInstance();
-    private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
+    private final DataSessionDataService dataSessionDataService = new DataSessionDataService();
+    private final WorkspaceDataService workspaceDataService = new WorkspaceDataService();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public WorkspaceNewUI(

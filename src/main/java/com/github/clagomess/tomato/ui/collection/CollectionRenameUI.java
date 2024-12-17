@@ -10,7 +10,7 @@ import com.github.clagomess.tomato.ui.component.NameUI;
 import java.awt.*;
 
 public class CollectionRenameUI extends NameUI {
-    private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
+    private final CollectionDataService collectionDataService = new CollectionDataService();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionRenameUI(

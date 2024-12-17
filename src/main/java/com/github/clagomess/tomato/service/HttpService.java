@@ -10,6 +10,7 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.ssl.SSLContexts;
@@ -24,10 +25,8 @@ import java.util.logging.Level;
 
 @Slf4j
 public class HttpService {
+    @Getter
     private static final HttpService instance = new HttpService();
-    public synchronized static HttpService getInstance(){
-        return instance;
-    }
 
     private final RequestMapper mapper = RequestMapper.INSTANCE;
 

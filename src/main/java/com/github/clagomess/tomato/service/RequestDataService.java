@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -18,25 +15,13 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
+@RequiredArgsConstructor
 public class RequestDataService {
-    private RequestDataService() {}
-    private static final RequestDataService instance = new RequestDataService();
-    public synchronized static RequestDataService getInstance(){
-        return instance;
+    private final DataService dataService;
+
+    public RequestDataService() {
+        this(new DataService());
     }
-
-    private final JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
-            SpecVersion.VersionFlag.V7
-    );
-
-    @Getter
-    private final JsonSchema jsonSchema = factory.getSchema(
-            RequestDto.class.getResourceAsStream(
-                    "request.schema.json"
-            )
-    );
-
-    private final DataService dataService = DataService.getInstance();
 
     public Optional<RequestDto> load(
             RequestHeadDto request

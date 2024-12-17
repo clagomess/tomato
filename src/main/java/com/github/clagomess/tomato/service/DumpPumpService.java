@@ -5,11 +5,8 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import com.github.clagomess.tomato.mapper.PostmanCollectionPumpMapper;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -17,33 +14,29 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-@Slf4j
-public class DumpPumpService {
-    private DumpPumpService() {}
-    private static final DumpPumpService instance = new DumpPumpService();
-    public synchronized static DumpPumpService getInstance(){
-        return instance;
-    }
+import static com.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.COLLECTION;
 
+@Slf4j
+@RequiredArgsConstructor
+public class DumpPumpService {
     private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
     private final PostmanCollectionPumpMapper pumpMapper = PostmanCollectionPumpMapper.INSTANCE;
+    private final CollectionDataService collectionDataService;
+    private final RequestDataService requestDataService;
 
-    private final JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
-            SpecVersion.VersionFlag.V4
-    );
-
-    private final CollectionDataService collectionDataService = CollectionDataService.getInstance();
-    private final RequestDataService requestDataService = RequestDataService.getInstance();
-
-    @Getter
-    private final JsonSchema postmanCollectionSchema = factory.getSchema(getClass().getResourceAsStream(
-            "postman.collection.v2.1.0.schema.json"
-    ));
+    public DumpPumpService() {
+        this(
+                new CollectionDataService(),
+                new RequestDataService()
+        );
+    }
 
     public void pumpPostmanCollection(
             File destination,
             File postmanCollection
     ) throws IOException {
+        var postmanCollectionSchema = JsonSchemaService.getPostmanJsonSchema(COLLECTION);
+
         Set<ValidationMessage> validations  = postmanCollectionSchema.validate(
                 mapper.readTree(postmanCollection)
         );

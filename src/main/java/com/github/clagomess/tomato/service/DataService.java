@@ -5,10 +5,6 @@ import com.github.clagomess.tomato.dto.data.ConfigurationDto;
 import com.github.clagomess.tomato.dto.data.MetadataDto;
 import com.github.clagomess.tomato.exception.DirectoryCreateException;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -17,24 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
-@Getter
 public class DataService {
-    private DataService(){}
-    private static final DataService instance = new DataService();
-    public synchronized static DataService getInstance(){
-        return instance;
-    }
-
-    private final JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
-            SpecVersion.VersionFlag.V7
-    );
-
-    @Getter
-    private final JsonSchema jsonSchema = factory.getSchema(
-            ConfigurationDto.class.getResourceAsStream(
-                    "configuration.schema.json"
-            )
-    );
 
     protected File createDirectoryIfNotExists(File path){
         if(path.isDirectory()){

@@ -14,7 +14,7 @@ public class EnvironmentNewUI extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
 
-    private final EnvironmentDataService environmentDataService = EnvironmentDataService.getInstance();
+    private final EnvironmentDataService environmentDataService = new EnvironmentDataService();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
 
     public EnvironmentNewUI(Component parent){

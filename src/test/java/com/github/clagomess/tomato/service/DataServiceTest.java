@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 public class DataServiceTest {
-    private final DataService dataService = DataService.getInstance();
+    private final DataService dataService = new DataService();
 
     @Test
     public void read_e_write_File_json() throws IOException {

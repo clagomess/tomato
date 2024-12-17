@@ -10,7 +10,7 @@ import com.github.clagomess.tomato.ui.component.NameUI;
 import java.awt.*;
 
 public class RequestRenameUI extends NameUI {
-    private final RequestDataService requestDataService = RequestDataService.getInstance();
+    private final RequestDataService requestDataService = new RequestDataService();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestRenameUI(

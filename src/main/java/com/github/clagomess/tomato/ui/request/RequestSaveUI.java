@@ -21,7 +21,7 @@ public class RequestSaveUI extends JFrame {
     private final JTextField txtName = new JTextField();
     private final CollectionComboBox cbCollection = new CollectionComboBox(null);
 
-    private final RequestDataService requestDataService = RequestDataService.getInstance();
+    private final RequestDataService requestDataService = new RequestDataService();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestSaveUI(

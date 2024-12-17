@@ -31,29 +31,21 @@ public class DataSessionDataServiceTest {
                 .writeFile(Mockito.any(), Mockito.any());
 
 
-        try(var msDataService = Mockito.mockStatic(DataService.class)) {
-            msDataService.when(() -> DataService.getInstance()).thenReturn(dataServiceMock);
+        DataSessionDataService dataSessionDS = new DataSessionDataService(
+                dataServiceMock
+        );
 
-            DataSessionDataService dataSessionDSMock = Mockito.mock(
-                    DataSessionDataService.class,
-                    Mockito.withSettings().useConstructor()
-            );
-            Mockito.doCallRealMethod()
-                    .when(dataSessionDSMock)
-                    .saveDataSession(Mockito.any());
+        var dto = new DataSessionDto();
+        dto.setWorkspaceId(RandomStringUtils.randomAlphanumeric(8));
 
-            var dto = new DataSessionDto();
-            dto.setWorkspaceId(RandomStringUtils.randomAlphanumeric(8));
+        dataSessionDS.saveDataSession(dto);
 
-            dataSessionDSMock.saveDataSession(dto);
+        var result = new File(
+                mockDataDir,
+                "data-session.json"
+        );
 
-            var result = new File(
-                    mockDataDir,
-                    "data-session.json"
-            );
-
-            assertTrue(result.isFile());
-        }
+        assertTrue(result.isFile());
     }
 
     @Test
@@ -65,20 +57,12 @@ public class DataSessionDataServiceTest {
                 .when(dataServiceMock)
                 .writeFile(Mockito.any(), Mockito.any());
 
+        DataSessionDataService dataSessionDS = new DataSessionDataService(
+                dataServiceMock
+        );
 
-        try(var msDataService = Mockito.mockStatic(DataService.class)) {
-            msDataService.when(() -> DataService.getInstance()).thenReturn(dataServiceMock);
-
-            DataSessionDataService dataSessionDSMock = Mockito.mock(
-                    DataSessionDataService.class,
-                    Mockito.withSettings().useConstructor()
-            );
-            Mockito.when(dataSessionDSMock.getDataSession())
-                    .thenCallRealMethod();
-
-            var result = dataSessionDSMock.getDataSession();
-            Assertions.assertThat(result.getWorkspaceId()).isNull();
-        }
+        var result = dataSessionDS.getDataSession();
+        Assertions.assertThat(result.getWorkspaceId()).isNull();
     }
 
     @Test
@@ -86,7 +70,7 @@ public class DataSessionDataServiceTest {
         var dto = new DataSessionDto();
         dto.setWorkspaceId(RandomStringUtils.randomAlphanumeric(8));
 
-        DataService.getInstance().writeFile(new File(
+        new DataService().writeFile(new File(
                 mockDataDir, "data-session.json"
         ), dto);
 
@@ -97,18 +81,11 @@ public class DataSessionDataServiceTest {
                 .thenCallRealMethod();
 
 
-        try(var msDataService = Mockito.mockStatic(DataService.class)) {
-            msDataService.when(() -> DataService.getInstance()).thenReturn(dataServiceMock);
+        DataSessionDataService dataSessionDS = new DataSessionDataService(
+                dataServiceMock
+        );
 
-            DataSessionDataService dataSessionDSMock = Mockito.mock(
-                    DataSessionDataService.class,
-                    Mockito.withSettings().useConstructor()
-            );
-            Mockito.when(dataSessionDSMock.getDataSession())
-                    .thenCallRealMethod();
-
-            var result = dataSessionDSMock.getDataSession();
-            Assertions.assertThat(result.getWorkspaceId()).isEqualTo(dto.getWorkspaceId());
-        }
+        var result = dataSessionDS.getDataSession();
+        Assertions.assertThat(result.getWorkspaceId()).isEqualTo(dto.getWorkspaceId());
     }
 }

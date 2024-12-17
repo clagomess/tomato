@@ -1,7 +1,8 @@
 package com.github.clagomess.tomato.dto.external;
 
-import com.github.clagomess.tomato.service.DumpPumpService;
+import com.github.clagomess.tomato.service.JsonSchemaService;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
+import com.networknt.schema.JsonSchema;
 import com.networknt.schema.ValidationMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -11,10 +12,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.io.IOException;
 import java.util.Set;
 
+import static com.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.COLLECTION;
+
 @Slf4j
 public class PostmanCollectionV210DtoTest {
     private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
-    private final DumpPumpService dumpPumpService = DumpPumpService.getInstance();
+    private final JsonSchema jsonSchema = JsonSchemaService.getPostmanJsonSchema(COLLECTION);
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -33,8 +36,9 @@ public class PostmanCollectionV210DtoTest {
         // dump validate
         var resultDump = mapper.writeValueAsString(result);
 
-        Set<ValidationMessage> validations = dumpPumpService.getPostmanCollectionSchema()
-                .validate(mapper.readTree(resultDump));
+        Set<ValidationMessage> validations = jsonSchema.validate(
+                mapper.readTree(resultDump)
+        );
 
         Assertions.assertThat(validations).isEmpty();
     }

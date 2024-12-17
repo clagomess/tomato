@@ -5,11 +5,9 @@ import lombok.Getter;
 
 @Getter
 public class CollectionPublisher {
-    private CollectionPublisher() {}
+    @Getter
     private static final CollectionPublisher instance = new CollectionPublisher();
-    public synchronized static CollectionPublisher getInstance(){
-        return instance;
-    }
+    private CollectionPublisher() {}
 
     private final KeyPublisher<ParentCollectionId, CollectionTreeDto> onSave = new KeyPublisher<>();
 

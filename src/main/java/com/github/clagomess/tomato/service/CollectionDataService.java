@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.SpecVersion;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -18,27 +15,19 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CollectionDataService {
-    private CollectionDataService() {}
-    private static final CollectionDataService instance = new CollectionDataService();
-    public synchronized static CollectionDataService getInstance(){
-        return instance;
+    private final DataService dataService;
+    private final RequestDataService requestDataService;
+    private final WorkspaceDataService workspaceDataService;
+
+    public CollectionDataService() {
+        this(
+                new DataService(),
+                new RequestDataService(),
+                new WorkspaceDataService()
+        );
     }
-
-    private final JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
-            SpecVersion.VersionFlag.V7
-    );
-
-    @Getter
-    private final JsonSchema jsonSchema = factory.getSchema(
-            CollectionDto.class.getResourceAsStream(
-                    "collection.schema.json"
-            )
-    );
-
-    private final DataService dataService = DataService.getInstance();
-    private final RequestDataService requestDataService = RequestDataService.getInstance();
-    private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
 
     private File getCollectionFilePath(File collectionDir, String id){
         return new File(collectionDir, String.format(

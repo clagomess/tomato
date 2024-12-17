@@ -5,11 +5,9 @@ import lombok.Getter;
 
 @Getter
 public class WorkspacePublisher {
-    private WorkspacePublisher() {}
+    @Getter
     private static final WorkspacePublisher instance = new WorkspacePublisher();
-    public synchronized static WorkspacePublisher getInstance(){
-        return instance;
-    }
+    private WorkspacePublisher() {}
 
     private final NoKeyPublisher<WorkspaceDto> onSwitch = new NoKeyPublisher<>();
 }

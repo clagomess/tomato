@@ -17,7 +17,7 @@ public class RequestNameTextField extends JPanel {
         setForeground(Color.decode("#616365"));
     }};
     private final JLabel lblRequestName = new JLabel();
-    private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
+    private final WorkspaceDataService workspaceDataService = new WorkspaceDataService();
 
     private final List<UUID> listenerUuid = new ArrayList<>(0);
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();

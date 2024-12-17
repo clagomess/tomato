@@ -2,16 +2,19 @@ package com.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.clagomess.tomato.service.DataSessionDataService;
+import com.github.clagomess.tomato.service.JsonSchemaService;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
+import com.networknt.schema.JsonSchema;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static com.github.clagomess.tomato.enums.TomatoJsonSchemaEnum.DATA_SESSION;
+
 @Slf4j
 public class DataSessionDtoTest {
-    private final DataSessionDataService dataSessionDataService = DataSessionDataService.getInstance();
+    private final JsonSchema jsonSchema = JsonSchemaService.getTomatoJsonSchema(DATA_SESSION);
     private final ObjectMapper mapper = ObjectMapperUtil.getInstance();
 
     @Test
@@ -21,7 +24,7 @@ public class DataSessionDtoTest {
 
         var json = mapper.writeValueAsString(dto);
 
-        Assertions.assertThat(dataSessionDataService.getJsonSchema().validate(
+        Assertions.assertThat(jsonSchema.validate(
                 mapper.readTree(json)
         )).isEmpty();
     }
