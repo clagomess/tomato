@@ -40,7 +40,7 @@ public interface PostmanCollectionPumpMapper {
             @MappingTarget RequestDto.KeyValueItem target,
             PostmanCollectionV210Dto.Item.Request.Header source
     ){
-        target.setSelected(source.getDisabled() != null && !source.getDisabled());
+        target.setSelected(source.getDisabled() == null || !source.getDisabled());
     }
 
     @Mapping(target = "type", source = "mode")
@@ -82,7 +82,7 @@ public interface PostmanCollectionPumpMapper {
             @MappingTarget RequestDto.KeyValueItem target,
             PostmanCollectionV210Dto.Item.Request.Body.UrlEncoded source
     ){
-        target.setSelected(source.getDisabled() != null && !source.getDisabled());
+        target.setSelected(source.getDisabled() == null || !source.getDisabled());
     }
 
     @Mapping(target = "value", ignore = true)
@@ -94,7 +94,7 @@ public interface PostmanCollectionPumpMapper {
             @MappingTarget RequestDto.KeyValueItem target,
             PostmanCollectionV210Dto.Item.Request.Body.FormData source
     ){
-        target.setSelected(source.getDisabled() != null && !source.getDisabled());
+        target.setSelected(source.getDisabled() == null || !source.getDisabled());
 
         if("file".equals(source.getType())){
             target.setValue(source.getSrc());
