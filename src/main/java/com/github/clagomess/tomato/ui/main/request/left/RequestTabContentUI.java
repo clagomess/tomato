@@ -10,6 +10,7 @@ import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSaveIcon;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.right.ResponseTabContent;
@@ -119,7 +120,7 @@ public class RequestTabContentUI extends JPanel {
             return;
         }
 
-        try {
+        new WaitExecution(this, btnSaveRequest).setExecute(() -> {
             requestDataService.save(requestHeadDto.getPath(), requestDto);
 
             RequestMapper.INSTANCE.toRequestHead(
@@ -135,9 +136,7 @@ public class RequestTabContentUI extends JPanel {
             requestPublisher.getOnUpdate().publish(key, requestHeadDto);
             requestPublisher.getOnSave().publish(requestHeadDto.getId(), requestHeadDto);
             requestStagingMonitor.reset();
-        }catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
-        }
+        }).execute();
     }
 
     public void dispose(){

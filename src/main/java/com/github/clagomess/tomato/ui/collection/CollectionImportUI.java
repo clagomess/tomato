@@ -3,8 +3,8 @@ package com.github.clagomess.tomato.ui.collection;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.service.DumpPumpService;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.FileChooser;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
 import net.miginfocom.swing.MigLayout;
 
@@ -54,9 +54,7 @@ public class CollectionImportUI extends JFrame {
     }
 
     private void btnImportAction(){
-        btnImport.setEnabled(false);
-
-        try {
+        new WaitExecution(this, btnImport).setExecute(() -> {
             CollectionTreeDto parent = cbCollectionParent.getSelectedItem();
             if(parent == null) throw new Exception("Parent is null");
 
@@ -70,10 +68,6 @@ public class CollectionImportUI extends JFrame {
 
             setVisible(false);
             dispose();
-        } catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
-        } finally {
-            btnImport.setEnabled(true);
-        }
+        }).execute();
     }
 }

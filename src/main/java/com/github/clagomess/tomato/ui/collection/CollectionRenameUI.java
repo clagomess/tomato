@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.NameUI;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 
 import java.awt.*;
 
@@ -24,9 +25,7 @@ public class CollectionRenameUI extends NameUI {
     }
 
     private void btnSaveAction(CollectionTreeDto collectionTree){
-        btnSave.setEnabled(false);
-
-        try {
+        new WaitExecution(this, btnSave).setExecute(() -> {
             CollectionDto collectionDto = collectionDataService.load(collectionTree)
                     .orElseThrow();
 
@@ -45,10 +44,6 @@ public class CollectionRenameUI extends NameUI {
 
             setVisible(false);
             dispose();
-        } catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
-        } finally {
-            btnSave.setEnabled(true);
-        }
+        }).execute();
     }
 }

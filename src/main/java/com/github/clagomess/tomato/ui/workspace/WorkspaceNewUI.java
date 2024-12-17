@@ -4,7 +4,7 @@ import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.DataSessionDataService;
 import com.github.clagomess.tomato.service.WorkspaceDataService;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
 import net.miginfocom.swing.MigLayout;
 
@@ -44,9 +44,7 @@ public class WorkspaceNewUI extends JFrame {
     }
 
     private void btnSaveAction(){
-        btnSave.setEnabled(false);
-
-        try {
+        new WaitExecution(this, btnSave).setExecute(() -> {
             WorkspaceDto dto = new WorkspaceDto();
             dto.setName(txtName.getText());
             workspaceDataService.saveWorkspace(dto);
@@ -59,10 +57,6 @@ public class WorkspaceNewUI extends JFrame {
 
             setVisible(false);
             dispose();
-        } catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
-        } finally {
-            btnSave.setEnabled(true);
-        }
+        }).execute();
     }
 }

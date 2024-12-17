@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.ui.workspace;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.DataSessionDataService;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
 import net.miginfocom.swing.MigLayout;
 
@@ -40,8 +40,7 @@ public class WorkspaceSwitchUI extends JFrame {
     }
 
     private void btnSwitchAction(){
-        try {
-            btnSwitch.setEnabled(false);
+        new WaitExecution(this, btnSwitch).setExecute(() -> {
             WorkspaceDto selected = cbWorkspace.getSelectedItem();
             if(selected == null) return;
 
@@ -53,10 +52,6 @@ public class WorkspaceSwitchUI extends JFrame {
 
             setVisible(false);
             dispose();
-        } catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
-        } finally {
-            btnSwitch.setEnabled(true);
-        }
+        }).execute();
     }
 }

@@ -4,8 +4,8 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.service.RequestDataService;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.NameUI;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 
 import java.awt.*;
 
@@ -24,9 +24,7 @@ public class RequestRenameUI extends NameUI {
     }
 
     private void btnSaveAction(RequestHeadDto requestHead){
-        btnSave.setEnabled(false);
-
-        try {
+        new WaitExecution(this, btnSave).setExecute(() -> {
             RequestDto requestDto = requestDataService.load(requestHead)
                     .orElseThrow();
 
@@ -47,10 +45,6 @@ public class RequestRenameUI extends NameUI {
 
             setVisible(false);
             dispose();
-        } catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
-        } finally {
-            btnSave.setEnabled(true);
-        }
+        }).execute();
     }
 }

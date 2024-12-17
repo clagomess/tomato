@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.ui.environment.edit;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.service.EnvironmentDataService;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
 import net.miginfocom.swing.MigLayout;
 
@@ -47,9 +47,7 @@ public class EnvironmentEditUI extends JFrame {
     }
 
     private void btnSaveAction(){
-        btnSave.setEnabled(false);
-
-        try {
+        new WaitExecution(this, btnSave).setExecute(() -> {
             environment.setName(txtName.getText());
 
             environmentDataService.save(environment);
@@ -58,10 +56,6 @@ public class EnvironmentEditUI extends JFrame {
                     environment.getId(),
                     environment
             );
-        } catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
-        } finally {
-            btnSave.setEnabled(true);
-        }
+        }).execute();
     }
 }

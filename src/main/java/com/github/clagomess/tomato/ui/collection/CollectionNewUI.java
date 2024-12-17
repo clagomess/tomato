@@ -4,7 +4,7 @@ import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.service.CollectionDataService;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
 import net.miginfocom.swing.MigLayout;
 
@@ -49,9 +49,7 @@ public class CollectionNewUI extends JFrame {
     }
 
     private void btnSaveAction(){
-        btnSave.setEnabled(false);
-
-        try {
+        new WaitExecution(this, btnSave).setExecute(() -> {
             CollectionTreeDto parent = cbCollectionParent.getSelectedItem();
             if(parent == null) throw new Exception("Parent is null");
 
@@ -71,10 +69,6 @@ public class CollectionNewUI extends JFrame {
 
             setVisible(false);
             dispose();
-        } catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
-        } finally {
-            btnSave.setEnabled(true);
-        }
+        }).execute();
     }
 }

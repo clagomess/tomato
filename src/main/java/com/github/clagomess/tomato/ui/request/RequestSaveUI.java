@@ -7,7 +7,7 @@ import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.collection.CollectionComboBox;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
 import net.miginfocom.swing.MigLayout;
 
@@ -57,10 +57,9 @@ public class RequestSaveUI extends JFrame {
     }
 
     private void btnSaveAction(){
-        btnSave.setEnabled(false);
-        this.requestDto.setName(this.txtName.getText());
+        new WaitExecution(this, btnSave).setExecute(() -> {
+            this.requestDto.setName(this.txtName.getText());
 
-        try {
             CollectionTreeDto parent = cbCollection.getSelectedItem();
             if(parent == null) throw new Exception("Parent is null");
 
@@ -82,11 +81,7 @@ public class RequestSaveUI extends JFrame {
 
             setVisible(false);
             dispose();
-        } catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
-        } finally {
-            btnSave.setEnabled(true);
-        }
+        }).execute();
     }
 
     @FunctionalInterface
