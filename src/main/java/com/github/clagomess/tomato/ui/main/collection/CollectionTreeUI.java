@@ -1,11 +1,11 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
-import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.service.WorkspaceDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxHomeIcon;
+import com.github.clagomess.tomato.ui.environment.EnvironmentComboBox;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -14,8 +14,6 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
-import java.awt.*;
-import java.util.List;
 
 @Getter
 @Setter
@@ -25,7 +23,7 @@ public class CollectionTreeUI extends JPanel {
     private final JTree tree = new JTree(treeModel);
     private final CollectionTreeExpansionListener collectionTreeExpansionListener = new CollectionTreeExpansionListener(treeModel);
 
-    private final JComboBox<EnvironmentDto> cbEnvironment = new JComboBox<>();
+    private final EnvironmentComboBox cbEnvironment = new EnvironmentComboBox();
     private final JLabel lblCurrentWorkspace = new JLabel(new BxHomeIcon());
 
     private final WorkspaceDataService workspaceDataService = WorkspaceDataService.getInstance();
@@ -45,7 +43,7 @@ public class CollectionTreeUI extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
         add(lblCurrentWorkspace, "wrap");
-        add(getEnv(), "wrap");
+        add(cbEnvironment, "wrap");
         add(scrollPane, "height 100%");
 
         // data
@@ -64,25 +62,8 @@ public class CollectionTreeUI extends JPanel {
             collectionTreeExpansionListener.createLeaf(rootNode, rootCollection);
 
             this.treeModel.reload();
-
-//        setEnvironments(currentWorkspace.getEnvironments()); @TODO: check
         }catch (Exception e){
             DialogFactory.createDialogException(null, e);
         }
-    }
-
-    private void setEnvironments(List<EnvironmentDto> environments){
-        this.cbEnvironment.removeAllItems();
-        environments.forEach(cbEnvironment::addItem);
-    }
-
-    public JPanel getEnv(){
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-
-        cbEnvironment.setForeground(Color.GREEN);
-        panel.add(cbEnvironment);
-
-        return panel;
     }
 }
