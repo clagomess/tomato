@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
+import com.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,11 +19,13 @@ import java.util.stream.Stream;
 public class EnvironmentDataService {
     private final DataService dataService;
     private final WorkspaceDataService workspaceDataService;
+    private final WorkspaceSessionDataService workspaceSessionDataService;
 
     public EnvironmentDataService() {
         this(
                 new DataService(),
-                new WorkspaceDataService()
+                new WorkspaceDataService(),
+                new WorkspaceSessionDataService()
         );
     }
 
@@ -65,5 +68,12 @@ public class EnvironmentDataService {
                         return null;
                     }
                 }).filter(Objects::nonNull);
+    }
+
+    public Optional<EnvironmentDto> getWorkspaceSessionEnvironment() throws IOException {
+        WorkspaceSessionDto session = workspaceSessionDataService.load();
+        if(session.getEnvironmentId() == null) return Optional.empty();
+
+        return load(session.getEnvironmentId());
     }
 }

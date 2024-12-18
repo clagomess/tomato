@@ -38,7 +38,8 @@ public class EnvironmentDataServiceTest {
 
         EnvironmentDataService environmentDS = new EnvironmentDataService(
                 new DataService(),
-                workspaceDataServiceMock
+                workspaceDataServiceMock,
+                new WorkspaceSessionDataService()
         );
 
         var result = environmentDS.getEnvironmentFile("AAA");
@@ -102,7 +103,8 @@ public class EnvironmentDataServiceTest {
 
         EnvironmentDataService environmentDS = new EnvironmentDataService(
                 new DataService(),
-                workspaceDataServiceMock
+                workspaceDataServiceMock,
+                new WorkspaceSessionDataService()
         );
 
         var result = environmentDS.list();

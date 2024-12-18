@@ -140,5 +140,6 @@ public class RequestTabContentUI extends JPanel {
 
     public void dispose(){
         txtRequestName.dispose();
+        txtRequestUrl.dispose();
     }
 }

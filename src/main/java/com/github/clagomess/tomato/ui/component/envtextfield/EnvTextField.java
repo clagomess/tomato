@@ -15,6 +15,8 @@ public class EnvTextField extends JScrollPane {
         this.envDocumentListener = new EnvDocumentListener(this.textPane.getStyledDocument());
         this.textPane.getStyledDocument().addDocumentListener(this.envDocumentListener);
 
+        // @TODO: impl. tooltip
+
         setViewportView(this.textPane);
     }
 
@@ -24,5 +26,9 @@ public class EnvTextField extends JScrollPane {
 
     public void setText(String text){
         textPane.setText(text);
+    }
+
+    public void dispose(){
+        envDocumentListener.dispose();
     }
 }
