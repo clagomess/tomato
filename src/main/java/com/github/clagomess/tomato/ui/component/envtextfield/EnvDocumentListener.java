@@ -44,9 +44,7 @@ class EnvDocumentListener implements DocumentListener {
         StyleConstants.setForeground(envFilledStyle, ColorConstant.GREEN);
         StyleConstants.setForeground(envNotFilledStyle, ColorConstant.RED);
 
-        SwingUtilities.invokeLater(() -> {
-            updateEnvMap();
-        });
+        SwingUtilities.invokeLater(this::updateEnvMap);
 
         listenerUuid.add(workspaceSessionPublisher.getOnSave().addListener(event -> {
             updateEnvMap();
@@ -91,6 +89,7 @@ class EnvDocumentListener implements DocumentListener {
 
     private void updateEnvStyle(){
         try {
+            envMap.getInjected().clear();
             document.setCharacterAttributes(
                     0,
                     document.getLength(),
