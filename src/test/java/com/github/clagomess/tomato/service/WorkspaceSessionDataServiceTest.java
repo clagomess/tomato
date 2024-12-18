@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WorkspaceSessionDataServiceTest {
@@ -64,7 +65,7 @@ public class WorkspaceSessionDataServiceTest {
                 .thenCallRealMethod();
 
         var result = workspaceSessionDSMock.load();
-        Assertions.assertThat(result).isNotEmpty();
+        assertEquals("ELQkYBrD", result.getId());
     }
 
     @Test

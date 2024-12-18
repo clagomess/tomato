@@ -20,7 +20,7 @@ public class EnvironmentEditUI extends JFrame {
 
     public EnvironmentEditUI(
             Component parent,
-            EnvironmentDto environment
+            EnvironmentDto environment //@TODO: pass ID instead, causing UI problem on combobox
     ){
         this.environment = environment;
 

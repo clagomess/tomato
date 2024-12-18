@@ -27,8 +27,13 @@ public class WorkspaceSessionDataService {
         return new File(workspace.getPath(), "workspace-session.json");
     }
 
-    public Optional<WorkspaceSessionDto> load() throws IOException {
-        return dataService.readFile(getWorkspaceSessionFile(), new TypeReference<>(){});
+    public WorkspaceSessionDto load() throws IOException {
+        Optional<WorkspaceSessionDto> opt = dataService.readFile(
+                getWorkspaceSessionFile(),
+                new TypeReference<>(){}
+        );
+
+        return opt.orElseGet(WorkspaceSessionDto::new);
     }
 
     public File save(WorkspaceSessionDto dto) throws IOException {
