@@ -34,7 +34,9 @@ class EnvDocumentListener implements DocumentListener {
     private final SimpleAttributeSet envFilledStyle = new SimpleAttributeSet();
     private final SimpleAttributeSet envNotFilledStyle = new SimpleAttributeSet();
     protected final Pattern patternEnv = Pattern.compile("(\\{\\{.+?\\}\\}?)");
-    private final Map<String, String> envMap = new HashMap<>();
+
+    @Getter
+    private final EnvMap envMap = new EnvMap();
 
     public EnvDocumentListener(StyledDocument document) {
         this.document = document;
@@ -44,7 +46,6 @@ class EnvDocumentListener implements DocumentListener {
 
         SwingUtilities.invokeLater(() -> {
             updateEnvMap();
-            updateEnvStyle();
         });
 
         listenerUuid.add(workspaceSessionPublisher.getOnSave().addListener(event -> {
@@ -62,14 +63,18 @@ class EnvDocumentListener implements DocumentListener {
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        triggerOnChange();
-        SwingUtilities.invokeLater(this::updateEnvStyle);
+        SwingUtilities.invokeLater(() -> {
+            updateEnvStyle();
+            triggerOnChange();
+        });
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        triggerOnChange();
-        SwingUtilities.invokeLater(this::updateEnvStyle);
+        SwingUtilities.invokeLater(() -> {
+            updateEnvStyle();
+            triggerOnChange();
+        });
     }
 
     @Override
@@ -115,7 +120,7 @@ class EnvDocumentListener implements DocumentListener {
 
     private void updateEnvMap(){
         try {
-            envMap.clear();
+            envMap.reset();
             listenerUuid.forEach(uuid -> {
                 environmentPublisher.getOnSave().removeListener(uuid);
             });
@@ -123,9 +128,7 @@ class EnvDocumentListener implements DocumentListener {
             Optional<EnvironmentDto> current = environmentDataService.getWorkspaceSessionEnvironment();
             if(current.isEmpty()) return;
 
-            current.get().getEnvs().forEach(env -> {
-                envMap.put("{{" + env.getKey() + "}}", env.getValue());
-            });
+            envMap.put(current.get());
 
             listenerUuid.add(environmentPublisher.getOnSave().addListener(current.get().getId(), e -> {
                 updateEnvMap();
@@ -133,6 +136,32 @@ class EnvDocumentListener implements DocumentListener {
             }));
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
+        }
+    }
+
+    @Getter
+    public static class EnvMap {
+        private final Map<String, String> avaliable = new HashMap<>();
+        private final Map<String, String> injected = new HashMap<>();
+
+        public void put(EnvironmentDto dto) {
+            dto.getEnvs().forEach(env -> {
+                avaliable.put("{{" + env.getKey() + "}}", env.getValue());
+            });
+        }
+
+        public boolean containsKey(String token){
+            if(avaliable.containsKey(token)){
+                injected.putIfAbsent(token, avaliable.get(token));
+                return true;
+            }
+
+            return false;
+        }
+
+        public void reset(){
+            avaliable.clear();
+            injected.clear();
         }
     }
 }
