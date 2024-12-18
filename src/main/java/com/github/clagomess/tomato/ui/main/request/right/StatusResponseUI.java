@@ -3,13 +3,17 @@ package com.github.clagomess.tomato.ui.main.request.right;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.main.request.right.statusbadge.*;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class StatusResponseUI extends JPanel {
     public StatusResponseUI(){
-        setLayout(new FlowLayout(FlowLayout.LEFT));
+        setLayout(new MigLayout(
+                "insets 0 0 0 0",
+                "",
+                ""
+        ));
         add(new InfoBadge("Waiting response"));
     }
 

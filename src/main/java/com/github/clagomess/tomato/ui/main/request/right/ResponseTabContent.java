@@ -27,7 +27,11 @@ public class ResponseTabContent extends JPanel {
     private ResponseDto responseDto = null;
 
     public ResponseTabContent(){
-        setLayout(new MigLayout("insets 10 5 10 10", "[grow,fill]", ""));
+        setLayout(new MigLayout(
+                "insets 5 5 0 0",
+                "[grow,fill][]",
+                ""
+        ));
 
         add(statusResponseUI, "width 100%");
         add(btnDownload, "wrap");

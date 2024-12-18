@@ -95,7 +95,7 @@ public class RequestTabPaneUI extends JTabbedPane {
         var tabId = tab.tabKey().getUuid().toString();
         removeTabAt(indexOfTab(tabId));
         tab.tabTitleUI().dispose();
-        tab.tabContent().getRequestContent().dispose();
+        tab.tabContent().dispose();
         tabs.remove(tab);
     }
 
