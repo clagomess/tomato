@@ -9,8 +9,8 @@ import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.service.HttpService;
 import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
-import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
+import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSaveIcon;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.right.ResponseTabContent;
@@ -30,7 +30,7 @@ public class RequestTabContentUI extends JPanel {
 
     private final RequestNameTextField txtRequestName = new RequestNameTextField();
     private final HttpMethodComboBox cbHttpMethod = new HttpMethodComboBox();
-    private final ListenableTextField txtRequestUrl = new ListenableTextField();
+    private final EnvTextField txtRequestUrl = new EnvTextField();
     private final JButton btnSendRequest = new JButton("Send");
     private final JButton btnSaveRequest = new JButton(new BxSaveIcon());
     private final ButtonGroup bgBodyType = new ButtonGroup();
@@ -59,7 +59,6 @@ public class RequestTabContentUI extends JPanel {
 
         // layout
         add(txtRequestName, "span");
-        add(new JSeparator(JSeparator.HORIZONTAL), "span");
         add(cbHttpMethod);
         add(txtRequestUrl, "width 100%");
         add(btnSendRequest);
