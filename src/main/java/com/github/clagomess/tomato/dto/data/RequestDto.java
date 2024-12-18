@@ -19,7 +19,7 @@ import java.util.List;
 public class RequestDto extends MetadataDto {
     private String name = "New Request";
     private HttpMethodEnum method = HttpMethodEnum.GET;
-    private String url;
+    private String url = "http://";
     private List<KeyValueItem> headers = new ArrayList<>();
     private List<KeyValueItem> cookies = new ArrayList<>();
     private Body body = new Body();
