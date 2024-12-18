@@ -37,6 +37,7 @@ public class EnvironmentComboBox extends JPanel {
         comboBox.addActionListener(event -> setWorkspaceSessionSelected());
 
         btnEdit.addActionListener(event -> SwingUtilities.invokeLater(() -> {
+            setBtnEditEnabledOrDisabled();
             if(comboBox.getSelectedItem() == null) return;
             new EnvironmentEditUI(this, comboBox.getSelectedItem());
         }));
@@ -56,10 +57,17 @@ public class EnvironmentComboBox extends JPanel {
                 }
             });
 
-            btnEdit.setEnabled(comboBox.getItemCount() > 0); //@TODO: and not empty selected
+            setBtnEditEnabledOrDisabled();
         } catch (Throwable e){
             DialogFactory.createDialogException(this, e);
         }
+    }
+
+    private void setBtnEditEnabledOrDisabled(){
+        btnEdit.setEnabled(
+                comboBox.getItemCount() > 0 &&
+                comboBox.getSelectedItem() != null
+        );
     }
 
     private void setWorkspaceSessionSelected() {
