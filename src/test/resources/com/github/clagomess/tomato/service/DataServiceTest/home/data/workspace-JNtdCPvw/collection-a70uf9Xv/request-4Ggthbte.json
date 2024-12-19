@@ -1,0 +1,18 @@
+{
+  "id" : "4Ggthbte",
+  "createTime" : "2024-12-18T23:20:09",
+  "updateTime" : "2024-12-18T23:22:49",
+  "name" : "/hello-content-pdf",
+  "method" : "GET",
+  "url" : "http://localhost:8080/hello-content-pdf",
+  "headers" : [ {
+    "type" : "TEXT",
+    "key" : "x-set-response-content-type",
+    "value" : "application/pdf",
+    "selected" : true
+  } ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}

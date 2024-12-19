@@ -1,0 +1,17 @@
+{
+  "id" : "9LF0Losk",
+  "createTime" : "2024-12-18T23:33:47",
+  "updateTime" : "2024-12-18T23:34:44",
+  "name" : "/hello-selected-file",
+  "method" : "POST",
+  "url" : "http://localhost:8080/hello-selected-file",
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "BINARY",
+    "binary" : {
+      "contentType" : "application/octet-stream",
+      "file" : "C:\\Users\\claudio\\OneDrive\\Documentos\\BhuiyanManuscript.pdf"
+    }
+  }
+}

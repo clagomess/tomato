@@ -1,0 +1,24 @@
+{
+  "id" : "7M2S0Kxh",
+  "createTime" : "2024-12-18T23:28:53",
+  "updateTime" : "2024-12-18T23:30:04",
+  "name" : "/hello-urlencoded-form",
+  "method" : "POST",
+  "url" : "http://localhost:8080/hello-urlencoded-form",
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "URL_ENCODED_FORM",
+    "urlEncodedForm" : [ {
+      "type" : "TEXT",
+      "key" : "myparam1",
+      "value" : "a",
+      "selected" : true
+    }, {
+      "type" : "TEXT",
+      "key" : "myparam2",
+      "value" : "b",
+      "selected" : true
+    } ]
+  }
+}

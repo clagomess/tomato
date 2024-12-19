@@ -1,0 +1,17 @@
+{
+  "id" : "8bV40muQ",
+  "createTime" : "2024-12-18T23:36:03",
+  "updateTime" : "2024-12-18T23:37:34",
+  "name" : "/hello",
+  "method" : "PUT",
+  "url" : "http://localhost:8080/hello",
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "RAW",
+    "raw" : {
+      "type" : "JSON",
+      "raw" : "{\n\t\"foo\": \"bar\"\n}"
+    }
+  }
+}

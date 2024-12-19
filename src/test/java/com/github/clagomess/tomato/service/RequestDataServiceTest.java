@@ -16,15 +16,15 @@ public class RequestDataServiceTest {
     private final RequestDataService requestDataService = new RequestDataService();
 
 
-    private final File testHome = new File(getClass().getResource(
-            "DataServiceTest/home"
+    private final File testData = new File(getClass().getResource(
+            "DataServiceTest/home/data"
     ).getFile());
 
     @Test
     public void load() throws IOException {
         var request = new RequestHeadDto();
         request.setPath(new File(
-                testHome,
+                testData,
                 "workspace-nPUaq0TC/request-G4A3BCPq.json"
         ));
 
@@ -45,7 +45,7 @@ public class RequestDataServiceTest {
     public void getRequestList_whenHasResult_return(){
         var collectionParent = new CollectionTreeDto();
         collectionParent.setPath(new File(
-                testHome,
+                testData,
                 "workspace-nPUaq0TC"
         ));
 
@@ -59,7 +59,7 @@ public class RequestDataServiceTest {
                         "G4A3BCPq"
                 ))
                 .anyMatch(item -> item.getName().equals(
-                        "New Request"
+                        "/sample-root"
                 ))
         ;
     }

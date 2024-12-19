@@ -14,15 +14,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CollectionDataServiceTest {
     private final CollectionDataService collectionDataService = new CollectionDataService();
 
-    private final File testHome = new File(getClass().getResource(
-            "DataServiceTest/home"
+    private final File testData = new File(getClass().getResource(
+            "DataServiceTest/home/data"
     ).getFile());
 
     @Test
     public void getCollectionChildrenTree_whenHasResult_return(){
         var collectionStart = new CollectionTreeDto();
         collectionStart.setPath(new File(
-                testHome,
+                testData,
                 "workspace-nPUaq0TC"
         ));
 
@@ -34,7 +34,7 @@ public class CollectionDataServiceTest {
                         "us62qhbS"
                 ))
                 .anyMatch(item -> item.getName().equals(
-                        "a9sd8fkajnn"
+                        "Collection-lvl1"
                 ))
                 .allMatch(item -> item.getPath() != null)
                 .allMatch(item -> item.getChildren() != null)

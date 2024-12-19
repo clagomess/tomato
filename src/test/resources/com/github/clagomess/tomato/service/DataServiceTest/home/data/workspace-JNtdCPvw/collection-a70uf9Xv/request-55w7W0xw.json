@@ -1,0 +1,18 @@
+{
+  "id" : "55w7W0xw",
+  "createTime" : "2024-12-18T23:06:02",
+  "updateTime" : "2024-12-18T23:13:16",
+  "name" : "/hello-followredirect",
+  "method" : "GET",
+  "url" : "http://localhost:8080/hello-followredirect",
+  "headers" : [ {
+    "type" : "TEXT",
+    "key" : "x-set-response-status-code",
+    "value" : "301",
+    "selected" : true
+  } ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}

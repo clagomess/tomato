@@ -1,0 +1,13 @@
+{
+  "id" : "IWBXn64Q",
+  "createTime" : "2024-12-18T23:39:42",
+  "updateTime" : "2024-12-18T23:40:00",
+  "name" : "/hello",
+  "method" : "OPTIONS",
+  "url" : "http://localhost:8080/hello",
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}

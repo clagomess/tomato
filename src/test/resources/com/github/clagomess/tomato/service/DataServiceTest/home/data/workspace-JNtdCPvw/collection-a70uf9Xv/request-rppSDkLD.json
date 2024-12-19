@@ -1,0 +1,13 @@
+{
+  "id" : "rppSDkLD",
+  "createTime" : "2024-12-18T23:00:22",
+  "updateTime" : "2024-12-18T23:01:21",
+  "name" : "/hello",
+  "method" : "POST",
+  "url" : "http://localhost:8080/hello",
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}

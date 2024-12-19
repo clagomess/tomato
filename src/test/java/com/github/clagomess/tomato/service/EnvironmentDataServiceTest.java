@@ -15,16 +15,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EnvironmentDataServiceTest {
 
-    private final File testHome = new File(getClass().getResource(
-            "DataServiceTest/home"
+    private final File testData = new File(getClass().getResource(
+            "DataServiceTest/home/data"
     ).getFile());
 
-    private File mockHome;
+    private File mockData;
 
     @BeforeEach
     public void setMockDataDir(){
-        mockHome = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
-        assertTrue(mockHome.mkdirs());
+        mockData = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
+        assertTrue(mockData.mkdirs());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class EnvironmentDataServiceTest {
 
     @Test
     public void load() throws IOException {
-        var envFile = new File(testHome, "workspace-nPUaq0TC/environment-7rZO7Z1T.json");
+        var envFile = new File(testData, "workspace-nPUaq0TC/environment-7rZO7Z1T.json");
 
         DataService dataServiceMock = Mockito.mock(DataService.class);
         Mockito.doCallRealMethod()
@@ -72,7 +72,7 @@ public class EnvironmentDataServiceTest {
     public void save() throws IOException {
         var environment = new EnvironmentDto();
         environment.getEnvs().add(new EnvironmentDto.Env("AAA", "BBB"));
-        var envFile = new File(mockHome, "environment-"+environment.getId()+".json");
+        var envFile = new File(mockData, "environment-"+environment.getId()+".json");
 
         DataService dataServiceMock = Mockito.mock(DataService.class);
         Mockito.doCallRealMethod()
@@ -95,7 +95,7 @@ public class EnvironmentDataServiceTest {
     @Test
     public void list() throws IOException {
         WorkspaceDto workspaceDto = new WorkspaceDto();
-        workspaceDto.setPath(new File(testHome, "workspace-nPUaq0TC"));
+        workspaceDto.setPath(new File(testData, "workspace-nPUaq0TC"));
 
         WorkspaceDataService workspaceDataServiceMock = Mockito.mock(WorkspaceDataService.class);
         Mockito.when(workspaceDataServiceMock.getDataSessionWorkspace())

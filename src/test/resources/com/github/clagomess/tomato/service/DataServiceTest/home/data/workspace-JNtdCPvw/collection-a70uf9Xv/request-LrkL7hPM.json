@@ -1,0 +1,13 @@
+{
+  "id" : "LrkL7hPM",
+  "createTime" : "2024-12-18T23:37:37",
+  "updateTime" : "2024-12-18T23:38:20",
+  "name" : "/hello",
+  "method" : "DELETE",
+  "url" : "http://localhost:8080/hello",
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}

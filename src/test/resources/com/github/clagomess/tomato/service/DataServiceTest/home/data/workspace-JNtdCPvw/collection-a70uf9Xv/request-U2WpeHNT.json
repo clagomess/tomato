@@ -1,0 +1,13 @@
+{
+  "id" : "U2WpeHNT",
+  "createTime" : "2024-12-18T23:19:03",
+  "updateTime" : "2024-12-18T23:19:34",
+  "name" : "/hello-invalid-cert",
+  "method" : "GET",
+  "url" : "https://localhost:8443/hello-invalid-cert",
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}

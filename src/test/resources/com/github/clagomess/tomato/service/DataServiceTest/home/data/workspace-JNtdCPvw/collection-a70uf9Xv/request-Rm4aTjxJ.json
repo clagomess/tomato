@@ -1,0 +1,17 @@
+{
+  "id" : "Rm4aTjxJ",
+  "createTime" : "2024-12-18T23:30:14",
+  "updateTime" : "2024-12-18T23:31:16",
+  "name" : "/hello-body-json",
+  "method" : "POST",
+  "url" : "http://localhost:8080/hello-body-json",
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "RAW",
+    "raw" : {
+      "type" : "JSON",
+      "raw" : "{\n\t\"hello\": \"world\"\n}\n"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id" : "Dm078clh",
+  "createTime" : "2024-12-18T23:23:55",
+  "updateTime" : "2024-12-18T23:25:21",
+  "name" : "/hello-gzip",
+  "method" : "GET",
+  "url" : "http://localhost:8080/hello-gzip",
+  "headers" : [ {
+    "type" : "TEXT",
+    "key" : "accept-encoding",
+    "value" : "gzip",
+    "selected" : true
+  } ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}

@@ -1,0 +1,6 @@
+services:
+  http-echo:
+    image: ghcr.io/mendhak/http-https-echo:35
+    ports:
+      - "8080:8080"
+      - "8443:8443"

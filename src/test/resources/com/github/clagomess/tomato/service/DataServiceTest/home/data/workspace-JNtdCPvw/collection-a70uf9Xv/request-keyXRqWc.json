@@ -1,0 +1,18 @@
+{
+  "id" : "keyXRqWc",
+  "createTime" : "2024-12-18T23:15:15",
+  "updateTime" : "2024-12-18T23:16:22",
+  "name" : "/hello-delay-6s",
+  "method" : "GET",
+  "url" : "http://localhost:8080/hello-delay-6s",
+  "headers" : [ {
+    "type" : "TEXT",
+    "key" : "x-set-response-delay-ms",
+    "value" : "6000",
+    "selected" : true
+  } ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}

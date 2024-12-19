@@ -1,0 +1,18 @@
+{
+  "id" : "gtD5ZcKC",
+  "createTime" : "2024-12-18T23:40:42",
+  "updateTime" : "2024-12-18T23:44:02",
+  "name" : "/hello-response-iso-8859-1",
+  "method" : "GET",
+  "url" : "http://localhost:8080/hello-response-iso-8859-1",
+  "headers" : [ {
+    "type" : "TEXT",
+    "key" : "X-Set-Response-Content-Type",
+    "value" : "text/xml; charset=iso-8859-1",
+    "selected" : true
+  } ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}

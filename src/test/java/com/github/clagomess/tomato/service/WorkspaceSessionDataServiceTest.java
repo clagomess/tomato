@@ -16,16 +16,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WorkspaceSessionDataServiceTest {
 
-    private final File testHome = new File(getClass().getResource(
-            "DataServiceTest/home"
+    private final File testData = new File(getClass().getResource(
+            "DataServiceTest/home/data"
     ).getFile());
 
-    private File mockHome;
+    private File mockData;
 
     @BeforeEach
     public void setMockDataDir(){
-        mockHome = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
-        assertTrue(mockHome.mkdirs());
+        mockData = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
+        assertTrue(mockData.mkdirs());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class WorkspaceSessionDataServiceTest {
 
     @Test
     public void load() throws IOException {
-        var envFile = new File(testHome, "workspace-nPUaq0TC/workspace-session.json");
+        var envFile = new File(testData, "workspace-nPUaq0TC/workspace-session.json");
 
         DataService dataServiceMock = Mockito.mock(DataService.class);
         Mockito.doCallRealMethod()
@@ -70,7 +70,7 @@ public class WorkspaceSessionDataServiceTest {
 
     @Test
     public void save() throws IOException {
-        var envFile = new File(mockHome, "workspace-session.json");
+        var envFile = new File(mockData, "workspace-session.json");
 
         DataService dataServiceMock = Mockito.mock(DataService.class);
         Mockito.doCallRealMethod()

@@ -1,0 +1,24 @@
+{
+  "id" : "tmCsbrzA",
+  "createTime" : "2024-12-18T23:26:19",
+  "updateTime" : "2024-12-18T23:28:39",
+  "name" : "/hello-multipart-form",
+  "method" : "POST",
+  "url" : "http://localhost:8080/hello-multipart-form",
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "MULTIPART_FORM",
+    "multiPartForm" : [ {
+      "type" : "TEXT",
+      "key" : "myparam",
+      "value" : "123",
+      "selected" : true
+    }, {
+      "type" : "FILE",
+      "key" : "myfile",
+      "value" : "C:\\Users\\claudio\\OneDrive\\Documentos\\BhuiyanManuscript.pdf",
+      "selected" : true
+    } ]
+  }
+}

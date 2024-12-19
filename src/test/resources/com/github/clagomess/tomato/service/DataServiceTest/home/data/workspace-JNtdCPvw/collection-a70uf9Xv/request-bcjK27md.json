@@ -1,0 +1,13 @@
+{
+  "id" : "bcjK27md",
+  "createTime" : "2024-12-18T23:40:07",
+  "updateTime" : "2024-12-18T23:40:29",
+  "name" : "/hello",
+  "method" : "PATCH",
+  "url" : "http://localhost:8080/hello",
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}
