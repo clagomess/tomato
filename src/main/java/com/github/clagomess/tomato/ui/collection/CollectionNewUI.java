@@ -30,11 +30,14 @@ public class CollectionNewUI extends JFrame {
 
         cbCollectionParent = new CollectionComboBox(selectedCollectionTreeParent);
 
-        JPanel panel = new JPanel(new MigLayout());
+        JPanel panel = new JPanel(new MigLayout(
+                "insets 10",
+                "[grow]"
+        ));
         panel.add(new JLabel("Name"), "wrap");
-        panel.add(txtName, "width 100%, wrap");
+        panel.add(txtName, "width 300!, wrap");
         panel.add(new JLabel("Parent"), "wrap");
-        panel.add(cbCollectionParent, "width 100%, wrap");
+        panel.add(cbCollectionParent, "width 300!, wrap");
         panel.add(btnSave, "align right");
         add(panel);
 

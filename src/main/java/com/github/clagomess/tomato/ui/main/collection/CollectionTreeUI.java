@@ -31,7 +31,10 @@ public class CollectionTreeUI extends JPanel {
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public CollectionTreeUI() {
-        setLayout(new MigLayout("insets 10 10 10 5", "[grow, fill]", ""));
+        setLayout(new MigLayout(
+                "insets 10 10 10 5",
+                "[grow, fill]"
+        ));
         tree.setRootVisible(false);
         tree.setShowsRootHandles(true);
         tree.setCellRenderer(new CollectionTreeCellRender());
@@ -42,8 +45,8 @@ public class CollectionTreeUI extends JPanel {
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        add(lblCurrentWorkspace, "wrap");
-        add(cbEnvironment, "wrap");
+        add(lblCurrentWorkspace, "width 100:200:100% - 14px, wrap");
+        add(cbEnvironment, "width 100:200:100% - 14px, wrap");
         add(scrollPane, "height 100%");
 
         // data

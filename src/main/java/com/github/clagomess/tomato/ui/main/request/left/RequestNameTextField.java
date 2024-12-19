@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.service.WorkspaceDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,12 +24,13 @@ public class RequestNameTextField extends JPanel {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestNameTextField(){
-        setLayout(new FlowLayout(FlowLayout.LEFT));
-        add(parent);
+        setLayout(new MigLayout("insets 0 0 0 0"));
+
+        add(parent, "width ::250");
         add(new JLabel(" / "){{
             setForeground(Color.decode("#616365"));
         }});
-        add(lblRequestName);
+        add(lblRequestName, "width ::100% - 271px");
     }
 
     public void setText(

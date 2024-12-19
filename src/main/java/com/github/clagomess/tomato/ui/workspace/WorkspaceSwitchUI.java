@@ -23,9 +23,12 @@ public class WorkspaceSwitchUI extends JFrame {
         setMinimumSize(new Dimension(300, 100));
         setResizable(false);
 
-        JPanel panel = new JPanel(new MigLayout());
+        JPanel panel = new JPanel(new MigLayout(
+                "insets 10",
+                "[grow]"
+        ));
         panel.add(new JLabel("Select workspace:"), "wrap");
-        panel.add(cbWorkspace, "width 100%, wrap");
+        panel.add(cbWorkspace, "width 300!, wrap");
         panel.add(btnSwitch, "align right");
         add(panel);
 

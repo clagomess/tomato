@@ -15,8 +15,8 @@ public class ViewInjectedEnvironmentUI extends JFrame {
     ) {
         setTitle("View Injected Environment");
         setIconImage(new FaviconImageIcon().getImage());
-        setMinimumSize(new Dimension(400, 200));
-        setPreferredSize(new Dimension(400, 200));
+        setMinimumSize(new Dimension(500, 200));
+        setPreferredSize(new Dimension(500, 200));
         setResizable(true);
 
         TableManagerUI<KeyValueTMDto> tableManager = new TableManagerUI<>(
@@ -27,8 +27,11 @@ public class ViewInjectedEnvironmentUI extends JFrame {
             tableManager.getModel().addRow(new KeyValueTMDto(key, value));
         });
 
-        JPanel panel = new JPanel(new MigLayout());
-        panel.add(new JScrollPane(tableManager.getTable()));
+        JPanel panel = new JPanel(new MigLayout(
+                "insets 10",
+                "[grow, fill]"
+        ));
+        panel.add(new JScrollPane(tableManager.getTable()), "height 100%");
 
         add(panel);
 

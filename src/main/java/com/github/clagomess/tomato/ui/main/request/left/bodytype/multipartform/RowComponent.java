@@ -66,14 +66,13 @@ class RowComponent extends JPanel {
         // layout
         setLayout(new MigLayout(
                 "insets 0 0 0 0",
-                "[][][][grow, fill][]",
-                ""
+                "[][][][grow, fill][]"
         ));
-        add(cbSelected, "width 25:25:25");
-        add(cbType, "width 70:70:70");
-        add(txtKey, "width 100:100:100");
-        add(cValue, "width 100%");
-        add(btnRemove, "wrap");
+        add(cbSelected);
+        add(cbType, "width 70!");
+        add(txtKey, "width 100!");
+        add(cValue, "width 100:100:100%");
+        add(btnRemove);
     }
 
     private void cbTypeOnChange(){
@@ -85,7 +84,7 @@ class RowComponent extends JPanel {
 
         cValue = createCValue(item.getType(), item.getValue());
 
-        add(cValue, index);
+        add(cValue, "width 100:100:100%", index);
         revalidate();
         repaint();
     }

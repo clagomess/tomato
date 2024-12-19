@@ -26,13 +26,17 @@ public class EnvironmentEditUI extends JFrame {
 
         setTitle("Environment - " + environment.getName());
         setIconImage(new FaviconImageIcon().getImage());
-        setMinimumSize(new Dimension(600, 400));
+        setMinimumSize(new Dimension(600, 500));
+        setPreferredSize(new Dimension(600, 500));
         setResizable(true);
 
         txtName.setText(environment.getName());
         EnvUI envUI = new EnvUI(environment.getEnvs());
 
-        JPanel panel = new JPanel(new MigLayout());
+        JPanel panel = new JPanel(new MigLayout(
+                "insets 10",
+                "[grow]"
+        ));
         panel.add(new JLabel("Name"), "wrap");
         panel.add(txtName, "width 100%, wrap");
         panel.add(envUI, "width 100%, height 100%, wrap");
@@ -40,6 +44,8 @@ public class EnvironmentEditUI extends JFrame {
         add(panel);
 
         btnSave.addActionListener(l -> btnSaveAction());
+
+        getRootPane().setDefaultButton(btnSave);
 
         pack();
         setLocationRelativeTo(parent);

@@ -61,8 +61,7 @@ public class RequestSplitPaneUI extends JPanel {
 
         setLayout(new MigLayout(
                 "insets 5 5 10 10",
-                "[grow,fill]",
-                ""
+                "[grow,fill]"
         ));
 
         var paneRequestName = new JPanel(new MigLayout(
@@ -70,7 +69,7 @@ public class RequestSplitPaneUI extends JPanel {
                 "[grow,fill][]",
                 ""
         ));
-        paneRequestName.add(txtRequestName);
+        paneRequestName.add(txtRequestName, "width 300::100%");
         paneRequestName.add(btnSaveRequest);
         add(paneRequestName, "wrap");
 
@@ -82,7 +81,7 @@ public class RequestSplitPaneUI extends JPanel {
         paneUrl.add(cbHttpMethod);
         paneUrl.add(txtRequestUrl);
         paneUrl.add(btnSendRequest);
-        add(paneUrl, "wrap");
+        add(paneUrl, "width 300::100%, wrap");
 
         // set values
         txtRequestName.setText(requestHeadDto, requestDto);

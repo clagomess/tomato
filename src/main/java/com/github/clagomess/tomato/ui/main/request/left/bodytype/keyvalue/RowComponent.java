@@ -63,13 +63,12 @@ class RowComponent extends JPanel {
         // layout
         setLayout(new MigLayout(
                 "insets 0 0 0 0",
-                "[][][grow, fill][]",
-                ""
+                "[][][grow,fill][]"
         ));
-        add(cbSelected, "width 25:25:25");
-        add(txtKey, "width 100:100:100");
-        add(txtValue, "width 100%");
-        add(btnRemove, "wrap");
+        add(cbSelected);
+        add(txtKey, "width 150!");
+        add(txtValue, "width 150:150:100%");
+        add(btnRemove);
     }
 
     private void cbSelectedOnChange(){

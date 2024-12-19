@@ -26,8 +26,11 @@ public class EnvironmentComboBox extends JPanel {
     private final WorkspaceSessionPublisher workspaceSessionPublisher = WorkspaceSessionPublisher.getInstance();
 
     public EnvironmentComboBox(){
-        setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill][]", ""));
-        add(comboBox);
+        setLayout(new MigLayout(
+                "insets 0 0 0 0",
+                "[grow, fill][]"
+        ));
+        add(comboBox, "width ::100% - 32px");
         add(btnEdit);
 
         SwingUtilities.invokeLater(this::addItens);

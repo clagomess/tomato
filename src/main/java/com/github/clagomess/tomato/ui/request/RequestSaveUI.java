@@ -37,11 +37,14 @@ public class RequestSaveUI extends JFrame {
         setMinimumSize(new Dimension(300, 100));
         setResizable(false);
 
-        JPanel panel = new JPanel(new MigLayout());
+        JPanel panel = new JPanel(new MigLayout(
+                "insets 10",
+                "[grow]"
+        ));
         panel.add(new JLabel("Request Name"), "wrap");
-        panel.add(txtName, "width 100%, wrap");
+        panel.add(txtName, "width 300!, wrap");
         panel.add(new JLabel("Collection"), "wrap");
-        panel.add(cbCollection, "width 100%, wrap");
+        panel.add(cbCollection, "width 300!, wrap");
         panel.add(btnSave, "align right");
         add(panel);
 

@@ -36,7 +36,7 @@ public class TabTitleUI extends JPanel {
         setOpaque(false);
         add(changeIcon);
         add(httpMethod);
-        add(title);
+        add(title, "width ::200");
         add(btnClose);
 
         // set data
