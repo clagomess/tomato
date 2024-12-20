@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.component.envtextfield;
 
 import com.github.clagomess.tomato.dto.table.KeyValueTMDto;
-import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
+import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import com.github.clagomess.tomato.ui.component.tablemanager.TableManagerUI;
 import net.miginfocom.swing.MigLayout;
 
@@ -14,7 +14,7 @@ public class ViewInjectedEnvironmentUI extends JFrame {
             EnvDocumentListener.EnvMap envMap
     ) {
         setTitle("View Injected Environment");
-        setIconImage(new FaviconImageIcon().getImage());
+        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(500, 200));
         setPreferredSize(new Dimension(500, 200));
         setResizable(true);

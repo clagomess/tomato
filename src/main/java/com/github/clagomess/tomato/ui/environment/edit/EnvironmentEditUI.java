@@ -4,7 +4,7 @@ import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.service.EnvironmentDataService;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
-import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
+import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -25,7 +25,7 @@ public class EnvironmentEditUI extends JFrame {
         this.environment = environment;
 
         setTitle("Environment - " + environment.getName());
-        setIconImage(new FaviconImageIcon().getImage());
+        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(600, 500));
         setPreferredSize(new Dimension(600, 500));
         setResizable(true);

@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.ui;
 
 import com.github.clagomess.tomato.ui.collection.CollectionImportUI;
 import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
-import com.github.clagomess.tomato.ui.component.favicon.FaviconImageIcon;
+import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxExportIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxImportIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSliderAltIcon;
@@ -19,7 +19,7 @@ import java.awt.*;
 public class MainUI extends JFrame {
     public MainUI(){
         setTitle("Tomato");
-        setIconImage(new FaviconImageIcon().getImage());
+        setIconImages(FaviconImage.getFrameIconImage());
         setVisible(true);
         setMinimumSize(new Dimension(1200, 650));
         setJMenuBar(getMenu());
