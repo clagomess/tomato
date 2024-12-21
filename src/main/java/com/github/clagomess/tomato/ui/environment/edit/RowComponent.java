@@ -4,7 +4,6 @@ import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
-import jakarta.annotation.Nonnull;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -25,9 +24,9 @@ class RowComponent extends JPanel {
     private final JButton btnRemove = new JButton(new BxTrashIcon());
 
     public RowComponent(
-            @Nonnull Container parent,
-            @Nonnull List<EnvironmentDto.Env> list,
-            @Nonnull EnvironmentDto.Env item
+            Container parent,
+            List<EnvironmentDto.Env> list,
+            EnvironmentDto.Env item
     ){
         this.parent = parent;
         this.list = list;

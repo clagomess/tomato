@@ -3,7 +3,6 @@ package com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
-import jakarta.annotation.Nonnull;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -21,8 +20,8 @@ public class KeyValueUI extends JPanel {
     private final JPanel rowsPanel;
 
     public KeyValueUI(
-            @Nonnull List<RequestDto.KeyValueItem> list,
-            @Nonnull RequestStagingMonitor requestStagingMonitor
+            List<RequestDto.KeyValueItem> list,
+            RequestStagingMonitor requestStagingMonitor
     ) {
         this.list = list;
         this.requestStagingMonitor = requestStagingMonitor;

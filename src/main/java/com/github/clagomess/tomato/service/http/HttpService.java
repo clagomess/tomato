@@ -2,7 +2,6 @@ package com.github.clagomess.tomato.service.http;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
-import com.github.clagomess.tomato.mapper.RequestMapper;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +25,6 @@ public class HttpService {
     private static final HttpService instance = new HttpService();
     private HttpService() {}
 
-    private final RequestMapper mapper = RequestMapper.INSTANCE; //@TODO: check possible unused methods
     private final HttpLogCollectorUtil httpLogCollectorUtil = new HttpLogCollectorUtil();
 
     private HttpClient getClient() {

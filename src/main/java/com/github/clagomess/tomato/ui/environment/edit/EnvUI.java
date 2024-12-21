@@ -2,7 +2,6 @@ package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
-import jakarta.annotation.Nonnull;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -19,7 +18,7 @@ public class EnvUI extends JPanel {
     private final JPanel rowsPanel;
 
     public EnvUI(
-            @Nonnull List<EnvironmentDto.Env> list
+            List<EnvironmentDto.Env> list
     ) {
         this.list = list;
 

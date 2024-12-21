@@ -1,7 +1,6 @@
 package com.github.clagomess.tomato.dto;
 
 import com.github.clagomess.tomato.service.http.MediaType;
-import jakarta.ws.rs.core.NewCookie;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -37,11 +36,6 @@ public class ResponseDto {
         public String getBodyAsString(){
             // @TODO: check charset, content-type (not-binary)
             return new String(body);
-        }
-
-        public void setCookies(Map<String, NewCookie> map){
-            if(map == null || map.isEmpty()) return;
-            map.forEach((key, value) -> cookies.put(key, value.getValue()));
         }
     }
 }
