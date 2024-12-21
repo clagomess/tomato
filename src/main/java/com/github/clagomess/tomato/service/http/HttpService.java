@@ -160,7 +160,19 @@ public class HttpService {
             HttpRequest.Builder httpRequestBuilder,
             RequestDto dto
     ){
-        throw new RuntimeException("Not implemented yet"); //@TODO: impl URL_ENCODED
+        var form = new UrlEncodedFormBody(dto.getBody().getUrlEncodedForm());
+
+        httpRequestBuilder.header(
+                "Content-Type",
+                form.getContentType()
+        );
+
+        httpRequestBuilder.method(
+                dto.getMethod().getMethod(),
+                form.getBodyPublisher()
+        );
+
+        return httpRequestBuilder.build();
     }
 
     private HttpRequest buildBodyMultipart(

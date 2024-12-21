@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.service.http;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.http.HttpRequest;
@@ -29,6 +30,7 @@ public class MultipartFormDataBody {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
             for (var item : form) {
                 if(!item.isSelected()) continue;
+                if(StringUtils.isBlank(item.getKey())) continue;
 
                 writer.write(String.format("--%s\r\n", boundary));
 

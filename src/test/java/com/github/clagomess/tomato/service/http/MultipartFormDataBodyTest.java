@@ -26,6 +26,8 @@ public class MultipartFormDataBodyTest {
 
         var form = List.of(
                 new RequestDto.KeyValueItem(TEXT, "myparam", "myvalue", true),
+                new RequestDto.KeyValueItem(TEXT, null, null, true),
+                new RequestDto.KeyValueItem(TEXT,  " ", null, true),
                 new RequestDto.KeyValueItem(FILE, "myfile", formFile, true)
         );
 
