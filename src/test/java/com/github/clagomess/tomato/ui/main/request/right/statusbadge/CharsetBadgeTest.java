@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.main.request.right.statusbadge;
 
-import jakarta.ws.rs.core.MediaType;
+import com.github.clagomess.tomato.service.http.MediaType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

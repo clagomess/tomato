@@ -3,18 +3,19 @@ package com.github.clagomess.tomato.service.http;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.mapper.RequestMapper;
-import jakarta.ws.rs.core.MediaType;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.POST;
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.PUT;
@@ -67,13 +68,22 @@ public class HttpService {
             resultHttp.setBody(response.body());
             resultHttp.setBodySize(resultHttp.getBody().length);
             resultHttp.setStatus(response.statusCode());
-            resultHttp.setStatusReason("FOO");
+            resultHttp.setStatusReason("FOO"); // @TODO: impl. reason
             resultHttp.setHeaders(response.headers().map());
 //            resultHttp.setCookies(response.getCookies()); //@TODO: impl. parse cookies?
-            resultHttp.setContentType(MediaType.TEXT_PLAIN_TYPE); //@TODO: impl. response content-type
+
+            Optional<String> contentType = response.headers().firstValue("content-type");
+            if (contentType.isPresent()) {
+                resultHttp.setContentType(new MediaType(contentType.get()));
+            } else {
+                resultHttp.setContentType(MediaType.WILDCARD);
+            }
 
             result.setRequestStatus(true);
             result.setHttpResponse(resultHttp);
+        } catch (ConnectException e){
+            result.setRequestMessage("Connection refused");
+            log.error(log.getName(), e);
         } catch (Throwable e) {
             result.setRequestMessage(e.getMessage());
             log.error(log.getName(), e);

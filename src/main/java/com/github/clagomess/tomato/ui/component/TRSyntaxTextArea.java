@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.component;
 
-import jakarta.ws.rs.core.MediaType;
+import com.github.clagomess.tomato.service.http.MediaType;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import static jakarta.ws.rs.core.MediaType.*;
+import static com.github.clagomess.tomato.service.http.MediaType.*;
 
 public class TRSyntaxTextArea extends RSyntaxTextArea {
     private final List<OnChangeFI> onChangeList = new LinkedList<>();
@@ -62,17 +62,17 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
     }
 
     public void setSyntaxStyle(MediaType contentType){
-        if(contentType.isCompatible(APPLICATION_JSON_TYPE)) {
+        if(contentType.isCompatible(APPLICATION_JSON)) {
             setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
             return;
         }
 
-        if(contentType.isCompatible(TEXT_HTML_TYPE)) {
+        if(contentType.isCompatible(TEXT_HTML)) {
             setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
             return;
         }
 
-        if(contentType.isCompatible(APPLICATION_XML_TYPE)) {
+        if(contentType.isCompatible(APPLICATION_XML)) {
             setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
             return;
         }

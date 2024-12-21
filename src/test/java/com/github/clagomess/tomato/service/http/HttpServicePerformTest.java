@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.matchers.MatchType;
+import org.mockserver.model.MediaType;
 import org.mockserver.model.*;
 
 import java.util.Collections;

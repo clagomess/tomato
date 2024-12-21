@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.dto;
 
-import jakarta.ws.rs.core.MediaType;
+import com.github.clagomess.tomato.service.http.MediaType;
 import jakarta.ws.rs.core.NewCookie;
 import lombok.Data;
 

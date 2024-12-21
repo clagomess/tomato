@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.ui.main.request.right.statusbadge;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.service.http.MediaType;
 import com.github.clagomess.tomato.ui.ColorConstant;
-import jakarta.ws.rs.core.MediaType;
 
 import javax.swing.*;
 
@@ -32,8 +32,8 @@ public class CharsetBadge extends JPanel {
     protected String getCharset(MediaType contentType){
         if(contentType == null) return "No Content Type";
 
-        if(!"text".equalsIgnoreCase(contentType.getType()) &&
-                !contentType.isCompatible(MediaType.APPLICATION_JSON_TYPE)){
+        if(!contentType.isString() &&
+                !contentType.isCompatible(MediaType.APPLICATION_JSON)){
             return contentType.toString();
         }
 
