@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.service.http;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.enums.HttpStatusEnum;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -74,7 +75,7 @@ public class HttpService {
             resultHttp.setBody(response.body());
             resultHttp.setBodySize(resultHttp.getBody().length);
             resultHttp.setStatus(response.statusCode());
-            resultHttp.setStatusReason("FOO"); // @TODO: impl. reason
+            resultHttp.setStatusReason(HttpStatusEnum.getReasonPhrase(response.statusCode()));
             resultHttp.setHeaders(response.headers().map());
 //            resultHttp.setCookies(response.getCookies()); //@TODO: impl. parse cookies?
 
