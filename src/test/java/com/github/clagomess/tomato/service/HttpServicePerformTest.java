@@ -4,7 +4,6 @@ import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
-import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +15,7 @@ import org.mockserver.model.*;
 
 import java.util.Collections;
 
+import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -374,9 +374,16 @@ public class HttpServicePerformTest {
         request.setBody(new RequestDto.Body());
         request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
 
-        var item = new RequestDto.KeyValueItem("foo", "bar");
-        item.setType(KeyValueTypeEnum.FILE);
-        request.getBody().getMultiPartForm().add(item);
+        String formFile = getClass()
+                .getResource("http/HttpServicePerformTest/dummy.txt")
+                .getFile();
+
+        request.getBody().getMultiPartForm().add(new RequestDto.KeyValueItem(
+                FILE,
+                "key",
+                formFile,
+                true
+        ));
 
         ResponseDto response = httpService.perform(request);
         assertEquals(200, response.getHttpResponse().getStatus());

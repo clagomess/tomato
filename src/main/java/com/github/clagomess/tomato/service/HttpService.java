@@ -3,12 +3,14 @@ package com.github.clagomess.tomato.service;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.mapper.RequestMapper;
+import com.github.clagomess.tomato.service.http.MultipartFormDataBody;
 import com.github.clagomess.tomato.util.HttpLogCollectorUtil;
 import jakarta.ws.rs.core.MediaType;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -87,7 +89,7 @@ public class HttpService {
     private HttpRequest buildBody(
             HttpRequest.Builder httpRequestBuilder,
             RequestDto dto
-    ) throws FileNotFoundException {
+    ) throws IOException {
         if(!List.of(PUT, POST).contains(dto.getMethod())){
             return buildBodyEmpty(httpRequestBuilder, dto);
         }
@@ -166,7 +168,19 @@ public class HttpService {
     private HttpRequest buildBodyMultipart(
             HttpRequest.Builder httpRequestBuilder,
             RequestDto dto
-    ){
-        throw new RuntimeException("Not implemented yet"); //@TODO: impl URL_ENCODED
+    ) throws IOException {
+        var form = new MultipartFormDataBody(dto.getBody().getMultiPartForm());
+
+        httpRequestBuilder.header(
+                "Content-Type",
+                form.getContentType()
+        );
+
+        httpRequestBuilder.method(
+                dto.getMethod().getMethod(),
+                form.getBodyPublisher()
+        );
+
+        return httpRequestBuilder.build();
     }
 }

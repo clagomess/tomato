@@ -99,6 +99,7 @@ public class RequestDto extends MetadataDto {
 
     @Data
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class KeyValueItem {
         private KeyValueTypeEnum type = KeyValueTypeEnum.TEXT;
         private String key;
