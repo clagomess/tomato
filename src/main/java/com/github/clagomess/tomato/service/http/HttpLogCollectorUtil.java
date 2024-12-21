@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.util;
+package com.github.clagomess.tomato.service.http;
 
 import lombok.Getter;
 

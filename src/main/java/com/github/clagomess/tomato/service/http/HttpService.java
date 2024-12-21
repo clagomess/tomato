@@ -1,10 +1,8 @@
-package com.github.clagomess.tomato.service;
+package com.github.clagomess.tomato.service.http;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.mapper.RequestMapper;
-import com.github.clagomess.tomato.service.http.MultipartFormDataBody;
-import com.github.clagomess.tomato.util.HttpLogCollectorUtil;
 import jakarta.ws.rs.core.MediaType;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

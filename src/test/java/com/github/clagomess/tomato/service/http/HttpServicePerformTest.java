@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.service;
+package com.github.clagomess.tomato.service.http;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
@@ -375,7 +375,7 @@ public class HttpServicePerformTest {
         request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
 
         String formFile = getClass()
-                .getResource("http/HttpServicePerformTest/dummy.txt")
+                .getResource("HttpServicePerformTest/dummy.txt")
                 .getFile();
 
         request.getBody().getMultiPartForm().add(new RequestDto.KeyValueItem(
