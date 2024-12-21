@@ -42,13 +42,21 @@ public class HttpService {
                     .uri(URI.create(dto.getUrl()));
 
             // set headers
-            dto.getHeaders().forEach(header -> requestBuilder.header(
-                    header.getKey(),
-                    header.getValue()
-            ));
+            requestBuilder.setHeader("User-Agent", "Tomato/0.0.1"); //@TODO: get from project
+            dto.getHeaders().stream()
+                    .filter(RequestDto.KeyValueItem::isSelected)
+                    .forEach(header -> requestBuilder.setHeader(
+                            header.getKey(),
+                            header.getValue()
+                    ));
 
             // set cookies
-//            dto.getCookies().forEach(item -> invocationBuilder.cookie(item.getKey(), item.getValue())); //@TODO: impl. send cookie
+            dto.getCookies().stream()
+                    .filter(RequestDto.KeyValueItem::isSelected)
+                    .forEach(cookie -> requestBuilder.header(
+                            "Cookie",
+                            cookie.getKey() + "=" + cookie.getValue()
+                    ));
 
             HttpRequest request = buildBody(requestBuilder, dto);
             httpLogCollectorUtil.flush();
