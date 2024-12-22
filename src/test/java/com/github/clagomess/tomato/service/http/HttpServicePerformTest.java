@@ -5,8 +5,8 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndServer;
@@ -17,8 +17,7 @@ import org.mockserver.model.*;
 import java.util.Collections;
 
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpServicePerformTest {
     private static ClientAndServer mockServer;
@@ -65,13 +64,13 @@ public class HttpServicePerformTest {
 
         ResponseDto response = httpService.perform(request);
 
-        Assertions.assertTrue(response.isRequestStatus());
-        Assertions.assertNull(response.getRequestMessage());
+        assertTrue(response.isRequestStatus());
+        assertNull(response.getRequestMessage());
         assertEquals(200, response.getHttpResponse().getStatus());
         assertEquals("OK", response.getHttpResponse().getStatusReason());
         assertEquals(42, response.getHttpResponse().getBodySize());
         assertEquals("application/json", response.getHttpResponse().getContentType().toString());
-        Assertions.assertNotNull(response.getRequestDebug());
+        assertNotNull(response.getRequestDebug());
     }
 
     @Test
@@ -94,15 +93,14 @@ public class HttpServicePerformTest {
 
         ResponseDto response = httpService.perform(request);
 
-        Assertions.assertTrue(response.isRequestStatus());
-        Assertions.assertNull(response.getRequestMessage());
+        assertTrue(response.isRequestStatus());
+        assertNull(response.getRequestMessage());
         assertEquals(4, response.getHttpResponse().getBodySize());
         assertEquals("application/pdf", response.getHttpResponse().getContentType().toString());
 
-        assertArrayEquals(
-                new byte[]{0x25, 0x50, 0x44, 0x46},
-                response.getHttpResponse().getBody()
-        );
+        Assertions.assertThat(response.getHttpResponse().getBody())
+                .content()
+                .isEqualTo("%PDF");
     }
 
     @Test
@@ -150,7 +148,7 @@ public class HttpServicePerformTest {
 
         ResponseDto response = httpService.perform(request);
         assertEquals(200, response.getHttpResponse().getStatus());
-        Assertions.assertTrue(response.getHttpResponse().getHeaders().keySet().stream().anyMatch("foo"::equals));
+        assertTrue(response.getHttpResponse().getHeaders().keySet().stream().anyMatch("foo"::equals));
     }
 
     @Test
@@ -183,10 +181,10 @@ public class HttpServicePerformTest {
 
         ResponseDto response = httpService.perform(request);
 
-        Assertions.assertNull(response.getHttpResponse());
-        Assertions.assertNotNull(response.getRequestDebug());
-        Assertions.assertFalse(response.isRequestStatus());
-        Assertions.assertNotNull(response.getRequestMessage());
+        assertNull(response.getHttpResponse());
+        assertNotNull(response.getRequestDebug());
+        assertFalse(response.isRequestStatus());
+        assertNotNull(response.getRequestMessage());
     }
 
     @Test
@@ -207,10 +205,10 @@ public class HttpServicePerformTest {
 
         ResponseDto response = httpService.perform(request);
 
-        Assertions.assertNull(response.getHttpResponse());
-        Assertions.assertNotNull(response.getRequestDebug());
-        Assertions.assertFalse(response.isRequestStatus());
-        Assertions.assertNotNull(response.getRequestMessage());
+        assertNull(response.getHttpResponse());
+        assertNotNull(response.getRequestDebug());
+        assertFalse(response.isRequestStatus());
+        assertNotNull(response.getRequestMessage());
     }
 
     @Test

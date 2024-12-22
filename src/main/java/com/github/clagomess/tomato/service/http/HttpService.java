@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.enums.HttpStatusEnum;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -13,6 +14,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -62,18 +64,21 @@ public class HttpService {
             HttpRequest request = buildBody(requestBuilder, dto);
             httpLogCollectorUtil.flush();
 
+            var reponseFile = File.createTempFile("tomato-reponse-", ".bin");
+            reponseFile.deleteOnExit();
+
             long requestTime = System.currentTimeMillis();
 
-            HttpResponse<byte[]> response = getClient().send(
+            HttpResponse<Path> response = getClient().send(
                     request,
-                    HttpResponse.BodyHandlers.ofByteArray()
+                    HttpResponse.BodyHandlers.ofFile(reponseFile.toPath())
             );
 
             var resultHttp = new ResponseDto.Response();
             resultHttp.setRequestTime(System.currentTimeMillis() - requestTime);
 
-            resultHttp.setBody(response.body());
-            resultHttp.setBodySize(resultHttp.getBody().length);
+            resultHttp.setBody(reponseFile);
+            resultHttp.setBodySize(Files.size(reponseFile.toPath()));
             resultHttp.setStatus(response.statusCode());
             resultHttp.setStatusReason(HttpStatusEnum.getReasonPhrase(response.statusCode()));
             resultHttp.setHeaders(response.headers().map());
