@@ -124,7 +124,7 @@ public class RequestSplitPaneUI extends JPanel {
 
         new Thread(() -> {
             try {
-                ResponseDto responseDto = HttpService.getInstance().perform(requestDto);
+                ResponseDto responseDto = new HttpService(requestDto).perform();
                 responseContent.update(responseDto);
             } catch (Throwable e) {
                 DialogFactory.createDialogException(this, e);

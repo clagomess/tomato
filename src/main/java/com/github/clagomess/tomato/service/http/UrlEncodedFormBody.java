@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.URLEncoder;
-import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class UrlEncodedFormBody {
     @Getter
     private final String contentType = "application/x-www-form-urlencoded";
 
-    protected StringBuilder build(){
+    public String build(){
         StringBuilder urlEncoded = new StringBuilder();
         boolean first = true;
 
@@ -37,11 +36,6 @@ public class UrlEncodedFormBody {
             first = false;
         }
 
-        return urlEncoded;
-    }
-
-    public HttpRequest.BodyPublisher getBodyPublisher() {
-        return HttpRequest.BodyPublishers
-                .ofString(build().toString());
+        return urlEncoded.toString();
     }
 }

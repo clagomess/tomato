@@ -3,7 +3,6 @@ package com.github.clagomess.tomato.service.http;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.HttpStatusEnum;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -14,7 +13,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -24,11 +22,12 @@ import static com.github.clagomess.tomato.enums.HttpMethodEnum.PUT;
 
 @Slf4j
 public class HttpService {
-    @Getter
-    private static final HttpService instance = new HttpService();
-    private HttpService() {}
+    private final RequestDto requestDto;
+    private final HttpDebug debug = new HttpDebug();
 
-    private final HttpLogCollectorUtil httpLogCollectorUtil = new HttpLogCollectorUtil();
+    public HttpService(RequestDto requestDto) {
+        this.requestDto = requestDto;
+    }
 
     private HttpClient getClient() {
         // @TODO: check ssl
@@ -37,16 +36,16 @@ public class HttpService {
         return HttpClient.newHttpClient();
     }
 
-    public ResponseDto perform(RequestDto dto){
-        ResponseDto result = new ResponseDto(dto.getId());
+    public ResponseDto perform(){
+        ResponseDto result = new ResponseDto(requestDto.getId());
 
         try {
             HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                    .uri(URI.create(dto.getUrl()));
+                    .uri(URI.create(requestDto.getUrl()));
 
             // set headers
             requestBuilder.setHeader("User-Agent", "Tomato/0.0.1"); //@TODO: get from project
-            dto.getHeaders().stream()
+            requestDto.getHeaders().stream()
                     .filter(RequestDto.KeyValueItem::isSelected)
                     .forEach(header -> requestBuilder.setHeader(
                             header.getKey(),
@@ -54,18 +53,19 @@ public class HttpService {
                     ));
 
             // set cookies
-            dto.getCookies().stream()
+            requestDto.getCookies().stream()
                     .filter(RequestDto.KeyValueItem::isSelected)
                     .forEach(cookie -> requestBuilder.header(
                             "Cookie",
                             cookie.getKey() + "=" + cookie.getValue()
                     ));
 
-            HttpRequest request = buildBody(requestBuilder, dto);
-            httpLogCollectorUtil.flush();
+            HttpRequest request = buildBody(requestBuilder);
+            debug.setRequest(request);
 
             var reponseFile = File.createTempFile("tomato-reponse-", ".bin");
             reponseFile.deleteOnExit();
+            debug.setResponseBodyFile(reponseFile);
 
             long requestTime = System.currentTimeMillis();
 
@@ -73,12 +73,13 @@ public class HttpService {
                     request,
                     HttpResponse.BodyHandlers.ofFile(reponseFile.toPath())
             );
+            debug.setResponse(response);
 
             var resultHttp = new ResponseDto.Response();
             resultHttp.setRequestTime(System.currentTimeMillis() - requestTime);
 
             resultHttp.setBody(reponseFile);
-            resultHttp.setBodySize(Files.size(reponseFile.toPath()));
+            resultHttp.setBodySize(reponseFile.length());
             resultHttp.setStatus(response.statusCode());
             resultHttp.setStatusReason(HttpStatusEnum.getReasonPhrase(response.statusCode()));
             resultHttp.setHeaders(response.headers().map());
@@ -100,35 +101,33 @@ public class HttpService {
             result.setRequestMessage(e.getMessage());
             log.error(log.getName(), e);
         } finally {
-            result.setRequestDebug(httpLogCollectorUtil.getLogText().toString());
+            result.setRequestDebug(debug.assembly());
         }
 
         return result;
     }
 
     private HttpRequest buildBody(
-            HttpRequest.Builder httpRequestBuilder,
-            RequestDto dto
+            HttpRequest.Builder httpRequestBuilder
     ) throws IOException {
-        if(!List.of(PUT, POST).contains(dto.getMethod())){
-            return buildBodyEmpty(httpRequestBuilder, dto);
+        if(!List.of(PUT, POST).contains(requestDto.getMethod())){
+            return buildBodyEmpty(httpRequestBuilder);
         }
 
-        return switch (dto.getBody().getType()){
-            case RAW -> buildBodyRaw(httpRequestBuilder, dto);
-            case BINARY -> buildBodyBinary(httpRequestBuilder, dto);
-            case URL_ENCODED_FORM -> buildBodyUrlEncoded(httpRequestBuilder, dto);
-            case MULTIPART_FORM -> buildBodyMultipart(httpRequestBuilder, dto);
-            default -> buildBodyEmpty(httpRequestBuilder, dto);
+        return switch (requestDto.getBody().getType()){
+            case RAW -> buildBodyRaw(httpRequestBuilder);
+            case BINARY -> buildBodyBinary(httpRequestBuilder);
+            case URL_ENCODED_FORM -> buildBodyUrlEncoded(httpRequestBuilder);
+            case MULTIPART_FORM -> buildBodyMultipart(httpRequestBuilder);
+            default -> buildBodyEmpty(httpRequestBuilder);
         };
     }
 
     private HttpRequest buildBodyEmpty(
-            HttpRequest.Builder httpRequestBuilder,
-            RequestDto dto
+            HttpRequest.Builder httpRequestBuilder
     ){
         httpRequestBuilder.method(
-                dto.getMethod().getMethod(),
+                requestDto.getMethod().getMethod(),
                 HttpRequest.BodyPublishers.noBody()
         );
 
@@ -136,21 +135,22 @@ public class HttpService {
     }
 
     private HttpRequest buildBodyRaw(
-            HttpRequest.Builder httpRequestBuilder,
-            RequestDto dto
+            HttpRequest.Builder httpRequestBuilder
     ){
         httpRequestBuilder.header(
                 "Content-Type",
-                dto.getBody()
+                requestDto.getBody()
                         .getRaw()
                         .getType()
                         .getContentType().toString()
         );
 
+        debug.setRequestBodyString(requestDto.getBody().getRaw().getRaw());
+
         httpRequestBuilder.method(
-                dto.getMethod().getMethod(),
+                requestDto.getMethod().getMethod(),
                 HttpRequest.BodyPublishers.ofString(
-                        dto.getBody().getRaw().getRaw()
+                        requestDto.getBody().getRaw().getRaw()
                 )
         );
 
@@ -158,20 +158,21 @@ public class HttpService {
     }
 
     private HttpRequest buildBodyBinary(
-            HttpRequest.Builder httpRequestBuilder,
-            RequestDto dto
+            HttpRequest.Builder httpRequestBuilder
     ) throws FileNotFoundException {
         httpRequestBuilder.header(
                 "Content-Type",
-                dto.getBody()
+                requestDto.getBody()
                         .getBinary()
                         .getContentType()
         );
 
+        debug.setRequestBodyFile(new File(requestDto.getBody().getBinary().getFile()));
+
         httpRequestBuilder.method(
-                dto.getMethod().getMethod(),
+                requestDto.getMethod().getMethod(),
                 HttpRequest.BodyPublishers.ofFile(
-                        Path.of(dto.getBody().getBinary().getFile())
+                        Path.of(requestDto.getBody().getBinary().getFile())
                 )
         );
 
@@ -179,38 +180,42 @@ public class HttpService {
     }
 
     private HttpRequest buildBodyUrlEncoded(
-            HttpRequest.Builder httpRequestBuilder,
-            RequestDto dto
+            HttpRequest.Builder httpRequestBuilder
     ){
-        var form = new UrlEncodedFormBody(dto.getBody().getUrlEncodedForm());
+        var form = new UrlEncodedFormBody(requestDto.getBody().getUrlEncodedForm());
 
         httpRequestBuilder.header(
                 "Content-Type",
                 form.getContentType()
         );
 
+        String body = form.build();
+        debug.setRequestBodyString(body);
+
         httpRequestBuilder.method(
-                dto.getMethod().getMethod(),
-                form.getBodyPublisher()
+                requestDto.getMethod().getMethod(),
+                HttpRequest.BodyPublishers.ofString(body)
         );
 
         return httpRequestBuilder.build();
     }
 
     private HttpRequest buildBodyMultipart(
-            HttpRequest.Builder httpRequestBuilder,
-            RequestDto dto
+            HttpRequest.Builder httpRequestBuilder
     ) throws IOException {
-        var form = new MultipartFormDataBody(dto.getBody().getMultiPartForm());
+        var form = new MultipartFormDataBody(requestDto.getBody().getMultiPartForm());
 
         httpRequestBuilder.header(
                 "Content-Type",
                 form.getContentType()
         );
 
+        File body = form.build();
+        debug.setRequestBodyFile(body);
+
         httpRequestBuilder.method(
-                dto.getMethod().getMethod(),
-                form.getBodyPublisher()
+                requestDto.getMethod().getMethod(),
+                HttpRequest.BodyPublishers.ofFile(body.toPath())
         );
 
         return httpRequestBuilder.build();

@@ -4,7 +4,6 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
-import java.net.http.HttpRequest;
 import java.util.List;
 
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
@@ -23,7 +22,7 @@ public class MultipartFormDataBody {
         return "multipart/form-data; boundary=" + boundary;
     }
 
-    protected File build() throws IOException {
+    public File build() throws IOException {
         var file = File.createTempFile("tomato-request-", ".bin");
         file.deleteOnExit();
 
@@ -72,10 +71,5 @@ public class MultipartFormDataBody {
         }
 
         return file;
-    }
-
-    public HttpRequest.BodyPublisher getBodyPublisher() throws IOException {
-        return HttpRequest.BodyPublishers
-                .ofFile(build().toPath());
     }
 }

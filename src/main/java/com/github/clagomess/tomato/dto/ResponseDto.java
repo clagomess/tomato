@@ -41,6 +41,8 @@ public class ResponseDto {
         public String getBodyAsString(){
             int limit = 8192; // 8KB
 
+            if(bodySize == 0) return "";
+
             if(bodySize > limit){
                 return "[Response content size execeds render limit of 8KB. Download instead]";
             }
