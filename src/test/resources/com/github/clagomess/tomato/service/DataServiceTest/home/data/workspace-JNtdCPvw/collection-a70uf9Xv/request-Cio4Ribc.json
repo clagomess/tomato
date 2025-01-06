@@ -1,10 +1,10 @@
 {
   "id" : "Cio4Ribc",
   "createTime" : "2024-12-18T23:17:18",
-  "updateTime" : "2024-12-18T23:18:40",
-  "name" : "/hello-cookie",
+  "updateTime" : "2025-01-06T17:00:29",
+  "name" : "/echo.php?cookie",
   "method" : "GET",
-  "url" : "http://localhost:8080/hello-cookie",
+  "url" : "http://localhost:8000/echo.php?cookie",
   "headers" : [ ],
   "cookies" : [ {
     "type" : "TEXT",

@@ -1,10 +1,10 @@
 {
   "id" : "Dm078clh",
   "createTime" : "2024-12-18T23:23:55",
-  "updateTime" : "2024-12-18T23:25:21",
-  "name" : "/hello-gzip",
+  "updateTime" : "2025-01-06T17:01:12",
+  "name" : "/echo.php?gzip",
   "method" : "GET",
-  "url" : "http://localhost:8080/hello-gzip",
+  "url" : "http://localhost:8000/echo.php?gzip",
   "headers" : [ {
     "type" : "TEXT",
     "key" : "accept-encoding",

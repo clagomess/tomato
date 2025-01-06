@@ -1,10 +1,10 @@
 {
   "id" : "60ODtoRs",
   "createTime" : "2024-12-18T22:57:29",
-  "updateTime" : "2024-12-18T23:00:10",
-  "name" : "/hello",
+  "updateTime" : "2025-01-06T17:21:44",
+  "name" : "/echo.php",
   "method" : "GET",
-  "url" : "http://localhost:8080/hello",
+  "url" : "http://localhost:8000/echo.php",
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {

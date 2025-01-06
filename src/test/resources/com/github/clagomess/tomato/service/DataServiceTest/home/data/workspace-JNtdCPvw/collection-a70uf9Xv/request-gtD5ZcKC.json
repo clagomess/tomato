@@ -1,10 +1,10 @@
 {
   "id" : "gtD5ZcKC",
   "createTime" : "2024-12-18T23:40:42",
-  "updateTime" : "2024-12-18T23:44:02",
-  "name" : "/hello-response-iso-8859-1",
+  "updateTime" : "2025-01-06T17:09:52",
+  "name" : "/xml-iso-8859-1.php",
   "method" : "GET",
-  "url" : "http://localhost:8080/hello-response-iso-8859-1",
+  "url" : "http://localhost:8000/xml-iso-8859-1.php",
   "headers" : [ {
     "type" : "TEXT",
     "key" : "X-Set-Response-Content-Type",

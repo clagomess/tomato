@@ -1,10 +1,10 @@
 {
   "id" : "keyXRqWc",
   "createTime" : "2024-12-18T23:15:15",
-  "updateTime" : "2024-12-18T23:16:22",
-  "name" : "/hello-delay-6s",
+  "updateTime" : "2025-01-06T17:12:17",
+  "name" : "/delay.php",
   "method" : "GET",
-  "url" : "http://localhost:8080/hello-delay-6s",
+  "url" : "http://localhost:8000/delay.php",
   "headers" : [ {
     "type" : "TEXT",
     "key" : "x-set-response-delay-ms",

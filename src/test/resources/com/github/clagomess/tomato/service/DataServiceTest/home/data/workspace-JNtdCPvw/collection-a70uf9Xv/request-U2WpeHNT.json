@@ -1,10 +1,10 @@
 {
   "id" : "U2WpeHNT",
   "createTime" : "2024-12-18T23:19:03",
-  "updateTime" : "2024-12-18T23:19:34",
-  "name" : "/hello-invalid-cert",
+  "updateTime" : "2025-01-06T17:21:30",
+  "name" : "/echo.php?hello-invalid-cert",
   "method" : "GET",
-  "url" : "https://localhost:8443/hello-invalid-cert",
+  "url" : "https://localhost:8443/echo.php?hello-invalid-cert",
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {

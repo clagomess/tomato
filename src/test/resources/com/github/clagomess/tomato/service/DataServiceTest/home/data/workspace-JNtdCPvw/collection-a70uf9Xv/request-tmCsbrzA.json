@@ -1,10 +1,10 @@
 {
   "id" : "tmCsbrzA",
   "createTime" : "2024-12-18T23:26:19",
-  "updateTime" : "2024-12-18T23:28:39",
-  "name" : "/hello-multipart-form",
+  "updateTime" : "2025-01-06T17:16:05",
+  "name" : "/echo.php?multipart-form",
   "method" : "POST",
-  "url" : "http://localhost:8080/hello-multipart-form",
+  "url" : "http://localhost:8000/echo.php?multipart-form",
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {

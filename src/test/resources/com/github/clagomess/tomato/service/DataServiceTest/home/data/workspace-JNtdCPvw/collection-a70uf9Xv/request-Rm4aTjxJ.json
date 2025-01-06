@@ -1,10 +1,10 @@
 {
   "id" : "Rm4aTjxJ",
   "createTime" : "2024-12-18T23:30:14",
-  "updateTime" : "2024-12-18T23:31:16",
-  "name" : "/hello-body-json",
+  "updateTime" : "2025-01-06T17:14:52",
+  "name" : "/echo.php?body-json",
   "method" : "POST",
-  "url" : "http://localhost:8080/hello-body-json",
+  "url" : "http://localhost:8000/echo.php?body-json",
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
