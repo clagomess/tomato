@@ -72,7 +72,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
             return;
         }
 
-        if(contentType.isCompatible(APPLICATION_XML)) {
+        if(contentType.isCompatible(TEXT_XML)) {
             setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
             return;
         }

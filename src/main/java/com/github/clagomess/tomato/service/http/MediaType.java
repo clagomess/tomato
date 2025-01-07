@@ -103,5 +103,5 @@ public class MediaType {
     public final static MediaType TEXT_PLAIN = new MediaType("text", "plain");
     public final static MediaType APPLICATION_JSON = new MediaType("application", "json");
     public final static MediaType TEXT_HTML = new MediaType("text", "html");
-    public final static MediaType APPLICATION_XML = new MediaType("application", "xml");
+    public final static MediaType TEXT_XML = new MediaType("text", "xml");
 }
