@@ -11,6 +11,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -123,7 +124,7 @@ public class DataService {
     public void delete(File target) throws IOException {
         if(target.isDirectory()){
             try(Stream<Path> paths = Files.walk(target.toPath())){
-                paths.sorted()
+                paths.sorted(Comparator.reverseOrder())
                         .map(Path::toFile)
                         .forEach(item -> {
                             if(!item.delete()){

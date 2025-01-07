@@ -3,10 +3,7 @@ package com.github.clagomess.tomato.ui.main.collection;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.ui.collection.CollectionImportUI;
-import com.github.clagomess.tomato.ui.collection.CollectionMoveUI;
-import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
-import com.github.clagomess.tomato.ui.collection.CollectionRenameUI;
+import com.github.clagomess.tomato.ui.collection.*;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
 import com.github.clagomess.tomato.ui.request.RequestDeleteUI;
 import com.github.clagomess.tomato.ui.request.RequestMoveUI;
@@ -111,7 +108,9 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         }});
         popup.add(new JMenuItem("Export", new BxExportIcon())); //@TODO: implement
         popup.addSeparator();
-        popup.add(new JMenuItem("Delete", new BxTrashIcon())); //@TODO: implement
+        popup.add(new JMenuItem("Delete", new BxTrashIcon()){{
+            addActionListener(ae -> new CollectionDeleteUI(tree, dto).showConfirmDialog());
+        }});
         popup.show(e.getComponent(), e.getX(), e.getY());
     }
 }
