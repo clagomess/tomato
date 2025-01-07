@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.dto.table.ResponseHeaderTMDto;
 import com.github.clagomess.tomato.service.http.MediaType;
 import com.github.clagomess.tomato.ui.component.RawTextArea;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.tablemanager.TableManagerUI;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,8 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.io.File;
+import java.nio.file.Files;
 
 @Slf4j
 @Getter
@@ -90,15 +93,13 @@ public class ResponseTabContent extends JPanel {
         JFileChooser file = new JFileChooser();
         file.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
-        /* @TODO: check
-        if(file.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-            try {
-                DataService.getInstance().writeFile(file.getSelectedFile(), responseDto.getHttpResponse().getBody());
-            } catch (IOException e){
-                DialogFactory.createDialogException(this, e);
-            }
+        if(file.showSaveDialog(this) != JFileChooser.APPROVE_OPTION){
+            return;
         }
 
-         */
+        new WaitExecution(this, btnDownload).setExecute(() -> {
+            File bodyFile = responseDto.getHttpResponse().getBody();
+            Files.copy(bodyFile.toPath(), file.getSelectedFile().toPath());
+        }).execute();
     }
 }
