@@ -31,7 +31,6 @@ public class MediaType {
     }
 
     public MediaType(String contentType){
-        // @TODO: impl
         int typeSeparator = contentType.indexOf('/');
         type = contentType.substring(0, typeSeparator);
 

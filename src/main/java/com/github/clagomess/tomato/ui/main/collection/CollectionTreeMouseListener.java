@@ -7,6 +7,7 @@ import com.github.clagomess.tomato.ui.collection.CollectionImportUI;
 import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
 import com.github.clagomess.tomato.ui.collection.CollectionRenameUI;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
+import com.github.clagomess.tomato.ui.request.RequestMoveUI;
 import com.github.clagomess.tomato.ui.request.RequestRenameUI;
 import lombok.RequiredArgsConstructor;
 
@@ -75,7 +76,9 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         }});
         popup.add(new JMenuItem("Open Detached", new BxLinkExternalIcon())); //@TODO: implement
         popup.addSeparator();
-        popup.add(new JMenuItem("Move", new BxSortAlt2Icon())); //@TODO: implement
+        popup.add(new JMenuItem("Move", new BxSortAlt2Icon()){{
+            addActionListener(e -> new RequestMoveUI(tree, dto));
+        }});
         popup.add(new JMenuItem("Rename"){{
             addActionListener(e -> new RequestRenameUI(tree, dto));
         }});

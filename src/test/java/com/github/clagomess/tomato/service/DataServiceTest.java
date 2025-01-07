@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.ConfigurationDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
@@ -124,5 +125,40 @@ public class DataServiceTest {
         Assertions.assertThat(
                 dataService.listFiles(new File("xyz"))
         ).isEmpty();
+    }
+
+    @Test
+    public void move_whenMoveFile() throws IOException {
+        dataService.writeFile(new File(
+                mockHome, "foo.json"
+        ), new RequestDto());
+
+        var dest = new File(mockHome, "dest");
+        assertTrue(dest.mkdir());
+
+        dataService.move(
+                new File(mockHome, "foo.json"),
+                dest
+        );
+
+        Assertions.assertThat(new File(dest, "foo.json"))
+                .isFile();
+    }
+
+    @Test
+    public void move_whenMoveDir() throws IOException {
+        var dir = new File(mockHome, "foo");
+        assertTrue(dir.mkdir());
+
+        var dest = new File(mockHome, "dest");
+        assertTrue(dest.mkdir());
+
+        dataService.move(
+                dir,
+                dest
+        );
+
+        Assertions.assertThat(new File(dest, "foo"))
+                .isDirectory();
     }
 }

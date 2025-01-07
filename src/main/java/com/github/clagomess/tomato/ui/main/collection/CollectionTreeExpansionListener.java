@@ -74,7 +74,9 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
         requestAddOnInsertListener(parentNode, new RequestPublisher.ParentCollectionId(
                 collectionTree.getId()
         ));
-
+        requestAddOnMoveListener(parentNode, new RequestPublisher.ParentCollectionId(
+                collectionTree.getId()
+        ));
     }
 
     private void collectionAddOnSaveListener(
@@ -118,6 +120,27 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
                     .forEach(parentNode::remove);
 
             parentNode.add(new DefaultMutableTreeNode(event));
+            treeModel.reload(parentNode);
+        });
+    }
+
+    private void requestAddOnMoveListener(
+            DefaultMutableTreeNode parentNode,
+            RequestPublisher.ParentCollectionId parentCollectionId
+    ){
+        requestPublisher.getOnMove().removeListener(parentCollectionId);
+        requestPublisher.getOnMove().addListener(parentCollectionId, event -> {
+            Collections.list(parentNode.children()).stream()
+                    .map(item -> (DefaultMutableTreeNode) item)
+                    .filter(item -> {
+                        if(item.getUserObject() instanceof RequestHeadDto dto){
+                            return dto.getId().equals(event.requestId());
+                        }
+
+                        return false;
+                    })
+                    .forEach(parentNode::remove);
+
             treeModel.reload(parentNode);
         });
     }

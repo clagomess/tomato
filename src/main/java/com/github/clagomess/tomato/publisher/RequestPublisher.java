@@ -18,8 +18,10 @@ public class RequestPublisher {
 
     // for collection tree
     private final KeyPublisher<ParentCollectionId, RequestHeadDto> onInsert = new KeyPublisher<>();
+    private final KeyPublisher<ParentCollectionId, RequestId> onMove = new KeyPublisher<>();
     private final KeyPublisher<RequestKey, RequestHeadDto> onUpdate = new KeyPublisher<>();
 
+    public record RequestId(String requestId){}
     public record RequestKey(String parentCollectionId, String requestId){}
     public record ParentCollectionId(String parentCollectionId){}
 }

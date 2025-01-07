@@ -104,4 +104,16 @@ public class DataService {
                 () -> new File[0]
         );
     }
+
+    public void move(File source, File target) throws IOException {
+        if(!target.isDirectory()) throw new IOException(target + " is not a directory");
+
+        if(!source.renameTo(new File(target, source.getName()))){
+            throw new IOException(String.format(
+                    "Fail to move %s to %s",
+                    source,
+                    target
+            ));
+        }
+    }
 }
