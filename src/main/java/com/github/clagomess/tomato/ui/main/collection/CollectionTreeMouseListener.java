@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.collection.CollectionImportUI;
+import com.github.clagomess.tomato.ui.collection.CollectionMoveUI;
 import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
 import com.github.clagomess.tomato.ui.collection.CollectionRenameUI;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
@@ -92,7 +93,9 @@ public class CollectionTreeMouseListener extends MouseAdapter {
             CollectionTreeDto dto
     ){
         JPopupMenu popup = new JPopupMenu();
-        popup.add(new JMenuItem("Move", new BxSortAlt2Icon())); //@TODO: implement
+        popup.add(new JMenuItem("Move", new BxSortAlt2Icon()){{
+            addActionListener(e -> new CollectionMoveUI(tree, dto));
+        }});
         popup.add(new JMenuItem("Rename"){{
             addActionListener(e -> new CollectionRenameUI(tree, dto));
         }});
