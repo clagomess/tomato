@@ -66,17 +66,18 @@ public class HttpDebugTest {
         debug.setResponse(response);
 
         Assertions.assertThat(debug.assembly())
-                .containsIgnoringNewLines(
+                .isEqualToNormalizingNewlines(
                         """
                         > POST http://localhost:8500/hello
                         > Content-Type: application/json
-                        >
+                        
                         hello world
+                        
                         < HTTP_1_1 200 OK
                         < connection: keep-alive
                         < content-length: 5
                         < content-type: text/plain
-                        <
+                        
                         hello
                         """
                 );
@@ -104,7 +105,7 @@ public class HttpDebugTest {
 
     @ParameterizedTest
     @CsvSource({
-            "helloword,hello [more 4 bytes]",
+            "helloword,hello[more 4 bytes]",
             "hello,hello"
     })
     public void assemblyBody_whenConstructString(
@@ -114,7 +115,7 @@ public class HttpDebugTest {
         var debug = new HttpDebug();
         var result = debug.assemblyBody(input, 5);
 
-        assertEquals(expected, result);
+        Assertions.assertThat(result).isEqualToIgnoringNewLines(expected);
     }
 
     @Test
@@ -139,6 +140,6 @@ public class HttpDebugTest {
         var result = debug.assemblyBody(file, 10);
 
         Assertions.assertThat(result)
-                .contains("helloworda [more");
+                .contains("helloworda\n[more");
     }
 }

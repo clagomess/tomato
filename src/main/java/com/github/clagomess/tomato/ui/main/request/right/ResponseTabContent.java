@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.main.request.right;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.table.ResponseHeaderTMDto;
+import com.github.clagomess.tomato.service.http.MediaType;
 import com.github.clagomess.tomato.ui.component.RawTextArea;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import com.github.clagomess.tomato.ui.component.tablemanager.TableManagerUI;
@@ -63,7 +64,13 @@ public class ResponseTabContent extends JPanel {
 
         if(responseDto.isRequestStatus()) {
             btnDownload.setEnabled(true);
-            txtResponse.setSyntaxStyle(responseDto.getHttpResponse().getContentType());
+
+            txtResponse.setSyntaxStyle(
+                    responseDto.getHttpResponse().isRenderBodyByContentType() ?
+                    responseDto.getHttpResponse().getContentType() :
+                    MediaType.TEXT_PLAIN
+            );
+
             txtResponse.setText(responseDto.getHttpResponse().getBodyAsString());
 
             tblResponseHeader.getModel().clear();

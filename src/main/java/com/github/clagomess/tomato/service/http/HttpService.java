@@ -2,7 +2,6 @@ package com.github.clagomess.tomato.service.http;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
-import com.github.clagomess.tomato.enums.HttpStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -15,7 +14,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.POST;
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.PUT;
@@ -75,22 +73,7 @@ public class HttpService {
             );
             debug.setResponse(response);
 
-            var resultHttp = new ResponseDto.Response();
-            resultHttp.setRequestTime(System.currentTimeMillis() - requestTime);
-
-            resultHttp.setBody(reponseFile);
-            resultHttp.setBodySize(reponseFile.length());
-            resultHttp.setStatus(response.statusCode());
-            resultHttp.setStatusReason(HttpStatusEnum.getReasonPhrase(response.statusCode()));
-            resultHttp.setHeaders(response.headers().map());
-//            resultHttp.setCookies(response.getCookies()); //@TODO: impl. parse cookies?
-
-            Optional<String> contentType = response.headers().firstValue("content-type");
-            if (contentType.isPresent()) {
-                resultHttp.setContentType(new MediaType(contentType.get()));
-            } else {
-                resultHttp.setContentType(MediaType.WILDCARD);
-            }
+            var resultHttp = new ResponseDto.Response(response, requestTime);
 
             result.setRequestStatus(true);
             result.setHttpResponse(resultHttp);

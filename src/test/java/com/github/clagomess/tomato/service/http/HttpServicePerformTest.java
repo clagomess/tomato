@@ -169,7 +169,7 @@ public class HttpServicePerformTest {
 
         ResponseDto response = new HttpService(request).perform();
         assertEquals(301, response.getHttpResponse().getStatus());
-        Assertions.assertThat(response.getHttpResponse().getBodyAsString()).isBlank();
+        assertEquals("< Empty Body", response.getHttpResponse().getBodyAsString());
     }
 
     @Test

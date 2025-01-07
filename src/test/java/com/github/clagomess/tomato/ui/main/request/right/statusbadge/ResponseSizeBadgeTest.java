@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.main.request.right.statusbadge;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,11 +15,11 @@ public class ResponseSizeBadgeTest {
             "2048576,1.95MB",
     })
     public void formatSize(
-            Integer size,
+            Long size,
             String expected
     ){
-        var response = new ResponseDto.Response();
-        response.setBodySize(size);
+        var response = Mockito.mock(ResponseDto.Response.class);
+        Mockito.when(response.getBodySize()).thenReturn(size);
 
         var ui = new ResponseSizeBadge(response);
         assertEquals(expected, ui.formatSize(size));
