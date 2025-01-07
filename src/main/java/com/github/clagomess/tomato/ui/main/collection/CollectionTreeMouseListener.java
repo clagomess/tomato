@@ -8,6 +8,7 @@ import com.github.clagomess.tomato.ui.collection.CollectionMoveUI;
 import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
 import com.github.clagomess.tomato.ui.collection.CollectionRenameUI;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
+import com.github.clagomess.tomato.ui.request.RequestDeleteUI;
 import com.github.clagomess.tomato.ui.request.RequestMoveUI;
 import com.github.clagomess.tomato.ui.request.RequestRenameUI;
 import lombok.RequiredArgsConstructor;
@@ -84,7 +85,9 @@ public class CollectionTreeMouseListener extends MouseAdapter {
             addActionListener(e -> new RequestRenameUI(tree, dto));
         }});
         popup.addSeparator();
-        popup.add(new JMenuItem("Delete", new BxTrashIcon())); //@TODO: implement
+        popup.add(new JMenuItem("Delete", new BxTrashIcon()){{
+            addActionListener(e -> new RequestDeleteUI(tree, dto).showConfirmDialog());
+        }});
         popup.show(e.getComponent(), e.getX(), e.getY());
     }
 

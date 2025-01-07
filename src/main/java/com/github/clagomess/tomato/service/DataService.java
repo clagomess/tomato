@@ -8,9 +8,12 @@ import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Slf4j
 public class DataService {
@@ -114,6 +117,24 @@ public class DataService {
                     source,
                     target
             ));
+        }
+    }
+
+    public void delete(File target) throws IOException {
+        if(target.isDirectory()){
+            try(Stream<Path> paths = Files.walk(target.toPath())){
+                paths.sorted()
+                        .map(Path::toFile)
+                        .forEach(item -> {
+                            if(!item.delete()){
+                                throw new RuntimeException(item + " cannot be deleted");
+                            }
+                        });
+            }
+        }else{
+            if(!target.delete()){
+                throw new IOException(target + " cannot be deleted");
+            }
         }
     }
 }

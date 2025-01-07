@@ -161,4 +161,30 @@ public class DataServiceTest {
         Assertions.assertThat(new File(dest, "foo"))
                 .isDirectory();
     }
+
+    @Test
+    public void delete_whenDeleteFile() throws IOException {
+        var file = new File(mockHome, "foo.json");
+
+        dataService.writeFile(file, new RequestDto());
+
+        dataService.delete(file);
+
+        Assertions.assertThat(file)
+                .doesNotExist();
+    }
+
+    @Test
+    public void delete_whenDeleteDir() throws IOException {
+        var dir = new File(mockHome, "dir");
+        assertTrue(dir.mkdir());
+        var file = new File(mockHome, "foo.json");
+
+        dataService.writeFile(file, new RequestDto());
+
+        dataService.delete(dir);
+
+        Assertions.assertThat(dir)
+                .doesNotExist();
+    }
 }
