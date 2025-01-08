@@ -191,7 +191,7 @@ public class HttpService {
 
     private HttpRequest buildBodyUrlEncoded(
             HttpRequest.Builder httpRequestBuilder
-    ){
+    ) throws IOException {
         var form = new UrlEncodedFormBody(requestDto.getBody().getUrlEncodedForm());
 
         httpRequestBuilder.header(

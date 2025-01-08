@@ -1,7 +1,7 @@
 {
   "id" : "7M2S0Kxh",
   "createTime" : "2024-12-18T23:28:53",
-  "updateTime" : "2025-01-08T11:19:05",
+  "updateTime" : "2025-01-08T16:29:34",
   "name" : "/echo.php?urlencoded-form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php?urlencoded-form",
@@ -18,6 +18,11 @@
       "type" : "TEXT",
       "key" : "myparam2",
       "value" : "b",
+      "selected" : true
+    }, {
+      "type" : "TEXT",
+      "key" : "myparam3",
+      "value" : "{{token}}",
       "selected" : true
     } ]
   }
