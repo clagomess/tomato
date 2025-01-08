@@ -40,16 +40,16 @@ public class MultipartFormDataBody {
                 .map(EnvironmentDto::getEnvs)
                 .orElse(Collections.emptyList());
 
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
+        try(BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))){
             for (var item : form) {
                 if(!item.isSelected()) continue;
                 if(StringUtils.isBlank(item.getKey())) continue;
 
-                writer.write(String.format("--%s\r\n", boundary));
+                bos.write(String.format("--%s\r\n", boundary).getBytes());
 
                 if(item.getType() == TEXT){
                     writeTextBoundary(
-                            writer,
+                            bos,
                             envs,
                             item.getKey(),
                             item.getValue()
@@ -57,30 +57,30 @@ public class MultipartFormDataBody {
                 }
 
                 if(item.getType() == FILE){
-                    writeFileBoundary(writer, item.getKey(), item.getValue());
+                    writeFileBoundary(bos, item.getKey(), item.getValue());
                 }
 
-                writer.write("\r\n");
+                bos.write("\r\n".getBytes());
             }
 
-            writer.write("--" + boundary + "--\r\n");
+            bos.write(("--" + boundary + "--\r\n").getBytes());
         }
 
         return file;
     }
 
     protected void writeTextBoundary(
-            Writer writer,
+            OutputStream os,
             List<EnvironmentDto.Env> envs,
             String key,
             String value
     ) throws IOException {
-        writer.write("Content-Type: text/plain\r\n");
-        writer.write(String.format(
+        os.write("Content-Type: text/plain\r\n".getBytes());
+        os.write(String.format(
                 "Content-Disposition: form-data; name=\"%s\"\r\n",
                 key
-        ));
-        writer.write("\r\n");
+        ).getBytes());
+        os.write("\r\n".getBytes());
 
         if(value == null) return;
 
@@ -93,30 +93,31 @@ public class MultipartFormDataBody {
             }
         }
 
-        writer.write(value);
+        os.write(value.getBytes());
     }
 
     protected void writeFileBoundary(
-            Writer writer,
+            OutputStream os,
             String key,
             String value
     ) throws IOException {
         if(value == null) throw new FileNotFoundException(key);
 
         var itemFile = new File(value);
-        writer.write("Content-Type: application/octet-stream\r\n");
-        writer.write(String.format(
+        os.write("Content-Type: application/octet-stream\r\n".getBytes());
+        os.write(String.format(
                 "Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"\r\n",
                 key,
                 itemFile.getName()
-        ));
-        writer.write("\r\n");
-        try(BufferedReader reader = new BufferedReader(new FileReader(itemFile))){
-            char[] buffer = new char[8192];
+        ).getBytes());
+        os.write("\r\n".getBytes());
+
+        try(BufferedInputStream bis = new BufferedInputStream(new FileInputStream(itemFile))){
+            byte[] buffer = new byte[8192];
             int n;
 
-            while ((n = reader.read(buffer)) != -1) {
-                writer.write(buffer, 0, n);
+            while ((n = bis.read(buffer)) != -1) {
+                os.write(buffer, 0, n);
             }
         }
     }

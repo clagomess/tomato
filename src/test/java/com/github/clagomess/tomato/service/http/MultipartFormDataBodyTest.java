@@ -12,9 +12,9 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.List;
 import java.util.Optional;
 
@@ -148,24 +148,24 @@ public class MultipartFormDataBodyTest {
             "a-{{bar}},a-{{bar}}",
     })
     public void writeTextBoundary_assertEnvInject(String input, String expected) throws IOException {
-        StringWriter sw = new StringWriter();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         List<EnvironmentDto.Env> envs = List.of(
                 new EnvironmentDto.Env("foo", "bar")
         );
 
         var form = new MultipartFormDataBody(List.of());
-        form.writeTextBoundary(sw, envs, "mykey", input);
+        form.writeTextBoundary(baos, envs, "mykey", input);
 
-        Assertions.assertThat(sw.toString()).contains(expected);
+        Assertions.assertThat(baos.toString()).contains(expected);
     }
 
     @Test
     public void writeTextBoundary_whenEnvListIsNull_doNothing() throws IOException {
-        StringWriter sw = new StringWriter();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         var form = new MultipartFormDataBody(List.of());
-        form.writeTextBoundary(sw, null, "mykey", "myvalue");
+        form.writeTextBoundary(baos, null, "mykey", "myvalue");
 
-        Assertions.assertThat(sw.toString()).contains("myvalue");
+        Assertions.assertThat(baos.toString()).contains("myvalue");
     }
 }
