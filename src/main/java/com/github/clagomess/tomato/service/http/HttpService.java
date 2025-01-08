@@ -52,23 +52,7 @@ public class HttpService {
                     .uri(buildUri(requestDto.getUrl()));
 
             // set headers
-            // @TODO: impl. env inject
-            requestBuilder.setHeader("User-Agent", "Tomato/0.0.1"); //@TODO: get from project
-            requestDto.getHeaders().stream()
-                    .filter(RequestDto.KeyValueItem::isSelected)
-                    .forEach(header -> requestBuilder.setHeader(
-                            header.getKey(),
-                            header.getValue()
-                    ));
-
-            // set cookies
-            // @TODO: impl. env inject
-            requestDto.getCookies().stream()
-                    .filter(RequestDto.KeyValueItem::isSelected)
-                    .forEach(cookie -> requestBuilder.header(
-                            "Cookie",
-                            cookie.getKey() + "=" + cookie.getValue()
-                    ));
+            new HttpHeaderBuilder(requestBuilder, requestDto).build();
 
             HttpRequest request = buildBody(requestBuilder);
             debug.setRequest(request);
