@@ -1,14 +1,19 @@
 {
   "id" : "x4woN3gk",
   "createTime" : "2024-12-18T23:04:19",
-  "updateTime" : "2025-01-06T17:18:08",
+  "updateTime" : "2025-01-08T16:12:09",
   "name" : "/echo.php?custom-header",
   "method" : "GET",
-  "url" : "http://localhost:8000/echo.php-custom-header",
+  "url" : "{{echoServer}}/echo.php?custom-header",
   "headers" : [ {
     "type" : "TEXT",
     "key" : "X-Burger",
     "value" : "ichi",
+    "selected" : true
+  }, {
+    "type" : "TEXT",
+    "key" : "Authorization",
+    "value" : "Bearer {{token}}",
     "selected" : true
   } ],
   "cookies" : [ ],

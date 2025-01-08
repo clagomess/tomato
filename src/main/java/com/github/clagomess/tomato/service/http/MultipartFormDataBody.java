@@ -1,21 +1,31 @@
 package com.github.clagomess.tomato.service.http;
 
+import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.service.EnvironmentDataService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.util.Collections;
 import java.util.List;
 
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 
+@RequiredArgsConstructor
 public class MultipartFormDataBody {
+    private final EnvironmentDataService environmentDataService;
+
     private final String boundary;
     private final List<RequestDto.KeyValueItem> form;
 
     public MultipartFormDataBody(List<RequestDto.KeyValueItem> form) {
-        this.boundary = "tomato-" + System.currentTimeMillis();
-        this.form = form;
+        this(
+                new EnvironmentDataService(),
+                "tomato-" + System.currentTimeMillis(),
+                form
+        );
     }
 
     public String getContentType() {
@@ -26,6 +36,10 @@ public class MultipartFormDataBody {
         var file = File.createTempFile("tomato-request-", ".bin");
         file.deleteOnExit();
 
+        List<EnvironmentDto.Env> envs = environmentDataService.getWorkspaceSessionEnvironment()
+                .map(EnvironmentDto::getEnvs)
+                .orElse(Collections.emptyList());
+
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
             for (var item : form) {
                 if(!item.isSelected()) continue;
@@ -34,7 +48,12 @@ public class MultipartFormDataBody {
                 writer.write(String.format("--%s\r\n", boundary));
 
                 if(item.getType() == TEXT){
-                    writeTextBoundary(writer, item.getKey(), item.getValue());
+                    writeTextBoundary(
+                            writer,
+                            envs,
+                            item.getKey(),
+                            item.getValue()
+                    );
                 }
 
                 if(item.getType() == FILE){
@@ -52,6 +71,7 @@ public class MultipartFormDataBody {
 
     protected void writeTextBoundary(
             Writer writer,
+            List<EnvironmentDto.Env> envs,
             String key,
             String value
     ) throws IOException {
@@ -61,8 +81,19 @@ public class MultipartFormDataBody {
                 key
         ));
         writer.write("\r\n");
-        // @TODO: impl. env inject
-        if(value != null) writer.write(value);
+
+        if(value == null) return;
+
+        if(envs != null){
+            for(var env : envs) {
+                value = value.replace(
+                        String.format("{{%s}}", env.getKey()),
+                        env.getValue()
+                );
+            }
+        }
+
+        writer.write(value);
     }
 
     protected void writeFileBoundary(
