@@ -1,7 +1,10 @@
 package com.github.clagomess.tomato.service.http;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.service.EnvironmentDataService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -14,17 +17,24 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.POST;
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.PUT;
 
 @Slf4j
+@RequiredArgsConstructor
 public class HttpService {
     private final RequestDto requestDto;
-    private final HttpDebug debug = new HttpDebug();
+    private final HttpDebug debug;
+    private final EnvironmentDataService environmentDataService;
 
     public HttpService(RequestDto requestDto) {
-        this.requestDto = requestDto;
+        this(
+                requestDto,
+                new HttpDebug(),
+                new EnvironmentDataService()
+        );
     }
 
     private HttpClient getClient() {
@@ -39,9 +49,10 @@ public class HttpService {
 
         try {
             HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                    .uri(URI.create(requestDto.getUrl()));
+                    .uri(buildUri(requestDto.getUrl()));
 
             // set headers
+            // @TODO: impl. env inject
             requestBuilder.setHeader("User-Agent", "Tomato/0.0.1"); //@TODO: get from project
             requestDto.getHeaders().stream()
                     .filter(RequestDto.KeyValueItem::isSelected)
@@ -51,6 +62,7 @@ public class HttpService {
                     ));
 
             // set cookies
+            // @TODO: impl. env inject
             requestDto.getCookies().stream()
                     .filter(RequestDto.KeyValueItem::isSelected)
                     .forEach(cookie -> requestBuilder.header(
@@ -88,6 +100,21 @@ public class HttpService {
         }
 
         return result;
+    }
+
+    protected URI buildUri(String url) throws IOException {
+        Optional<EnvironmentDto> current = environmentDataService.getWorkspaceSessionEnvironment();
+
+        if(current.isPresent()) {
+            for(var env : current.get().getEnvs()) {
+                url = url.replace(
+                        String.format("{{%s}}", env.getKey()),
+                        env.getValue()
+                );
+            }
+        }
+
+        return URI.create(url);
     }
 
     private HttpRequest buildBody(

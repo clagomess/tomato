@@ -1,10 +1,10 @@
 {
   "id" : "LrkL7hPM",
   "createTime" : "2024-12-18T23:37:37",
-  "updateTime" : "2025-01-06T17:21:57",
+  "updateTime" : "2025-01-08T11:19:54",
   "name" : "/echo.php",
   "method" : "DELETE",
-  "url" : "http://localhost:8000/echo.php",
+  "url" : "{{echoServer}}/echo.php",
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {

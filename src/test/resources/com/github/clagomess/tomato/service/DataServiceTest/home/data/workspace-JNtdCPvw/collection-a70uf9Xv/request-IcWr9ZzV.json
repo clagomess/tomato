@@ -1,10 +1,10 @@
 {
   "id" : "IcWr9ZzV",
   "createTime" : "2024-12-18T23:38:23",
-  "updateTime" : "2025-01-06T17:21:49",
+  "updateTime" : "2025-01-08T11:19:42",
   "name" : "/echo.php",
   "method" : "HEAD",
-  "url" : "http://localhost:8000/echo.php",
+  "url" : "{{echoServer}}/echo.php",
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {

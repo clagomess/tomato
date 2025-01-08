@@ -1,0 +1,10 @@
+{
+  "id" : "KmZxncfJ",
+  "createTime" : "2025-01-08T10:35:34",
+  "updateTime" : "2025-01-08T10:36:23",
+  "name" : "Local",
+  "envs" : [ {
+    "key" : "echoServer",
+    "value" : "http://localhost:8000"
+  } ]
+}

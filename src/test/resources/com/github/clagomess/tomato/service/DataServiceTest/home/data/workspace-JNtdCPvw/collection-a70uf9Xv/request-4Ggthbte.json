@@ -1,10 +1,10 @@
 {
   "id" : "4Ggthbte",
   "createTime" : "2024-12-18T23:20:09",
-  "updateTime" : "2025-01-07T16:42:56",
+  "updateTime" : "2025-01-08T11:18:51",
   "name" : "/sample.pdf",
   "method" : "GET",
-  "url" : "http://localhost:8000/sample.pdf",
+  "url" : "{{echoServer}}/sample.pdf",
   "headers" : [ {
     "type" : "TEXT",
     "key" : "x-set-response-content-type",

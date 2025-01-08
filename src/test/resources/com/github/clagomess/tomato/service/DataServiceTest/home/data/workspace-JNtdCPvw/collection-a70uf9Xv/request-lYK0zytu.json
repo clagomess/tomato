@@ -1,10 +1,10 @@
 {
   "id" : "lYK0zytu",
   "createTime" : "2024-12-18T23:13:33",
-  "updateTime" : "2025-01-06T17:14:05",
+  "updateTime" : "2025-01-08T11:19:59",
   "name" : "/text-plain.txt",
   "method" : "GET",
-  "url" : "http://localhost:8000/text-plain.txt",
+  "url" : "{{echoServer}}/text-plain.txt",
   "headers" : [ {
     "type" : "TEXT",
     "key" : "X-Set-Response-Content-Type",
