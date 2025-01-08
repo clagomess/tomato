@@ -25,6 +25,8 @@ public class HttpDebug {
     private final int defaultLimitBody = 300;
 
     public String assembly(){
+        if(request == null) return null;
+
         StringBuilder result = new StringBuilder();
         result.append("> ");
         result.append(request.method());

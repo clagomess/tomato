@@ -42,6 +42,13 @@ public class HttpDebugTest {
     }
 
     @Test
+    public void assembly_whenRequestIsNull(){
+        var debug = new HttpDebug();
+        var result = debug.assembly();
+        Assertions.assertThat(result).isBlank();
+    }
+
+    @Test
     public void assembly_whenPOSTString() throws URISyntaxException, IOException, InterruptedException {
         var bodyString = "hello world";
 
