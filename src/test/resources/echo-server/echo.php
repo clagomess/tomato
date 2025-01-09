@@ -8,6 +8,6 @@ echo json_encode(array(
     "headers" => apache_request_headers(),
     "body" => file_get_contents('php://input'),
     "server" => $_SERVER,
-));
+), JSON_PRETTY_PRINT);
 
 
