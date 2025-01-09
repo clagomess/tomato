@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
+import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.Getter;
@@ -105,7 +106,7 @@ class RowComponent extends JPanel {
 
     public JComponent createCValue(KeyValueTypeEnum type, String value){
         if(type == TEXT){
-            var textField = new ListenableTextField();
+            var textField = new EnvTextField();
             textField.setText(value);
             textField.addOnChange(vl -> {
                 item.setValue(vl);

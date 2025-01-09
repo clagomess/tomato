@@ -62,4 +62,14 @@ public class EnvTextField extends JPanel {
     public void dispose(){
         envDocumentListener.dispose();
     }
+
+    public void setEnabled(boolean enabled){
+        textPane.setEnabled(enabled);
+
+        if(enabled){
+            setBtnEnvViewEnabledOrDisabled();
+        }else{
+            btnEnvView.setEnabled(false);
+        }
+    }
 }
