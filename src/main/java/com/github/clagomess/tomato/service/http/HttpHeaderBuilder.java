@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.service.http;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.service.EnvironmentDataService;
+import com.github.clagomess.tomato.util.RevisionUtil;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
@@ -47,8 +48,10 @@ public class HttpHeaderBuilder {
     }
 
     public void build() throws IOException {
-        //@TODO: get tomato version from project
-        requestBuilder.setHeader("User-Agent", "Tomato/0.0.1");
+        requestBuilder.setHeader(
+                "User-Agent",
+                "Tomato/" + RevisionUtil.getInstance().getDeployTag()
+        );
 
         List<EnvironmentDto.Env> envs = environmentDataService.getWorkspaceSessionEnvironment()
                 .map(EnvironmentDto::getEnvs)
