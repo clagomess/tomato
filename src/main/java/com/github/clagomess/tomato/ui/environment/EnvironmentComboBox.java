@@ -14,6 +14,7 @@ import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditUI;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.util.Objects;
 
 public class EnvironmentComboBox extends JPanel {
     private final ComboBox comboBox = new ComboBox();
@@ -74,12 +75,15 @@ public class EnvironmentComboBox extends JPanel {
     }
 
     private void setWorkspaceSessionSelected() {
-        new WaitExecution(this, null).setExecute(() -> {
+        new WaitExecution(this, () -> {
             var selected = comboBox.getSelectedItem();
             var environmentId = selected == null ? null : selected.getId();
 
             var session = workspaceSessionDataService.load();
             session.setEnvironmentId(environmentId);
+
+            if(Objects.equals(session.getEnvironmentId(), environmentId)) return;
+
             workspaceSessionDataService.save(session);
             workspaceSessionPublisher.getOnSave().publish(session);
         }).execute();
