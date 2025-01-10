@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
+import com.github.clagomess.tomato.util.CacheManager;
 import lombok.RequiredArgsConstructor;
 
 import java.io.File;
@@ -13,6 +14,7 @@ import java.util.Optional;
 public class WorkspaceSessionDataService {
     private final DataService dataService;
     private final WorkspaceDataService workspaceDataService;
+    private static final CacheManager<String, WorkspaceSessionDto> cache = new CacheManager<>("workspaceSession");
 
     public WorkspaceSessionDataService() {
         this(
@@ -28,18 +30,22 @@ public class WorkspaceSessionDataService {
     }
 
     public WorkspaceSessionDto load() throws IOException {
-        Optional<WorkspaceSessionDto> opt = dataService.readFile(
-                getWorkspaceSessionFile(),
-                new TypeReference<>(){}
-        );
+        return cache.get(() -> {
+            Optional<WorkspaceSessionDto> opt = dataService.readFile(
+                    getWorkspaceSessionFile(),
+                    new TypeReference<>() {
+                    }
+            );
 
-        return opt.orElseGet(WorkspaceSessionDto::new);
+            return opt.orElseGet(WorkspaceSessionDto::new);
+        });
     }
 
     public File save(WorkspaceSessionDto dto) throws IOException {
         File filePath = getWorkspaceSessionFile();
 
         dataService.writeFile(filePath, dto);
+        cache.evict();
 
         return filePath;
     }

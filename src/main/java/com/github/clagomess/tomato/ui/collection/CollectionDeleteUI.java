@@ -36,6 +36,7 @@ public class CollectionDeleteUI {
 
     private void delete(){
         new WaitExecution(parent, () -> {
+            // @TODO: change to own *dataService and apply cache evict
             dataService.delete(collectionTree.getPath());
 
             // update source collection

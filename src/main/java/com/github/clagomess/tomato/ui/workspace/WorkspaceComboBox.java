@@ -17,7 +17,7 @@ public class WorkspaceComboBox extends JComboBox<WorkspaceDto> {
 
     private void addItens() {
         try {
-            workspaceDataService.listWorkspaces().forEach(this::addItem);
+            workspaceDataService.list().forEach(this::addItem);
             setSelectedItem(workspaceDataService.getDataSessionWorkspace());
         } catch (Throwable e){
             DialogFactory.createDialogException(this, e);

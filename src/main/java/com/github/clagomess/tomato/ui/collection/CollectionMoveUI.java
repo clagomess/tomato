@@ -61,6 +61,7 @@ public class CollectionMoveUI extends JFrame {
             CollectionTreeDto destination = cbCollectionDestination.getSelectedItem();
             if(destination == null) throw new Exception("Destination not selected");
 
+            // @TODO: change to own *dataService and apply cache evict
             dataService.move(this.collectionTree.getPath(), destination.getPath());
 
             // update source collection

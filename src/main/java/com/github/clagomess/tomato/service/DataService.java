@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.ConfigurationDto;
 import com.github.clagomess.tomato.dto.data.MetadataDto;
 import com.github.clagomess.tomato.exception.DirectoryCreateException;
+import com.github.clagomess.tomato.util.CacheManager;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,46 +62,54 @@ public class DataService {
         }
     }
 
+    private static final CacheManager<String, File> cacheHomeDir = new CacheManager<>("homeDir");
     protected File getHomeDir(){
-        return createDirectoryIfNotExists(new File(
+        return cacheHomeDir.get(() -> createDirectoryIfNotExists(new File(
                 System.getProperty("user.home"),
                 ".tomato"
+        )));
+    }
+
+    private static final CacheManager<String, ConfigurationDto> cacheConfiguration = new CacheManager<>("configuration");
+    protected ConfigurationDto getConfiguration() throws IOException {
+        return cacheConfiguration.get(() -> {
+            var file = new File(
+                    getHomeDir(),
+                    "configuration.json"
+            );
+
+            Optional<ConfigurationDto> configuration = readFile(
+                    file,
+                    new TypeReference<>() {
+                    }
+            );
+
+            if (configuration.isPresent()) {
+                return configuration.get();
+            } else {
+                var defaultConfiguration = new ConfigurationDto();
+                defaultConfiguration.setDataDirectory(new File(
+                        getHomeDir(),
+                        "data"
+                ));
+
+                writeFile(file, defaultConfiguration);
+
+                return defaultConfiguration;
+            }
+        });
+    }
+
+    private static final CacheManager<String, File> cacheDatadir = new CacheManager<>("dataDir");
+    protected File getDataDir() throws IOException {
+        return cacheDatadir.get(() -> createDirectoryIfNotExists(
+                getConfiguration().getDataDirectory()
         ));
     }
 
-    protected ConfigurationDto getConfiguration() throws IOException {
-        var file = new File(
-                getHomeDir(),
-                "configuration.json"
-        );
-
-        Optional<ConfigurationDto> configuration = readFile(
-                file,
-                new TypeReference<>(){}
-        );
-
-        if(configuration.isPresent()){
-            return configuration.get();
-        }else{
-            var defaultConfiguration = new ConfigurationDto();
-            defaultConfiguration.setDataDirectory(new File(
-                    getHomeDir(),
-                    "data"
-            ));
-
-            writeFile(file, defaultConfiguration);
-
-            return defaultConfiguration;
-        }
-    }
-
-    protected File getDataDir() throws IOException {
-        return createDirectoryIfNotExists(
-                getConfiguration().getDataDirectory()
-        );
-    }
-
     protected File[] listFiles(File basepath){
+        log.debug("LIST-DIR: {}", basepath);
+
         if(basepath == null || !basepath.isDirectory()) return new File[0];
 
         return Objects.requireNonNullElseGet(
@@ -110,6 +119,8 @@ public class DataService {
     }
 
     public void move(File source, File target) throws IOException {
+        log.debug("MOVE: {} -> {}", source, target);
+
         if(!target.isDirectory()) throw new IOException(target + " is not a directory");
 
         if(!source.renameTo(new File(target, source.getName()))){
@@ -122,11 +133,14 @@ public class DataService {
     }
 
     public void delete(File target) throws IOException {
+        log.debug("TO-DELETE: {}", target);
+
         if(target.isDirectory()){
             try(Stream<Path> paths = Files.walk(target.toPath())){
                 paths.sorted(Comparator.reverseOrder())
                         .map(Path::toFile)
                         .forEach(item -> {
+                            log.debug("DELETE: {}", item);
                             if(!item.delete()){
                                 throw new RuntimeException(item + " cannot be deleted");
                             }

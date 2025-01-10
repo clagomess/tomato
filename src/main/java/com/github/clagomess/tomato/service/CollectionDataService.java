@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.util.CacheManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -36,11 +38,22 @@ public class CollectionDataService {
         ));
     }
 
+    private static final CacheManager<String, Optional<CollectionDto>> cacheCollection = new CacheManager<>();
     public Optional<CollectionDto> load(CollectionTreeDto collection) throws IOException {
-        return dataService.readFile(getCollectionFilePath(
+        return cacheCollection.get(collection.getId(), () -> dataService.readFile(getCollectionFilePath(
                 collection.getPath(),
                 collection.getId()
-        ), new TypeReference<>(){});
+        ), new TypeReference<>(){}));
+    }
+
+    private static final CacheManager<String, Optional<CollectionTreeDto>> cacheCollectionTree = new CacheManager<>();
+    private Optional<CollectionTreeDto> load(File collectionDir) throws IOException {
+        String id = collectionDir.getName().replace("collection-", "");
+
+        return cacheCollectionTree.get(id, () -> dataService.readFile(
+                getCollectionFilePath(collectionDir, id),
+                new TypeReference<>() {}
+        ));
     }
 
     /**
@@ -63,23 +76,31 @@ public class CollectionDataService {
         );
 
         dataService.writeFile(collectionFile, collection);
+        cacheCollection.evict(collection.getId());
+        cacheCollectionTree.evict(collection.getId());
+        cacheListFiles.evict(parentPath);
+        cacheListFiles.evict(collectionDir);
 
         return collectionDir;
+    }
+
+    private static final CacheManager<File, List<File>> cacheListFiles = new CacheManager<>();
+    private List<File> listFiles(File rootPath) {
+        return cacheListFiles.get(rootPath, () ->
+                Arrays.stream(dataService.listFiles(rootPath))
+                        .filter(File::isDirectory)
+                        .filter(item -> item.getName().startsWith("collection"))
+                        .toList()
+        );
     }
 
     public Stream<CollectionTreeDto> getCollectionChildrenTree(
             CollectionTreeDto collectionStart
     ){
-        return Arrays.stream(dataService.listFiles(collectionStart.getPath()))
-                .filter(File::isDirectory)
-                .filter(item -> item.getName().startsWith("collection"))
+        return listFiles(collectionStart.getPath()).stream()
                 .map(item -> {
-                    String id = item.getName().replace("collection-", "");
                     try {
-                        Optional<CollectionTreeDto> optResult = dataService.readFile(
-                                getCollectionFilePath(item, id),
-                                new TypeReference<>() {}
-                        );
+                        Optional<CollectionTreeDto> optResult = load(item);
 
                         optResult.ifPresent(result -> {
                             result.setParent(collectionStart);

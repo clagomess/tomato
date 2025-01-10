@@ -22,7 +22,7 @@ public class DataSessionDataServiceTest {
     }
 
     @Test
-    public void saveDataSession() throws IOException {
+    public void save() throws IOException {
         DataService dataServiceMock = Mockito.mock(DataService.class);
         Mockito.when(dataServiceMock.getDataDir())
                 .thenReturn(mockDataDir);
@@ -38,7 +38,7 @@ public class DataSessionDataServiceTest {
         var dto = new DataSessionDto();
         dto.setWorkspaceId(RandomStringUtils.randomAlphanumeric(8));
 
-        dataSessionDS.saveDataSession(dto);
+        dataSessionDS.save(dto);
 
         var result = new File(
                 mockDataDir,
@@ -49,7 +49,7 @@ public class DataSessionDataServiceTest {
     }
 
     @Test
-    public void getDataSession_whenNotExists_ReturnsAndCreateDefault() throws IOException {
+    public void load_whenNotExists_ReturnsAndCreateDefault() throws IOException {
         DataService dataServiceMock = Mockito.mock(DataService.class);
         Mockito.when(dataServiceMock.getDataDir())
                 .thenReturn(mockDataDir);
@@ -61,12 +61,12 @@ public class DataSessionDataServiceTest {
                 dataServiceMock
         );
 
-        var result = dataSessionDS.getDataSession();
+        var result = dataSessionDS.load();
         Assertions.assertThat(result.getWorkspaceId()).isNull();
     }
 
     @Test
-    public void getDataSession_whenExists_Returns() throws IOException {
+    public void load_whenExists_Returns() throws IOException {
         var dto = new DataSessionDto();
         dto.setWorkspaceId(RandomStringUtils.randomAlphanumeric(8));
 
@@ -85,7 +85,7 @@ public class DataSessionDataServiceTest {
                 dataServiceMock
         );
 
-        var result = dataSessionDS.getDataSession();
+        var result = dataSessionDS.load();
         Assertions.assertThat(result.getWorkspaceId()).isEqualTo(dto.getWorkspaceId());
     }
 }

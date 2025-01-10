@@ -1,9 +1,11 @@
 package com.github.clagomess.tomato.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.github.clagomess.tomato.dto.data.DataSessionDto;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
+import com.github.clagomess.tomato.util.CacheManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +22,7 @@ public class EnvironmentDataService {
     private final DataService dataService;
     private final WorkspaceDataService workspaceDataService;
     private final WorkspaceSessionDataService workspaceSessionDataService;
+    private static final CacheManager<String, Optional<EnvironmentDto>> cache = new CacheManager<>();
 
     public EnvironmentDataService() {
         this(
@@ -39,13 +42,17 @@ public class EnvironmentDataService {
     }
 
     public Optional<EnvironmentDto> load(String id) throws IOException {
-        return dataService.readFile(getEnvironmentFile(id), new TypeReference<>(){});
+        return cache.get(id, () -> dataService.readFile(
+                getEnvironmentFile(id),
+                new TypeReference<>(){}
+        ));
     }
 
     public File save(EnvironmentDto environmentDto) throws IOException {
         File filePath = getEnvironmentFile(environmentDto.getId());
 
         dataService.writeFile(filePath, environmentDto);
+        cache.evict(environmentDto.getId());
 
         return filePath;
     }

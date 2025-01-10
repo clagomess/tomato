@@ -62,6 +62,7 @@ public class RequestMoveUI extends JFrame {
             CollectionTreeDto destination = cbCollectionDestination.getSelectedItem();
             if(destination == null) throw new Exception("Destination not selected");
 
+            // @TODO: change to own *dataService and apply cache evict
             dataService.move(this.requestHead.getPath(), destination.getPath());
 
             // update source collection

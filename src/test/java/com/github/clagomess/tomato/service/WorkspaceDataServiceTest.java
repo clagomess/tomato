@@ -46,7 +46,7 @@ public class WorkspaceDataServiceTest {
     }
 
     @Test
-    public void saveWorkspace_whenNotExists_CreateAndWriteDto() throws IOException {
+    public void save_whenNotExists_CreateAndWriteDto() throws IOException {
         DataService dataServiceMock = Mockito.mock(DataService.class);
         Mockito.when(dataServiceMock.getDataDir())
                 .thenReturn(mockDataDir);
@@ -64,7 +64,7 @@ public class WorkspaceDataServiceTest {
         var dto = new WorkspaceDto();
         dto.setName("OPA");
 
-        workspaceDS.saveWorkspace(dto);
+        workspaceDS.save(dto);
 
         var result = new File(
                 mockDataDir,
@@ -79,7 +79,7 @@ public class WorkspaceDataServiceTest {
     }
 
     @Test
-    public void listWorkspaces_whenDataDirIsEmpty_ReturnDefault() throws IOException {
+    public void list_whenDataDirIsEmpty_ReturnDefault() throws IOException {
         DataService dataServiceMock = Mockito.mock(DataService.class);
         Mockito.when(dataServiceMock.getDataDir())
                 .thenReturn(mockDataDir);
@@ -98,7 +98,7 @@ public class WorkspaceDataServiceTest {
                 new DataSessionDataService()
         );
 
-        Assertions.assertThat(workspaceDS.listWorkspaces())
+        Assertions.assertThat(workspaceDS.list())
                 .isNotEmpty()
                 .allMatch(item -> item.getPath().isDirectory())
         ;
@@ -109,7 +109,7 @@ public class WorkspaceDataServiceTest {
         var workspace = new WorkspaceDto();
 
         DataSessionDataService dataSessionDataServiceMock = Mockito.mock(DataSessionDataService.class);
-        Mockito.when(dataSessionDataServiceMock.getDataSession())
+        Mockito.when(dataSessionDataServiceMock.load())
                 .thenReturn(new DataSessionDto());
 
         WorkspaceDataService workspaceDSMock = Mockito.mock(
@@ -119,7 +119,7 @@ public class WorkspaceDataServiceTest {
                         dataSessionDataServiceMock
                 )
         );
-        Mockito.when(workspaceDSMock.listWorkspaces())
+        Mockito.when(workspaceDSMock.list())
                 .thenReturn(Stream.of(workspace));
         Mockito.when(workspaceDSMock.getDataSessionWorkspace())
                 .thenCallRealMethod();
@@ -135,7 +135,7 @@ public class WorkspaceDataServiceTest {
         dataSession.setWorkspaceId(workspace.getId());
 
         DataSessionDataService dataSessionDataServiceMock = Mockito.mock(DataSessionDataService.class);
-        Mockito.when(dataSessionDataServiceMock.getDataSession())
+        Mockito.when(dataSessionDataServiceMock.load())
                 .thenReturn(dataSession);
 
         WorkspaceDataService workspaceDS = Mockito.mock(
@@ -145,7 +145,7 @@ public class WorkspaceDataServiceTest {
                         dataSessionDataServiceMock
                 )
         );
-        Mockito.when(workspaceDS.listWorkspaces())
+        Mockito.when(workspaceDS.list())
                 .thenReturn(Stream.of(new WorkspaceDto(), workspace));
         Mockito.when(workspaceDS.getDataSessionWorkspace())
                 .thenCallRealMethod();

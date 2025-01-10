@@ -47,9 +47,9 @@ public class WorkspaceSwitchUI extends JFrame {
             WorkspaceDto selected = cbWorkspace.getSelectedItem();
             if(selected == null) return;
 
-            var session = dataSessionDataService.getDataSession();
+            var session = dataSessionDataService.load();
             session.setWorkspaceId(selected.getId());
-            dataSessionDataService.saveDataSession(session);
+            dataSessionDataService.save(session);
 
             workspacePublisher.getOnSwitch().publish(selected);
 

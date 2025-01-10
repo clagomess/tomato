@@ -50,11 +50,11 @@ public class WorkspaceNewUI extends JFrame {
         new WaitExecution(this, btnSave, () -> {
             WorkspaceDto dto = new WorkspaceDto();
             dto.setName(txtName.getText());
-            workspaceDataService.saveWorkspace(dto);
+            workspaceDataService.save(dto);
 
-            var session = dataSessionDataService.getDataSession();
+            var session = dataSessionDataService.load();
             session.setWorkspaceId(dto.getId());
-            dataSessionDataService.saveDataSession(session);
+            dataSessionDataService.save(session);
 
             workspacePublisher.getOnSwitch().publish(dto);
 
