@@ -10,6 +10,7 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTransferAltIc
 import com.github.clagomess.tomato.ui.environment.EnvironmentNewUI;
 import com.github.clagomess.tomato.ui.main.collection.CollectionTreeUI;
 import com.github.clagomess.tomato.ui.main.request.RequestTabPaneUI;
+import com.github.clagomess.tomato.ui.settings.AboutUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceNewUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceSwitchUI;
 
@@ -85,7 +86,7 @@ public class MainUI extends JFrame {
                 addActionListener(l -> {}); //@TODO: Implements
             }});
             add(new JMenuItem("About"){{
-                addActionListener(l -> {}); //@TODO: Implements
+                addActionListener(l -> new AboutUI());
             }});
         }});
 
