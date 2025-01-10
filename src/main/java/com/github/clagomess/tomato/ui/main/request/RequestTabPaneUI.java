@@ -6,11 +6,10 @@ import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.service.RequestDataService;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,16 +33,16 @@ public class RequestTabPaneUI extends JTabbedPane {
         });
 
         requestPublisher.getOnOpenNew().addListener(event -> {
-            addNewTab(null, new RequestDto());
+            new WaitExecution(() -> {
+                addNewTab(null, new RequestDto());
+            }).execute();
         });
 
         requestPublisher.getOnLoad().addListener(event -> {
-            try {
+            new WaitExecution(() -> {
                 requestDataService.load(event)
                         .ifPresent(item -> addNewTab(event, item));
-            } catch (IOException e) {
-                DialogFactory.createDialogException(this, e);
-            }
+            }).execute();
         });
     }
 
@@ -56,7 +55,9 @@ public class RequestTabPaneUI extends JTabbedPane {
         setTabComponentAt(indexOfTab("+"), btnPlus);
 
         btnPlus.addActionListener(l -> {
-            addNewTab(null, new RequestDto());
+            new WaitExecution(() -> {
+                addNewTab(null, new RequestDto());
+            }).execute();
         });
     }
 
