@@ -2,15 +2,15 @@ package com.github.clagomess.tomato.ui.request;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.service.RequestDataService;
 import com.github.clagomess.tomato.ui.component.NameUI;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 
 import java.awt.*;
 
 public class RequestRenameUI extends NameUI {
-    private final RequestDataService requestDataService = new RequestDataService();
+    private final RequestRepository requestDataService = new RequestRepository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestRenameUI(

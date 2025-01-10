@@ -4,10 +4,10 @@ import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import com.github.clagomess.tomato.io.http.HttpService;
+import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.service.RequestDataService;
-import com.github.clagomess.tomato.service.http.HttpService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
@@ -42,7 +42,7 @@ public class RequestSplitPaneUI extends JPanel {
     private final ResponseTabContent responseContent;
 
     private final RequestStagingMonitor requestStagingMonitor;
-    private final RequestDataService requestDataService = new RequestDataService();
+    private final RequestRepository requestDataService = new RequestRepository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
 

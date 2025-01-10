@@ -1,14 +1,14 @@
 package com.github.clagomess.tomato.ui.workspace;
 
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
-import com.github.clagomess.tomato.service.WorkspaceDataService;
+import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 
 import javax.swing.*;
 
 public class WorkspaceComboBox extends JComboBox<WorkspaceDto> {
-    private final WorkspaceDataService workspaceDataService = new WorkspaceDataService();
+    private final WorkspaceRepository workspaceDataService = new WorkspaceRepository();
 
     public WorkspaceComboBox() {
         setRenderer(new DtoListCellRenderer<>(WorkspaceDto::getName));

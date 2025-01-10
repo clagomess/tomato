@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.ui.workspace;
 
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
+import com.github.clagomess.tomato.io.repository.DataSessionRepository;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
-import com.github.clagomess.tomato.service.DataSessionDataService;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -14,7 +14,7 @@ public class WorkspaceSwitchUI extends JFrame {
     private final WorkspaceComboBox cbWorkspace = new WorkspaceComboBox();
     private final JButton btnSwitch = new JButton("Switch");
 
-    private final DataSessionDataService dataSessionDataService = new DataSessionDataService();
+    private final DataSessionRepository dataSessionDataService = new DataSessionRepository();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public WorkspaceSwitchUI(Component parent) {

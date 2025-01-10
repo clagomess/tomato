@@ -2,8 +2,8 @@ package com.github.clagomess.tomato.ui.request;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import com.github.clagomess.tomato.io.repository.Repository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.ui.collection.CollectionComboBox;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -19,7 +19,7 @@ public class RequestMoveUI extends JFrame {
     private final CollectionComboBox cbCollectionDestination;
     private final RequestHeadDto requestHead;
 
-    private final DataService dataService = new DataService();
+    private final Repository dataService = new Repository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestMoveUI(

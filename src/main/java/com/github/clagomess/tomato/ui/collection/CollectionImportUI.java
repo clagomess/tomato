@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.io.converter.PostmanConverter;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
-import com.github.clagomess.tomato.service.DumpPumpService;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -19,7 +19,7 @@ public class CollectionImportUI extends JFrame {
     });
     private final CollectionComboBox cbCollectionParent;
 
-    private final DumpPumpService dumpPumpService = new DumpPumpService();
+    private final PostmanConverter dumpPumpService = new PostmanConverter();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionImportUI(

@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.ui.main.request.right;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.table.ResponseHeaderTMDto;
-import com.github.clagomess.tomato.service.http.MediaType;
+import com.github.clagomess.tomato.io.http.MediaType;
 import com.github.clagomess.tomato.ui.component.RawTextArea;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import com.github.clagomess.tomato.ui.component.WaitExecution;

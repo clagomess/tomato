@@ -2,8 +2,8 @@ package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
-import com.github.clagomess.tomato.service.CollectionDataService;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -16,7 +16,7 @@ public class CollectionNewUI extends JFrame {
     private final JTextField txtName = new JTextField();
     private final CollectionComboBox cbCollectionParent;
 
-    private final CollectionDataService collectionDataService = new CollectionDataService();
+    private final CollectionRepository collectionDataService = new CollectionRepository();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionNewUI(

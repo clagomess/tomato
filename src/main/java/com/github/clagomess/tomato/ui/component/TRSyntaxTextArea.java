@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.component;
 
-import com.github.clagomess.tomato.service.http.MediaType;
+import com.github.clagomess.tomato.io.http.MediaType;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.github.clagomess.tomato.service.http.MediaType.*;
+import static com.github.clagomess.tomato.io.http.MediaType.*;
 
 public class TRSyntaxTextArea extends RSyntaxTextArea {
     private final List<OnChangeFI> onChangeList = new LinkedList<>();

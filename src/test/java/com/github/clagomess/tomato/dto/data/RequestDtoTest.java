@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
-import com.github.clagomess.tomato.service.JsonSchemaService;
+import com.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import com.networknt.schema.JsonSchema;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import static com.github.clagomess.tomato.enums.TomatoJsonSchemaEnum.REQUEST;
 
 @Slf4j
 public class RequestDtoTest {
-    private final JsonSchema jsonSchema = JsonSchemaService.getTomatoJsonSchema(REQUEST);
+    private final JsonSchema jsonSchema = JsonSchemaBuilder.getTomatoJsonSchema(REQUEST);
     private final ObjectMapper mapper = ObjectMapperUtil.getInstance();
 
     @Test

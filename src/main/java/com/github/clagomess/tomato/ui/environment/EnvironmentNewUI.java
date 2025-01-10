@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.ui.environment;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
-import com.github.clagomess.tomato.service.EnvironmentDataService;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -14,7 +14,7 @@ public class EnvironmentNewUI extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
 
-    private final EnvironmentDataService environmentDataService = new EnvironmentDataService();
+    private final EnvironmentRepository environmentDataService = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
 
     public EnvironmentNewUI(Component parent){

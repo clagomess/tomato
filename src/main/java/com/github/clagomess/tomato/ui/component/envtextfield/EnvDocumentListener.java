@@ -1,9 +1,9 @@
 package com.github.clagomess.tomato.ui.component.envtextfield;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
-import com.github.clagomess.tomato.service.EnvironmentDataService;
 import com.github.clagomess.tomato.ui.ColorConstant;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 class EnvDocumentListener implements DocumentListener {
     @Getter
     private final List<EnvTextFieldOnChangeFI> onChangeList = new LinkedList<>();
-    private final EnvironmentDataService environmentDataService = new EnvironmentDataService();
+    private final EnvironmentRepository environmentDataService = new EnvironmentRepository();
 
     private final List<UUID> listenerUuid = new ArrayList<>(2);
     private final WorkspaceSessionPublisher workspaceSessionPublisher = WorkspaceSessionPublisher.getInstance();

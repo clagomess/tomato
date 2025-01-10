@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.dto;
 
 import com.github.clagomess.tomato.enums.HttpStatusEnum;
-import com.github.clagomess.tomato.service.http.MediaType;
+import com.github.clagomess.tomato.io.http.MediaType;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 

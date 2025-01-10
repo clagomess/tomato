@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
+import com.github.clagomess.tomato.io.repository.CollectionRepository;
+import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
-import com.github.clagomess.tomato.service.CollectionDataService;
-import com.github.clagomess.tomato.service.WorkspaceDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxHomeIcon;
 import com.github.clagomess.tomato.ui.environment.EnvironmentComboBox;
@@ -26,8 +26,8 @@ public class CollectionTreeUI extends JPanel {
     private final EnvironmentComboBox cbEnvironment = new EnvironmentComboBox();
     private final JLabel lblCurrentWorkspace = new JLabel(new BxHomeIcon());
 
-    private final WorkspaceDataService workspaceDataService = new WorkspaceDataService();
-    private final CollectionDataService collectionDataService = new CollectionDataService();
+    private final WorkspaceRepository workspaceDataService = new WorkspaceRepository();
+    private final CollectionRepository collectionDataService = new CollectionRepository();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public CollectionTreeUI() {

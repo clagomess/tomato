@@ -2,8 +2,8 @@ package com.github.clagomess.tomato.ui.main.request.left;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.service.WorkspaceDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import net.miginfocom.swing.MigLayout;
 
@@ -18,7 +18,7 @@ public class RequestNameTextField extends JPanel {
         setForeground(Color.decode("#616365"));
     }};
     private final JLabel lblRequestName = new JLabel();
-    private final WorkspaceDataService workspaceDataService = new WorkspaceDataService();
+    private final WorkspaceRepository workspaceDataService = new WorkspaceRepository();
 
     private final List<UUID> listenerUuid = new ArrayList<>(0);
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();

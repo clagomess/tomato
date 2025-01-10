@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.dto.external;
 
-import com.github.clagomess.tomato.service.JsonSchemaService;
+import com.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.ValidationMessage;
@@ -17,7 +17,7 @@ import static com.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.COLLECTION
 @Slf4j
 public class PostmanCollectionV210DtoTest {
     private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
-    private final JsonSchema jsonSchema = JsonSchemaService.getPostmanJsonSchema(COLLECTION);
+    private final JsonSchema jsonSchema = JsonSchemaBuilder.getPostmanJsonSchema(COLLECTION);
 
     @ParameterizedTest
     @ValueSource(strings = {

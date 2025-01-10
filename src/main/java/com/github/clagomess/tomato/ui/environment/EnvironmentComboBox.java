@@ -1,11 +1,11 @@
 package com.github.clagomess.tomato.ui.environment;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
+import com.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
-import com.github.clagomess.tomato.service.EnvironmentDataService;
-import com.github.clagomess.tomato.service.WorkspaceSessionDataService;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
@@ -20,10 +20,10 @@ public class EnvironmentComboBox extends JPanel {
     private final ComboBox comboBox = new ComboBox();
     private final JButton btnEdit = new JButton(new BxEditIcon());
 
-    private final EnvironmentDataService environmentDataService = new EnvironmentDataService();
+    private final EnvironmentRepository environmentDataService = new EnvironmentRepository();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
-    private final WorkspaceSessionDataService workspaceSessionDataService = new WorkspaceSessionDataService();
+    private final WorkspaceSessionRepository workspaceSessionDataService = new WorkspaceSessionRepository();
     private final WorkspaceSessionPublisher workspaceSessionPublisher = WorkspaceSessionPublisher.getInstance();
 
     public EnvironmentComboBox(){

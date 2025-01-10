@@ -1,9 +1,9 @@
 package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.io.repository.CollectionRepository;
+import com.github.clagomess.tomato.io.repository.Repository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
-import com.github.clagomess.tomato.service.CollectionDataService;
-import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -17,9 +17,9 @@ public class CollectionMoveUI extends JFrame {
     private final CollectionComboBox cbCollectionDestination;
     private final CollectionTreeDto collectionTree;
 
-    private final DataService dataService = new DataService();
+    private final Repository dataService = new Repository();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
-    private final CollectionDataService collectionDataService = new CollectionDataService();
+    private final CollectionRepository collectionDataService = new CollectionRepository();
 
     public CollectionMoveUI(
             Component parent,

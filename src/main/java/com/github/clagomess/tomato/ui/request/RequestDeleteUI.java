@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.ui.request;
 
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import com.github.clagomess.tomato.io.repository.Repository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +14,7 @@ public class RequestDeleteUI {
     private final Component parent;
     private final RequestHeadDto requestHead;
 
-    private final DataService dataService = new DataService();
+    private final Repository dataService = new Repository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public void showConfirmDialog(){

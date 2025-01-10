@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import com.github.clagomess.tomato.io.repository.Repository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
-import com.github.clagomess.tomato.service.DataService;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +14,7 @@ public class CollectionDeleteUI {
     private final Component parent;
     private final CollectionTreeDto collectionTree;
 
-    private final DataService dataService = new DataService();
+    private final Repository dataService = new Repository();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public void showConfirmDialog(){
