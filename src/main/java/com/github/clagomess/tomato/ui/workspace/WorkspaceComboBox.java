@@ -8,7 +8,7 @@ import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 import javax.swing.*;
 
 public class WorkspaceComboBox extends JComboBox<WorkspaceDto> {
-    private final WorkspaceRepository workspaceDataService = new WorkspaceRepository();
+    private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
 
     public WorkspaceComboBox() {
         setRenderer(new DtoListCellRenderer<>(WorkspaceDto::getName));
@@ -17,8 +17,8 @@ public class WorkspaceComboBox extends JComboBox<WorkspaceDto> {
 
     private void addItens() {
         try {
-            workspaceDataService.list().forEach(this::addItem);
-            setSelectedItem(workspaceDataService.getDataSessionWorkspace());
+            workspaceRepository.list().forEach(this::addItem);
+            setSelectedItem(workspaceRepository.getDataSessionWorkspace());
         } catch (Throwable e){
             DialogFactory.createDialogException(this, e);
         }

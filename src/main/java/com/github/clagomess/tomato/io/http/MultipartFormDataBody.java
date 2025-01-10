@@ -15,7 +15,7 @@ import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 
 @RequiredArgsConstructor
 public class MultipartFormDataBody {
-    private final EnvironmentRepository environmentDataService;
+    private final EnvironmentRepository environmentRepository;
 
     private final String boundary;
     private final List<RequestDto.KeyValueItem> form;
@@ -36,7 +36,7 @@ public class MultipartFormDataBody {
         var file = File.createTempFile("tomato-request-", ".bin");
         file.deleteOnExit();
 
-        List<EnvironmentDto.Env> envs = environmentDataService.getWorkspaceSessionEnvironment()
+        List<EnvironmentDto.Env> envs = environmentRepository.getWorkspaceSessionEnvironment()
                 .map(EnvironmentDto::getEnvs)
                 .orElse(Collections.emptyList());
 

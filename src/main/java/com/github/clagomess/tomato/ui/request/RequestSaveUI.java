@@ -21,7 +21,7 @@ public class RequestSaveUI extends JFrame {
     private final JTextField txtName = new JTextField();
     private final CollectionComboBox cbCollection = new CollectionComboBox(null);
 
-    private final RequestRepository requestDataService = new RequestRepository();
+    private final RequestRepository requestRepository = new RequestRepository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestSaveUI(
@@ -66,7 +66,7 @@ public class RequestSaveUI extends JFrame {
             CollectionTreeDto parent = cbCollection.getSelectedItem();
             if(parent == null) throw new Exception("Parent is null");
 
-            var filePath = requestDataService.save(
+            var filePath = requestRepository.save(
                     parent.getPath(),
                     requestDto
             );

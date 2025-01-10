@@ -10,7 +10,7 @@ import com.github.clagomess.tomato.ui.component.WaitExecution;
 import java.awt.*;
 
 public class RequestRenameUI extends NameUI {
-    private final RequestRepository requestDataService = new RequestRepository();
+    private final RequestRepository requestRepository = new RequestRepository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestRenameUI(
@@ -25,13 +25,13 @@ public class RequestRenameUI extends NameUI {
 
     private void btnSaveAction(RequestHeadDto requestHead){
         new WaitExecution(this, btnSave, () -> {
-            RequestDto requestDto = requestDataService.load(requestHead)
+            RequestDto requestDto = requestRepository.load(requestHead)
                     .orElseThrow();
 
             requestDto.setName(this.txtName.getText());
             requestHead.setName(this.txtName.getText());
 
-            requestDataService.save(
+            requestRepository.save(
                     requestHead.getPath(),
                     requestDto
             );

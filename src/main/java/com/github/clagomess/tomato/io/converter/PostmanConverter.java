@@ -23,8 +23,8 @@ import static com.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.COLLECTION
 public class PostmanConverter {
     private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
     private final PostmanCollectionPumpMapper pumpMapper = PostmanCollectionPumpMapper.INSTANCE;
-    private final CollectionRepository collectionDataService;
-    private final RequestRepository requestDataService;
+    private final CollectionRepository collectionRepository;
+    private final RequestRepository requestRepository;
 
     public PostmanConverter() {
         this(
@@ -70,13 +70,13 @@ public class PostmanConverter {
 
             if(item.getRequest() == null){
                 CollectionDto collection = pumpMapper.toCollectionDto(item);
-                File collectionDir = collectionDataService.save(destination, collection);
+                File collectionDir = collectionRepository.save(destination, collection);
                 pumpPostmanCollection(collectionDir, item.getItem());
                 continue;
             }
 
             RequestDto request = pumpMapper.toRequestDto(item);
-            requestDataService.save(destination, request);
+            requestRepository.save(destination, request);
         }
     }
 }

@@ -20,10 +20,10 @@ public class EnvironmentComboBox extends JPanel {
     private final ComboBox comboBox = new ComboBox();
     private final JButton btnEdit = new JButton(new BxEditIcon());
 
-    private final EnvironmentRepository environmentDataService = new EnvironmentRepository();
+    private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
-    private final WorkspaceSessionRepository workspaceSessionDataService = new WorkspaceSessionRepository();
+    private final WorkspaceSessionRepository workspaceSessionRepository = new WorkspaceSessionRepository();
     private final WorkspaceSessionPublisher workspaceSessionPublisher = WorkspaceSessionPublisher.getInstance();
 
     public EnvironmentComboBox(){
@@ -51,9 +51,9 @@ public class EnvironmentComboBox extends JPanel {
         try {
             comboBox.removeAllItems();
 
-            var session = workspaceSessionDataService.load();
+            var session = workspaceSessionRepository.load();
 
-            environmentDataService.list().forEach(item -> {
+            environmentRepository.list().forEach(item -> {
                 comboBox.addItem(item);
 
                 if(item.getId().equals(session.getEnvironmentId())){
@@ -79,12 +79,12 @@ public class EnvironmentComboBox extends JPanel {
             var selected = comboBox.getSelectedItem();
             var environmentId = selected == null ? null : selected.getId();
 
-            var session = workspaceSessionDataService.load();
+            var session = workspaceSessionRepository.load();
             session.setEnvironmentId(environmentId);
 
             if(Objects.equals(session.getEnvironmentId(), environmentId)) return;
 
-            workspaceSessionDataService.save(session);
+            workspaceSessionRepository.save(session);
             workspaceSessionPublisher.getOnSave().publish(session);
         }).execute();
     }

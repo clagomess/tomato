@@ -27,7 +27,7 @@ import static com.github.clagomess.tomato.enums.HttpMethodEnum.PUT;
 public class HttpService {
     private final RequestDto requestDto;
     private final HttpDebug debug;
-    private final EnvironmentRepository environmentDataService;
+    private final EnvironmentRepository environmentRepository;
 
     public HttpService(RequestDto requestDto) {
         this(
@@ -87,7 +87,7 @@ public class HttpService {
     }
 
     protected URI buildUri(String url) throws IOException {
-        Optional<EnvironmentDto> current = environmentDataService.getWorkspaceSessionEnvironment();
+        Optional<EnvironmentDto> current = environmentRepository.getWorkspaceSessionEnvironment();
 
         if(current.isPresent()) {
             for(var env : current.get().getEnvs()) {

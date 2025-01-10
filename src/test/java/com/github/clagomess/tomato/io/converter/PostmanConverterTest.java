@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class PostmanConverterTest {
-    private final PostmanConverter dumpPumpService = new PostmanConverter();
+    private final PostmanConverter postmanConverter = new PostmanConverter();
 
     @Test
     public void pumpPostmanCollection() throws IOException {
@@ -16,7 +16,7 @@ public class PostmanConverterTest {
         var postmanCollection = new File(getClass().getResource("PostmanConverterTest/postman.collection.v2.1.0.json")
                 .getFile());
 
-        dumpPumpService.pumpPostmanCollection(
+        postmanConverter.pumpPostmanCollection(
                 mockDataDir,
                 postmanCollection
         );

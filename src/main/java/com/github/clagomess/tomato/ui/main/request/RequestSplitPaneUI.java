@@ -42,7 +42,7 @@ public class RequestSplitPaneUI extends JPanel {
     private final ResponseTabContent responseContent;
 
     private final RequestStagingMonitor requestStagingMonitor;
-    private final RequestRepository requestDataService = new RequestRepository();
+    private final RequestRepository requestRepository = new RequestRepository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
 
@@ -148,7 +148,7 @@ public class RequestSplitPaneUI extends JPanel {
         }
 
         new WaitExecution(this, btnSaveRequest, () -> {
-            requestDataService.save(requestHeadDto.getPath(), requestDto);
+            requestRepository.save(requestHeadDto.getPath(), requestDto);
 
             RequestMapper.INSTANCE.toRequestHead(
                     requestHeadDto,

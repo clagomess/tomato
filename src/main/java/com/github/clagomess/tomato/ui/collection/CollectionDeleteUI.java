@@ -14,7 +14,7 @@ public class CollectionDeleteUI {
     private final Component parent;
     private final CollectionTreeDto collectionTree;
 
-    private final Repository dataService = new Repository();
+    private final Repository repository = new Repository();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public void showConfirmDialog(){
@@ -36,8 +36,8 @@ public class CollectionDeleteUI {
 
     private void delete(){
         new WaitExecution(parent, () -> {
-            // @TODO: change to own *dataService and apply cache evict
-            dataService.delete(collectionTree.getPath());
+            // @TODO: change to own *repository and apply cache evict
+            repository.delete(collectionTree.getPath());
 
             // update source collection
             collectionPublisher.getOnSave().publish(

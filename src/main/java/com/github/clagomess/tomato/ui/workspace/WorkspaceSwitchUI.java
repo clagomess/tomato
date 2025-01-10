@@ -14,7 +14,7 @@ public class WorkspaceSwitchUI extends JFrame {
     private final WorkspaceComboBox cbWorkspace = new WorkspaceComboBox();
     private final JButton btnSwitch = new JButton("Switch");
 
-    private final DataSessionRepository dataSessionDataService = new DataSessionRepository();
+    private final DataSessionRepository dataSessionRepository = new DataSessionRepository();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public WorkspaceSwitchUI(Component parent) {
@@ -47,9 +47,9 @@ public class WorkspaceSwitchUI extends JFrame {
             WorkspaceDto selected = cbWorkspace.getSelectedItem();
             if(selected == null) return;
 
-            var session = dataSessionDataService.load();
+            var session = dataSessionRepository.load();
             session.setWorkspaceId(selected.getId());
-            dataSessionDataService.save(session);
+            dataSessionRepository.save(session);
 
             workspacePublisher.getOnSwitch().publish(selected);
 

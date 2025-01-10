@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 public class RepositoryTest {
-    private final Repository dataService = new Repository();
+    private final Repository repository = new Repository();
 
     @BeforeEach
     public void setup(){
@@ -44,8 +44,8 @@ public class RepositoryTest {
         );
 
         // write
-        dataService.writeFile(file, dto);
-        var result = dataService.readFile(
+        repository.writeFile(file, dto);
+        var result = repository.readFile(
                 file,
                 new TypeReference<ConfigurationDto>(){}
         );
@@ -65,21 +65,21 @@ public class RepositoryTest {
 
     @Test
     public void getHomeDir(){
-        assertNotNull(dataService.getHomeDir());
+        assertNotNull(repository.getHomeDir());
     }
 
     @Test
     public void getConfiguration_whenNotExists_ReturnsAndCreateDefault() throws IOException {
-        Repository dataServiceMock = Mockito.mock(Repository.class);
-        Mockito.when(dataServiceMock.getHomeDir())
+        Repository repositoryMock = Mockito.mock(Repository.class);
+        Mockito.when(repositoryMock.getHomeDir())
                 .thenReturn(mockHome);
         Mockito.doCallRealMethod()
-                .when(dataServiceMock)
+                .when(repositoryMock)
                 .writeFile(Mockito.any(), Mockito.any());
-        Mockito.when(dataServiceMock.getConfiguration())
+        Mockito.when(repositoryMock.getConfiguration())
                 .thenCallRealMethod();
 
-        var result = dataServiceMock.getConfiguration();
+        var result = repositoryMock.getConfiguration();
         Assertions.assertThat(result.getDataDirectory().getAbsolutePath())
                 .contains(mockHome + File.separator + "data");
     }
@@ -89,19 +89,19 @@ public class RepositoryTest {
         var dto = new ConfigurationDto();
         dto.setDataDirectory(new File(mockHome, "data-foo"));
 
-        dataService.writeFile(new File(
+        repository.writeFile(new File(
                 mockHome, "configuration.json"
         ), dto);
 
-        Repository dataServiceMock = Mockito.mock(Repository.class);
-        Mockito.when(dataServiceMock.getHomeDir())
+        Repository repositoryMock = Mockito.mock(Repository.class);
+        Mockito.when(repositoryMock.getHomeDir())
                 .thenReturn(mockHome);
-        Mockito.when(dataServiceMock.readFile(Mockito.any(), Mockito.any()))
+        Mockito.when(repositoryMock.readFile(Mockito.any(), Mockito.any()))
                 .thenCallRealMethod();
-        Mockito.when(dataServiceMock.getConfiguration())
+        Mockito.when(repositoryMock.getConfiguration())
                 .thenCallRealMethod();
 
-        var result = dataServiceMock.getConfiguration();
+        var result = repositoryMock.getConfiguration();
         Assertions.assertThat(result.getDataDirectory().getAbsolutePath())
                 .contains(mockHome + File.separator + "data-foo");
     }
@@ -111,39 +111,39 @@ public class RepositoryTest {
         var dto = new ConfigurationDto();
         dto.setDataDirectory(new File(mockHome, "data"));
 
-        Repository dataServiceMock = Mockito.mock(Repository.class);
-        Mockito.when(dataServiceMock.getConfiguration())
+        Repository repositoryMock = Mockito.mock(Repository.class);
+        Mockito.when(repositoryMock.getConfiguration())
                 .thenReturn(dto);
-        Mockito.when(dataServiceMock.createDirectoryIfNotExists(Mockito.any()))
+        Mockito.when(repositoryMock.createDirectoryIfNotExists(Mockito.any()))
                 .thenCallRealMethod();
-        Mockito.when(dataServiceMock.getDataDir())
+        Mockito.when(repositoryMock.getDataDir())
                 .thenCallRealMethod();
 
-        var result = dataServiceMock.getDataDir();
+        var result = repositoryMock.getDataDir();
         assertTrue(result.isDirectory());
     }
 
     @Test
     public void listFiles_whenInvalidDirectory_returnEmpty() {
         Assertions.assertThat(
-                dataService.listFiles(null)
+                repository.listFiles(null)
         ).isEmpty();
 
         Assertions.assertThat(
-                dataService.listFiles(new File("xyz"))
+                repository.listFiles(new File("xyz"))
         ).isEmpty();
     }
 
     @Test
     public void move_whenMoveFile() throws IOException {
-        dataService.writeFile(new File(
+        repository.writeFile(new File(
                 mockHome, "foo.json"
         ), new RequestDto());
 
         var dest = new File(mockHome, "dest");
         assertTrue(dest.mkdir());
 
-        dataService.move(
+        repository.move(
                 new File(mockHome, "foo.json"),
                 dest
         );
@@ -160,7 +160,7 @@ public class RepositoryTest {
         var dest = new File(mockHome, "dest");
         assertTrue(dest.mkdir());
 
-        dataService.move(
+        repository.move(
                 dir,
                 dest
         );
@@ -173,9 +173,9 @@ public class RepositoryTest {
     public void delete_whenDeleteFile() throws IOException {
         var file = new File(mockHome, "foo.json");
 
-        dataService.writeFile(file, new RequestDto());
+        repository.writeFile(file, new RequestDto());
 
-        dataService.delete(file);
+        repository.delete(file);
 
         Assertions.assertThat(file)
                 .doesNotExist();
@@ -187,9 +187,9 @@ public class RepositoryTest {
         assertTrue(dir.mkdir());
         var file = new File(mockHome, "foo.json");
 
-        dataService.writeFile(file, new RequestDto());
+        repository.writeFile(file, new RequestDto());
 
-        dataService.delete(dir);
+        repository.delete(dir);
 
         Assertions.assertThat(dir)
                 .doesNotExist();

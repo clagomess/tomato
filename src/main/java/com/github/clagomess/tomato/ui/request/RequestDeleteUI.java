@@ -14,7 +14,7 @@ public class RequestDeleteUI {
     private final Component parent;
     private final RequestHeadDto requestHead;
 
-    private final Repository dataService = new Repository();
+    private final Repository repository = new Repository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public void showConfirmDialog(){
@@ -36,8 +36,8 @@ public class RequestDeleteUI {
 
     private void delete(){
         new WaitExecution(parent, () -> {
-            // @TODO: change to own *dataService and apply cache evict
-            dataService.delete(requestHead.getPath());
+            // @TODO: change to own *repository and apply cache evict
+            repository.delete(requestHead.getPath());
 
             // update source collection
             requestPublisher.getOnMove().publish(

@@ -18,7 +18,7 @@ public class RequestNameTextField extends JPanel {
         setForeground(Color.decode("#616365"));
     }};
     private final JLabel lblRequestName = new JLabel();
-    private final WorkspaceRepository workspaceDataService = new WorkspaceRepository();
+    private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
 
     private final List<UUID> listenerUuid = new ArrayList<>(0);
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
@@ -41,7 +41,7 @@ public class RequestNameTextField extends JPanel {
             parent.setText(requestHeadDto.getParent().getFlattenedParentString());
         }else{
             try {
-                parent.setText(workspaceDataService.getDataSessionWorkspace().getName());
+                parent.setText(workspaceRepository.getDataSessionWorkspace().getName());
             } catch (Throwable e) {
                 DialogFactory.createDialogException(this, e);
             }

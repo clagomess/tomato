@@ -19,9 +19,9 @@ import java.util.stream.Stream;
 @Slf4j
 @RequiredArgsConstructor
 public class CollectionRepository {
-    private final Repository dataService;
-    private final RequestRepository requestDataService;
-    private final WorkspaceRepository workspaceDataService;
+    private final Repository repository;
+    private final RequestRepository requestRepository;
+    private final WorkspaceRepository workspaceRepository;
 
     public CollectionRepository() {
         this(
@@ -40,7 +40,7 @@ public class CollectionRepository {
 
     protected static final CacheManager<String, Optional<CollectionDto>> cacheCollection = new CacheManager<>();
     public Optional<CollectionDto> load(CollectionTreeDto collection) throws IOException {
-        return cacheCollection.get(collection.getId(), () -> dataService.readFile(getCollectionFilePath(
+        return cacheCollection.get(collection.getId(), () -> repository.readFile(getCollectionFilePath(
                 collection.getPath(),
                 collection.getId()
         ), new TypeReference<>(){}));
@@ -50,7 +50,7 @@ public class CollectionRepository {
     protected Optional<CollectionTreeDto> load(File collectionDir) throws IOException {
         String id = collectionDir.getName().replace("collection-", "");
 
-        return cacheCollectionTree.get(id, () -> dataService.readFile(
+        return cacheCollectionTree.get(id, () -> repository.readFile(
                 getCollectionFilePath(collectionDir, id),
                 new TypeReference<>() {}
         ));
@@ -65,7 +65,7 @@ public class CollectionRepository {
             File parentPath,
             CollectionDto collection
     ) throws IOException {
-        var collectionDir = dataService.createDirectoryIfNotExists(new File(
+        var collectionDir = repository.createDirectoryIfNotExists(new File(
                 parentPath,
                 String.format("collection-%s", collection.getId())
         ));
@@ -75,7 +75,7 @@ public class CollectionRepository {
                 collection.getId()
         );
 
-        dataService.writeFile(collectionFile, collection);
+        repository.writeFile(collectionFile, collection);
         cacheCollection.evict(collection.getId());
         cacheCollectionTree.evict(collection.getId());
         cacheListFiles.evict(parentPath);
@@ -87,7 +87,7 @@ public class CollectionRepository {
     protected static final CacheManager<File, List<File>> cacheListFiles = new CacheManager<>();
     protected List<File> listFiles(File rootPath) {
         return cacheListFiles.get(rootPath, () ->
-                Arrays.stream(dataService.listFiles(rootPath))
+                Arrays.stream(repository.listFiles(rootPath))
                         .filter(File::isDirectory)
                         .filter(item -> item.getName().startsWith("collection"))
                         .toList()
@@ -106,7 +106,7 @@ public class CollectionRepository {
                             result.setParent(collectionStart);
                             result.setPath(item);
                             result.setChildren(this::getCollectionChildrenTree);
-                            result.setRequests(requestDataService::getRequestList);
+                            result.setRequests(requestRepository::getRequestList);
                         });
 
                         return optResult.orElse(null);
@@ -130,14 +130,14 @@ public class CollectionRepository {
     }
 
     public CollectionTreeDto getWorkspaceCollectionTree() throws IOException {
-        WorkspaceDto workspace = workspaceDataService.getDataSessionWorkspace();
+        WorkspaceDto workspace = workspaceRepository.getDataSessionWorkspace();
 
         CollectionTreeDto root = new CollectionTreeDto();
         root.setId(workspace.getId());
         root.setName(workspace.getName());
         root.setPath(workspace.getPath());
         root.setChildren(this::getCollectionChildrenTree);
-        root.setRequests(requestDataService::getRequestList);
+        root.setRequests(requestRepository::getRequestList);
 
         return root;
     }

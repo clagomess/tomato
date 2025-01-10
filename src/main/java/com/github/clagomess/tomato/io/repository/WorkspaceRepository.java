@@ -18,8 +18,8 @@ import java.util.stream.Stream;
 @Slf4j
 @RequiredArgsConstructor
 public class WorkspaceRepository {
-    private final Repository dataService;
-    private final DataSessionRepository dataSessionDataService;
+    private final Repository repository;
+    private final DataSessionRepository dataSessionRepository;
 
     public WorkspaceRepository() {
         this(
@@ -29,8 +29,8 @@ public class WorkspaceRepository {
     }
 
     protected File getWorkspaceDirectory(String id) throws IOException {
-        return dataService.createDirectoryIfNotExists(new File(
-                dataService.getDataDir(),
+        return repository.createDirectoryIfNotExists(new File(
+                repository.getDataDir(),
                 String.format("workspace-%s", id)
         ));
     }
@@ -38,7 +38,7 @@ public class WorkspaceRepository {
     public void save(WorkspaceDto dto) throws IOException {
         File workspaceDir = getWorkspaceDirectory(dto.getId());
 
-        dataService.writeFile(new File(
+        repository.writeFile(new File(
                 workspaceDir,
                 String.format(
                         "workspace-%s.json",
@@ -53,9 +53,9 @@ public class WorkspaceRepository {
     protected static final CacheManager<String, List<File>> cacheListDirectories = new CacheManager<>("workspaceDirs");
     private List<File> listDirectories() throws IOException {
         return cacheListDirectories.get(() -> {
-            File dataDir = dataService.getDataDir();
+            File dataDir = repository.getDataDir();
 
-            List<File> result = Arrays.stream(dataService.listFiles(dataDir))
+            List<File> result = Arrays.stream(repository.listFiles(dataDir))
                     .filter(File::isDirectory)
                     .filter(item -> item.getName().startsWith("workspace"))
                     .toList();
@@ -76,7 +76,7 @@ public class WorkspaceRepository {
     public Optional<WorkspaceDto> load(File workspaceDir) throws IOException {
         String id = workspaceDir.getName().replace("workspace-", "");
 
-        return cache.get(id, () -> dataService.readFile(
+        return cache.get(id, () -> repository.readFile(
                 new File(
                         workspaceDir,
                         String.format("workspace-%s.json", id)
@@ -106,13 +106,13 @@ public class WorkspaceRepository {
     }
 
     public WorkspaceDto getDataSessionWorkspace() throws IOException {
-        DataSessionDto dataSession = dataSessionDataService.load();
+        DataSessionDto dataSession = dataSessionRepository.load();
 
         if(dataSession.getWorkspaceId() == null){
             WorkspaceDto workspace = list().findFirst().orElseThrow();
             dataSession.setWorkspaceId(workspace.getId());
 
-            dataSessionDataService.save(dataSession);
+            dataSessionRepository.save(dataSession);
 
             return workspace;
         }

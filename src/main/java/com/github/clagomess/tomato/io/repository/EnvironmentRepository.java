@@ -18,9 +18,9 @@ import java.util.stream.Stream;
 @Slf4j
 @RequiredArgsConstructor
 public class EnvironmentRepository {
-    private final Repository dataService;
-    private final WorkspaceRepository workspaceDataService;
-    private final WorkspaceSessionRepository workspaceSessionDataService;
+    private final Repository repository;
+    private final WorkspaceRepository workspaceRepository;
+    private final WorkspaceSessionRepository workspaceSessionRepository;
     protected static final CacheManager<String, Optional<EnvironmentDto>> cache = new CacheManager<>();
 
     public EnvironmentRepository() {
@@ -32,7 +32,7 @@ public class EnvironmentRepository {
     }
 
     protected File getEnvironmentFile(String id) throws IOException {
-        WorkspaceDto workspace = workspaceDataService.getDataSessionWorkspace();
+        WorkspaceDto workspace = workspaceRepository.getDataSessionWorkspace();
 
         return new File(workspace.getPath(), String.format(
                 "environment-%s.json",
@@ -41,7 +41,7 @@ public class EnvironmentRepository {
     }
 
     public Optional<EnvironmentDto> load(String id) throws IOException {
-        return cache.get(id, () -> dataService.readFile(
+        return cache.get(id, () -> repository.readFile(
                 getEnvironmentFile(id),
                 new TypeReference<>(){}
         ));
@@ -50,16 +50,16 @@ public class EnvironmentRepository {
     public File save(EnvironmentDto environmentDto) throws IOException {
         File filePath = getEnvironmentFile(environmentDto.getId());
 
-        dataService.writeFile(filePath, environmentDto);
+        repository.writeFile(filePath, environmentDto);
         cache.evict(environmentDto.getId());
 
         return filePath;
     }
 
     public Stream<EnvironmentDto> list() throws IOException {
-        WorkspaceDto workspace = workspaceDataService.getDataSessionWorkspace();
+        WorkspaceDto workspace = workspaceRepository.getDataSessionWorkspace();
 
-        return Arrays.stream(dataService.listFiles(workspace.getPath()))
+        return Arrays.stream(repository.listFiles(workspace.getPath()))
                 .filter(File::isFile)
                 .filter(item -> item.getName().startsWith("environment"))
                 .map(item -> {
@@ -77,7 +77,7 @@ public class EnvironmentRepository {
     }
 
     public Optional<EnvironmentDto> getWorkspaceSessionEnvironment() throws IOException {
-        WorkspaceSessionDto session = workspaceSessionDataService.load();
+        WorkspaceSessionDto session = workspaceSessionRepository.load();
         if(session.getEnvironmentId() == null) return Optional.empty();
 
         return load(session.getEnvironmentId());

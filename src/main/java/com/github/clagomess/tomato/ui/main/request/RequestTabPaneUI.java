@@ -16,7 +16,7 @@ import java.util.List;
 public class RequestTabPaneUI extends JTabbedPane {
     private final List<Tab> tabs = new ArrayList<>();
 
-    private final RequestRepository requestDataService = new RequestRepository();
+    private final RequestRepository requestRepository = new RequestRepository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
@@ -40,7 +40,7 @@ public class RequestTabPaneUI extends JTabbedPane {
 
         requestPublisher.getOnLoad().addListener(event -> {
             new WaitExecution(() -> {
-                requestDataService.load(event)
+                requestRepository.load(event)
                         .ifPresent(item -> addNewTab(event, item));
             }).execute();
         });

@@ -111,14 +111,14 @@ public class CollectionRepositoryTest {
         workspaceDto.setName("ROOT");
         workspaceDto.setPath(new File("target"));
 
-        WorkspaceRepository workspaceDataServiceMock = Mockito.mock(WorkspaceRepository.class);
-        Mockito.when(workspaceDataServiceMock.getDataSessionWorkspace())
+        WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
+        Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
         CollectionRepository collectionDS = new CollectionRepository(
                 new Repository(),
                 new RequestRepository(),
-                workspaceDataServiceMock
+                workspaceRepositoryMock
         );
 
         var result = collectionDS.getWorkspaceCollectionTree();

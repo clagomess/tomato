@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class WorkspaceSessionRepository {
-    private final Repository dataService;
-    private final WorkspaceRepository workspaceDataService;
+    private final Repository repository;
+    private final WorkspaceRepository workspaceRepository;
     protected static final CacheManager<String, WorkspaceSessionDto> cache = new CacheManager<>("workspaceSession");
 
     public WorkspaceSessionRepository() {
@@ -24,14 +24,14 @@ public class WorkspaceSessionRepository {
     }
 
     protected File getWorkspaceSessionFile() throws IOException {
-        WorkspaceDto workspace = workspaceDataService.getDataSessionWorkspace();
+        WorkspaceDto workspace = workspaceRepository.getDataSessionWorkspace();
 
         return new File(workspace.getPath(), "workspace-session.json");
     }
 
     public WorkspaceSessionDto load() throws IOException {
         return cache.get(() -> {
-            Optional<WorkspaceSessionDto> opt = dataService.readFile(
+            Optional<WorkspaceSessionDto> opt = repository.readFile(
                     getWorkspaceSessionFile(),
                     new TypeReference<>() {
                     }
@@ -44,7 +44,7 @@ public class WorkspaceSessionRepository {
     public File save(WorkspaceSessionDto dto) throws IOException {
         File filePath = getWorkspaceSessionFile();
 
-        dataService.writeFile(filePath, dto);
+        repository.writeFile(filePath, dto);
         cache.evict();
 
         return filePath;

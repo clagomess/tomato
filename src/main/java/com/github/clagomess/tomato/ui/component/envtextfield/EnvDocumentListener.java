@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 class EnvDocumentListener implements DocumentListener {
     @Getter
     private final List<EnvTextFieldOnChangeFI> onChangeList = new LinkedList<>();
-    private final EnvironmentRepository environmentDataService = new EnvironmentRepository();
+    private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
 
     private final List<UUID> listenerUuid = new ArrayList<>(2);
     private final WorkspaceSessionPublisher workspaceSessionPublisher = WorkspaceSessionPublisher.getInstance();
@@ -124,7 +124,7 @@ class EnvDocumentListener implements DocumentListener {
                 environmentPublisher.getOnSave().removeListener(uuid);
             });
 
-            Optional<EnvironmentDto> current = environmentDataService.getWorkspaceSessionEnvironment();
+            Optional<EnvironmentDto> current = environmentRepository.getWorkspaceSessionEnvironment();
             if(current.isEmpty()) return;
 
             envMap.put(current.get());

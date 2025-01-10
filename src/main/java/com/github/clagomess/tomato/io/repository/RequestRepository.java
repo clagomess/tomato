@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 @Slf4j
 @RequiredArgsConstructor
 public class RequestRepository {
-    private final Repository dataService;
+    private final Repository repository;
 
     public RequestRepository() {
         this(new Repository());
@@ -28,7 +28,7 @@ public class RequestRepository {
     public Optional<RequestDto> load(
             RequestHeadDto request
     ) throws IOException {
-        return dataService.readFile(
+        return repository.readFile(
                 request.getPath(),
                 new TypeReference<>() {}
         );
@@ -36,7 +36,7 @@ public class RequestRepository {
 
     protected static final CacheManager<File, Optional<RequestHeadDto>> cacheHead = new CacheManager<>();
     private Optional<RequestHeadDto> loadHead(File file) throws IOException {
-        return cacheHead.get(file, () -> dataService.readFile(
+        return cacheHead.get(file, () -> repository.readFile(
                 file,
                 new TypeReference<>() {}
         ));
@@ -54,7 +54,7 @@ public class RequestRepository {
             requestFile = basepath;
         }
 
-        dataService.writeFile(requestFile, request);
+        repository.writeFile(requestFile, request);
         cacheHead.evict(requestFile);
         cacheListFiles.evict(basepath);
 
@@ -64,7 +64,7 @@ public class RequestRepository {
     protected static final CacheManager<File, List<File>> cacheListFiles = new CacheManager<>();
     private List<File> listFiles(File rootPath) {
         return cacheListFiles.get(rootPath, () ->
-                Arrays.stream(dataService.listFiles(rootPath))
+                Arrays.stream(repository.listFiles(rootPath))
                         .filter(File::isFile)
                         .filter(item -> item.getName().startsWith("request-"))
                         .toList()

@@ -19,7 +19,7 @@ public class CollectionImportUI extends JFrame {
     });
     private final CollectionComboBox cbCollectionParent;
 
-    private final PostmanConverter dumpPumpService = new PostmanConverter();
+    private final PostmanConverter postmanConverter = new PostmanConverter();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionImportUI(
@@ -61,7 +61,7 @@ public class CollectionImportUI extends JFrame {
             CollectionTreeDto parent = cbCollectionParent.getSelectedItem();
             if(parent == null) throw new Exception("Parent is null");
 
-            dumpPumpService.pumpPostmanCollection(
+            postmanConverter.pumpPostmanCollection(
                     parent.getPath(),
                     fileChooser.getValue()
             );

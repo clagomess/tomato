@@ -19,7 +19,7 @@ public class RequestMoveUI extends JFrame {
     private final CollectionComboBox cbCollectionDestination;
     private final RequestHeadDto requestHead;
 
-    private final Repository dataService = new Repository();
+    private final Repository repository = new Repository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestMoveUI(
@@ -62,8 +62,8 @@ public class RequestMoveUI extends JFrame {
             CollectionTreeDto destination = cbCollectionDestination.getSelectedItem();
             if(destination == null) throw new Exception("Destination not selected");
 
-            // @TODO: change to own *dataService and apply cache evict
-            dataService.move(this.requestHead.getPath(), destination.getPath());
+            // @TODO: change to own *repository and apply cache evict
+            repository.move(this.requestHead.getPath(), destination.getPath());
 
             // update source collection
             requestPublisher.getOnMove().publish(

@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class DataSessionRepository {
-    private final Repository dataService;
+    private final Repository repository;
     protected static final CacheManager<String, DataSessionDto> cache = new CacheManager<>("dataSession");
 
     public DataSessionRepository() {
@@ -20,19 +20,19 @@ public class DataSessionRepository {
 
     protected File getDataSessionFile() throws IOException {
         return new File(
-                dataService.getDataDir(),
+                repository.getDataDir(),
                 "data-session.json"
         );
     }
 
     public void save(DataSessionDto dto) throws IOException {
-        dataService.writeFile(getDataSessionFile(), dto);
+        repository.writeFile(getDataSessionFile(), dto);
         cache.evict();
     }
 
     public DataSessionDto load() throws IOException {
         return cache.get(() -> {
-            Optional<DataSessionDto> dataSession = dataService.readFile(
+            Optional<DataSessionDto> dataSession = repository.readFile(
                     getDataSessionFile(),
                     new TypeReference<>(){}
             );

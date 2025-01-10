@@ -15,8 +15,8 @@ public class WorkspaceNewUI extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
 
-    private final DataSessionRepository dataSessionDataService = new DataSessionRepository();
-    private final WorkspaceRepository workspaceDataService = new WorkspaceRepository();
+    private final DataSessionRepository dataSessionRepository = new DataSessionRepository();
+    private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public WorkspaceNewUI(
@@ -50,11 +50,11 @@ public class WorkspaceNewUI extends JFrame {
         new WaitExecution(this, btnSave, () -> {
             WorkspaceDto dto = new WorkspaceDto();
             dto.setName(txtName.getText());
-            workspaceDataService.save(dto);
+            workspaceRepository.save(dto);
 
-            var session = dataSessionDataService.load();
+            var session = dataSessionRepository.load();
             session.setWorkspaceId(dto.getId());
-            dataSessionDataService.save(session);
+            dataSessionRepository.save(session);
 
             workspacePublisher.getOnSwitch().publish(dto);
 

@@ -26,8 +26,8 @@ public class CollectionTreeUI extends JPanel {
     private final EnvironmentComboBox cbEnvironment = new EnvironmentComboBox();
     private final JLabel lblCurrentWorkspace = new JLabel(new BxHomeIcon());
 
-    private final WorkspaceRepository workspaceDataService = new WorkspaceRepository();
-    private final CollectionRepository collectionDataService = new CollectionRepository();
+    private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
+    private final CollectionRepository collectionRepository = new CollectionRepository();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public CollectionTreeUI() {
@@ -59,7 +59,7 @@ public class CollectionTreeUI extends JPanel {
 
     private void loadCurrentWorkspace(){
         try {
-            var rootCollection = collectionDataService.getWorkspaceCollectionTree();
+            var rootCollection = collectionRepository.getWorkspaceCollectionTree();
             lblCurrentWorkspace.setText(rootCollection.getName());
             rootNode.setUserObject(rootCollection);
             collectionTreeExpansionListener.createLeaf(rootNode, rootCollection);

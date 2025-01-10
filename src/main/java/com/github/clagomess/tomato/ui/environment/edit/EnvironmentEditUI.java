@@ -14,7 +14,7 @@ public class EnvironmentEditUI extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
 
-    private final EnvironmentRepository environmentDataService = new EnvironmentRepository();
+    private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
     private final EnvironmentDto environment;
 
@@ -56,7 +56,7 @@ public class EnvironmentEditUI extends JFrame {
         new WaitExecution(this, btnSave, () -> {
             environment.setName(txtName.getText());
 
-            environmentDataService.save(environment);
+            environmentRepository.save(environment);
 
             environmentPublisher.getOnSave().publish(
                     environment.getId(),

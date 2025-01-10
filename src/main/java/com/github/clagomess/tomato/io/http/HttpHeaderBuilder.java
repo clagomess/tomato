@@ -13,7 +13,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class HttpHeaderBuilder {
-    private final EnvironmentRepository environmentDataService;
+    private final EnvironmentRepository environmentRepository;
 
     private final HttpRequest.Builder requestBuilder;
     private final RequestDto requestDto;
@@ -53,7 +53,7 @@ public class HttpHeaderBuilder {
                 "Tomato/" + RevisionUtil.getInstance().getDeployTag()
         );
 
-        List<EnvironmentDto.Env> envs = environmentDataService.getWorkspaceSessionEnvironment()
+        List<EnvironmentDto.Env> envs = environmentRepository.getWorkspaceSessionEnvironment()
                 .map(EnvironmentDto::getEnvs)
                 .orElse(Collections.emptyList());
 

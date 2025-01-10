@@ -16,7 +16,7 @@ public class CollectionNewUI extends JFrame {
     private final JTextField txtName = new JTextField();
     private final CollectionComboBox cbCollectionParent;
 
-    private final CollectionRepository collectionDataService = new CollectionRepository();
+    private final CollectionRepository collectionRepository = new CollectionRepository();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionNewUI(
@@ -57,12 +57,12 @@ public class CollectionNewUI extends JFrame {
             if(parent == null) throw new Exception("Parent is null");
 
             CollectionDto dto = new CollectionDto(txtName.getText());
-            collectionDataService.save(
+            collectionRepository.save(
                     parent.getPath(),
                     dto
             );
 
-            var collectionTree = collectionDataService.getCollectionRootTree(
+            var collectionTree = collectionRepository.getCollectionRootTree(
                     parent,
                     dto.getId()
             );

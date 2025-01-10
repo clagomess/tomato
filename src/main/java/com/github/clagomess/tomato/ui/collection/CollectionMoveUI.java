@@ -17,9 +17,9 @@ public class CollectionMoveUI extends JFrame {
     private final CollectionComboBox cbCollectionDestination;
     private final CollectionTreeDto collectionTree;
 
-    private final Repository dataService = new Repository();
+    private final Repository repository = new Repository();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
-    private final CollectionRepository collectionDataService = new CollectionRepository();
+    private final CollectionRepository collectionRepository = new CollectionRepository();
 
     public CollectionMoveUI(
             Component parent,
@@ -61,8 +61,8 @@ public class CollectionMoveUI extends JFrame {
             CollectionTreeDto destination = cbCollectionDestination.getSelectedItem();
             if(destination == null) throw new Exception("Destination not selected");
 
-            // @TODO: change to own *dataService and apply cache evict
-            dataService.move(this.collectionTree.getPath(), destination.getPath());
+            // @TODO: change to own *repository and apply cache evict
+            repository.move(this.collectionTree.getPath(), destination.getPath());
 
             // update source collection
             collectionPublisher.getOnSave().publish(
@@ -73,7 +73,7 @@ public class CollectionMoveUI extends JFrame {
             );
 
             // update dest collection
-            CollectionTreeDto movedCollection = collectionDataService.getCollectionRootTree(
+            CollectionTreeDto movedCollection = collectionRepository.getCollectionRootTree(
                     destination,
                     collectionTree.getId()
             );

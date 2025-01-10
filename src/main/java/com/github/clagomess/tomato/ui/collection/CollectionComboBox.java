@@ -8,7 +8,7 @@ import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 import javax.swing.*;
 
 public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
-    private final CollectionRepository collectionDataService = new CollectionRepository();
+    private final CollectionRepository collectionRepository = new CollectionRepository();
 
     public CollectionComboBox(CollectionTreeDto selectedCollectionTree) {
         setRenderer(new DtoListCellRenderer<>(CollectionTreeDto::getFlattenedParentString)); //@TODO: problemático
@@ -17,7 +17,7 @@ public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
 
     private void addItens(CollectionTreeDto selectedCollectionTree) {
         try {
-            collectionDataService.getWorkspaceCollectionTree()
+            collectionRepository.getWorkspaceCollectionTree()
                     .flattened()
                     .forEach(this::addItem);
 

@@ -10,7 +10,7 @@ import com.github.clagomess.tomato.ui.component.WaitExecution;
 import java.awt.*;
 
 public class CollectionRenameUI extends NameUI {
-    private final CollectionRepository collectionDataService = new CollectionRepository();
+    private final CollectionRepository collectionRepository = new CollectionRepository();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionRenameUI(
@@ -25,12 +25,12 @@ public class CollectionRenameUI extends NameUI {
 
     private void btnSaveAction(CollectionTreeDto collectionTree){
         new WaitExecution(this, btnSave, () -> {
-            CollectionDto collectionDto = collectionDataService.load(collectionTree)
+            CollectionDto collectionDto = collectionRepository.load(collectionTree)
                     .orElseThrow();
 
             collectionDto.setName(this.txtName.getText());
 
-            collectionDataService.save(
+            collectionRepository.save(
                     collectionTree.getParent().getPath(),
                     collectionDto
             );

@@ -37,13 +37,13 @@ public class WorkspaceSessionRepositoryTest {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(new File("target"));
 
-        WorkspaceRepository workspaceDataServiceMock = Mockito.mock(WorkspaceRepository.class);
-        Mockito.when(workspaceDataServiceMock.getDataSessionWorkspace())
+        WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
+        Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
         WorkspaceSessionRepository workspaceSessionDS = new WorkspaceSessionRepository(
                 new Repository(),
-                workspaceDataServiceMock
+                workspaceRepositoryMock
         );
 
         var result = workspaceSessionDS.getWorkspaceSessionFile();
@@ -54,9 +54,9 @@ public class WorkspaceSessionRepositoryTest {
     public void load() throws IOException {
         var envFile = new File(testData, "workspace-nPUaq0TC/workspace-session.json");
 
-        Repository dataServiceMock = Mockito.mock(Repository.class);
+        Repository repositoryMock = Mockito.mock(Repository.class);
         Mockito.doCallRealMethod()
-                .when(dataServiceMock)
+                .when(repositoryMock)
                 .readFile(Mockito.any(), Mockito.any());
 
         WorkspaceSessionRepository workspaceSessionDSMock = Mockito.mock(
@@ -76,9 +76,9 @@ public class WorkspaceSessionRepositoryTest {
     public void save() throws IOException {
         var envFile = new File(mockData, "workspace-session.json");
 
-        Repository dataServiceMock = Mockito.mock(Repository.class);
+        Repository repositoryMock = Mockito.mock(Repository.class);
         Mockito.doCallRealMethod()
-                .when(dataServiceMock)
+                .when(repositoryMock)
                 .writeFile(Mockito.any(), Mockito.any());
 
         WorkspaceSessionRepository workspaceSessionDSMock = Mockito.mock(

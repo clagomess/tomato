@@ -15,7 +15,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RequestRepositoryTest {
-    private final RequestRepository requestDataService = new RequestRepository();
+    private final RequestRepository requestRepository = new RequestRepository();
 
 
     private final File testData = new File(Objects.requireNonNull(getClass().getResource(
@@ -36,7 +36,7 @@ public class RequestRepositoryTest {
                 "workspace-nPUaq0TC/request-G4A3BCPq.json"
         ));
 
-        var result = requestDataService.load(request);
+        var result = requestRepository.load(request);
         Assertions.assertThat(result).isNotEmpty();
     }
 
@@ -45,7 +45,7 @@ public class RequestRepositoryTest {
         var mockHome = new File("target", "home-" + RandomStringUtils.randomAlphanumeric(8));
         assertTrue(mockHome.mkdirs());
 
-        var result = requestDataService.save(mockHome, new RequestDto());
+        var result = requestRepository.save(mockHome, new RequestDto());
         Assertions.assertThat(result).isFile();
     }
 
@@ -57,7 +57,7 @@ public class RequestRepositoryTest {
                 "workspace-nPUaq0TC"
         ));
 
-        var result = requestDataService.getRequestList(collectionParent);
+        var result = requestRepository.getRequestList(collectionParent);
 
         Assertions.assertThat(result)
                 .hasSize(1)

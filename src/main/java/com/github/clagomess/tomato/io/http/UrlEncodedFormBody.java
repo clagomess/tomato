@@ -15,7 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class UrlEncodedFormBody {
-    private final EnvironmentRepository environmentDataService;
+    private final EnvironmentRepository environmentRepository;
     private final List<RequestDto.KeyValueItem> form;
 
     @Getter
@@ -32,7 +32,7 @@ public class UrlEncodedFormBody {
         StringBuilder urlEncoded = new StringBuilder();
         boolean first = true;
 
-        List<EnvironmentDto.Env> envs = environmentDataService.getWorkspaceSessionEnvironment()
+        List<EnvironmentDto.Env> envs = environmentRepository.getWorkspaceSessionEnvironment()
                 .map(EnvironmentDto::getEnvs)
                 .orElse(Collections.emptyList());
 

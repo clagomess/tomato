@@ -36,13 +36,13 @@ public class EnvironmentRepositoryTest {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(new File("target"));
 
-        WorkspaceRepository workspaceDataServiceMock = Mockito.mock(WorkspaceRepository.class);
-        Mockito.when(workspaceDataServiceMock.getDataSessionWorkspace())
+        WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
+        Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
         EnvironmentRepository environmentDS = new EnvironmentRepository(
                 new Repository(),
-                workspaceDataServiceMock,
+                workspaceRepositoryMock,
                 new WorkspaceSessionRepository()
         );
 
@@ -54,9 +54,9 @@ public class EnvironmentRepositoryTest {
     public void load() throws IOException {
         var envFile = new File(testData, "workspace-nPUaq0TC/environment-7rZO7Z1T.json");
 
-        Repository dataServiceMock = Mockito.mock(Repository.class);
+        Repository repositoryMock = Mockito.mock(Repository.class);
         Mockito.doCallRealMethod()
-                .when(dataServiceMock)
+                .when(repositoryMock)
                 .readFile(Mockito.any(), Mockito.any());
 
         EnvironmentRepository environmentDSMock = Mockito.mock(
@@ -78,9 +78,9 @@ public class EnvironmentRepositoryTest {
         environment.getEnvs().add(new EnvironmentDto.Env("AAA", "BBB"));
         var envFile = new File(mockData, "environment-"+environment.getId()+".json");
 
-        Repository dataServiceMock = Mockito.mock(Repository.class);
+        Repository repositoryMock = Mockito.mock(Repository.class);
         Mockito.doCallRealMethod()
-                .when(dataServiceMock)
+                .when(repositoryMock)
                 .writeFile(Mockito.any(), Mockito.any());
 
         EnvironmentRepository environmentDSMock = Mockito.mock(
@@ -101,13 +101,13 @@ public class EnvironmentRepositoryTest {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(new File(testData, "workspace-nPUaq0TC"));
 
-        WorkspaceRepository workspaceDataServiceMock = Mockito.mock(WorkspaceRepository.class);
-        Mockito.when(workspaceDataServiceMock.getDataSessionWorkspace())
+        WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
+        Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
         EnvironmentRepository environmentDS = new EnvironmentRepository(
                 new Repository(),
-                workspaceDataServiceMock,
+                workspaceRepositoryMock,
                 new WorkspaceSessionRepository()
         );
 

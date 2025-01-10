@@ -14,7 +14,7 @@ public class EnvironmentNewUI extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
 
-    private final EnvironmentRepository environmentDataService = new EnvironmentRepository();
+    private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
 
     public EnvironmentNewUI(Component parent){
@@ -47,7 +47,7 @@ public class EnvironmentNewUI extends JFrame {
             EnvironmentDto environment = new EnvironmentDto();
             environment.setName(txtName.getText());
 
-            environmentDataService.save(environment);
+            environmentRepository.save(environment);
             environmentPublisher.getOnInsert().publish(environment.getId());
 
             setVisible(false);
