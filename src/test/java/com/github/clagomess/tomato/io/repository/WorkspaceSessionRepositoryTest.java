@@ -10,22 +10,26 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WorkspaceSessionRepositoryTest {
 
-    private final File testData = new File(getClass().getResource(
+    private final File testData = new File(Objects.requireNonNull(getClass().getResource(
             "home/data"
-    ).getFile());
+    )).getFile());
 
     private File mockData;
 
     @BeforeEach
-    public void setMockDataDir(){
+    public void setup(){
         mockData = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
         assertTrue(mockData.mkdirs());
+
+        // reset cache
+        WorkspaceSessionRepository.cache.evictAll();
     }
 
     @Test

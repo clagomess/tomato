@@ -1,22 +1,78 @@
 package com.github.clagomess.tomato.io.repository;
 
+import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CollectionRepositoryTest {
-    private final CollectionRepository collectionDataService = new CollectionRepository();
+    private final CollectionRepository collectionRepository = new CollectionRepository();
 
-    private final File testData = new File(getClass().getResource(
+    private final File testData = new File(Objects.requireNonNull(getClass().getResource(
             "home/data"
-    ).getFile());
+    )).getFile());
+
+    private File mockDataDir;
+
+    @BeforeEach
+    public void setup() {
+        mockDataDir = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
+        assertTrue(mockDataDir.mkdirs());
+
+        // reset cache
+        CollectionRepository.cacheCollection.evictAll();
+        CollectionRepository.cacheCollectionTree.evictAll();
+        CollectionRepository.cacheListFiles.evictAll();
+    }
+
+    @Test
+    public void getCollectionFilePath(){
+        Assertions.assertThat(collectionRepository.getCollectionFilePath(testData, "foo"))
+                .hasFileName("collection-foo.json");
+    }
+
+    @Test
+    public void load_FromTree() throws IOException {
+        var tree = new CollectionTreeDto();
+        tree.setPath(new File(testData, "workspace-JNtdCPvw/collection-a70uf9Xv"));
+        tree.setId("a70uf9Xv");
+
+        var result = collectionRepository.load(tree);
+        assertEquals(tree.getId(), result.orElseThrow().getId());
+    }
+
+    @Test
+    public void load_FromDir() throws IOException {
+        var collectionDir = new File(testData, "workspace-JNtdCPvw/collection-a70uf9Xv");
+
+        var result = collectionRepository.load(collectionDir);
+        assertEquals("a70uf9Xv", result.orElseThrow().getId());
+    }
+
+    @Test
+    public void save_whenNew_create() throws IOException {
+        var collection = new CollectionDto();
+
+        var result = collectionRepository.save(mockDataDir, collection);
+        Assertions.assertThat(result).isDirectory();
+    }
+
+    @Test
+    public void listFiles(){
+        var result = collectionRepository.listFiles(new File(testData, "workspace-JNtdCPvw"));
+        Assertions.assertThat(result).isNotEmpty();
+    }
 
     @Test
     public void getCollectionChildrenTree_whenHasResult_return(){
@@ -26,7 +82,7 @@ public class CollectionRepositoryTest {
                 "workspace-nPUaq0TC"
         ));
 
-        var result = collectionDataService.getCollectionChildrenTree(collectionStart).toList();
+        var result = collectionRepository.getCollectionChildrenTree(collectionStart).toList();
 
         Assertions.assertThat(result)
                 .hasSize(1)
@@ -41,7 +97,7 @@ public class CollectionRepositoryTest {
                 .allMatch(item -> item.getRequests() != null)
         ;
 
-        collectionDataService.getCollectionChildrenTree(collectionStart).toList().get(0).getRequests().toList();
+        collectionRepository.getCollectionChildrenTree(collectionStart).toList().get(0).getRequests().toList();
 
         var parent = result.get(0);
         Assertions.assertThat(parent.getRequests())

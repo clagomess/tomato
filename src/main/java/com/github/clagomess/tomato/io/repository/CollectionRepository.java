@@ -31,14 +31,14 @@ public class CollectionRepository {
         );
     }
 
-    private File getCollectionFilePath(File collectionDir, String id){
+    protected File getCollectionFilePath(File collectionDir, String id){
         return new File(collectionDir, String.format(
                 "collection-%s.json",
                 id
         ));
     }
 
-    private static final CacheManager<String, Optional<CollectionDto>> cacheCollection = new CacheManager<>();
+    protected static final CacheManager<String, Optional<CollectionDto>> cacheCollection = new CacheManager<>();
     public Optional<CollectionDto> load(CollectionTreeDto collection) throws IOException {
         return cacheCollection.get(collection.getId(), () -> dataService.readFile(getCollectionFilePath(
                 collection.getPath(),
@@ -46,8 +46,8 @@ public class CollectionRepository {
         ), new TypeReference<>(){}));
     }
 
-    private static final CacheManager<String, Optional<CollectionTreeDto>> cacheCollectionTree = new CacheManager<>();
-    private Optional<CollectionTreeDto> load(File collectionDir) throws IOException {
+    protected static final CacheManager<String, Optional<CollectionTreeDto>> cacheCollectionTree = new CacheManager<>();
+    protected Optional<CollectionTreeDto> load(File collectionDir) throws IOException {
         String id = collectionDir.getName().replace("collection-", "");
 
         return cacheCollectionTree.get(id, () -> dataService.readFile(
@@ -84,8 +84,8 @@ public class CollectionRepository {
         return collectionDir;
     }
 
-    private static final CacheManager<File, List<File>> cacheListFiles = new CacheManager<>();
-    private List<File> listFiles(File rootPath) {
+    protected static final CacheManager<File, List<File>> cacheListFiles = new CacheManager<>();
+    protected List<File> listFiles(File rootPath) {
         return cacheListFiles.get(rootPath, () ->
                 Arrays.stream(dataService.listFiles(rootPath))
                         .filter(File::isDirectory)

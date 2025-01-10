@@ -47,6 +47,10 @@ public class CacheManager<K, V> {
         evict(defaultKey);
     }
 
+    public void evictAll() {
+        cache.clear();
+    }
+
     @FunctionalInterface
     public interface TaskFI <V, E extends Throwable> {
         V run() throws E;

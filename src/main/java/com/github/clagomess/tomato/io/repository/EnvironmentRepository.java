@@ -21,7 +21,7 @@ public class EnvironmentRepository {
     private final Repository dataService;
     private final WorkspaceRepository workspaceDataService;
     private final WorkspaceSessionRepository workspaceSessionDataService;
-    private static final CacheManager<String, Optional<EnvironmentDto>> cache = new CacheManager<>();
+    protected static final CacheManager<String, Optional<EnvironmentDto>> cache = new CacheManager<>();
 
     public EnvironmentRepository() {
         this(

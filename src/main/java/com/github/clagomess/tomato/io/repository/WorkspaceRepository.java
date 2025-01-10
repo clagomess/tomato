@@ -46,13 +46,13 @@ public class WorkspaceRepository {
                 )
         ), dto);
 
-        cachelistDirectories.evict();
+        cacheListDirectories.evict();
         cache.evict(dto.getId());
     }
 
-    private static final CacheManager<String, List<File>> cachelistDirectories = new CacheManager<>("workspaceDirs");
+    protected static final CacheManager<String, List<File>> cacheListDirectories = new CacheManager<>("workspaceDirs");
     private List<File> listDirectories() throws IOException {
-        return cachelistDirectories.get(() -> {
+        return cacheListDirectories.get(() -> {
             File dataDir = dataService.getDataDir();
 
             List<File> result = Arrays.stream(dataService.listFiles(dataDir))
@@ -72,7 +72,7 @@ public class WorkspaceRepository {
         });
     }
 
-    private static final CacheManager<String, Optional<WorkspaceDto>> cache = new CacheManager<>();
+    protected static final CacheManager<String, Optional<WorkspaceDto>> cache = new CacheManager<>();
     public Optional<WorkspaceDto> load(File workspaceDir) throws IOException {
         String id = workspaceDir.getName().replace("workspace-", "");
 

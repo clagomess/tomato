@@ -5,10 +5,12 @@ import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -16,9 +18,15 @@ public class RequestRepositoryTest {
     private final RequestRepository requestDataService = new RequestRepository();
 
 
-    private final File testData = new File(getClass().getResource(
+    private final File testData = new File(Objects.requireNonNull(getClass().getResource(
             "home/data"
-    ).getFile());
+    )).getFile());
+
+    @BeforeEach
+    public void setup(){
+        RequestRepository.cacheHead.evictAll();
+        RequestRepository.cacheListFiles.evictAll();
+    }
 
     @Test
     public void load() throws IOException {

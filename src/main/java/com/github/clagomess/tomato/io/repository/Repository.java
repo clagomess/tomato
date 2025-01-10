@@ -62,7 +62,7 @@ public class Repository { //@TODO: make package private
         }
     }
 
-    private static final CacheManager<String, File> cacheHomeDir = new CacheManager<>("homeDir");
+    protected static final CacheManager<String, File> cacheHomeDir = new CacheManager<>("homeDir");
     protected File getHomeDir(){
         return cacheHomeDir.get(() -> createDirectoryIfNotExists(new File(
                 System.getProperty("user.home"),
@@ -70,7 +70,7 @@ public class Repository { //@TODO: make package private
         )));
     }
 
-    private static final CacheManager<String, ConfigurationDto> cacheConfiguration = new CacheManager<>("configuration");
+    protected static final CacheManager<String, ConfigurationDto> cacheConfiguration = new CacheManager<>("configuration");
     protected ConfigurationDto getConfiguration() throws IOException {
         return cacheConfiguration.get(() -> {
             var file = new File(
@@ -100,7 +100,7 @@ public class Repository { //@TODO: make package private
         });
     }
 
-    private static final CacheManager<String, File> cacheDatadir = new CacheManager<>("dataDir");
+    protected static final CacheManager<String, File> cacheDatadir = new CacheManager<>("dataDir");
     protected File getDataDir() throws IOException {
         return cacheDatadir.get(() -> createDirectoryIfNotExists(
                 getConfiguration().getDataDirectory()

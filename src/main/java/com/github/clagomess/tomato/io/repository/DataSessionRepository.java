@@ -12,31 +12,28 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DataSessionRepository {
     private final Repository dataService;
-    private static final CacheManager<String, DataSessionDto> cache = new CacheManager<>("dataSession");
+    protected static final CacheManager<String, DataSessionDto> cache = new CacheManager<>("dataSession");
 
     public DataSessionRepository() {
         this(new Repository());
     }
 
-    public void save(DataSessionDto dto) throws IOException {
-        File file = new File(
+    protected File getDataSessionFile() throws IOException {
+        return new File(
                 dataService.getDataDir(),
                 "data-session.json"
         );
+    }
 
-        dataService.writeFile(file, dto);
+    public void save(DataSessionDto dto) throws IOException {
+        dataService.writeFile(getDataSessionFile(), dto);
         cache.evict();
     }
 
     public DataSessionDto load() throws IOException {
         return cache.get(() -> {
-            File file = new File(
-                    dataService.getDataDir(),
-                    "data-session.json"
-            );
-
             Optional<DataSessionDto> dataSession = dataService.readFile(
-                    file,
+                    getDataSessionFile(),
                     new TypeReference<>(){}
             );
 

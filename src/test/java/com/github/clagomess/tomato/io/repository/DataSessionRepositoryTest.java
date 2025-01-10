@@ -10,82 +10,100 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DataSessionRepositoryTest {
+    private final Repository repositoryMock = Mockito.mock(Repository.class);
+    private final DataSessionRepository dataSessionRepositoryMock = Mockito.mock(
+            DataSessionRepository.class,
+            Mockito.withSettings().useConstructor(
+                    repositoryMock
+            )
+    );
+
     private File mockDataDir;
+    private File mockDataSessionFile;
 
     @BeforeEach
-    public void setMockDataDir(){
+    public void setup() throws IOException {
         mockDataDir = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
         assertTrue(mockDataDir.mkdirs());
+
+        mockDataSessionFile = new File(mockDataDir, "data-session.json");
+
+        // mock Repository
+        Mockito.reset(repositoryMock);
+
+        Mockito.doCallRealMethod()
+                .when(repositoryMock)
+                .writeFile(Mockito.any(), Mockito.any());
+
+        Mockito.when(repositoryMock.readFile(Mockito.any(), Mockito.any()))
+                .thenCallRealMethod();
+
+        // mock DataSessionRepository
+        Mockito.reset(dataSessionRepositoryMock);
+
+        Mockito.when(dataSessionRepositoryMock.getDataSessionFile())
+                .thenReturn(mockDataSessionFile);
+
+        // reset cache
+        DataSessionRepository.cache.evictAll();
+    }
+
+    @Test
+    public void getDataSessionFile() throws IOException {
+        var dataSessionRepository = new DataSessionRepository();
+        Assertions.assertThat(dataSessionRepository.getDataSessionFile())
+                .hasFileName("data-session.json");
     }
 
     @Test
     public void save() throws IOException {
-        Repository dataServiceMock = Mockito.mock(Repository.class);
-        Mockito.when(dataServiceMock.getDataDir())
-                .thenReturn(mockDataDir);
         Mockito.doCallRealMethod()
-                .when(dataServiceMock)
-                .writeFile(Mockito.any(), Mockito.any());
+                .when(dataSessionRepositoryMock)
+                .save(Mockito.any());
 
-
-        DataSessionRepository dataSessionDS = new DataSessionRepository(
-                dataServiceMock
-        );
-
+        // test
         var dto = new DataSessionDto();
         dto.setWorkspaceId(RandomStringUtils.randomAlphanumeric(8));
 
-        dataSessionDS.save(dto);
+        dataSessionRepositoryMock.save(dto);
 
-        var result = new File(
-                mockDataDir,
-                "data-session.json"
-        );
-
-        assertTrue(result.isFile());
+        assertTrue(mockDataSessionFile.isFile());
     }
 
     @Test
     public void load_whenNotExists_ReturnsAndCreateDefault() throws IOException {
-        Repository dataServiceMock = Mockito.mock(Repository.class);
-        Mockito.when(dataServiceMock.getDataDir())
-                .thenReturn(mockDataDir);
+        Mockito.when(dataSessionRepositoryMock.load())
+                .thenCallRealMethod();
+
         Mockito.doCallRealMethod()
-                .when(dataServiceMock)
-                .writeFile(Mockito.any(), Mockito.any());
+                .when(dataSessionRepositoryMock)
+                .save(Mockito.any());
 
-        DataSessionRepository dataSessionDS = new DataSessionRepository(
-                dataServiceMock
-        );
-
-        var result = dataSessionDS.load();
+        // test
+        var result = dataSessionRepositoryMock.load();
+        Assertions.assertThat(mockDataSessionFile).isFile();
         Assertions.assertThat(result.getWorkspaceId()).isNull();
     }
 
     @Test
     public void load_whenExists_Returns() throws IOException {
-        var dto = new DataSessionDto();
-        dto.setWorkspaceId(RandomStringUtils.randomAlphanumeric(8));
+        Mockito.doCallRealMethod()
+                .when(dataSessionRepositoryMock)
+                .save(Mockito.any());
 
-        new Repository().writeFile(new File(
-                mockDataDir, "data-session.json"
-        ), dto);
-
-        Repository dataServiceMock = Mockito.mock(Repository.class);
-        Mockito.when(dataServiceMock.getDataDir())
-                .thenReturn(mockDataDir);
-        Mockito.when(dataServiceMock.readFile(Mockito.any(), Mockito.any()))
+        Mockito.when(dataSessionRepositoryMock.load())
                 .thenCallRealMethod();
 
+        // teste
+        var dto = new DataSessionDto();
+        dataSessionRepositoryMock.save(dto);
 
-        DataSessionRepository dataSessionDS = new DataSessionRepository(
-                dataServiceMock
-        );
+        var result = dataSessionRepositoryMock.load();
 
-        var result = dataSessionDS.load();
-        Assertions.assertThat(result.getWorkspaceId()).isEqualTo(dto.getWorkspaceId());
+        assertEquals(dto.getId(), result.getId());
     }
 }

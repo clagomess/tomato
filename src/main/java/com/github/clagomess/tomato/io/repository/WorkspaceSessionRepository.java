@@ -14,7 +14,7 @@ import java.util.Optional;
 public class WorkspaceSessionRepository {
     private final Repository dataService;
     private final WorkspaceRepository workspaceDataService;
-    private static final CacheManager<String, WorkspaceSessionDto> cache = new CacheManager<>("workspaceSession");
+    protected static final CacheManager<String, WorkspaceSessionDto> cache = new CacheManager<>("workspaceSession");
 
     public WorkspaceSessionRepository() {
         this(

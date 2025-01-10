@@ -19,9 +19,13 @@ public class WorkspaceRepositoryTest {
     private File mockDataDir;
 
     @BeforeEach
-    public void setMockDataDir(){
+    public void setup(){
         mockDataDir = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
         assertTrue(mockDataDir.mkdirs());
+
+        // reset cache
+        WorkspaceRepository.cacheListDirectories.evictAll();
+        WorkspaceRepository.cache.evictAll();
     }
 
     @Test

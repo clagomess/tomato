@@ -34,7 +34,7 @@ public class RequestRepository {
         );
     }
 
-    private static final CacheManager<File, Optional<RequestHeadDto>> cacheHead = new CacheManager<>();
+    protected static final CacheManager<File, Optional<RequestHeadDto>> cacheHead = new CacheManager<>();
     private Optional<RequestHeadDto> loadHead(File file) throws IOException {
         return cacheHead.get(file, () -> dataService.readFile(
                 file,
@@ -61,7 +61,7 @@ public class RequestRepository {
         return requestFile;
     }
 
-    private static final CacheManager<File, List<File>> cacheListFiles = new CacheManager<>();
+    protected static final CacheManager<File, List<File>> cacheListFiles = new CacheManager<>();
     private List<File> listFiles(File rootPath) {
         return cacheListFiles.get(rootPath, () ->
                 Arrays.stream(dataService.listFiles(rootPath))

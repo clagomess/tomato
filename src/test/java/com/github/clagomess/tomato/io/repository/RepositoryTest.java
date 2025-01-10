@@ -21,6 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RepositoryTest {
     private final Repository dataService = new Repository();
 
+    @BeforeEach
+    public void setup(){
+        Repository.cacheHomeDir.evictAll();
+        Repository.cacheConfiguration.evictAll();
+        Repository.cacheDatadir.evictAll();
+    }
+
     @Test
     public void read_e_write_File_json() throws IOException {
         var dto = new ConfigurationDto();
