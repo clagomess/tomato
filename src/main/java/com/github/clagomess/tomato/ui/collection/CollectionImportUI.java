@@ -57,7 +57,7 @@ public class CollectionImportUI extends JFrame {
     }
 
     private void btnImportAction(){
-        new WaitExecution(this, btnImport).setExecute(() -> {
+        new WaitExecution(this, btnImport, () -> {
             CollectionTreeDto parent = cbCollectionParent.getSelectedItem();
             if(parent == null) throw new Exception("Parent is null");
 

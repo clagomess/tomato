@@ -25,7 +25,7 @@ public class CollectionRenameUI extends NameUI {
     }
 
     private void btnSaveAction(CollectionTreeDto collectionTree){
-        new WaitExecution(this, btnSave).setExecute(() -> {
+        new WaitExecution(this, btnSave, () -> {
             CollectionDto collectionDto = collectionDataService.load(collectionTree)
                     .orElseThrow();
 

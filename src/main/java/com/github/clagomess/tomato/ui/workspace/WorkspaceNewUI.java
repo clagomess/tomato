@@ -47,7 +47,7 @@ public class WorkspaceNewUI extends JFrame {
     }
 
     private void btnSaveAction(){
-        new WaitExecution(this, btnSave).setExecute(() -> {
+        new WaitExecution(this, btnSave, () -> {
             WorkspaceDto dto = new WorkspaceDto();
             dto.setName(txtName.getText());
             workspaceDataService.saveWorkspace(dto);

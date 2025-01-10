@@ -60,7 +60,7 @@ public class RequestSaveUI extends JFrame {
     }
 
     private void btnSaveAction(){
-        new WaitExecution(this, btnSave).setExecute(() -> {
+        new WaitExecution(this, btnSave, () -> {
             this.requestDto.setName(this.txtName.getText());
 
             CollectionTreeDto parent = cbCollection.getSelectedItem();

@@ -147,7 +147,7 @@ public class RequestSplitPaneUI extends JPanel {
             return;
         }
 
-        new WaitExecution(this, btnSaveRequest).setExecute(() -> {
+        new WaitExecution(this, btnSaveRequest, () -> {
             requestDataService.save(requestHeadDto.getPath(), requestDto);
 
             RequestMapper.INSTANCE.toRequestHead(

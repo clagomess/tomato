@@ -43,7 +43,7 @@ public class WorkspaceSwitchUI extends JFrame {
     }
 
     private void btnSwitchAction(){
-        new WaitExecution(this, btnSwitch).setExecute(() -> {
+        new WaitExecution(this, btnSwitch, () -> {
             WorkspaceDto selected = cbWorkspace.getSelectedItem();
             if(selected == null) return;
 

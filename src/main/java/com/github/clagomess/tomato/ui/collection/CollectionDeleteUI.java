@@ -35,7 +35,7 @@ public class CollectionDeleteUI {
     }
 
     private void delete(){
-        new WaitExecution(parent, null).setExecute(() -> {
+        new WaitExecution(parent, () -> {
             dataService.delete(collectionTree.getPath());
 
             // update source collection

@@ -35,7 +35,7 @@ public class RequestDeleteUI {
     }
 
     private void delete(){
-        new WaitExecution(parent, null).setExecute(() -> {
+        new WaitExecution(parent, () -> {
             dataService.delete(requestHead.getPath());
 
             // update source collection

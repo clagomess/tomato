@@ -58,7 +58,7 @@ public class RequestMoveUI extends JFrame {
     }
 
     private void btnMoveAction(){
-        new WaitExecution(this, btnMove).setExecute(() -> {
+        new WaitExecution(this, () -> {
             CollectionTreeDto destination = cbCollectionDestination.getSelectedItem();
             if(destination == null) throw new Exception("Destination not selected");
 

@@ -52,7 +52,7 @@ public class CollectionNewUI extends JFrame {
     }
 
     private void btnSaveAction(){
-        new WaitExecution(this, btnSave).setExecute(() -> {
+        new WaitExecution(this, btnSave, () -> {
             CollectionTreeDto parent = cbCollectionParent.getSelectedItem();
             if(parent == null) throw new Exception("Parent is null");
 

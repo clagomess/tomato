@@ -97,7 +97,7 @@ public class ResponseTabContent extends JPanel {
             return;
         }
 
-        new WaitExecution(this, btnDownload).setExecute(() -> {
+        new WaitExecution(this, btnDownload, () -> {
             File bodyFile = responseDto.getHttpResponse().getBody();
             Files.copy(bodyFile.toPath(), file.getSelectedFile().toPath());
         }).execute();

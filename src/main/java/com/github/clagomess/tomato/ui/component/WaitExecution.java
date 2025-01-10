@@ -4,36 +4,47 @@ import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class WaitExecution {
     private final Component component;
     private final JButton button;
-    private Task execute;
-    private Runnable onFinish;
+    private final Task execute;
 
-    public WaitExecution setExecute(Task execute) {
-        this.execute = execute;
-        return this;
+    public WaitExecution(Component component, Task execute) {
+        this(component, null, execute);
     }
 
-    public WaitExecution setOnFinish(Runnable onFinish) {
-        this.onFinish = onFinish;
-        return this;
+    public WaitExecution(Task execute) {
+        this(null, null, execute);
+    }
+
+    private void setCursor(Cursor cursor) {
+        if(component == null) {
+            Arrays.stream(Window.getWindows())
+                    .forEach(window -> window.setCursor(cursor));
+        }else{
+            component.setCursor(cursor);
+        }
+    }
+
+    private void setButtonEnabled(boolean enabled) {
+        if(button == null) return;
+        button.setEnabled(enabled);
     }
 
     public void execute(){
         SwingUtilities.invokeLater(() -> {
             try {
-                component.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                if(button != null) button.setEnabled(false);
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                setButtonEnabled(false);
                 execute.run();
             } catch (Throwable e){
                 DialogFactory.createDialogException(component, e);
             } finally {
-                if(button != null) button.setEnabled(true);
-                if(onFinish != null) onFinish.run();
-                component.setCursor(Cursor.getDefaultCursor());
+                setButtonEnabled(true);
+                setCursor(Cursor.getDefaultCursor());
             }
         });
     }

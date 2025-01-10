@@ -24,7 +24,7 @@ public class RequestRenameUI extends NameUI {
     }
 
     private void btnSaveAction(RequestHeadDto requestHead){
-        new WaitExecution(this, btnSave).setExecute(() -> {
+        new WaitExecution(this, btnSave, () -> {
             RequestDto requestDto = requestDataService.load(requestHead)
                     .orElseThrow();
 

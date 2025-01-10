@@ -43,7 +43,7 @@ public class EnvironmentNewUI extends JFrame {
     }
 
     private void btnSaveAction(){
-        new WaitExecution(this, btnSave).setExecute(() -> {
+        new WaitExecution(this, btnSave, () -> {
             EnvironmentDto environment = new EnvironmentDto();
             environment.setName(txtName.getText());
 

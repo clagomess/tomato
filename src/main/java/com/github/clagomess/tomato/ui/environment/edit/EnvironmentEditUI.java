@@ -53,7 +53,7 @@ public class EnvironmentEditUI extends JFrame {
     }
 
     private void btnSaveAction(){
-        new WaitExecution(this, btnSave).setExecute(() -> {
+        new WaitExecution(this, btnSave, () -> {
             environment.setName(txtName.getText());
 
             environmentDataService.save(environment);
