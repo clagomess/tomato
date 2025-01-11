@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.dto.data;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.temporal.ChronoUnit;
@@ -30,5 +31,17 @@ public class MetadataDtoTest {
                 metadata.getUpdateTime().truncatedTo(ChronoUnit.SECONDS),
                 parsed.getUpdateTime()
         );
+    }
+
+    @Test
+    public void equalsHashCode(){
+        var dtoA = new MetadataDto(){};
+        dtoA.setId("aaa");
+
+        var dtoB = new MetadataDto(){};
+        dtoB.setId("aaa");
+
+        Assertions.assertThat(dtoA)
+                .isEqualTo(dtoB);
     }
 }

@@ -28,4 +28,16 @@ public class WorkspaceDtoTest {
                 mapper.readTree(json)
         )).isEmpty();
     }
+
+    @Test
+    public void equalsHashCode(){
+        var dtoA = new WorkspaceDto();
+        dtoA.setId("aaa");
+
+        var dtoB = new WorkspaceDto();
+        dtoB.setId("aaa");
+
+        Assertions.assertThat(dtoA)
+                .isEqualTo(dtoB);
+    }
 }

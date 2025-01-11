@@ -28,4 +28,16 @@ public class DataSessionDtoTest {
                 mapper.readTree(json)
         )).isEmpty();
     }
+
+    @Test
+    public void equalsHashCode(){
+        var dtoA = new DataSessionDto();
+        dtoA.setId("aaa");
+
+        var dtoB = new DataSessionDto();
+        dtoB.setId("aaa");
+
+        Assertions.assertThat(dtoA)
+                .isEqualTo(dtoB);
+    }
 }

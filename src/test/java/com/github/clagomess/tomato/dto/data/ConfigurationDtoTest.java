@@ -29,4 +29,16 @@ public class ConfigurationDtoTest {
                 mapper.readTree(json)
         )).isEmpty();
     }
+
+    @Test
+    public void equalsHashCode(){
+        var dtoA = new ConfigurationDto();
+        dtoA.setId("aaa");
+
+        var dtoB = new ConfigurationDto();
+        dtoB.setId("aaa");
+
+        Assertions.assertThat(dtoA)
+                .isEqualTo(dtoB);
+    }
 }

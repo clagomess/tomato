@@ -28,4 +28,16 @@ public class CollectionDtoTest {
                 mapper.readTree(json)
         )).isEmpty();
     }
+
+    @Test
+    public void equalsHashCode(){
+        var dtoA = new CollectionDto();
+        dtoA.setId("aaa");
+
+        var dtoB = new CollectionDto();
+        dtoB.setId("aaa");
+
+        Assertions.assertThat(dtoA)
+                .isEqualTo(dtoB);
+    }
 }

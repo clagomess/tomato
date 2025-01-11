@@ -5,10 +5,7 @@ import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class RequestDto extends MetadataDto {
     private String name = "New Request";
     private HttpMethodEnum method = HttpMethodEnum.GET;
@@ -41,6 +39,7 @@ public class RequestDto extends MetadataDto {
 
     @Getter
     @Setter
+    @EqualsAndHashCode
     public static class Body {
         private BodyTypeEnum type = BodyTypeEnum.NO_BODY;
         private RawBody raw;
@@ -86,6 +85,7 @@ public class RequestDto extends MetadataDto {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
+    @EqualsAndHashCode
     public static class RawBody {
         private RawBodyTypeEnum type = RawBodyTypeEnum.TEXT;
         private String raw;
@@ -95,6 +95,7 @@ public class RequestDto extends MetadataDto {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
+    @EqualsAndHashCode
     public static class BinaryBody {
         private String contentType = "application/octet-stream";
         private String file;
@@ -104,6 +105,7 @@ public class RequestDto extends MetadataDto {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
+    @EqualsAndHashCode
     public static class KeyValueItem {
         private KeyValueTypeEnum type = KeyValueTypeEnum.TEXT;
         private String key;

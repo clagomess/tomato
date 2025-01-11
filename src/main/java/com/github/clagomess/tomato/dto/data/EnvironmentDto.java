@@ -1,9 +1,6 @@
 package com.github.clagomess.tomato.dto.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class EnvironmentDto extends MetadataDto {
     private String name = "New Environment";
     private List<Env> envs = new ArrayList<>();
@@ -19,6 +17,7 @@ public class EnvironmentDto extends MetadataDto {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
+    @EqualsAndHashCode
     public static class Env {
         private String key;
         private String value;

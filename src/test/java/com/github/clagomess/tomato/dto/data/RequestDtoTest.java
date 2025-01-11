@@ -126,4 +126,40 @@ public class RequestDtoTest {
                 mapper.readTree(json)
         )).isEmpty();
     }
+
+    @Test
+    public void equalsHashCode(){
+        var dtoA = new RequestDto();
+        dtoA.setId("aaa");
+
+        var dtoB = new RequestDto();
+        dtoB.setId("aaa");
+
+        Assertions.assertThat(dtoA)
+                .isEqualTo(dtoB);
+    }
+
+    @Test
+    public void Body_equalsHashCode(){
+        Assertions.assertThat(new RequestDto.Body())
+                .isEqualTo(new RequestDto.Body());
+    }
+
+    @Test
+    public void RawBody_equalsHashCode(){
+        Assertions.assertThat(new RequestDto.RawBody())
+                .isEqualTo(new RequestDto.RawBody());
+    }
+
+    @Test
+    public void BinaryBody_equalsHashCode(){
+        Assertions.assertThat(new RequestDto.BinaryBody())
+                .isEqualTo(new RequestDto.BinaryBody());
+    }
+
+    @Test
+    public void KeyValueItem_equalsHashCode(){
+        Assertions.assertThat(new RequestDto.KeyValueItem())
+                .isEqualTo(new RequestDto.KeyValueItem());
+    }
 }

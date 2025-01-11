@@ -33,4 +33,22 @@ public class EnvironmentDtoTest {
                 mapper.readTree(json)
         )).isEmpty();
     }
+
+    @Test
+    public void equalsHashCode(){
+        var dtoA = new EnvironmentDto();
+        dtoA.setId("aaa");
+
+        var dtoB = new EnvironmentDto();
+        dtoB.setId("aaa");
+
+        Assertions.assertThat(dtoA)
+                .isEqualTo(dtoB);
+    }
+
+    @Test
+    public void Env_equalsHashCode(){
+        Assertions.assertThat(new EnvironmentDto.Env())
+                .isEqualTo(new EnvironmentDto.Env());
+    }
 }
