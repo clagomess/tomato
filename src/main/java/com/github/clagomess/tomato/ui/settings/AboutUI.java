@@ -15,6 +15,7 @@ public class AboutUI extends JFrame {
         setTitle("About");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         JPanel panel = new JPanel(new MigLayout(

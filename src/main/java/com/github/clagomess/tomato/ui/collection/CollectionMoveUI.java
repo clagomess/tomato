@@ -28,6 +28,7 @@ public class CollectionMoveUI extends JFrame {
         setTitle("Move Collection");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         this.collectionTree = collectionTree;

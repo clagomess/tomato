@@ -26,6 +26,7 @@ public class CollectionNewUI extends JFrame {
         setTitle("New Collection");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         cbCollectionParent = new CollectionComboBox(selectedCollectionTreeParent);

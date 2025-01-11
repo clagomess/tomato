@@ -29,6 +29,7 @@ public class RequestMoveUI extends JFrame {
         setTitle("Move Request");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         this.requestHead = requestHead;

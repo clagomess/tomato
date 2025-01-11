@@ -21,6 +21,7 @@ public class EnvironmentNewUI extends JFrame {
         setTitle("New Environment");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         JPanel panel = new JPanel(new MigLayout(

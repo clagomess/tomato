@@ -25,6 +25,7 @@ public class WorkspaceNewUI extends JFrame {
         setTitle("New Workspace");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
         JPanel panel = new JPanel(new MigLayout(
