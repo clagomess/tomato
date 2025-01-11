@@ -11,6 +11,7 @@ import com.github.clagomess.tomato.ui.environment.EnvironmentNewUI;
 import com.github.clagomess.tomato.ui.main.collection.CollectionTreeUI;
 import com.github.clagomess.tomato.ui.main.request.RequestTabPaneUI;
 import com.github.clagomess.tomato.ui.settings.AboutUI;
+import com.github.clagomess.tomato.ui.settings.DebugPublisherUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceNewUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceSwitchUI;
 
@@ -87,6 +88,9 @@ public class MainUI extends JFrame {
             }});
             add(new JMenuItem("About"){{
                 addActionListener(l -> new AboutUI());
+            }});
+            add(new JMenuItem("Debug -> Publisher"){{
+                addActionListener(l -> new DebugPublisherUI());
             }});
         }});
 
