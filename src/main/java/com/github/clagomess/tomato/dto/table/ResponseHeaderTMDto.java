@@ -2,9 +2,11 @@ package com.github.clagomess.tomato.dto.table;
 
 import com.github.clagomess.tomato.ui.component.tablemanager.ModelColumn;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class ResponseHeaderTMDto {
     @ModelColumn(name = "Header")

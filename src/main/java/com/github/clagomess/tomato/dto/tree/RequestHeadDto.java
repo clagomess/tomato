@@ -2,11 +2,13 @@ package com.github.clagomess.tomato.dto.tree;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 
-@Data
+@Getter
+@Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestHeadDto {
     private String id;

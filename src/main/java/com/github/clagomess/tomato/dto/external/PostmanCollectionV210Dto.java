@@ -3,17 +3,20 @@ package com.github.clagomess.tomato.dto.external;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostmanCollectionV210Dto {
     private Info info;
     private List<Item> item;
 
-    @Data
+    @Getter
+    @Setter
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Info {
         @JsonProperty("_postman_id")
@@ -22,7 +25,8 @@ public class PostmanCollectionV210Dto {
         private String schema = "https://schema.getpostman.com/json/collection/v2.1.0/collection.json";
     }
 
-    @Data
+    @Getter
+    @Setter
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Item {
         private String name;
@@ -33,7 +37,8 @@ public class PostmanCollectionV210Dto {
         @JsonInclude(JsonInclude.Include.NON_NULL)
         private Request request;
 
-        @Data
+        @Getter
+        @Setter
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Request {
             private Auth auth;
@@ -44,7 +49,8 @@ public class PostmanCollectionV210Dto {
             private List<Header> header;
             private Url url;
 
-            @Data
+            @Getter
+            @Setter
             @JsonIgnoreProperties(ignoreUnknown = true)
             public static class Auth {
                 private String type;
@@ -52,7 +58,8 @@ public class PostmanCollectionV210Dto {
                 @JsonInclude(JsonInclude.Include.NON_NULL)
                 private List<Bearer> bearer;
 
-                @Data
+                @Getter
+                @Setter
                 @JsonIgnoreProperties(ignoreUnknown = true)
                 public static class Bearer {
                     private String key;
@@ -61,7 +68,8 @@ public class PostmanCollectionV210Dto {
                 }
             }
 
-            @Data
+            @Getter
+            @Setter
             @JsonIgnoreProperties(ignoreUnknown = true)
             public static class Body {
                 private String mode;
@@ -78,7 +86,8 @@ public class PostmanCollectionV210Dto {
                 @JsonInclude(JsonInclude.Include.NON_NULL)
                 private Options options;
 
-                @Data
+                @Getter
+                @Setter
                 @JsonIgnoreProperties(ignoreUnknown = true)
                 public static class UrlEncoded {
                     private String key;
@@ -89,7 +98,8 @@ public class PostmanCollectionV210Dto {
                     private Boolean disabled;
                 }
 
-                @Data
+                @Getter
+                @Setter
                 @JsonIgnoreProperties(ignoreUnknown = true)
                 public static class FormData {
                     private String key;
@@ -101,12 +111,14 @@ public class PostmanCollectionV210Dto {
                     private Boolean disabled;
                 }
 
-                @Data
+                @Getter
+                @Setter
                 @JsonIgnoreProperties(ignoreUnknown = true)
                 public static class Options {
                     private Raw raw;
 
-                    @Data
+                    @Getter
+                    @Setter
                     @JsonIgnoreProperties(ignoreUnknown = true)
                     public static class Raw {
                         private String language;
@@ -114,7 +126,8 @@ public class PostmanCollectionV210Dto {
                 }
             }
 
-            @Data
+            @Getter
+            @Setter
             @JsonIgnoreProperties(ignoreUnknown = true)
             public static class Header {
                 private String key;
@@ -124,7 +137,8 @@ public class PostmanCollectionV210Dto {
                 private Boolean disabled;
             }
 
-            @Data
+            @Getter
+            @Setter
             @JsonIgnoreProperties(ignoreUnknown = true)
             public static class Url {
                 private String raw;
@@ -132,7 +146,8 @@ public class PostmanCollectionV210Dto {
                 @JsonInclude(JsonInclude.Include.NON_NULL)
                 private List<Variable> variable;
 
-                @Data
+                @Getter
+                @Setter
                 @JsonIgnoreProperties(ignoreUnknown = true)
                 public static class Variable {
                     private String key;

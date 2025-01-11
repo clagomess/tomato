@@ -1,12 +1,12 @@
 package com.github.clagomess.tomato.dto.data;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 public class ConfigurationDto extends MetadataDto {
     private File dataDirectory;
 }

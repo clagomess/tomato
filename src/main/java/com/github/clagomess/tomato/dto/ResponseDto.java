@@ -2,7 +2,9 @@ package com.github.clagomess.tomato.dto;
 
 import com.github.clagomess.tomato.enums.HttpStatusEnum;
 import com.github.clagomess.tomato.io.http.MediaType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -15,7 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Data
+@Getter
+@Setter
+@ToString(of = {"requestId"})
 public class ResponseDto {
     private String requestId;
     private LocalDateTime createTime = LocalDateTime.now();
@@ -29,7 +33,8 @@ public class ResponseDto {
         this.requestId = requestId;
     }
 
-    @Data
+    @Getter
+    @Setter
     @Slf4j
     public static class Response {
         private final long requestTime;

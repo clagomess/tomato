@@ -1,13 +1,13 @@
 package com.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 public class WorkspaceDto extends MetadataDto {
     private String name;
 

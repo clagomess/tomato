@@ -11,7 +11,7 @@ public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
     private final CollectionRepository collectionRepository = new CollectionRepository();
 
     public CollectionComboBox(CollectionTreeDto selectedCollectionTree) {
-        setRenderer(new DtoListCellRenderer<>(CollectionTreeDto::getFlattenedParentString)); //@TODO: problemático
+        setRenderer(new DtoListCellRenderer<>(CollectionTreeDto::getFlattenedParentString));
         SwingUtilities.invokeLater(() -> addItens(selectedCollectionTree));
     }
 

@@ -1,14 +1,14 @@
 package com.github.clagomess.tomato.dto.tree;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.File;
 import java.util.stream.Stream;
 
-@Data
-@EqualsAndHashCode(of = {"id"})
+@Getter
+@Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CollectionTreeDto {
     private String id;
