@@ -1,7 +1,5 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
-import com.github.clagomess.tomato.publisher.CollectionPublisher;
-import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.main.collection.node.CollectionTreeNode;
 import com.github.clagomess.tomato.ui.main.collection.node.RequestTreeNode;
 
@@ -9,17 +7,8 @@ import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 public class CollectionTreeExpansionListener implements TreeExpansionListener {
-    private final DefaultTreeModel treeModel;
-    private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
-    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
-
-    public CollectionTreeExpansionListener(DefaultTreeModel treeModel) {
-        this.treeModel = treeModel;
-    }
-
     @Override
     public void treeExpanded(TreeExpansionEvent event) {
         CollectionTreeNode node = (CollectionTreeNode) event.getPath().getLastPathComponent();

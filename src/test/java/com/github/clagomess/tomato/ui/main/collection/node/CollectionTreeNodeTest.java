@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.ui.main.collection;
+package com.github.clagomess.tomato.ui.main.collection.node;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +11,10 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class CollectionTreeExpansionListenerTest {
-    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
-    private final DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
+public class CollectionTreeNodeTest {
+    private final DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
 
-    private CollectionTreeDto collectionTree = new CollectionTreeDto(){{
+    private final CollectionTreeDto collectionTree = new CollectionTreeDto(){{
         setName("ROOT");
         setChildren(parent -> Stream.of(
                 new CollectionTreeDto(){{
@@ -33,12 +32,10 @@ public class CollectionTreeExpansionListenerTest {
     }};
 
     @Test
-    public void createLeaf(){
-        var rootNode = new DefaultMutableTreeNode("ROOT");
-        var treeModel = new DefaultTreeModel(rootNode);
-
-        var treeExpansionListener = new CollectionTreeExpansionListener(treeModel);
-        treeExpansionListener.createLeaf(rootNode, collectionTree);
+    public void loadChildren(){
+        var rootNode = new CollectionTreeNode(treeModel, collectionTree);
+        treeModel.setRoot(rootNode);
+        rootNode.loadChildren();
 
         assertEquals(2, rootNode.getChildCount());
     }

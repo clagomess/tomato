@@ -21,7 +21,6 @@ import javax.swing.tree.TreeSelectionModel;
 public class CollectionTreeUI extends JPanel {
     private final DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
     private final JTree tree = new JTree(treeModel);
-    private final CollectionTreeExpansionListener collectionTreeExpansionListener = new CollectionTreeExpansionListener(treeModel);
 
     private final EnvironmentComboBox cbEnvironment = new EnvironmentComboBox();
     private final JLabel lblCurrentWorkspace = new JLabel(new BxHomeIcon());
@@ -40,7 +39,7 @@ public class CollectionTreeUI extends JPanel {
         tree.setCellRenderer(new CollectionTreeCellRender());
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addMouseListener(new CollectionTreeMouseListener(tree));
-        tree.addTreeExpansionListener(collectionTreeExpansionListener);
+        tree.addTreeExpansionListener(new CollectionTreeExpansionListener());
 
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
