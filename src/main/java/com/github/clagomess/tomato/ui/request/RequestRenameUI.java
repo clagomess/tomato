@@ -40,6 +40,8 @@ public class RequestRenameUI extends NameUI {
                     requestHead.getParent().getId(),
                     requestHead.getId()
             );
+
+            // @TODO: merge
             requestPublisher.getOnUpdate().publish(key, requestHead);
             requestPublisher.getOnSave().publish(requestHead.getId(), requestHead);
 

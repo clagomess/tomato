@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxHomeIcon;
 import com.github.clagomess.tomato.ui.environment.EnvironmentComboBox;
+import com.github.clagomess.tomato.ui.main.collection.node.CollectionTreeNode;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -18,8 +19,7 @@ import javax.swing.tree.TreeSelectionModel;
 @Getter
 @Setter
 public class CollectionTreeUI extends JPanel {
-    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
-    private final DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
+    private final DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
     private final JTree tree = new JTree(treeModel);
     private final CollectionTreeExpansionListener collectionTreeExpansionListener = new CollectionTreeExpansionListener(treeModel);
 
@@ -52,7 +52,6 @@ public class CollectionTreeUI extends JPanel {
         // data
         SwingUtilities.invokeLater(this::loadCurrentWorkspace);
         workspacePublisher.getOnSwitch().addListener(event -> {
-            rootNode.removeAllChildren();
             loadCurrentWorkspace();
         });
     }
@@ -61,10 +60,14 @@ public class CollectionTreeUI extends JPanel {
         try {
             var rootCollection = collectionRepository.getWorkspaceCollectionTree();
             lblCurrentWorkspace.setText(rootCollection.getName());
-            rootNode.setUserObject(rootCollection);
-            collectionTreeExpansionListener.createLeaf(rootNode, rootCollection);
 
-            this.treeModel.reload();
+            if(treeModel.getRoot() instanceof CollectionTreeNode rootNode){
+                rootNode.setParent(null);
+            }
+
+            var rootNode = new CollectionTreeNode(treeModel, rootCollection);
+            treeModel.setRoot(rootNode);
+            rootNode.loadChildren();
         }catch (Exception e){
             DialogFactory.createDialogException(null, e);
         }
