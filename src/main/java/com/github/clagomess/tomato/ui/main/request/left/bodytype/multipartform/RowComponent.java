@@ -99,6 +99,11 @@ class RowComponent extends JPanel {
     private void btnRemoveAction(){
         multiPartFormItems.remove(item);
         requestStagingMonitor.update();
+
+        if(cValue instanceof EnvTextField){
+            ((EnvTextField) cValue).dispose();
+        }
+
         parent.remove(ComponentUtil.getComponentIndex(parent, this));
         parent.revalidate();
         parent.repaint();
