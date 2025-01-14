@@ -18,9 +18,15 @@ public class RequestDto extends MetadataDto {
     private String name = "New Request";
     private HttpMethodEnum method = HttpMethodEnum.GET;
     private String url = "http://";
+    private UrlParam urlParam = new UrlParam();
     private List<KeyValueItem> headers = new ArrayList<>();
     private List<KeyValueItem> cookies = new ArrayList<>();
     private Body body = new Body();
+
+    public UrlParam getUrlParam() {
+        if(urlParam == null) urlParam = new UrlParam();
+        return urlParam;
+    }
 
     public Body getBody() {
         if(body == null) body = new Body();
@@ -35,6 +41,24 @@ public class RequestDto extends MetadataDto {
     public List<KeyValueItem> getHeaders() {
         if(headers == null) headers = new ArrayList<>();
         return headers;
+    }
+
+    @Getter
+    @Setter
+    @EqualsAndHashCode
+    public static class UrlParam {
+        private List<KeyValueItem> path  = new ArrayList<>();
+        private List<KeyValueItem> query  = new ArrayList<>();
+
+        public List<KeyValueItem> getPath() {
+            if(path == null) path = new ArrayList<>();
+            return path;
+        }
+
+        public List<KeyValueItem> getQuery() {
+            if(query == null) query = new ArrayList<>();
+            return query;
+        }
     }
 
     @Getter

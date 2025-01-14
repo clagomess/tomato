@@ -25,6 +25,7 @@ public class PostmanCollectionV210DtoTest {
             "without-auth.postman.collection.v2.1.0.json",
             "body-raw.postman.collection.v2.1.0.json",
             "formdata-file.postman.collection.v2.1.0.json",
+            "queryparam.postman.collection.v2.1.0.json",
     })
     public void pumpDumpTest(String filename) throws IOException {
         var url = getClass().getResourceAsStream(String.format(

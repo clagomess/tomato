@@ -12,6 +12,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
+import java.util.ArrayList;
+
 @Mapper
 public interface PostmanCollectionPumpMapper {
     PostmanCollectionPumpMapper INSTANCE = Mappers.getMapper(PostmanCollectionPumpMapper.class);
@@ -25,11 +27,44 @@ public interface PostmanCollectionPumpMapper {
     @Mapping(target = "createTime", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "url", source = "request.url.raw")
+    @Mapping(target = "urlParam.query", source = "request.url.query")
+    @Mapping(target = "urlParam.path", source = "request.url.variable")
     @Mapping(target = "method", source = "request.method")
     @Mapping(target = "headers", source = "request.header")
     @Mapping(target = "cookies", ignore = true)
     @Mapping(target = "body", source = "request.body")
     RequestDto toRequestDto(PostmanCollectionV210Dto.Item source);
+
+    @AfterMapping
+    default void toRequestDtoAfter(
+            @MappingTarget RequestDto target,
+            PostmanCollectionV210Dto.Item source
+    ){
+        if(source.getRequest().getAuth() != null && "bearer".equals(source.getRequest().getAuth().getType())){
+            if(target.getHeaders() == null){
+                target.setHeaders(new ArrayList<>());
+            }
+
+            source.getRequest().getAuth().getBearer().forEach(item -> {
+                target.getHeaders().add(new RequestDto.KeyValueItem(
+                        "Authorization",
+                        "Bearer " + item.getValue()
+                ));
+            });
+        }
+    }
+
+    @Mapping(target = "type", ignore = true)
+    @Mapping(target = "selected", ignore = true)
+    RequestDto.KeyValueItem map(PostmanCollectionV210Dto.Item.Request.Url.Param source);
+
+    @AfterMapping
+    default void mapAfter(
+            @MappingTarget RequestDto.KeyValueItem target,
+            PostmanCollectionV210Dto.Item.Request.Url.Param source
+    ){
+        target.setSelected(source.getDisabled() == null || !source.getDisabled());
+    }
 
     @Mapping(target = "type", ignore = true)
     @Mapping(target = "selected", ignore = true)

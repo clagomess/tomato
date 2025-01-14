@@ -1,0 +1,65 @@
+{
+  "info": {
+    "_postman_id": "e22339ab-6ef1-19c9-2674-e65dfc06f341",
+    "name": "tomato",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "1019385"
+  },
+  "item": [
+    {
+      "name": "/api/relatorio/visualizar/:tipo/:seqRelatorio",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{urlSiscon}}/api/relatorio/visualizar/:tipo/:seqRelatorio?TIPO_ACESSO=&DATA_ACESSO_INICIO=01%2F03%2F2021&DATA_ACESSO_FIM=22%2F03%2F2021",
+          "host": [
+            "{{urlSiscon}}"
+          ],
+          "path": [
+            "api",
+            "relatorio",
+            "visualizar",
+            ":tipo",
+            ":seqRelatorio"
+          ],
+          "query": [
+            {
+              "key": "TIPO_ACESSO",
+              "value": ""
+            },
+            {
+              "key": "DATA_ACESSO_INICIO",
+              "value": "01%2F03%2F2021"
+            },
+            {
+              "key": "DATA_ACESSO_FIM",
+              "value": "22%2F03%2F2021"
+            }
+          ],
+          "variable": [
+            {
+              "key": "tipo",
+              "value": "json"
+            },
+            {
+              "key": "seqRelatorio",
+              "value": "26"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

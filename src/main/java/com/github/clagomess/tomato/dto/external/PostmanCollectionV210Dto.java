@@ -144,14 +144,20 @@ public class PostmanCollectionV210Dto {
                 private String raw;
 
                 @JsonInclude(JsonInclude.Include.NON_NULL)
-                private List<Variable> variable;
+                private List<Param> query;
+
+                @JsonInclude(JsonInclude.Include.NON_NULL)
+                private List<Param> variable;
 
                 @Getter
                 @Setter
                 @JsonIgnoreProperties(ignoreUnknown = true)
-                public static class Variable {
+                public static class Param {
                     private String key;
                     private String value;
+
+                    @JsonInclude(JsonInclude.Include.NON_NULL)
+                    private Boolean disabled;
                 }
             }
         }

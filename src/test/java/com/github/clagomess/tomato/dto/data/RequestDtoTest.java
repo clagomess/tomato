@@ -32,6 +32,21 @@ public class RequestDtoTest {
     }
 
     @Test
+    public void toJson_UrlParam() throws JsonProcessingException {
+        var dto = new RequestDto();
+        dto.setUrl("http://localhost:8080/tomato");
+        dto.getUrlParam().getPath().add(new RequestDto.KeyValueItem("key", "value"));
+        dto.getUrlParam().getQuery().add(new RequestDto.KeyValueItem("key", "value"));
+
+        var json = mapper.writeValueAsString(dto);
+        log.info(json);
+
+        Assertions.assertThat(jsonSchema.validate(
+                mapper.readTree(json)
+        )).isEmpty();
+    }
+
+    @Test
     public void toJson_Header() throws JsonProcessingException {
         var dto = new RequestDto();
         dto.setUrl("http://localhost:8080/tomato");
@@ -137,6 +152,12 @@ public class RequestDtoTest {
 
         Assertions.assertThat(dtoA)
                 .isEqualTo(dtoB);
+    }
+
+    @Test
+    public void UrlParam_equalsHashCode(){
+        Assertions.assertThat(new RequestDto.UrlParam())
+                .isEqualTo(new RequestDto.UrlParam());
     }
 
     @Test
