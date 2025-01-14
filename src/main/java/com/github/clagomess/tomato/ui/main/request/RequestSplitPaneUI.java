@@ -193,5 +193,6 @@ public class RequestSplitPaneUI extends JPanel {
     public void dispose(){
         txtRequestName.dispose();
         txtRequestUrl.dispose();
+        requestContent.dispose();
     }
 }

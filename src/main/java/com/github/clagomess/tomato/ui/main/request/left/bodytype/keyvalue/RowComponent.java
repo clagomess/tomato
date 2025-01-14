@@ -13,6 +13,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -21,7 +22,7 @@ class RowComponent extends JPanel {
     private final RequestStagingMonitor requestStagingMonitor;
     private final List<RequestDto.KeyValueItem> list;
     private final RequestDto.KeyValueItem item;
-    private final OnChange onChange;
+    private OnChange onChange;
 
     private final JCheckBox cbSelected = new JCheckBox();
     private final ListenableTextField txtKey = new ListenableTextField();
@@ -54,18 +55,10 @@ class RowComponent extends JPanel {
 
         // listeners
         cbSelected.addActionListener(l -> cbSelectedOnChange());
-        txtKey.addOnChange(value -> {
-            item.setKey(value);
-            requestStagingMonitor.update();
-            onChange.run(item);
-        });
-        txtValue.addOnChange(value -> {
-            item.setValue(value);
-            requestStagingMonitor.update();
-            onChange.run(item);
-        });
+        txtKey.addOnChange(this::txtKeyOnChange);
+        txtValue.addOnChange(this::txtValueOnChange);
         // @TODO: add possibility to expand to new window
-        btnRemove.addActionListener(l -> btnRemoveAction());
+        btnRemove.addActionListener(l -> remove());
 
         // layout
         setLayout(new MigLayout(
@@ -79,13 +72,31 @@ class RowComponent extends JPanel {
     }
 
     private void cbSelectedOnChange(){
+        if(Objects.equals(item.isSelected(), cbSelected.isSelected())) return;
+
         item.setSelected(cbSelected.isSelected());
         setEnabled(cbSelected.isSelected());
         requestStagingMonitor.update();
         onChange.run(item);
     }
 
-    private void btnRemoveAction(){
+    private void txtKeyOnChange(String value){
+        if(Objects.equals(value, item.getKey())) return;
+
+        item.setKey(value);
+        requestStagingMonitor.update();
+        onChange.run(item);
+    }
+
+    private void txtValueOnChange(String value){
+        if(Objects.equals(value, item.getValue())) return;
+
+        item.setValue(value);
+        requestStagingMonitor.update();
+        onChange.run(item);
+    }
+
+    public void remove(){
         list.remove(item);
         requestStagingMonitor.update();
         onChange.run(null);

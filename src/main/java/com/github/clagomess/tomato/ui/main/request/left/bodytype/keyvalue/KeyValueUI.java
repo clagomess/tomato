@@ -9,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
@@ -89,10 +90,29 @@ public class KeyValueUI extends JPanel {
     }
 
     public void refresh(){
-//        Arrays.stream(rowsPanel.getComponents())
-//                .filter(row -> row instanceof RowComponent)
-//                .map(row -> (RowComponent) row)
-//                .forEach(RowComponent::remove);
-        // @TODO: impl. update
+        List<RowComponent> rows = Arrays.stream(rowsPanel.getComponents())
+                .filter(row -> row instanceof RowComponent)
+                .map(row -> (RowComponent) row)
+                .toList();
+
+        rows.forEach(row -> {
+            row.setOnChange(value -> {});
+
+            if(!list.contains(row.getItem())){
+                row.remove();
+            }
+
+            row.getCbSelected().setSelected(row.getItem().isSelected());
+            row.getTxtKey().setText(row.getItem().getKey());
+            row.getTxtValue().setText(row.getItem().getValue());
+
+            row.setOnChange(onChange);
+        });
+
+        // add
+        for(var item : list){
+            var ret = rows.stream().noneMatch(row -> item.equals(row.getItem()));
+            if(ret) addRow(item);
+        }
     }
 }

@@ -12,6 +12,8 @@ import javax.swing.*;
 @Getter
 @Setter
 public class RequestTabContentUI extends JPanel {
+    private final URIParamUI uriParamUI;
+
     public RequestTabContentUI(
             TabKey tabKey,
             RequestDto requestDto,
@@ -20,9 +22,11 @@ public class RequestTabContentUI extends JPanel {
         // layout definitions
         setLayout(new MigLayout("insets 5 0 0 5", "[grow,fill]", ""));
 
+        uriParamUI = new URIParamUI(tabKey, requestDto, requestStagingMonitor);
+
         JTabbedPane tpRequest = new JTabbedPane();
         //@TODO: add count
-        tpRequest.addTab("Params", new URIParamUI(tabKey, requestDto, requestStagingMonitor));
+        tpRequest.addTab("Params", uriParamUI);
         tpRequest.addTab("Body", new BodyUI(requestDto.getBody(), requestStagingMonitor));
         //@TODO: add count
         tpRequest.addTab("Headers", new KeyValueUI(requestDto.getHeaders(), requestStagingMonitor));
@@ -31,5 +35,7 @@ public class RequestTabContentUI extends JPanel {
         add(tpRequest, "span, height 100%");
     }
 
-    // @TODO: impl. dispose URIParamUI
+    public void dispose(){
+        uriParamUI.dispose();
+    }
 }

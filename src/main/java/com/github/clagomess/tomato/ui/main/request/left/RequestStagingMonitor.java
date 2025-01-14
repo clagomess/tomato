@@ -31,7 +31,10 @@ public class RequestStagingMonitor {
     }
 
     public void update(){
-        this.actualHashCode = requestDto.hashCode();
+        int newHashCode = requestDto.hashCode();
+        if(this.actualHashCode == newHashCode) return;
+
+        this.actualHashCode = newHashCode;
         requestPublisher.getOnStaging().publish(
                 tabKey,
                 currentHashCode != actualHashCode

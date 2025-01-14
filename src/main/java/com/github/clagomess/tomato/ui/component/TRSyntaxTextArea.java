@@ -51,9 +51,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {
-                update();
-            }
+            public void changedUpdate(DocumentEvent e) {}
 
             public void update(){
                 onChangeList.forEach(ch -> ch.change(getText()));

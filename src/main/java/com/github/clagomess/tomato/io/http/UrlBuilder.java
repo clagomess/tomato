@@ -88,10 +88,6 @@ public class UrlBuilder {
             }
         }
 
-        for(var item : query){
-            if(!queryParam.containsKey(item.getKey())){
-                item.setSelected(false);
-            }
-        }
+        query.removeIf(item -> !queryParam.containsKey(item.getKey()));
     }
 }
