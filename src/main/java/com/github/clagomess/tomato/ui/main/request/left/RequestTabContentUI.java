@@ -19,11 +19,13 @@ public class RequestTabContentUI extends JPanel {
         setLayout(new MigLayout("insets 5 0 0 5", "[grow,fill]", ""));
 
         JTabbedPane tpRequest = new JTabbedPane();
+        //@TODO: add count
+        tpRequest.addTab("Params", new URIParamUI(requestStagingMonitor));
         tpRequest.addTab("Body", new BodyUI(requestDto.getBody(), requestStagingMonitor));
         //@TODO: add count
-        tpRequest.addTab("Header", new KeyValueUI(requestDto.getHeaders(), requestStagingMonitor));
+        tpRequest.addTab("Headers", new KeyValueUI(requestDto.getHeaders(), requestStagingMonitor));
         //@TODO: add count
-        tpRequest.addTab("Cookie", new KeyValueUI(requestDto.getCookies(), requestStagingMonitor));
+        tpRequest.addTab("Cookies", new KeyValueUI(requestDto.getCookies(), requestStagingMonitor));
         add(tpRequest, "span, height 100%");
     }
 }
