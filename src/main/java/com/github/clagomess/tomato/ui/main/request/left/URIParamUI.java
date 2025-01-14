@@ -1,21 +1,30 @@
 package com.github.clagomess.tomato.ui.main.request.left;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
+import com.github.clagomess.tomato.io.http.UrlBuilder;
+import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue.KeyValueUI;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.util.List;
 
 @Slf4j
 public class URIParamUI extends JPanel {
+    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
+    private final TabKey tabKey;
     private final KeyValueUI queryUI;
     private final KeyValueUI pathUI;
 
     public URIParamUI(
+            TabKey tabKey,
             RequestDto requestDto,
             RequestStagingMonitor requestStagingMonitor
     ) {
+        this.tabKey = tabKey;
+
         setLayout(new MigLayout(
                 "insets 0 0 0 0",
                 "[grow, fill]"
@@ -43,9 +52,27 @@ public class URIParamUI extends JPanel {
 
         add(pQueryParams, "height 100%, wrap");
         add(pPathVariables, "height 100%");
+
+        // listeners
+        requestPublisher.getOnUrlChange().addListener(tabKey, value -> {
+            updateQueryParam(requestDto.getUrlParam().getQuery(), value);
+        });
+    }
+
+    protected void updateQueryParam(List<RequestDto.KeyValueItem> query, String value){
+        try {
+            new UrlBuilder(value).updateQueryParam(query);
+            queryUI.refresh();
+        } catch (Throwable e) {
+            log.warn(e.getMessage(), e);
+        }
     }
 
     private void onChange(){
         log.info("impl"); // @TODO: impl.
+    }
+
+    public void dispose(){
+        requestPublisher.getOnUrlChange().removeListener(tabKey);
     }
 }

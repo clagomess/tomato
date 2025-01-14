@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.left;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue.KeyValueUI;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import javax.swing.*;
 @Setter
 public class RequestTabContentUI extends JPanel {
     public RequestTabContentUI(
+            TabKey tabKey,
             RequestDto requestDto,
             RequestStagingMonitor requestStagingMonitor
     ){
@@ -20,7 +22,7 @@ public class RequestTabContentUI extends JPanel {
 
         JTabbedPane tpRequest = new JTabbedPane();
         //@TODO: add count
-        tpRequest.addTab("Params", new URIParamUI(requestDto, requestStagingMonitor));
+        tpRequest.addTab("Params", new URIParamUI(tabKey, requestDto, requestStagingMonitor));
         tpRequest.addTab("Body", new BodyUI(requestDto.getBody(), requestStagingMonitor));
         //@TODO: add count
         tpRequest.addTab("Headers", new KeyValueUI(requestDto.getHeaders(), requestStagingMonitor));
@@ -28,4 +30,6 @@ public class RequestTabContentUI extends JPanel {
         tpRequest.addTab("Cookies", new KeyValueUI(requestDto.getCookies(), requestStagingMonitor));
         add(tpRequest, "span, height 100%");
     }
+
+    // @TODO: impl. dispose URIParamUI
 }

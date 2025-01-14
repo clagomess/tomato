@@ -106,6 +106,7 @@ public class RequestSplitPaneUI extends JPanel {
         txtRequestUrl.addOnChange(value -> {
             requestDto.setUrl(value);
             requestStagingMonitor.update();
+            requestPublisher.getOnUrlChange().publish(key, value);
         });
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
@@ -117,6 +118,7 @@ public class RequestSplitPaneUI extends JPanel {
         splitPane.setDividerLocation(0.5);
 
         this.requestContent = new RequestTabContentUI(
+                key,
                 requestDto,
                 requestStagingMonitor
         );

@@ -15,6 +15,7 @@ public class RequestPublisher {
     private final NoKeyPublisher<RequestHeadDto> onLoad = new NoKeyPublisher<>();
     private final KeyPublisher<String, RequestHeadDto> onSave = new KeyPublisher<>();
     private final KeyPublisher<TabKey, Boolean> onStaging = new KeyPublisher<>();
+    private final KeyPublisher<TabKey, String> onUrlChange = new KeyPublisher<>();
 
     // for collection tree
     private final KeyPublisher<ParentCollectionId, RequestHeadDto> onInsert = new KeyPublisher<>();

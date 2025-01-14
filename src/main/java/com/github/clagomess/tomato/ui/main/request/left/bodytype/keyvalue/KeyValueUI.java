@@ -87,4 +87,12 @@ public class KeyValueUI extends JPanel {
         rowsPanel.add(row, "wrap");
         rowsPanel.revalidate();
     }
+
+    public void refresh(){
+//        Arrays.stream(rowsPanel.getComponents())
+//                .filter(row -> row instanceof RowComponent)
+//                .map(row -> (RowComponent) row)
+//                .forEach(RowComponent::remove);
+        // @TODO: impl. update
+    }
 }

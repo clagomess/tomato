@@ -1,9 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
-import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
-import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,13 +9,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.POST;
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.PUT;
@@ -27,14 +23,10 @@ import static com.github.clagomess.tomato.enums.HttpMethodEnum.PUT;
 public class HttpService {
     private final RequestDto requestDto;
     private final HttpDebug debug;
-    private final EnvironmentRepository environmentRepository;
 
     public HttpService(RequestDto requestDto) {
-        this(
-                requestDto,
-                new HttpDebug(),
-                new EnvironmentRepository()
-        );
+        this.requestDto = requestDto;
+        this.debug = new HttpDebug();
     }
 
     private HttpClient getClient() {
@@ -49,7 +41,7 @@ public class HttpService {
 
         try {
             HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                    .uri(buildUri(requestDto.getUrl()));
+                    .uri(new UrlBuilder(requestDto.getUrl()).buildUri());
 
             // set headers
             new HttpHeaderBuilder(requestBuilder, requestDto).build();
@@ -87,21 +79,6 @@ public class HttpService {
         }
 
         return result;
-    }
-
-    protected URI buildUri(String url) throws IOException {
-        Optional<EnvironmentDto> current = environmentRepository.getWorkspaceSessionEnvironment();
-
-        if(current.isPresent()) {
-            for(var env : current.get().getEnvs()) {
-                url = url.replace(
-                        String.format("{{%s}}", env.getKey()),
-                        env.getValue()
-                );
-            }
-        }
-
-        return URI.create(url);
     }
 
     private HttpRequest buildBody(
