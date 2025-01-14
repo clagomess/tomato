@@ -14,7 +14,7 @@ public class StatusResponseUI extends JPanel {
                 "",
                 ""
         ));
-        add(new InfoBadge("Waiting response"));
+        add(new InfoBadge("Waiting new request"));
     }
 
     private Timer requestTimer;

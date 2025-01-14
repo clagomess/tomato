@@ -7,6 +7,7 @@ import com.github.clagomess.tomato.ui.component.RawTextArea;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxDownloadIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
 import com.github.clagomess.tomato.ui.component.tablemanager.TableManagerUI;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,10 @@ public class ResponseTabContent extends JPanel {
     private final TableManagerUI<ResponseHeaderTMDto> tblResponseHeader = new TableManagerUI<>(
             ResponseHeaderTMDto.class
     );
+    private final JButton btnBeautify = new JButton(new BxsMagicWandIcon()){{
+        setToolTipText("Beautify response");
+        setEnabled(false);
+    }};
     private final JButton btnDownload = new JButton(new BxDownloadIcon()){{
         setToolTipText("Download");
     }};
@@ -36,23 +41,25 @@ public class ResponseTabContent extends JPanel {
     public ResponseTabContent(){
         setLayout(new MigLayout(
                 "insets 5 5 0 0",
-                "[grow,fill][]",
+                "[grow,fill][][]",
                 ""
         ));
 
         add(statusResponseUI, "width 100%");
+        add(btnBeautify);
         add(btnDownload, "wrap");
 
         var hsp = new JScrollPane(tblResponseHeader.getTable());
         hsp.setBorder(new MatteBorder(0, 1, 1, 1, Color.decode("#616365")));
 
         JTabbedPane tpResponse = new JTabbedPane();
-        tpResponse.addTab("Preview", TRSyntaxTextArea.createScroll(txtResponse));
+        tpResponse.addTab("Response", TRSyntaxTextArea.createScroll(txtResponse));
         tpResponse.addTab("Header", hsp);
         tpResponse.addTab("Debug", RawTextArea.createScroll(txtHTTPDebug));
         add(tpResponse, "span, height 100%");
 
         // configure
+        // @TODO: impl. btnBeautify
         btnDownload.addActionListener(l -> btnDownloadAction());
         btnDownload.setEnabled(false);
     }
