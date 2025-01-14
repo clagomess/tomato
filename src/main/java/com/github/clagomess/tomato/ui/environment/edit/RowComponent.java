@@ -21,7 +21,9 @@ class RowComponent extends JPanel {
 
     private final ListenableTextField txtKey = new ListenableTextField();
     private final ListenableTextField txtValue = new ListenableTextField();
-    private final JButton btnRemove = new JButton(new BxTrashIcon());
+    private final JButton btnRemove = new JButton(new BxTrashIcon()){{
+        setToolTipText("Remove");
+    }};
 
     public RowComponent(
             Container parent,

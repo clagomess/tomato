@@ -29,13 +29,13 @@ public class StatusResponseUI extends JPanel {
 
         if(!dto.isRequestStatus()){
             DialogFactory.createDialogWarning(this, dto.getRequestMessage());
-            return;
+            add(new ErrorBadge("ERROR"));
+        }else {
+            add(new HttpStatusBadge(dto.getHttpResponse()));
+            add(new ResponseTimeBadge(dto.getHttpResponse()));
+            add(new ResponseSizeBadge(dto.getHttpResponse()));
+            add(new CharsetBadge(dto.getHttpResponse()));
         }
-
-        add(new HttpStatusBadge(dto.getHttpResponse()));
-        add(new ResponseTimeBadge(dto.getHttpResponse()));
-        add(new ResponseSizeBadge(dto.getHttpResponse()));
-        add(new CharsetBadge(dto.getHttpResponse()));
 
         revalidate();
         repaint();

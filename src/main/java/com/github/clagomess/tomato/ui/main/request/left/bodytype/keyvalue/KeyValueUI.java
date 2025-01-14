@@ -16,7 +16,9 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 public class KeyValueUI extends JPanel {
     private final List<RequestDto.KeyValueItem> list;
     private final RequestStagingMonitor requestStagingMonitor;
-    private final JButton btnAddNew = new JButton(new BxPlusIcon());
+    private final JButton btnAddNew = new JButton(new BxPlusIcon()){{
+        setToolTipText("Add new");
+    }};
     private final JPanel rowsPanel;
 
     public KeyValueUI(

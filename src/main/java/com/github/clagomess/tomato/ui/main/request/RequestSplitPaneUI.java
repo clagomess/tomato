@@ -11,7 +11,9 @@ import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxBlockIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSaveIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSendIcon;
 import com.github.clagomess.tomato.ui.main.request.left.HttpMethodComboBox;
 import com.github.clagomess.tomato.ui.main.request.left.RequestNameTextField;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
@@ -24,6 +26,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.util.Arrays;
 
 @Getter
 public class RequestSplitPaneUI extends JPanel {
@@ -32,11 +35,17 @@ public class RequestSplitPaneUI extends JPanel {
     private final RequestDto requestDto;
 
     private final RequestNameTextField txtRequestName = new RequestNameTextField();
-    private final JButton btnSaveRequest = new JButton(new BxSaveIcon());
+    private final JButton btnSaveRequest = new JButton(new BxSaveIcon()){{
+        setToolTipText("Save");
+    }};
 
     private final HttpMethodComboBox cbHttpMethod = new HttpMethodComboBox();
     private final EnvTextField txtRequestUrl = new EnvTextField();
-    private final JButton btnSendRequest = new JButton("Send");
+    private final JButton btnSendRequest = new JButton("Send", new BxSendIcon());
+    private final JButton btnCancelRequest = new JButton(new BxBlockIcon()){{
+        setToolTipText("Cancel");
+        setEnabled(false);
+    }};
 
     private final RequestTabContentUI requestContent;
     private final ResponseTabContent responseContent;
@@ -81,6 +90,7 @@ public class RequestSplitPaneUI extends JPanel {
         paneUrl.add(cbHttpMethod);
         paneUrl.add(txtRequestUrl);
         paneUrl.add(btnSendRequest);
+        paneUrl.add(btnCancelRequest);
         add(paneUrl, "width 300::100%, wrap");
 
         // set values
@@ -120,9 +130,13 @@ public class RequestSplitPaneUI extends JPanel {
 
     public void btnSendRequestAction(){
         btnSendRequest.setEnabled(false);
+        btnCancelRequest.setEnabled(true);
         responseContent.reset();
 
-        new Thread(() -> {
+        Arrays.stream(btnCancelRequest.getActionListeners())
+                .forEach(btnCancelRequest::removeActionListener);
+
+        Thread requestThread = new Thread(() -> {
             try {
                 ResponseDto responseDto = new HttpService(requestDto).perform();
                 responseContent.update(responseDto);
@@ -130,8 +144,16 @@ public class RequestSplitPaneUI extends JPanel {
                 DialogFactory.createDialogException(this, e);
             } finally {
                 btnSendRequest.setEnabled(true);
+                btnCancelRequest.setEnabled(false);
             }
-        }).start();
+        });
+
+        requestThread.start();
+
+        btnCancelRequest.addActionListener(l -> {
+            btnCancelRequest.setEnabled(false);
+            requestThread.interrupt();
+        });
     }
 
     public void btnSaveRequestAction(){

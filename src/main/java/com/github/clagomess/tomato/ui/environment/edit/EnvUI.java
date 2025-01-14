@@ -14,7 +14,9 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 public class EnvUI extends JPanel {
     private final List<EnvironmentDto.Env> list;
-    private final JButton btnAddNew = new JButton(new BxPlusIcon());
+    private final JButton btnAddNew = new JButton(new BxPlusIcon()){{
+        setToolTipText("Add a new environment");
+    }};
     private final JPanel rowsPanel;
 
     public EnvUI(

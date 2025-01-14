@@ -51,6 +51,7 @@ public class RequestTabPaneUI extends JTabbedPane {
         setSelectedIndex(-1);
 
         JButton btnPlus = new JButton(new BxPlusIcon());
+        btnPlus.setToolTipText("Add a new request");
 
         setTabComponentAt(indexOfTab("+"), btnPlus);
 
@@ -93,6 +94,7 @@ public class RequestTabPaneUI extends JTabbedPane {
     }
 
     private void removeTab(Tab tab){
+        // @TODO: check if unsaved before remove
         var tabId = tab.tabKey().getUuid().toString();
         removeTabAt(indexOfTab(tabId));
         tab.tabTitleUI().dispose();

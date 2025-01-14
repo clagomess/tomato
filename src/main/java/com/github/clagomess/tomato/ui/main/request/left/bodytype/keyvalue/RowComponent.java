@@ -25,7 +25,9 @@ class RowComponent extends JPanel {
     private final JCheckBox cbSelected = new JCheckBox();
     private final ListenableTextField txtKey = new ListenableTextField();
     private final EnvTextField txtValue = new EnvTextField();
-    private final JButton btnRemove = new JButton(new BxTrashIcon());
+    private final JButton btnRemove = new JButton(new BxTrashIcon()){{
+        setToolTipText("Remove");
+    }};
 
     public RowComponent(
             Container parent,

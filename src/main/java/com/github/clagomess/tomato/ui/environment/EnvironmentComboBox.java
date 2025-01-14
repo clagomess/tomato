@@ -18,7 +18,9 @@ import java.util.Objects;
 
 public class EnvironmentComboBox extends JPanel {
     private final ComboBox comboBox = new ComboBox();
-    private final JButton btnEdit = new JButton(new BxEditIcon());
+    private final JButton btnEdit = new JButton(new BxEditIcon()){{
+        setToolTipText("Edit Environment");
+    }};
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();

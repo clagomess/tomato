@@ -32,7 +32,9 @@ class RowComponent extends JPanel {
     private final ListenableTextField txtKey = new ListenableTextField();
     private JComponent cValue;
     private final JCheckBox cbSelected = new JCheckBox();
-    private final JButton btnRemove = new JButton(new BxTrashIcon());
+    private final JButton btnRemove = new JButton(new BxTrashIcon()){{
+        setToolTipText("Remove");
+    }};
 
     public RowComponent(
             Container parent,

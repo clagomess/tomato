@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.io.http.MediaType;
 import com.github.clagomess.tomato.ui.component.RawTextArea;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxDownloadIcon;
 import com.github.clagomess.tomato.ui.component.tablemanager.TableManagerUI;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,9 @@ public class ResponseTabContent extends JPanel {
     private final TableManagerUI<ResponseHeaderTMDto> tblResponseHeader = new TableManagerUI<>(
             ResponseHeaderTMDto.class
     );
-    private final JButton btnDownload = new JButton("Download");
+    private final JButton btnDownload = new JButton(new BxDownloadIcon()){{
+        setToolTipText("Download");
+    }};
 
     private ResponseDto responseDto = null;
 
