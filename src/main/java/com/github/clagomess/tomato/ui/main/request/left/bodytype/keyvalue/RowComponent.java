@@ -21,6 +21,7 @@ class RowComponent extends JPanel {
     private final RequestStagingMonitor requestStagingMonitor;
     private final List<RequestDto.KeyValueItem> list;
     private final RequestDto.KeyValueItem item;
+    private final OnChange onChange;
 
     private final JCheckBox cbSelected = new JCheckBox();
     private final ListenableTextField txtKey = new ListenableTextField();
@@ -33,12 +34,14 @@ class RowComponent extends JPanel {
             Container parent,
             RequestStagingMonitor requestStagingMonitor,
             List<RequestDto.KeyValueItem> list,
-            RequestDto.KeyValueItem item
+            RequestDto.KeyValueItem item,
+            OnChange onChange
     ){
         this.parent = parent;
         this.requestStagingMonitor = requestStagingMonitor;
         this.list = list;
         this.item = item;
+        this.onChange = onChange;
 
         if(!this.list.contains(this.item)){
             this.list.add(this.item);
@@ -54,10 +57,12 @@ class RowComponent extends JPanel {
         txtKey.addOnChange(value -> {
             item.setKey(value);
             requestStagingMonitor.update();
+            onChange.run(item);
         });
         txtValue.addOnChange(value -> {
             item.setValue(value);
             requestStagingMonitor.update();
+            onChange.run(item);
         });
         // @TODO: add possibility to expand to new window
         btnRemove.addActionListener(l -> btnRemoveAction());
@@ -77,11 +82,13 @@ class RowComponent extends JPanel {
         item.setSelected(cbSelected.isSelected());
         setEnabled(cbSelected.isSelected());
         requestStagingMonitor.update();
+        onChange.run(item);
     }
 
     private void btnRemoveAction(){
         list.remove(item);
         requestStagingMonitor.update();
+        onChange.run(null);
         txtValue.dispose();
         parent.remove(ComponentUtil.getComponentIndex(parent, this));
         parent.revalidate();
@@ -92,5 +99,10 @@ class RowComponent extends JPanel {
         txtKey.setEnabled(enabled);
         txtValue.setEnabled(enabled);
         btnRemove.setEnabled(enabled);
+    }
+
+    @FunctionalInterface
+    public interface OnChange {
+        void run(RequestDto.KeyValueItem item);
     }
 }

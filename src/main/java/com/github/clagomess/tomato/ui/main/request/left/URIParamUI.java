@@ -2,10 +2,12 @@ package com.github.clagomess.tomato.ui.main.request.left;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue.KeyValueUI;
+import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 
+@Slf4j
 public class URIParamUI extends JPanel {
     private final KeyValueUI queryUI;
     private final KeyValueUI pathUI;
@@ -26,6 +28,7 @@ public class URIParamUI extends JPanel {
         ));
         pQueryParams.setBorder(BorderFactory.createTitledBorder("Query Params"));
         queryUI = new KeyValueUI(requestDto.getUrlParam().getQuery(), requestStagingMonitor);
+        queryUI.setOnChange(item -> onChange());
         pQueryParams.add(queryUI);
 
         // Path Variables
@@ -35,9 +38,14 @@ public class URIParamUI extends JPanel {
         ));
         pPathVariables.setBorder(BorderFactory.createTitledBorder("Path Variables"));
         pathUI = new KeyValueUI(requestDto.getUrlParam().getPath(), requestStagingMonitor);
+        pathUI.setOnChange(item -> onChange());
         pPathVariables.add(pathUI);
 
         add(pQueryParams, "height 100%, wrap");
         add(pPathVariables, "height 100%");
+    }
+
+    private void onChange(){
+        log.info("impl"); // @TODO: impl.
     }
 }

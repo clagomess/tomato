@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
+import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -20,6 +21,9 @@ public class KeyValueUI extends JPanel {
         setToolTipText("Add new");
     }};
     private final JPanel rowsPanel;
+
+    @Setter
+    private RowComponent.OnChange onChange = item -> {};
 
     public KeyValueUI(
             List<RequestDto.KeyValueItem> list,
@@ -60,7 +64,9 @@ public class KeyValueUI extends JPanel {
         add(scrollPane, "width ::100%, height 100%");
 
         btnAddNew.addActionListener(l -> {
-            addRow(new RequestDto.KeyValueItem());
+            var item = new RequestDto.KeyValueItem();
+            addRow(item);
+            onChange.run(item);
             requestStagingMonitor.update();
         });
 
@@ -74,7 +80,8 @@ public class KeyValueUI extends JPanel {
                 rowsPanel,
                 this.requestStagingMonitor,
                 this.list,
-                item
+                item,
+                onChange
         );
 
         rowsPanel.add(row, "wrap");
