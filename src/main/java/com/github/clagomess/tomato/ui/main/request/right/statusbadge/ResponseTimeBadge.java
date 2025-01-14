@@ -2,19 +2,35 @@ package com.github.clagomess.tomato.ui.main.request.right.statusbadge;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.ui.ColorConstant;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
 public class ResponseTimeBadge extends JPanel {
+    private final JLabel label = new JLabel("0ms");
+
+    @Getter
+    private long duration = 0;
+
     public ResponseTimeBadge(ResponseDto.Response response) {
-        var color = getColor(response.getRequestTime());
+        this(response.getRequestTime());
+    }
+
+    public ResponseTimeBadge(long duration) {
+        add(label);
+        tick(duration);
+    }
+
+    public void tick(long duration){
+        this.duration = duration;
+
+        var color = getColor(duration);
         setBackground(color.background());
 
-        var label = new JLabel(formatTime(response.getRequestTime()));
+        label.setText(formatTime(duration));
         label.setForeground(color.foreground());
-        add(label);
     }
 
     private ColorConstant.Match getColor(long duration){

@@ -17,14 +17,24 @@ public class StatusResponseUI extends JPanel {
         add(new InfoBadge("Waiting response"));
     }
 
+    private Timer requestTimer;
     public void reset(){
         removeAll();
-        add(new InfoBadge("Waiting response"));
+
+        var timeBadge = new ResponseTimeBadge(0);
+        add(timeBadge);
+
         revalidate();
         repaint();
+
+        requestTimer = new Timer(100, l -> {
+            timeBadge.tick(timeBadge.getDuration() + 100);
+        });
+        requestTimer.start();
     }
 
     public void update(ResponseDto dto){
+        requestTimer.stop();
         removeAll();
 
         if(!dto.isRequestStatus()){
