@@ -1,10 +1,19 @@
 {
   "id" : "7M2S0Kxh",
   "createTime" : "2024-12-18T23:28:53",
-  "updateTime" : "2025-01-08T16:29:34",
+  "updateTime" : "2025-01-14T17:02:54",
   "name" : "/echo.php?urlencoded-form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php?urlencoded-form",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ {
+      "type" : "TEXT",
+      "key" : "urlencoded-form",
+      "value" : "",
+      "selected" : true
+    } ]
+  },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {

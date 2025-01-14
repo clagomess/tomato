@@ -1,10 +1,14 @@
 {
   "id" : "55w7W0xw",
   "createTime" : "2024-12-18T23:06:02",
-  "updateTime" : "2025-01-08T11:18:56",
+  "updateTime" : "2025-01-14T17:02:49",
   "name" : "/redirect.php",
   "method" : "GET",
   "url" : "{{echoServer}}/redirect.php",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ ]
+  },
   "headers" : [ {
     "type" : "TEXT",
     "key" : "x-set-response-status-code",

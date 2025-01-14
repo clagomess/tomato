@@ -1,10 +1,14 @@
 {
   "id" : "8bV40muQ",
   "createTime" : "2024-12-18T23:36:03",
-  "updateTime" : "2025-01-08T11:19:10",
+  "updateTime" : "2025-01-14T17:02:56",
   "name" : "/echo.php",
   "method" : "PUT",
   "url" : "{{echoServer}}/echo.php",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ ]
+  },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {

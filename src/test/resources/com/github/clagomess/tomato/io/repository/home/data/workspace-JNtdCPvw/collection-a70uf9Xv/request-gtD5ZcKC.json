@@ -1,10 +1,14 @@
 {
   "id" : "gtD5ZcKC",
   "createTime" : "2024-12-18T23:40:42",
-  "updateTime" : "2025-01-08T11:19:36",
+  "updateTime" : "2025-01-14T17:03:12",
   "name" : "/xml-iso-8859-1.php",
   "method" : "GET",
   "url" : "{{echoServer}}/xml-iso-8859-1.php",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ ]
+  },
   "headers" : [ {
     "type" : "TEXT",
     "key" : "X-Set-Response-Content-Type",

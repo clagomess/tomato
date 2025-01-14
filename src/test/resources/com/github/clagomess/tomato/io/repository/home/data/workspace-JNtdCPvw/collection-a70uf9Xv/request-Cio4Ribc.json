@@ -1,10 +1,19 @@
 {
   "id" : "Cio4Ribc",
   "createTime" : "2024-12-18T23:17:18",
-  "updateTime" : "2025-01-08T11:19:27",
+  "updateTime" : "2025-01-14T17:03:07",
   "name" : "/echo.php?cookie",
   "method" : "GET",
   "url" : "{{echoServer}}/echo.php?cookie",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ {
+      "type" : "TEXT",
+      "key" : "cookie",
+      "value" : "",
+      "selected" : true
+    } ]
+  },
   "headers" : [ ],
   "cookies" : [ {
     "type" : "TEXT",

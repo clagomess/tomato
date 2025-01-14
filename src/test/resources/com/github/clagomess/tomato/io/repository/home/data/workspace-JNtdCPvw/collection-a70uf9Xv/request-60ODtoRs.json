@@ -1,10 +1,14 @@
 {
   "id" : "60ODtoRs",
   "createTime" : "2024-12-18T22:57:29",
-  "updateTime" : "2025-01-08T11:19:01",
+  "updateTime" : "2025-01-14T17:02:52",
   "name" : "/echo.php",
   "method" : "GET",
   "url" : "{{echoServer}}/echo.php",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ ]
+  },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {

@@ -1,10 +1,19 @@
 {
   "id" : "tmCsbrzA",
   "createTime" : "2024-12-18T23:26:19",
-  "updateTime" : "2025-01-08T16:13:48",
+  "updateTime" : "2025-01-14T17:03:31",
   "name" : "/echo.php?multipart-form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php?multipart-form",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ {
+      "type" : "TEXT",
+      "key" : "multipart-form",
+      "value" : "",
+      "selected" : true
+    } ]
+  },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {

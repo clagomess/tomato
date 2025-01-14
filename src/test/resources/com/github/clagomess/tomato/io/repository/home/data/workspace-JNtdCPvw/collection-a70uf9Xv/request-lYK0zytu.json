@@ -1,10 +1,14 @@
 {
   "id" : "lYK0zytu",
   "createTime" : "2024-12-18T23:13:33",
-  "updateTime" : "2025-01-08T11:19:59",
+  "updateTime" : "2025-01-14T17:03:24",
   "name" : "/text-plain.txt",
   "method" : "GET",
   "url" : "{{echoServer}}/text-plain.txt",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ ]
+  },
   "headers" : [ {
     "type" : "TEXT",
     "key" : "X-Set-Response-Content-Type",

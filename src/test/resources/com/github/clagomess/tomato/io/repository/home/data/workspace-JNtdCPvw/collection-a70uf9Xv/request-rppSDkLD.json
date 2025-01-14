@@ -1,10 +1,14 @@
 {
   "id" : "rppSDkLD",
   "createTime" : "2024-12-18T23:00:22",
-  "updateTime" : "2025-01-08T10:36:43",
+  "updateTime" : "2025-01-14T17:03:28",
   "name" : "/echo.php",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ ]
+  },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {

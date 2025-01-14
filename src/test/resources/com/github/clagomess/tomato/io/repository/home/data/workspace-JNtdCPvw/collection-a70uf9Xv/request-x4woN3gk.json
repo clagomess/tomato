@@ -1,10 +1,19 @@
 {
   "id" : "x4woN3gk",
   "createTime" : "2024-12-18T23:04:19",
-  "updateTime" : "2025-01-08T16:12:09",
+  "updateTime" : "2025-01-14T17:03:45",
   "name" : "/echo.php?custom-header",
   "method" : "GET",
   "url" : "{{echoServer}}/echo.php?custom-header",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ {
+      "type" : "TEXT",
+      "key" : "custom-header",
+      "value" : "",
+      "selected" : true
+    } ]
+  },
   "headers" : [ {
     "type" : "TEXT",
     "key" : "X-Burger",

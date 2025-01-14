@@ -1,10 +1,14 @@
 {
   "id" : "keyXRqWc",
   "createTime" : "2024-12-18T23:15:15",
-  "updateTime" : "2025-01-08T11:19:50",
+  "updateTime" : "2025-01-14T17:03:19",
   "name" : "/delay.php",
   "method" : "GET",
   "url" : "{{echoServer}}/delay.php",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ ]
+  },
   "headers" : [ {
     "type" : "TEXT",
     "key" : "x-set-response-delay-ms",
