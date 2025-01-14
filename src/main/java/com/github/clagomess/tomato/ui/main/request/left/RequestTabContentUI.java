@@ -20,7 +20,7 @@ public class RequestTabContentUI extends JPanel {
 
         JTabbedPane tpRequest = new JTabbedPane();
         //@TODO: add count
-        tpRequest.addTab("Params", new URIParamUI(requestStagingMonitor));
+        tpRequest.addTab("Params", new URIParamUI(requestDto, requestStagingMonitor));
         tpRequest.addTab("Body", new BodyUI(requestDto.getBody(), requestStagingMonitor));
         //@TODO: add count
         tpRequest.addTab("Headers", new KeyValueUI(requestDto.getHeaders(), requestStagingMonitor));
