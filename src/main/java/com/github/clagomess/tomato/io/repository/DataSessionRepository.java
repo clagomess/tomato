@@ -31,6 +31,7 @@ public class DataSessionRepository {
     }
 
     public DataSessionDto load() throws IOException {
+        // @TODO: impl syncronized read/write. check other with same scenario
         return cache.get(() -> {
             Optional<DataSessionDto> dataSession = repository.readFile(
                     getDataSessionFile(),
