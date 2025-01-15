@@ -19,7 +19,7 @@ public class EnvTextField extends JPanel {
         this.btnEnvView.setToolTipText("View Injected Environment");
         this.btnEnvView.addActionListener(e -> btnEnvViewAction());
 
-        this.textPane = new JTextPane();
+        this.textPane = new JTextPane(); // @TODO: disable render lne break
 
         this.envDocumentListener = new EnvDocumentListener(this.textPane.getStyledDocument());
         this.textPane.getStyledDocument().addDocumentListener(this.envDocumentListener);

@@ -118,6 +118,8 @@ public class RequestSplitPaneUI extends JPanel {
         requestPublisher.getOnUrlParamChange().addListener(key, url -> {
             txtRequestUrl.getOnChangeList().remove(txtRequestUrlChange);
             txtRequestUrl.setText(url);
+            requestDto.setUrl(url);
+            requestStagingMonitor.update();
             SwingUtilities.invokeLater(() -> txtRequestUrl.getOnChangeList().add(txtRequestUrlChange));
         });
 

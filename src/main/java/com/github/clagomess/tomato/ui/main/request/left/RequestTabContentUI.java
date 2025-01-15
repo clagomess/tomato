@@ -25,12 +25,12 @@ public class RequestTabContentUI extends JPanel {
         uriParamUI = new URIParamUI(tabKey, requestDto, requestStagingMonitor);
 
         JTabbedPane tpRequest = new JTabbedPane();
-        //@TODO: add count
+        //@TODO: add count - Params
         tpRequest.addTab("Params", uriParamUI);
         tpRequest.addTab("Body", new BodyUI(requestDto.getBody(), requestStagingMonitor));
-        //@TODO: add count
+        //@TODO: add count - Headers
         tpRequest.addTab("Headers", new KeyValueUI(requestDto.getHeaders(), requestStagingMonitor));
-        //@TODO: add count
+        //@TODO: add count - Cookies
         tpRequest.addTab("Cookies", new KeyValueUI(requestDto.getCookies(), requestStagingMonitor));
         add(tpRequest, "span, height 100%");
     }

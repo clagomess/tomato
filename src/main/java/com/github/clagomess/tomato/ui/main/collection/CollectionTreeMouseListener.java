@@ -73,7 +73,7 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         popup.add(new JMenuItem("Open"){{
             addActionListener(e -> requestPublisher.getOnLoad().publish(dto));
         }});
-        popup.add(new JMenuItem("Open Detached", new BxLinkExternalIcon())); //@TODO: implement
+        popup.add(new JMenuItem("Open Detached", new BxLinkExternalIcon())); //@TODO: implement - Open Detached Resquest
         popup.addSeparator();
         popup.add(new JMenuItem("Move", new BxSortAlt2Icon()){{
             addActionListener(e -> new RequestMoveUI(tree, dto));
@@ -106,7 +106,7 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         popup.add(new JMenuItem("Import", new BxImportIcon()){{
             addActionListener(ae -> new CollectionImportUI(e.getComponent(), dto));
         }});
-        popup.add(new JMenuItem("Export", new BxExportIcon())); //@TODO: implement
+        popup.add(new JMenuItem("Export", new BxExportIcon())); //@TODO: implement - Export Collection
         popup.addSeparator();
         popup.add(new JMenuItem("Delete", new BxTrashIcon()){{
             addActionListener(ae -> new CollectionDeleteUI(tree, dto).showConfirmDialog());

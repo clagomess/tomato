@@ -31,7 +31,7 @@ public class HttpService {
 
     private HttpClient getClient() {
         // @TODO: check ssl
-        // @TODO: FOLLOW_REDIRECTS
+        // @TODO: impl. reuse client
         // @TODO: TIMEOUT
         return HttpClient.newHttpClient();
     }

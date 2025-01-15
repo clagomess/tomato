@@ -51,7 +51,7 @@ public class MainUI extends JFrame {
                 addActionListener(l -> new WorkspaceNewUI(mainUI));
             }});
             add(new JMenuItem("Edit Workspaces"){{
-                addActionListener(l -> {}); //@TODO: Implements
+                addActionListener(l -> {}); //@TODO: Implements - Edit Workspaces
             }});
         }});
 
@@ -64,7 +64,7 @@ public class MainUI extends JFrame {
                 addActionListener(l -> new CollectionImportUI(mainUI, null));
             }});
             add(new JMenuItem("Export", new BxExportIcon()){{
-                addActionListener(l -> {}); //@TODO: Implements
+                addActionListener(l -> {}); //@TODO: Implements - Export Collection
             }});
         }});
 
@@ -74,17 +74,17 @@ public class MainUI extends JFrame {
                 addActionListener(l -> new EnvironmentNewUI(mainUI));
             }});
             add(new JMenuItem("Import", new BxImportIcon()){{
-                addActionListener(l -> {}); //@TODO: Implements
+                addActionListener(l -> {}); //@TODO: Implements - Import Environment
             }});
             add(new JMenuItem("Export", new BxExportIcon()){{
-                addActionListener(l -> {}); //@TODO: Implements
+                addActionListener(l -> {}); //@TODO: Implements - Export Environment
             }});
         }});
 
         // about
         menuBar.add(new JMenu("Settings"){{
             add(new JMenuItem("Configuration", new BxSliderAltIcon()){{
-                addActionListener(l -> {}); //@TODO: Implements
+                addActionListener(l -> {}); //@TODO: Implements - Settings -> Configuration
             }});
             add(new JMenuItem("About"){{
                 addActionListener(l -> new AboutUI());

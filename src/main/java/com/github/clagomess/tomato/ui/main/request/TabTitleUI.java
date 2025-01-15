@@ -53,6 +53,12 @@ public class TabTitleUI extends JPanel {
                 tabKey,
                 event -> changeIcon.setIcon(event ? iconHasChanged : iconHasNotChanged)
         ));
+
+        // @TODO: impl. mouse middle click close
+        // @TODO: impl. mouse right click options - Close Tab
+        // @TODO: impl. mouse right click options - Close Left Tabs
+        // @TODO: impl. mouse right click options - Close Right Tabs
+        // @TODO: impl. mouse right click options - Detach
     }
 
     public void onClose(ActionListener listener) {
