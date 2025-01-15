@@ -7,6 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
@@ -155,5 +156,46 @@ public class UrlBuilderTest {
 
         Assertions.assertThat(result)
                 .contains(new RequestDto.KeyValueItem("foo", "{{bar}}"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "http://localhost,http://localhost?foo=bar",
+            "http://localhost,http://localhost?",
+            "http://localhost,http://localhost",
+            "{{tomatoUri}}/:opa,{{tomatoUri}}/:opa",
+    })
+    public void recreateUrl_whenEmptyQuery(
+            String expected,
+            String input
+    ) {
+        UrlBuilder urlBuilder = new UrlBuilder(environmentDSMock, input);
+
+        var result = urlBuilder.recreateUrl(List.of());
+        assertEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "http://localhost?foo=bar,foo,bar",
+            "http://localhost?foo={{bar}},foo,{{bar}}",
+            "http://localhost?foo=01%2F01,foo,01/01",
+            "http://localhost,,",
+            "http://localhost,,aaa",
+    })
+    public void recreateUrl_whenNotEmptyQuery(
+            String expected,
+            String key,
+            String value
+    ){
+        UrlBuilder urlBuilder = new UrlBuilder(
+                environmentDSMock,
+                "http://localhost"
+        );
+
+        var param = new RequestDto.KeyValueItem(key, value);
+
+        var result = urlBuilder.recreateUrl(List.of(param));
+        assertEquals(expected, result);
     }
 }

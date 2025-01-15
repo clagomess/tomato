@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxListPlusIcon;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.util.List;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER;
@@ -22,6 +23,7 @@ public class EnvTextField extends JPanel {
 
         this.envDocumentListener = new EnvDocumentListener(this.textPane.getStyledDocument());
         this.textPane.getStyledDocument().addDocumentListener(this.envDocumentListener);
+        this.envDocumentListener.getOnChangeList().add(content -> setBtnEnvViewEnabledOrDisabled());
 
         var spTextPane = new JScrollPane(textPane);
         spTextPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
@@ -35,10 +37,15 @@ public class EnvTextField extends JPanel {
         add(spTextPane, "height 100%");
     }
 
+    // @TODO: MERGE
     public void addOnChange(EnvTextFieldOnChangeFI value){
         envDocumentListener.getOnChangeList().add(value);
-        envDocumentListener.getOnChangeList().add(content -> setBtnEnvViewEnabledOrDisabled());
     }
+
+    public List<EnvTextFieldOnChangeFI> getOnChangeList(){
+        return envDocumentListener.getOnChangeList();
+    }
+    // <<<<
 
     private void setBtnEnvViewEnabledOrDisabled(){
         btnEnvView.setEnabled(

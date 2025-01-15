@@ -15,6 +15,7 @@ import java.util.List;
 public class URIParamUI extends JPanel {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
     private final TabKey tabKey;
+    private final RequestDto requestDto;
     private final KeyValueUI queryUI;
     private final KeyValueUI pathUI;
 
@@ -24,6 +25,7 @@ public class URIParamUI extends JPanel {
             RequestStagingMonitor requestStagingMonitor
     ) {
         this.tabKey = tabKey;
+        this.requestDto = requestDto;
 
         setLayout(new MigLayout(
                 "insets 0 0 0 0",
@@ -69,7 +71,10 @@ public class URIParamUI extends JPanel {
     }
 
     private void onChange(){
-        log.info("impl"); // @TODO: impl.
+        var url = new UrlBuilder(requestDto.getUrl())
+                .recreateUrl(requestDto.getUrlParam().getQuery());
+
+        requestPublisher.getOnUrlParamChange().publish(tabKey, url);
     }
 
     public void dispose(){

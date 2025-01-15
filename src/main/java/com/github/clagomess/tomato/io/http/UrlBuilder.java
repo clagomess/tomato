@@ -8,7 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @RequiredArgsConstructor
 public class UrlBuilder {
@@ -72,7 +75,7 @@ public class UrlBuilder {
 
         for(var param : queryParam.entrySet()){
             Optional<RequestDto.KeyValueItem> kvitem = query.stream()
-                    .filter(item -> item.getKey().equals(param.getKey()))
+                    .filter(item -> Objects.equals(item.getKey(), param.getKey()))
                     .findFirst();
 
             kvitem.ifPresent(item -> {
@@ -89,5 +92,35 @@ public class UrlBuilder {
         }
 
         query.removeIf(item -> !queryParam.containsKey(item.getKey()));
+    }
+
+    public String recreateUrl(List<RequestDto.KeyValueItem> query){
+        int idx = url.indexOf('?');
+        StringBuilder urlBuffer = new StringBuilder(idx == -1 ? url : url.substring(0, idx));
+
+        if(query.isEmpty()) return urlBuffer.toString();
+
+        AtomicBoolean first = new AtomicBoolean(true);
+        query.stream()
+                .filter(RequestDto.KeyValueItem::isSelected)
+                .filter(param -> StringUtils.isNotBlank(param.getKey()))
+                .forEach(param -> {
+                    if(first.get()){
+                        urlBuffer.append("?");
+                        first.set(false);
+                    }else{
+                        urlBuffer.append('&');
+                    }
+
+                    urlBuffer.append(param.getKey());
+                    urlBuffer.append("=");
+
+                    urlBuffer.append(URLEncoder.encode(
+                            param.getValue() == null ? "" : param.getValue(),
+                            StandardCharsets.UTF_8
+                    ));
+                });
+
+        return urlBuffer.toString();
     }
 }
