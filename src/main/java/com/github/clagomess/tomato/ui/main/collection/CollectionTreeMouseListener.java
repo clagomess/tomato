@@ -77,7 +77,7 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         }});
         popup.add(new JMenuItem("Open Detached", new BxLinkExternalIcon()){{
             addActionListener(e -> {
-                new WaitExecution(() -> new RequestUI(dto).setVisible(true)).execute();
+                new WaitExecution(() -> new RequestUI(dto)).execute();
             });
         }});
         popup.addSeparator();

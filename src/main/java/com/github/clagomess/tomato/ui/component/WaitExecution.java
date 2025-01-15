@@ -39,7 +39,7 @@ public class WaitExecution {
     }
 
     public void execute(){
-        SwingUtilities.invokeLater(() -> {
+        new Thread(() -> {
             try {
                 setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 setButtonEnabled(false);
@@ -50,7 +50,7 @@ public class WaitExecution {
                 setButtonEnabled(true);
                 setCursor(Cursor.getDefaultCursor());
             }
-        });
+        }, getClass().getSimpleName()).start();
     }
 
     @FunctionalInterface

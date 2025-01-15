@@ -3,7 +3,6 @@ package com.github.clagomess.tomato.ui.main.collection;
 import com.github.clagomess.tomato.ui.main.collection.node.CollectionTreeNode;
 import com.github.clagomess.tomato.ui.main.collection.node.RequestTreeNode;
 
-import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -23,7 +22,10 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
             return;
         }
 
-        SwingUtilities.invokeLater(node::loadChildren);
+        new Thread(
+                node::loadChildren,
+                getClass().getSimpleName()
+        ).start();
     }
 
     @Override

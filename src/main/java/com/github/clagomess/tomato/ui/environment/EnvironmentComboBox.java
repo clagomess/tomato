@@ -16,6 +16,8 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.util.Objects;
 
+import static javax.swing.SwingUtilities.invokeLater;
+
 public class EnvironmentComboBox extends JPanel {
     private final ComboBox comboBox = new ComboBox();
     private final JButton btnEdit = new JButton(new BxEditIcon()){{
@@ -36,30 +38,32 @@ public class EnvironmentComboBox extends JPanel {
         add(comboBox, "width ::100% - 32px");
         add(btnEdit);
 
-        SwingUtilities.invokeLater(this::addItens);
+        new Thread(this::addItens, getClass().getSimpleName()).start();
+
         environmentPublisher.getOnInsert().addListener(event -> addItens());
         workspacePublisher.getOnSwitch().addListener(event -> addItens());
 
         comboBox.addActionListener(event -> setWorkspaceSessionSelected());
 
-        btnEdit.addActionListener(event -> SwingUtilities.invokeLater(() -> {
+        btnEdit.addActionListener(event -> {
             setBtnEditEnabledOrDisabled();
             if(comboBox.getSelectedItem() == null) return;
-            new EnvironmentEditUI(this, comboBox.getSelectedItem());
-        }));
+
+            invokeLater(() -> new EnvironmentEditUI(this, comboBox.getSelectedItem()));
+        });
     }
 
     private void addItens() {
         try {
-            comboBox.removeAllItems();
+            invokeLater(comboBox::removeAllItems);
 
             var session = workspaceSessionRepository.load();
 
             environmentRepository.list().forEach(item -> {
-                comboBox.addItem(item);
+                invokeLater(() -> comboBox.addItem(item));
 
                 if(item.getId().equals(session.getEnvironmentId())){
-                    comboBox.setSelectedItem(item);
+                    invokeLater(() -> comboBox.setSelectedItem(item));
                 }
             });
 
@@ -70,10 +74,10 @@ public class EnvironmentComboBox extends JPanel {
     }
 
     private void setBtnEditEnabledOrDisabled(){
-        btnEdit.setEnabled(
+        invokeLater(() -> btnEdit.setEnabled(
                 comboBox.getItemCount() > 0 &&
                 comboBox.getSelectedItem() != null
-        );
+        ));
     }
 
     private void setWorkspaceSessionSelected() {

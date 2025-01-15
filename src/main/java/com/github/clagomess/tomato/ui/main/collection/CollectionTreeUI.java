@@ -49,7 +49,11 @@ public class CollectionTreeUI extends JPanel {
         add(scrollPane, "height 100%");
 
         // data
-        SwingUtilities.invokeLater(this::loadCurrentWorkspace);
+        new Thread(
+                this::loadCurrentWorkspace,
+                getClass().getSimpleName()
+        ).start();
+
         workspacePublisher.getOnSwitch().addListener(event -> {
             loadCurrentWorkspace();
         });

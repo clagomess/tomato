@@ -7,26 +7,30 @@ import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 
 import javax.swing.*;
 
+import static javax.swing.SwingUtilities.invokeLater;
+
 public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
     private final CollectionRepository collectionRepository = new CollectionRepository();
 
     public CollectionComboBox(CollectionTreeDto selectedCollectionTree) {
         setRenderer(new DtoListCellRenderer<>(CollectionTreeDto::getFlattenedParentString));
-        SwingUtilities.invokeLater(() -> addItens(selectedCollectionTree));
+        addItens(selectedCollectionTree);
     }
 
     private void addItens(CollectionTreeDto selectedCollectionTree) {
-        try {
-            collectionRepository.getWorkspaceCollectionTree()
-                    .flattened()
-                    .forEach(this::addItem);
+        new Thread(() -> {
+            try {
+                collectionRepository.getWorkspaceCollectionTree()
+                        .flattened()
+                        .forEach(item -> invokeLater(() -> addItem(item)));
 
-            if(selectedCollectionTree != null){
-                setSelectedItem(selectedCollectionTree);
+                if(selectedCollectionTree != null){
+                    invokeLater(() -> setSelectedItem(selectedCollectionTree));
+                }
+            } catch (Throwable e){
+                invokeLater(() -> DialogFactory.createDialogException(this, e));
             }
-        } catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
-        }
+        }, "CollectionComboBox").start();
     }
 
     @Override

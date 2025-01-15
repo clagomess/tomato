@@ -6,7 +6,6 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -27,17 +26,15 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
         setWrapStyleWord(true);
         setAntiAliasingEnabled(true);
 
-        SwingUtilities.invokeLater(() -> {
-            try {
-                var theme = Theme.load(getClass().getResourceAsStream(
-                        "trsyntax-textarea-theme.xml"
-                ));
+        try {
+            var theme = Theme.load(getClass().getResourceAsStream(
+                    "trsyntax-textarea-theme.xml"
+            ));
 
-                theme.apply(this);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+            theme.apply(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         getDocument().addDocumentListener(new DocumentListener() {
             @Override

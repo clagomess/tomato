@@ -159,7 +159,7 @@ public class RequestSplitPaneUI extends JPanel {
                 btnSendRequest.setEnabled(true);
                 btnCancelRequest.setEnabled(false);
             }
-        });
+        }, "request-perform");
 
         requestThread.start();
 

@@ -5,20 +5,24 @@ import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import com.github.clagomess.tomato.ui.main.request.RequestSplitPaneUI;
+import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+@Slf4j
 public class RequestUI extends JFrame {
     private final RequestRepository requestRepository = new RequestRepository();
     private final RequestSplitPaneUI requestSplitPaneUI;
 
     public RequestUI(
             RequestHeadDto requestHead
-    ) throws IOException {
-        setTitle(requestHead.getName()); // @TODO: add listener when change name
+    ) throws IOException, InterruptedException {
+        // @TODO: add title listener when change name
+        // @TODO: add '*' when change request
+        setTitle(requestHead.getName());
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(600, 600));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -35,6 +39,7 @@ public class RequestUI extends JFrame {
 
         pack();
         setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     @Override

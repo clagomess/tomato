@@ -2,7 +2,6 @@ package com.github.clagomess.tomato.publisher;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -22,11 +21,9 @@ public class NoKeyPublisher<T> extends BasePublisher<Void, T> {
 
         var noConcurrentList = new ArrayList<>(listeners);
 
-        noConcurrentList.forEach(listener -> {
-            SwingUtilities.invokeLater(() -> {
-                log.debug("-> trigger: {}", listener.getUuid());
-                listener.getRunnable().change(event);
-            });
+        noConcurrentList.parallelStream().forEach(listener -> {
+            log.debug("-> trigger: {}", listener.getUuid());
+            listener.getRunnable().change(event);
         });
 
         noConcurrentList.clear();

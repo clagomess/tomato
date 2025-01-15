@@ -12,7 +12,7 @@ public class WorkspaceComboBox extends JComboBox<WorkspaceDto> {
 
     public WorkspaceComboBox() {
         setRenderer(new DtoListCellRenderer<>(WorkspaceDto::getName));
-        SwingUtilities.invokeLater(this::addItens);
+        new Thread(this::addItens, getClass().getSimpleName()).start();
     }
 
     private void addItens() {

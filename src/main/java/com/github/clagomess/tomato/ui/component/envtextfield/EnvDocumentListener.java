@@ -8,7 +8,6 @@ import com.github.clagomess.tomato.ui.ColorConstant;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -44,7 +43,7 @@ class EnvDocumentListener implements DocumentListener {
         StyleConstants.setForeground(envFilledStyle, ColorConstant.GREEN);
         StyleConstants.setForeground(envNotFilledStyle, ColorConstant.RED);
 
-        SwingUtilities.invokeLater(this::updateEnvMap);
+        new Thread(this::updateEnvMap, getClass().getSimpleName()).start();
 
         listenerUuid.add(workspaceSessionPublisher.getOnSave().addListener(event -> {
             updateEnvMap();
@@ -61,18 +60,18 @@ class EnvDocumentListener implements DocumentListener {
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        SwingUtilities.invokeLater(() -> {
+        new Thread(() -> {
             updateEnvStyle();
             triggerOnChange();
-        });
+        }, getClass().getSimpleName()).start();
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        SwingUtilities.invokeLater(() -> {
+        new Thread(() -> {
             updateEnvStyle();
             triggerOnChange();
-        });
+        }, getClass().getSimpleName()).start();
     }
 
     @Override
