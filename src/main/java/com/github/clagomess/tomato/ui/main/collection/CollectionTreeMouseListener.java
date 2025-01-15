@@ -4,10 +4,12 @@ import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.collection.*;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
 import com.github.clagomess.tomato.ui.request.RequestDeleteUI;
 import com.github.clagomess.tomato.ui.request.RequestMoveUI;
 import com.github.clagomess.tomato.ui.request.RequestRenameUI;
+import com.github.clagomess.tomato.ui.request.RequestUI;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
@@ -73,7 +75,11 @@ public class CollectionTreeMouseListener extends MouseAdapter {
         popup.add(new JMenuItem("Open"){{
             addActionListener(e -> requestPublisher.getOnLoad().publish(dto));
         }});
-        popup.add(new JMenuItem("Open Detached", new BxLinkExternalIcon())); //@TODO: implement - Open Detached Resquest
+        popup.add(new JMenuItem("Open Detached", new BxLinkExternalIcon()){{
+            addActionListener(e -> {
+                new WaitExecution(() -> new RequestUI(dto).setVisible(true)).execute();
+            });
+        }});
         popup.addSeparator();
         popup.add(new JMenuItem("Move", new BxSortAlt2Icon()){{
             addActionListener(e -> new RequestMoveUI(tree, dto));

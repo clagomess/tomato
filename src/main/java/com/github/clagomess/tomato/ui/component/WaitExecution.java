@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.ui.component;
 
+import com.github.clagomess.tomato.ui.MainUI;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
@@ -23,7 +24,10 @@ public class WaitExecution {
     private void setCursor(Cursor cursor) {
         if(component == null) {
             Arrays.stream(Window.getWindows())
-                    .forEach(window -> window.setCursor(cursor));
+                    .filter(item -> item instanceof MainUI)
+                    .findFirst()
+                    .ifPresent(window -> window.setCursor(cursor))
+            ;
         }else{
             component.setCursor(cursor);
         }
