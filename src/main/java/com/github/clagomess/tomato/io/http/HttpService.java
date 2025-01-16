@@ -13,6 +13,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.POST;
@@ -29,11 +31,15 @@ public class HttpService {
         this.debug = new HttpDebug();
     }
 
-    private HttpClient getClient() {
-        // @TODO: check ssl
-        // @TODO: impl. reuse client
-        // @TODO: TIMEOUT
-        return HttpClient.newHttpClient();
+    private static HttpClient client;
+    private HttpClient getClient() throws NoSuchAlgorithmException, KeyManagementException {
+        if(client != null) return client;
+
+        client = HttpClient.newBuilder()
+                .sslContext(new SSLContextBuilder().build())
+                .build();
+
+        return client;
     }
 
     public ResponseDto perform(){

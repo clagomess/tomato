@@ -4,12 +4,18 @@ import com.github.clagomess.tomato.enums.HttpStatusEnum;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.naming.InvalidNameException;
+import javax.naming.ldap.LdapName;
+import javax.net.ssl.SSLSession;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
+import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -51,6 +57,10 @@ public class HttpDebug {
 
         if(response == null) return result.toString();
 
+        if(response.sslSession().isPresent()){
+            result.append(assemblyCertificates(response.sslSession().get()));
+        }
+
         result.append("\n");
         result.append("< ");
         result.append(response.version());
@@ -72,6 +82,59 @@ public class HttpDebug {
         }
 
         return result.toString();
+    }
+
+    protected String assemblyCN(String dn) {
+        try {
+            return new LdapName(dn).getRdns().stream()
+                    .filter(item -> "CN".equals(item.getType()))
+                    .map(item -> String.valueOf(item.getValue()))
+                    .findFirst()
+                    .orElse(dn);
+        }catch (InvalidNameException e){
+            log.error(e.getMessage());
+        }
+
+        return dn;
+    }
+
+    protected StringBuilder assemblyCertificates(SSLSession session){
+        StringBuilder result = new StringBuilder();
+
+        result.append("# CERTIFICATE CHAIN - ");
+        result.append(session.getProtocol()).append(" - ");
+        result.append(session.getCipherSuite()).append("\n");
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        try {
+            Arrays.stream(session.getPeerCertificates())
+                    .filter(X509Certificate.class::isInstance)
+                    .map(X509Certificate.class::cast)
+                    .forEach(certificate -> {
+                        var subject = certificate.getSubjectX500Principal();
+                        var issuer = certificate.getIssuerX500Principal();
+
+                        result.append("Subject: ");
+                        result.append(assemblyCN(subject.getName()));
+                        result.append("\n");
+                        result.append("Valid from: ");
+                        result.append(formatter.format(certificate.getNotBefore()));
+                        result.append(" - ");
+                        result.append(formatter.format(certificate.getNotAfter()));
+                        result.append("\n");
+
+                        if(!issuer.equals(subject)) {
+                            result.append("Issuer: ");
+                            result.append(assemblyCN(issuer.getName()));
+                            result.append("\n\n");
+                        }
+                    });
+        }catch (Throwable e){
+            log.warn(e.getMessage());
+        }
+
+        return result;
     }
 
     protected StringBuilder assemblyHeaderItem(String key, List<String> value){
