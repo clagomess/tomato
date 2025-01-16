@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.request;
 
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.io.repository.Repository;
+import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ public class RequestDeleteUI {
     private final Component parent;
     private final RequestHeadDto requestHead;
 
-    private final Repository repository = new Repository();
+    private final RequestRepository requestRepository = new RequestRepository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public void showConfirmDialog(){
@@ -36,8 +36,7 @@ public class RequestDeleteUI {
 
     private void delete(){
         new WaitExecution(parent, () -> {
-            // @TODO: change to own *repository and apply cache evict
-            repository.delete(requestHead.getPath());
+            requestRepository.delete(requestHead);
 
             // update source collection
             requestPublisher.getOnMove().publish(

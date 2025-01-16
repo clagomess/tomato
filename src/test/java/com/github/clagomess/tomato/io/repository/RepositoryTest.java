@@ -168,30 +168,4 @@ public class RepositoryTest {
         Assertions.assertThat(new File(dest, "foo"))
                 .isDirectory();
     }
-
-    @Test
-    public void delete_whenDeleteFile() throws IOException {
-        var file = new File(mockHome, "foo.json");
-
-        repository.writeFile(file, new RequestDto());
-
-        repository.delete(file);
-
-        Assertions.assertThat(file)
-                .doesNotExist();
-    }
-
-    @Test
-    public void delete_whenDeleteDir() throws IOException {
-        var dir = new File(mockHome, "dir");
-        assertTrue(dir.mkdir());
-        var file = new File(mockHome, "foo.json");
-
-        repository.writeFile(file, new RequestDto());
-
-        repository.delete(dir);
-
-        Assertions.assertThat(dir)
-                .doesNotExist();
-    }
 }

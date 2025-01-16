@@ -9,13 +9,9 @@ import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Slf4j
 public class Repository { //@TODO: make package private
@@ -129,27 +125,6 @@ public class Repository { //@TODO: make package private
                     source,
                     target
             ));
-        }
-    }
-
-    public void delete(File target) throws IOException {
-        log.debug("TO-DELETE: {}", target);
-
-        if(target.isDirectory()){
-            try(Stream<Path> paths = Files.walk(target.toPath())){
-                paths.sorted(Comparator.reverseOrder())
-                        .map(Path::toFile)
-                        .forEach(item -> {
-                            log.debug("DELETE: {}", item);
-                            if(!item.delete()){
-                                throw new RuntimeException(item + " cannot be deleted");
-                            }
-                        });
-            }
-        }else{
-            if(!target.delete()){
-                throw new IOException(target + " cannot be deleted");
-            }
         }
     }
 }

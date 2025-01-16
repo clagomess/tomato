@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.io.repository;
 
 import com.github.clagomess.tomato.dto.data.CollectionDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -126,5 +127,19 @@ public class CollectionRepositoryTest {
         assertEquals("nPUaq0TC", result.getId());
         assertEquals("ROOT", result.getName());
         Assertions.assertThat(result.getPath()).isDirectory();
+    }
+
+    @Test
+    public void delete() throws IOException {
+        var dir = collectionRepository.save(mockDataDir, new CollectionDto());
+        new RequestRepository().save(dir, new RequestDto());
+
+        CollectionTreeDto tree = collectionRepository.load(dir).orElseThrow();
+        tree.setPath(dir);
+
+        collectionRepository.delete(tree);
+
+        Assertions.assertThat(dir)
+                .doesNotExist();
     }
 }

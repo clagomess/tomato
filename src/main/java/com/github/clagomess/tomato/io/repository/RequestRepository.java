@@ -35,7 +35,7 @@ public class RequestRepository {
     }
 
     protected static final CacheManager<File, Optional<RequestHeadDto>> cacheHead = new CacheManager<>();
-    private Optional<RequestHeadDto> loadHead(File file) throws IOException {
+    protected Optional<RequestHeadDto> loadHead(File file) throws IOException {
         return cacheHead.get(file, () -> repository.readFile(
                 file,
                 new TypeReference<>() {}
@@ -91,5 +91,16 @@ public class RequestRepository {
                         return null;
                     }
                 }).filter(Objects::nonNull);
+    }
+
+    public void delete(RequestHeadDto head) throws IOException {
+        log.debug("DELETE: {}", head.getPath());
+
+        if(!head.getPath().delete()){
+            throw new IOException(head.getPath() + " cannot be deleted");
+        }
+
+        cacheHead.evict(head.getPath());
+        cacheListFiles.evict(head.getPath().getParentFile());
     }
 }

@@ -10,10 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -140,5 +139,25 @@ public class CollectionRepository {
         root.setRequests(requestRepository::getRequestList);
 
         return root;
+    }
+
+    public void delete(CollectionTreeDto tree) throws IOException {
+        log.debug("TO-DELETE: {}", tree.getPath());
+
+        try(Stream<Path> paths = Files.walk(tree.getPath().toPath())){
+            paths.sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(item -> {
+                        log.debug("DELETE: {}", item);
+                        if(!item.delete()){
+                            throw new RuntimeException(item + " cannot be deleted");
+                        }
+                    });
+        }
+
+        cacheCollection.evict(tree.getId());
+        cacheCollectionTree.evict(tree.getId());
+        cacheListFiles.evict(tree.getPath().getParentFile());
+        cacheListFiles.evict(tree.getPath());
     }
 }

@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import com.github.clagomess.tomato.io.repository.Repository;
+import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ public class CollectionDeleteUI {
     private final Component parent;
     private final CollectionTreeDto collectionTree;
 
-    private final Repository repository = new Repository();
+    private final CollectionRepository collectionRepository = new CollectionRepository();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public void showConfirmDialog(){
@@ -36,8 +36,7 @@ public class CollectionDeleteUI {
 
     private void delete(){
         new WaitExecution(parent, () -> {
-            // @TODO: change to own *repository and apply cache evict
-            repository.delete(collectionTree.getPath());
+            collectionRepository.delete(collectionTree);
 
             // update source collection
             collectionPublisher.getOnSave().publish(

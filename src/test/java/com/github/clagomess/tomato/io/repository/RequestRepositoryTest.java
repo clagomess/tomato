@@ -71,4 +71,16 @@ public class RequestRepositoryTest {
                 ))
         ;
     }
+
+    @Test
+    public void delete() throws IOException {
+        File file = requestRepository.save(testData, new RequestDto());
+        RequestHeadDto head = requestRepository.loadHead(file).orElseThrow();
+        head.setPath(file);
+
+        requestRepository.delete(head);
+
+        Assertions.assertThat(file)
+                .doesNotExist();
+    }
 }
