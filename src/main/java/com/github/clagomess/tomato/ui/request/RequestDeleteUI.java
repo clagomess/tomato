@@ -39,10 +39,13 @@ public class RequestDeleteUI {
             requestRepository.delete(requestHead);
 
             // update source collection
-            requestPublisher.getOnMove().publish(
-                    new RequestPublisher.ParentCollectionId(
-                            requestHead.getParent().getId()
-                    ),
+            var key = new RequestPublisher.RequestKey(
+                    requestHead.getParent().getId(),
+                    requestHead.getId()
+            );
+
+            requestPublisher.getOnDelete().publish(
+                    key,
                     new RequestPublisher.RequestId(requestHead.getId())
             );
         }).execute();

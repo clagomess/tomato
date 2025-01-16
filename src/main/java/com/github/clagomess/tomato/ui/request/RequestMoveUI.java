@@ -66,14 +66,17 @@ public class RequestMoveUI extends JFrame {
             requestRepository.move(requestHead, destination);
 
             // update source collection
-            requestPublisher.getOnMove().publish(
-                    new RequestPublisher.ParentCollectionId(
-                            requestHead.getParent().getId()
-                    ),
+            var key = new RequestPublisher.RequestKey(
+                    requestHead.getParent().getId(),
+                    requestHead.getId()
+            );
+
+            requestPublisher.getOnDelete().publish(
+                    key,
                     new RequestPublisher.RequestId(requestHead.getId())
             );
 
-            // update dest collection
+            // update target collection
             this.requestHead.setParent(destination);
             this.requestHead.setPath(new File(
                     destination.getPath(),
@@ -81,9 +84,7 @@ public class RequestMoveUI extends JFrame {
             ));
 
             requestPublisher.getOnInsert().publish(
-                    new RequestPublisher.ParentCollectionId(
-                        destination.getId()
-                    ),
+                    new RequestPublisher.ParentCollectionId(destination.getId()),
                     requestHead
             );
 

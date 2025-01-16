@@ -20,7 +20,7 @@ public class RequestPublisher {
 
     // for collection tree
     private final KeyPublisher<ParentCollectionId, RequestHeadDto> onInsert = new KeyPublisher<>();
-    private final KeyPublisher<ParentCollectionId, RequestId> onMove = new KeyPublisher<>();
+    private final KeyPublisher<RequestKey, RequestId> onDelete = new KeyPublisher<>();
     private final KeyPublisher<RequestKey, RequestHeadDto> onUpdate = new KeyPublisher<>();
 
     public record RequestId(String requestId){}
