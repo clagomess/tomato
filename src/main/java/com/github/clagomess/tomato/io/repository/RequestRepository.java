@@ -55,8 +55,7 @@ public class RequestRepository {
         }
 
         repository.writeFile(requestFile, request);
-        cacheHead.evict(requestFile);
-        cacheListFiles.evict(basepath);
+        cacheEvict(requestFile);
 
         return requestFile;
     }
@@ -93,6 +92,11 @@ public class RequestRepository {
                 }).filter(Objects::nonNull);
     }
 
+    public void cacheEvict(File requestFile) {
+        cacheHead.evict(requestFile);
+        cacheListFiles.evict(requestFile.getParentFile());
+    }
+
     public void delete(RequestHeadDto head) throws IOException {
         log.debug("DELETE: {}", head.getPath());
 
@@ -100,7 +104,24 @@ public class RequestRepository {
             throw new IOException(head.getPath() + " cannot be deleted");
         }
 
-        cacheHead.evict(head.getPath());
-        cacheListFiles.evict(head.getPath().getParentFile());
+        cacheEvict(head.getPath());
+    }
+
+    public void move(
+            RequestHeadDto source,
+            CollectionTreeDto target
+    ) throws IOException {
+        log.debug("MOVE: {} -> {}", source.getPath(), target.getPath());
+
+        if(!source.getPath().renameTo(new File(target.getPath(), source.getPath().getName()))){
+            throw new IOException(String.format(
+                    "Fail to move %s to %s",
+                    source,
+                    target
+            ));
+        }
+
+        cacheEvict(source.getPath());
+        cacheEvict(target.getPath());
     }
 }

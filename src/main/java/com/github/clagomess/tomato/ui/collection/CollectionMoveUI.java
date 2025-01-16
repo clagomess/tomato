@@ -2,7 +2,6 @@ package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
-import com.github.clagomess.tomato.io.repository.Repository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -17,7 +16,6 @@ public class CollectionMoveUI extends JFrame {
     private final CollectionComboBox cbCollectionDestination;
     private final CollectionTreeDto collectionTree;
 
-    private final Repository repository = new Repository();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
     private final CollectionRepository collectionRepository = new CollectionRepository();
 
@@ -62,8 +60,7 @@ public class CollectionMoveUI extends JFrame {
             CollectionTreeDto destination = cbCollectionDestination.getSelectedItem();
             if(destination == null) throw new Exception("Destination not selected");
 
-            // @TODO: change to own *repository and apply cache evict
-            repository.move(this.collectionTree.getPath(), destination.getPath());
+            collectionRepository.move(collectionTree, destination);
 
             // update source collection
             collectionPublisher.getOnSave().publish(

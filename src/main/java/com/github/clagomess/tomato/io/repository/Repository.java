@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
-public class Repository { //@TODO: make package private
+class Repository {
 
     protected File createDirectoryIfNotExists(File path){
         if(path.isDirectory()){
@@ -112,19 +112,5 @@ public class Repository { //@TODO: make package private
                 basepath.listFiles(),
                 () -> new File[0]
         );
-    }
-
-    public void move(File source, File target) throws IOException {
-        log.debug("MOVE: {} -> {}", source, target);
-
-        if(!target.isDirectory()) throw new IOException(target + " is not a directory");
-
-        if(!source.renameTo(new File(target, source.getName()))){
-            throw new IOException(String.format(
-                    "Fail to move %s to %s",
-                    source,
-                    target
-            ));
-        }
     }
 }

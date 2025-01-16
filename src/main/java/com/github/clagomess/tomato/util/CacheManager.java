@@ -39,6 +39,8 @@ public class CacheManager<K, V> {
     }
 
     public void evict(K key) {
+        if(!cache.containsKey(key)) return;
+
         log.debug("Cache Evict: {}", key);
         cache.remove(key);
     }

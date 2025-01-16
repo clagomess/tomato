@@ -142,4 +142,27 @@ public class CollectionRepositoryTest {
         Assertions.assertThat(dir)
                 .doesNotExist();
     }
+
+    @Test
+    public void move() throws IOException {
+        // create source
+        var sourceDir = collectionRepository.save(mockDataDir, new CollectionDto());
+        new RequestRepository().save(sourceDir, new RequestDto());
+
+        CollectionTreeDto sourceTree = collectionRepository.load(sourceDir).orElseThrow();
+        sourceTree.setPath(sourceDir);
+
+        // create target
+        var targetDir = collectionRepository.save(mockDataDir, new CollectionDto());
+        new RequestRepository().save(targetDir, new RequestDto());
+
+        CollectionTreeDto targetTree = collectionRepository.load(targetDir).orElseThrow();
+        targetTree.setPath(targetDir);
+
+        // test
+        collectionRepository.move(sourceTree, targetTree);
+
+        Assertions.assertThat(new File(targetDir, sourceDir.getName()))
+                .isDirectory();
+    }
 }

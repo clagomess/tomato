@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.io.repository;
 
+import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RequestRepositoryTest {
     private final RequestRepository requestRepository = new RequestRepository();
-
+    private final CollectionRepository collectionRepository = new CollectionRepository();
 
     private final File testData = new File(Objects.requireNonNull(getClass().getResource(
             "home/data"
@@ -82,5 +83,26 @@ public class RequestRepositoryTest {
 
         Assertions.assertThat(file)
                 .doesNotExist();
+    }
+
+    @Test
+    public void move() throws IOException {
+        // create source
+        File file = requestRepository.save(testData, new RequestDto());
+        RequestHeadDto source = requestRepository.loadHead(file).orElseThrow();
+        source.setPath(file);
+
+        // create target
+        var targetDir = collectionRepository.save(testData, new CollectionDto());
+        new RequestRepository().save(targetDir, new RequestDto());
+
+        CollectionTreeDto targetTree = collectionRepository.load(targetDir).orElseThrow();
+        targetTree.setPath(targetDir);
+
+        // teste
+        requestRepository.move(source, targetTree);
+
+        Assertions.assertThat(new File(targetDir, source.getPath().getName()))
+                .isFile();
     }
 }

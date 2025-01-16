@@ -75,10 +75,7 @@ public class CollectionRepository {
         );
 
         repository.writeFile(collectionFile, collection);
-        cacheCollection.evict(collection.getId());
-        cacheCollectionTree.evict(collection.getId());
-        cacheListFiles.evict(parentPath);
-        cacheListFiles.evict(collectionDir);
+        cacheEvict(collection.getId(), collectionDir);
 
         return collectionDir;
     }
@@ -141,6 +138,39 @@ public class CollectionRepository {
         return root;
     }
 
+    private void cacheEvict(String id, File collectionDir) {
+        cacheCollection.evict(id);
+        cacheCollectionTree.evict(id);
+        cacheListFiles.evict(collectionDir.getParentFile());
+        cacheListFiles.evict(collectionDir);
+    }
+
+    public void move(
+            CollectionTreeDto source,
+            CollectionTreeDto target
+    ) throws IOException {
+        log.debug("MOVE: {} -> {}", source.getPath(), target.getPath());
+
+        try(Stream<Path> paths = Files.walk(source.getPath().toPath())){
+            paths.map(Path::toFile).forEach(requestRepository::cacheEvict);
+        }
+
+        try(Stream<Path> paths = Files.walk(target.getPath().toPath())){
+            paths.map(Path::toFile).forEach(requestRepository::cacheEvict);
+        }
+
+        if(!source.getPath().renameTo(new File(target.getPath(), source.getPath().getName()))){
+            throw new IOException(String.format(
+                    "Fail to move %s to %s",
+                    source.getPath(),
+                    target.getPath()
+            ));
+        }
+
+        cacheEvict(source.getId(), source.getPath());
+        cacheEvict(target.getId(), target.getPath());
+    }
+
     public void delete(CollectionTreeDto tree) throws IOException {
         log.debug("TO-DELETE: {}", tree.getPath());
 
@@ -152,12 +182,10 @@ public class CollectionRepository {
                         if(!item.delete()){
                             throw new RuntimeException(item + " cannot be deleted");
                         }
+                        requestRepository.cacheEvict(item);
                     });
         }
 
-        cacheCollection.evict(tree.getId());
-        cacheCollectionTree.evict(tree.getId());
-        cacheListFiles.evict(tree.getPath().getParentFile());
-        cacheListFiles.evict(tree.getPath());
+        cacheEvict(tree.getId(), tree.getPath());
     }
 }

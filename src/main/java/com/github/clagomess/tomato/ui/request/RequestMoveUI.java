@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.ui.request;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.io.repository.Repository;
+import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.collection.CollectionComboBox;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
@@ -19,7 +19,7 @@ public class RequestMoveUI extends JFrame {
     private final CollectionComboBox cbCollectionDestination;
     private final RequestHeadDto requestHead;
 
-    private final Repository repository = new Repository();
+    private final RequestRepository requestRepository = new RequestRepository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestMoveUI(
@@ -63,8 +63,7 @@ public class RequestMoveUI extends JFrame {
             CollectionTreeDto destination = cbCollectionDestination.getSelectedItem();
             if(destination == null) throw new Exception("Destination not selected");
 
-            // @TODO: change to own *repository and apply cache evict
-            repository.move(this.requestHead.getPath(), destination.getPath());
+            requestRepository.move(requestHead, destination);
 
             // update source collection
             requestPublisher.getOnMove().publish(
