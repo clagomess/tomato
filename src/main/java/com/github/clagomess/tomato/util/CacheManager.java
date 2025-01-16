@@ -38,6 +38,12 @@ public class CacheManager<K, V> {
         return get(defaultKey, doTaskIfAbsent);
     }
 
+    public synchronized <E extends Throwable> V getSynchronized(
+            TaskFI<V, E> doTaskIfAbsent
+    ) throws E {
+        return get(defaultKey, doTaskIfAbsent);
+    }
+
     public void evict(K key) {
         if(!cache.containsKey(key)) return;
 

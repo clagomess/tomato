@@ -10,7 +10,7 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.stream.Stream;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,8 +24,8 @@ public class WorkspaceRepositoryTest {
         assertTrue(mockDataDir.mkdirs());
 
         // reset cache
-        WorkspaceRepository.cacheListDirectories.evictAll();
-        WorkspaceRepository.cache.evictAll();
+        WorkspaceRepository.cacheList.evictAll();
+        WorkspaceRepository.cacheLoad.evictAll();
     }
 
     @Test
@@ -124,7 +124,7 @@ public class WorkspaceRepositoryTest {
                 )
         );
         Mockito.when(workspaceDSMock.list())
-                .thenReturn(Stream.of(workspace));
+                .thenReturn(List.of(workspace));
         Mockito.when(workspaceDSMock.getDataSessionWorkspace())
                 .thenCallRealMethod();
 
@@ -150,7 +150,7 @@ public class WorkspaceRepositoryTest {
                 )
         );
         Mockito.when(workspaceDS.list())
-                .thenReturn(Stream.of(new WorkspaceDto(), workspace));
+                .thenReturn(List.of(new WorkspaceDto(), workspace));
         Mockito.when(workspaceDS.getDataSessionWorkspace())
                 .thenCallRealMethod();
 

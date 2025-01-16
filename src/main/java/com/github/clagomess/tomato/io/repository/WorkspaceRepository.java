@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -46,37 +45,34 @@ public class WorkspaceRepository {
                 )
         ), dto);
 
-        cacheListDirectories.evict();
-        cache.evict(dto.getId());
+        cacheLoad.evict(dto.getId());
+        cacheList.evict();
     }
 
-    protected static final CacheManager<String, List<File>> cacheListDirectories = new CacheManager<>("workspaceDirs");
     private List<File> listDirectories() throws IOException {
-        return cacheListDirectories.get(() -> {
-            File dataDir = repository.getDataDir();
+        File dataDir = repository.getDataDir();
 
-            List<File> result = Arrays.stream(repository.listFiles(dataDir))
-                    .filter(File::isDirectory)
-                    .filter(item -> item.getName().startsWith("workspace"))
-                    .toList();
+        List<File> result = Arrays.stream(repository.listFiles(dataDir))
+                .filter(File::isDirectory)
+                .filter(item -> item.getName().startsWith("workspace"))
+                .toList();
 
-            if (result.isEmpty()) {
-                var defaultWorkspace = new WorkspaceDto();
-                defaultWorkspace.setName("Default Workspace");
-                save(defaultWorkspace);
+        if (result.isEmpty()) {
+            var defaultWorkspace = new WorkspaceDto();
+            defaultWorkspace.setName("Default Workspace");
+            save(defaultWorkspace);
 
-                return List.of(getWorkspaceDirectory(defaultWorkspace.getId()));
-            }
+            return List.of(getWorkspaceDirectory(defaultWorkspace.getId()));
+        }
 
-            return result;
-        });
+        return result;
     }
 
-    protected static final CacheManager<String, Optional<WorkspaceDto>> cache = new CacheManager<>();
-    public Optional<WorkspaceDto> load(File workspaceDir) throws IOException {
+    protected static final CacheManager<String, Optional<WorkspaceDto>> cacheLoad = new CacheManager<>();
+    protected Optional<WorkspaceDto> load(File workspaceDir) throws IOException {
         String id = workspaceDir.getName().replace("workspace-", "");
 
-        return cache.get(id, () -> repository.readFile(
+        return cacheLoad.get(id, () -> repository.readFile(
                 new File(
                         workspaceDir,
                         String.format("workspace-%s.json", id)
@@ -85,8 +81,9 @@ public class WorkspaceRepository {
         ));
     }
 
-    public Stream<WorkspaceDto> list() throws IOException {
-        return listDirectories().stream()
+    protected static final CacheManager<String, List<WorkspaceDto>> cacheList = new CacheManager<>("workspaces");
+    public List<WorkspaceDto> list() throws IOException {
+        return cacheList.getSynchronized(() -> listDirectories().stream()
                 .map(item -> {
                     try{
                         Optional<WorkspaceDto> optResult = load(item);
@@ -102,14 +99,16 @@ public class WorkspaceRepository {
                         return null;
                     }
                 })
-                .filter(Objects::nonNull);
+                .filter(Objects::nonNull)
+                .toList()
+        );
     }
 
     public WorkspaceDto getDataSessionWorkspace() throws IOException {
         DataSessionDto dataSession = dataSessionRepository.load();
 
         if(dataSession.getWorkspaceId() == null){
-            WorkspaceDto workspace = list().findFirst().orElseThrow();
+            WorkspaceDto workspace = list().stream().findFirst().orElseThrow();
             dataSession.setWorkspaceId(workspace.getId());
 
             dataSessionRepository.save(dataSession);
@@ -117,7 +116,7 @@ public class WorkspaceRepository {
             return workspace;
         }
 
-        return list()
+        return list().stream()
                 .filter(item -> item.getId().equals(dataSession.getWorkspaceId()))
                 .findFirst()
                 .orElseThrow();
