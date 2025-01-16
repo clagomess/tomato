@@ -13,23 +13,20 @@ import java.awt.*;
 import java.net.URL;
 import java.util.Objects;
 
+@RequiredArgsConstructor
 public class SvgIcon implements Icon {
+    private final String resourceName;
     private final int iconWidth;
     private final int iconHeight;
-    private final SVGDocument document;
+    private final Color color;
 
     public SvgIcon(String resourceName){
         this(resourceName, 18, 18, UIManager.getColor("Objects.Grey"));
     }
 
-    public SvgIcon(
-            String resourceName,
-            int iconWidth,
-            int iconHeight,
-            Color color
-    ) {
-        this.iconWidth = iconWidth;
-        this.iconHeight = iconHeight;
+    private SVGDocument document = null;
+    private SVGDocument getDocument() {
+        if(document != null) return document;
 
         URL svgUrl = Objects.requireNonNull(
                 getClass().getResource(resourceName),
@@ -50,6 +47,7 @@ public class SvgIcon implements Icon {
             );
         }
 
+        return document;
     }
 
     @Override
@@ -59,7 +57,7 @@ public class SvgIcon implements Icon {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
 
-        document.render(c, g2, new ViewBox(x, y, iconWidth, iconHeight));
+        getDocument().render(c, g2, new ViewBox(x, y, iconWidth, iconHeight));
     }
 
     @Override
@@ -82,13 +80,16 @@ public class SvgIcon implements Icon {
         }
     }
 
-    @RequiredArgsConstructor
     private static class CustomDomProcessor implements DomProcessor {
-        private final Color color;
+        private final String color;
+
+        public CustomDomProcessor(Color color) {
+            this.color = "#" + String.format("%06X", 0xFFFFFF & color.getRGB());
+        }
 
         @Override
         public void process(ParsedElement root) {
-            root.attributeNode().attributes().put("fill", "#" + String.format("%06X", 0xFFFFFF & color.getRGB()));
+            root.attributeNode().attributes().put("fill", this.color);
         }
     }
 }
