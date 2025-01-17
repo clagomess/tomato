@@ -89,6 +89,7 @@ public class RequestSplitPaneUI extends JPanel {
         ));
         paneUrl.add(cbHttpMethod);
         paneUrl.add(txtRequestUrl);
+        // @TODO: add option to view rendered URI
         paneUrl.add(btnSendRequest);
         paneUrl.add(btnCancelRequest);
         add(paneUrl, "width 300::100%, wrap");
