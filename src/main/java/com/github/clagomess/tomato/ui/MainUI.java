@@ -36,6 +36,7 @@ public class MainUI extends JFrame {
 
         add(splitPane);
         pack();
+        setVisible(true);
     }
 
     public JMenuBar getMenu(){
