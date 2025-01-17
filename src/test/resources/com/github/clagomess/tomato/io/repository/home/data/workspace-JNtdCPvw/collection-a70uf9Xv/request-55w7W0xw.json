@@ -1,7 +1,7 @@
 {
   "id" : "55w7W0xw",
   "createTime" : "2024-12-18T23:06:02",
-  "updateTime" : "2025-01-14T17:02:49",
+  "updateTime" : "2025-01-17T16:38:50",
   "name" : "/redirect.php",
   "method" : "GET",
   "url" : "{{echoServer}}/redirect.php",
@@ -9,12 +9,7 @@
     "path" : [ ],
     "query" : [ ]
   },
-  "headers" : [ {
-    "type" : "TEXT",
-    "key" : "x-set-response-status-code",
-    "value" : "301",
-    "selected" : true
-  } ],
+  "headers" : [ ],
   "cookies" : [ ],
   "body" : {
     "type" : "NO_BODY"

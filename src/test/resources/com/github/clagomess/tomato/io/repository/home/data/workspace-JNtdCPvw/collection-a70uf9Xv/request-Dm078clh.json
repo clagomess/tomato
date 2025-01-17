@@ -1,18 +1,13 @@
 {
   "id" : "Dm078clh",
   "createTime" : "2024-12-18T23:23:55",
-  "updateTime" : "2025-01-14T17:03:09",
-  "name" : "/echo.php?gzip",
+  "updateTime" : "2025-01-17T16:54:19",
+  "name" : "accept-encoding: gzip",
   "method" : "GET",
-  "url" : "{{echoServer}}/echo.php?gzip",
+  "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
     "path" : [ ],
-    "query" : [ {
-      "type" : "TEXT",
-      "key" : "gzip",
-      "value" : "",
-      "selected" : true
-    } ]
+    "query" : [ ]
   },
   "headers" : [ {
     "type" : "TEXT",

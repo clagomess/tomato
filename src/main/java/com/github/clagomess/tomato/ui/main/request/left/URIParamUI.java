@@ -27,7 +27,7 @@ public class URIParamUI extends JPanel {
         pQueryParams.add(new KeyValueUI(
                 urlParam.getQuery(),
                 requestStagingMonitor
-        ));
+        ), "height 100%");
 
         // Path Variables
         var pPathVariables = new JPanel(new MigLayout(
@@ -38,7 +38,7 @@ public class URIParamUI extends JPanel {
         pPathVariables.add(new KeyValueUI(
                 urlParam.getPath(),
                 requestStagingMonitor
-        ));
+        ), "height 100%");
 
         add(pQueryParams, "height 100%, wrap");
         add(pPathVariables, "height 100%");

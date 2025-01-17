@@ -1,18 +1,13 @@
 {
   "id" : "7M2S0Kxh",
   "createTime" : "2024-12-18T23:28:53",
-  "updateTime" : "2025-01-14T17:02:54",
-  "name" : "/echo.php?urlencoded-form",
+  "updateTime" : "2025-01-17T16:41:30",
+  "name" : "urlencoded-form",
   "method" : "POST",
-  "url" : "{{echoServer}}/echo.php?urlencoded-form",
+  "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
     "path" : [ ],
-    "query" : [ {
-      "type" : "TEXT",
-      "key" : "urlencoded-form",
-      "value" : "",
-      "selected" : true
-    } ]
+    "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],
@@ -33,6 +28,16 @@
       "key" : "myparam3",
       "value" : "{{token}}",
       "selected" : true
+    }, {
+      "type" : "TEXT",
+      "key" : "disabledparam",
+      "value" : "notSend!",
+      "selected" : false
+    }, {
+      "type" : "TEXT",
+      "key" : "disabledparam2",
+      "value" : "{{token}}",
+      "selected" : false
     } ]
   }
 }

@@ -1,18 +1,13 @@
 {
   "id" : "tmCsbrzA",
   "createTime" : "2024-12-18T23:26:19",
-  "updateTime" : "2025-01-14T17:03:31",
-  "name" : "/echo.php?multipart-form",
+  "updateTime" : "2025-01-17T16:48:55",
+  "name" : "multipart-form",
   "method" : "POST",
-  "url" : "{{echoServer}}/echo.php?multipart-form",
+  "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
     "path" : [ ],
-    "query" : [ {
-      "type" : "TEXT",
-      "key" : "multipart-form",
-      "value" : "",
-      "selected" : true
-    } ]
+    "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],
@@ -33,6 +28,21 @@
       "key" : "token",
       "value" : "{{token}}",
       "selected" : true
+    }, {
+      "type" : "TEXT",
+      "key" : "disabled1",
+      "value" : "notSend!",
+      "selected" : false
+    }, {
+      "type" : "FILE",
+      "key" : "disabled2",
+      "value" : "C:\\Users\\claudio\\OneDrive\\Documentos\\aaa.csv",
+      "selected" : false
+    }, {
+      "type" : "TEXT",
+      "key" : "disabled3",
+      "value" : "{{token}}",
+      "selected" : false
     } ]
   }
 }

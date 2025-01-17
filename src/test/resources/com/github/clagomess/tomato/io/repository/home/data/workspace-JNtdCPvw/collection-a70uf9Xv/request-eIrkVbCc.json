@@ -1,0 +1,37 @@
+{
+  "id" : "eIrkVbCc",
+  "createTime" : "2025-01-17T16:59:24",
+  "updateTime" : "2025-01-17T17:01:03",
+  "name" : "Query Params",
+  "method" : "GET",
+  "url" : "{{echoServer}}/echo.php",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ {
+      "type" : "TEXT",
+      "key" : "myparam1",
+      "value" : "teste",
+      "selected" : true
+    }, {
+      "type" : "TEXT",
+      "key" : "myparam2",
+      "value" : "<code> encoded",
+      "selected" : true
+    }, {
+      "type" : "TEXT",
+      "key" : "myparam3",
+      "value" : "{{token}}",
+      "selected" : true
+    }, {
+      "type" : "TEXT",
+      "key" : "disabled",
+      "value" : "no Send!",
+      "selected" : false
+    } ]
+  },
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}

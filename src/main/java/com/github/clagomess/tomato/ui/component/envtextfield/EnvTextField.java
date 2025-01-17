@@ -41,6 +41,7 @@ public class EnvTextField extends JPanel {
 
     private void setBtnEnvViewEnabledOrDisabled(){
         btnEnvView.setEnabled(
+                textPane.isEnabled() &&
                 !envDocumentListener.getEnvMap()
                         .getInjected()
                         .isEmpty()
@@ -64,11 +65,6 @@ public class EnvTextField extends JPanel {
 
     public void setEnabled(boolean enabled){
         textPane.setEnabled(enabled);
-
-        if(enabled){
-            setBtnEnvViewEnabledOrDisabled();
-        }else{
-            btnEnvView.setEnabled(false);
-        }
+        setBtnEnvViewEnabledOrDisabled();
     }
 }

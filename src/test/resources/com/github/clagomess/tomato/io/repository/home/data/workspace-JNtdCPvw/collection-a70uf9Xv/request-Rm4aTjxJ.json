@@ -1,18 +1,13 @@
 {
   "id" : "Rm4aTjxJ",
   "createTime" : "2024-12-18T23:30:14",
-  "updateTime" : "2025-01-14T17:03:26",
-  "name" : "/echo.php?body-json",
+  "updateTime" : "2025-01-17T16:56:19",
+  "name" : "body-json",
   "method" : "POST",
-  "url" : "{{echoServer}}/echo.php?body-json",
+  "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
     "path" : [ ],
-    "query" : [ {
-      "type" : "TEXT",
-      "key" : "body-json",
-      "value" : "",
-      "selected" : true
-    } ]
+    "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],

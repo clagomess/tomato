@@ -52,11 +52,11 @@ class RowComponent extends JPanel {
         }
 
         // set values
-        // @TODO: not set row disabled when fresh load and item is disabled
         cbType.setSelectedItem(item.getType());
         txtKey.setText(item.getKey());
         cValue = createCValue(item.getType(), item.getValue());
         cbSelected.setSelected(item.isSelected());
+        setEnabled(item.isSelected());
 
         // listeners
         cbType.addActionListener(l -> cbTypeOnChange());

@@ -1,18 +1,13 @@
 {
   "id" : "x4woN3gk",
   "createTime" : "2024-12-18T23:04:19",
-  "updateTime" : "2025-01-14T17:03:45",
-  "name" : "/echo.php?custom-header",
+  "updateTime" : "2025-01-17T16:58:39",
+  "name" : "custom-header",
   "method" : "GET",
-  "url" : "{{echoServer}}/echo.php?custom-header",
+  "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
     "path" : [ ],
-    "query" : [ {
-      "type" : "TEXT",
-      "key" : "custom-header",
-      "value" : "",
-      "selected" : true
-    } ]
+    "query" : [ ]
   },
   "headers" : [ {
     "type" : "TEXT",

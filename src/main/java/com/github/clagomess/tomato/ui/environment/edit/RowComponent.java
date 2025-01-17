@@ -39,17 +39,12 @@ class RowComponent extends JPanel {
         }
 
         // set values
-        // @TODO: not set row disabled when fresh load and item is disabled
         txtKey.setText(item.getKey());
         txtValue.setText(item.getValue());
 
         // listeners
-        txtKey.addOnChange(value -> {
-            item.setKey(value);
-        });
-        txtValue.addOnChange(value -> {
-            item.setValue(value);
-        });
+        txtKey.addOnChange(item::setKey);
+        txtValue.addOnChange(item::setValue);
         btnRemove.addActionListener(l -> btnRemoveAction());
 
         // layout
@@ -67,11 +62,5 @@ class RowComponent extends JPanel {
         parent.remove(ComponentUtil.getComponentIndex(parent, this));
         parent.revalidate();
         parent.repaint();
-    }
-
-    public void setEnabled(boolean enabled){
-        txtKey.setEnabled(enabled);
-        txtValue.setEnabled(enabled);
-        btnRemove.setEnabled(enabled);
     }
 }

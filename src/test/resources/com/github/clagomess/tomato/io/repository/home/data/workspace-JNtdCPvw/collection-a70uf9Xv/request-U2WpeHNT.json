@@ -1,18 +1,13 @@
 {
   "id" : "U2WpeHNT",
   "createTime" : "2024-12-18T23:19:03",
-  "updateTime" : "2025-01-14T17:03:39",
-  "name" : "/echo.php?hello-invalid-cert",
+  "updateTime" : "2025-01-17T16:57:54",
+  "name" : "Self-signed certificate",
   "method" : "GET",
-  "url" : "https://localhost:8443/echo.php?hello-invalid-cert",
+  "url" : "https://localhost:8443/echo.php",
   "urlParam" : {
     "path" : [ ],
-    "query" : [ {
-      "type" : "TEXT",
-      "key" : "hello-invalid-cert",
-      "value" : "",
-      "selected" : true
-    } ]
+    "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],
