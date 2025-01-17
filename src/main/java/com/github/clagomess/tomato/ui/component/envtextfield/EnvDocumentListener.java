@@ -7,6 +7,7 @@ import com.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
 import com.github.clagomess.tomato.ui.ColorConstant;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -15,6 +16,8 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +37,8 @@ class EnvDocumentListener implements DocumentListener {
     private final SimpleAttributeSet envNotFilledStyle = new SimpleAttributeSet();
     protected final Pattern patternEnv = Pattern.compile("(\\{\\{.+?\\}\\}?)");
 
+    private final ExecutorService documentChangeExecutor = Executors.newSingleThreadExecutor();
+
     @Getter
     private final EnvMap envMap = new EnvMap();
 
@@ -52,6 +57,8 @@ class EnvDocumentListener implements DocumentListener {
     }
 
     public void dispose() {
+        documentChangeExecutor.shutdown();
+
         listenerUuid.forEach(uuid -> {
             workspaceSessionPublisher.getOnSave().removeListener(uuid);
             environmentPublisher.getOnSave().removeListener(uuid);
@@ -60,22 +67,26 @@ class EnvDocumentListener implements DocumentListener {
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        new Thread(() -> {
+        log.debug("insertUpdate");
+        documentChangeExecutor.submit(() -> {
             updateEnvStyle();
             triggerOnChange();
-        }, getClass().getSimpleName()).start();
+        });
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        new Thread(() -> {
+        log.debug("removeUpdate");
+        documentChangeExecutor.submit(() -> {
             updateEnvStyle();
             triggerOnChange();
-        }, getClass().getSimpleName()).start();
+        });
     }
 
     @Override
-    public void changedUpdate(DocumentEvent e) {}
+    public void changedUpdate(DocumentEvent e) {
+        log.debug("changedUpdate");
+    }
 
     public void triggerOnChange() {
         try {
@@ -89,6 +100,8 @@ class EnvDocumentListener implements DocumentListener {
     private void updateEnvStyle(){
         try {
             envMap.getInjected().clear();
+            if(document.getLength() == 0) return;
+
             document.setCharacterAttributes(
                     0,
                     document.getLength(),
@@ -97,8 +110,9 @@ class EnvDocumentListener implements DocumentListener {
             );
 
             String text = document.getText(0, document.getLength());
-            Matcher matcher = patternEnv.matcher(text);
+            if(StringUtils.isBlank(text)) return;
 
+            Matcher matcher = patternEnv.matcher(text);
             while (matcher.find()) {
                 String token = matcher.group();
                 log.debug("Token found: {}", token);
@@ -110,7 +124,6 @@ class EnvDocumentListener implements DocumentListener {
                         true
                 );
             }
-
         } catch (BadLocationException e) {
             log.error(e.getMessage(), e);
         }
