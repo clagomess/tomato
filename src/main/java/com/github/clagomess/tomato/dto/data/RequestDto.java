@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +131,7 @@ public class RequestDto extends MetadataDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @EqualsAndHashCode
-    public static class KeyValueItem {
+    public static class KeyValueItem implements Comparable<KeyValueItem> {
         private KeyValueTypeEnum type = KeyValueTypeEnum.TEXT;
         private String key;
         private String value;
@@ -139,6 +140,11 @@ public class RequestDto extends MetadataDto {
         public KeyValueItem(String key, String value) {
             this.key = key;
             this.value = value;
+        }
+
+        @Override
+        public int compareTo(KeyValueItem o) {
+            return StringUtils.compare(this.getKey(), o.getKey());
         }
     }
 }

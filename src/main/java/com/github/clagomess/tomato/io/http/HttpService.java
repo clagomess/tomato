@@ -47,7 +47,7 @@ public class HttpService {
 
         try {
             HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                    .uri(new UrlBuilder(requestDto.getUrl()).buildUri());
+                    .uri(new UrlBuilder(requestDto).buildUri());
 
             // set headers
             new HttpHeaderBuilder(requestBuilder, requestDto).build();

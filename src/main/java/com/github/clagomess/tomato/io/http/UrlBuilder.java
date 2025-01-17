@@ -3,124 +3,129 @@ package com.github.clagomess.tomato.io.http;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
-@RequiredArgsConstructor
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class UrlBuilder {
-    private final EnvironmentRepository environmentRepository;
-    private final String url;
+    private final RequestDto request;
+    private final Map<String, String> environment;
 
-    public UrlBuilder(String url) {
-        this.url = url;
-        this.environmentRepository = new EnvironmentRepository();
+    public UrlBuilder(EnvironmentRepository environmentRepository, RequestDto request) throws IOException {
+        this.request = request;
+
+        Optional<EnvironmentDto> currentEnv = environmentRepository.getWorkspaceSessionEnvironment();
+        if(currentEnv.isPresent() && !currentEnv.get().getEnvs().isEmpty()){
+            environment = new HashMap<>(currentEnv.get().getEnvs().size());
+
+            currentEnv.get().getEnvs().forEach(item -> environment.put(
+                    String.format("{{%s}}", item.getKey()),
+                    item.getValue()
+            ));
+        }else{
+            environment = Collections.emptyMap();
+        }
     }
 
-    public URI buildUri() throws IOException {
-        Optional<EnvironmentDto> current = environmentRepository.getWorkspaceSessionEnvironment();
-        if(current.isEmpty()){
-            return URI.create(url);
-        }
-
-        String bufferUrl = url;
-
-        for(var env : current.get().getEnvs()) {
-            bufferUrl = bufferUrl.replace(
-                    String.format("{{%s}}", env.getKey()),
-                    env.getValue()
-            );
-        }
-
-        return URI.create(bufferUrl);
+    public UrlBuilder(RequestDto request) throws IOException {
+        this(new EnvironmentRepository(), request);
     }
 
-    protected Map<String, String> getQueryParams() {
-        int idx = url.indexOf('?');
-        if(idx == -1) return Map.of();
+    public URI buildUri() {
+        StringBuilder urlBuilder = new StringBuilder(request.getUrl());
 
-        String queryParam = url.substring(idx + 1);
+        buildUrlEnvironment(urlBuilder);
+        buildPathVariables(urlBuilder);
+        buildQueryParams(urlBuilder);
 
-        if(StringUtils.isBlank(queryParam)) return Map.of();
-
-        if(queryParam.indexOf('=') == -1){
-            return Map.of(queryParam, "");
-        }
-
-        var result = new HashMap<String, String>();
-
-        Arrays.stream(queryParam.split("&"))
-                .map(item -> item.split("="))
-                .forEach(keyvalue -> result.put(
-                        keyvalue[0],
-                        keyvalue.length == 2 ? keyvalue[1] : ""
-                ));
-
-        return result;
+        return URI.create(urlBuilder.toString());
     }
 
-    public void updateQueryParam(List<RequestDto.KeyValueItem> query) {
-        Map<String, String> queryParam = getQueryParams();
+    protected void buildUrlEnvironment(StringBuilder urlBuilder) {
+        if(environment.isEmpty()) return;
 
-        if (queryParam.isEmpty()) {
-            query.forEach(item -> item.setSelected(false));
-            return;
-        }
+        for(var env : environment.entrySet()) {
+            int idx = 0;
 
-        for(var param : queryParam.entrySet()){
-            Optional<RequestDto.KeyValueItem> kvitem = query.stream()
-                    .filter(item -> Objects.equals(item.getKey(), param.getKey()))
-                    .findFirst();
-
-            kvitem.ifPresent(item -> {
-                item.setSelected(true);
-                item.setValue(param.getValue());
-            });
-
-            if(kvitem.isEmpty()){
-                query.add(new RequestDto.KeyValueItem(
-                        param.getKey(),
-                        param.getValue()
-                ));
+            while ((idx = urlBuilder.indexOf(env.getKey(), idx)) != -1){
+                urlBuilder.replace(
+                        idx,
+                        idx + env.getKey().length(),
+                        env.getValue()
+                );
             }
         }
-
-        query.removeIf(item -> !queryParam.containsKey(item.getKey()));
     }
 
-    public String recreateUrl(List<RequestDto.KeyValueItem> query){
-        int idx = url.indexOf('?');
-        StringBuilder urlBuffer = new StringBuilder(idx == -1 ? url : url.substring(0, idx));
+    protected String buildEncodedParamValue(String paramValue){
+        if(paramValue == null) return "";
 
-        if(query.isEmpty()) return urlBuffer.toString();
+        for(var env : environment.entrySet()) {
+            if(!paramValue.contains(env.getKey())) continue;
 
-        AtomicBoolean first = new AtomicBoolean(true);
-        query.stream()
+            paramValue = paramValue.replace(env.getKey(), env.getValue());
+        }
+
+        return URLEncoder.encode(paramValue, UTF_8);
+    }
+
+    protected void buildPathVariables(StringBuilder urlBuilder) {
+        if(request.getUrlParam().getPath().isEmpty()) return;
+
+        var list = request.getUrlParam().getPath().stream()
                 .filter(RequestDto.KeyValueItem::isSelected)
-                .filter(param -> StringUtils.isNotBlank(param.getKey()))
-                .forEach(param -> {
-                    if(first.get()){
-                        urlBuffer.append("?");
-                        first.set(false);
-                    }else{
-                        urlBuffer.append('&');
-                    }
+                .filter(item -> StringUtils.isNotBlank(item.getKey()))
+                .sorted(Collections.reverseOrder())
+                .toList();
 
-                    urlBuffer.append(param.getKey());
-                    urlBuffer.append("=");
+        for(var param : list) {
+            var key = ":" + param.getKey();
+            int idx = 0;
 
-                    urlBuffer.append(URLEncoder.encode(
-                            param.getValue() == null ? "" : param.getValue(),
-                            StandardCharsets.UTF_8
-                    ));
-                });
+            while ((idx = urlBuilder.indexOf(key, idx)) != -1){
+                var value = buildEncodedParamValue(param.getValue());
+                urlBuilder.replace(idx, idx + key.length(), value);
+            }
+        }
+    }
 
-        return urlBuffer.toString();
+    protected void buildQueryParams(StringBuilder urlBuilder) {
+        if(request.getUrlParam().getQuery().isEmpty()) return;
+
+        var list = request.getUrlParam().getQuery().stream()
+                .filter(RequestDto.KeyValueItem::isSelected)
+                .filter(item -> StringUtils.isNotBlank(item.getKey()))
+                .sorted()
+                .toList();
+
+        if(list.isEmpty()) return;
+
+        int idx = urlBuilder.indexOf("?");
+        boolean isFirstParam;
+
+        if(idx == -1){
+            urlBuilder.append("?");
+            isFirstParam = true;
+        }else{
+            isFirstParam = urlBuilder.length() == idx + 1;
+        }
+
+        for(var param : list) {
+            if(!isFirstParam) urlBuilder.append("&");
+
+            urlBuilder.append(param.getKey());
+            urlBuilder.append("=");
+            urlBuilder.append(buildEncodedParamValue(param.getValue()));
+
+            isFirstParam = false;
+        }
     }
 }

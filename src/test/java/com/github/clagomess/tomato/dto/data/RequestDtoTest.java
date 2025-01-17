@@ -11,7 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static com.github.clagomess.tomato.enums.TomatoJsonSchemaEnum.REQUEST;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 public class RequestDtoTest {
@@ -182,5 +187,16 @@ public class RequestDtoTest {
     public void KeyValueItem_equalsHashCode(){
         Assertions.assertThat(new RequestDto.KeyValueItem())
                 .isEqualTo(new RequestDto.KeyValueItem());
+    }
+
+    @Test
+    public void KeyValueItem_sort(){
+        List<RequestDto.KeyValueItem> list = new ArrayList<>(2);
+        list.add(new RequestDto.KeyValueItem("bbb", "value"));
+        list.add(new RequestDto.KeyValueItem("aaa", "value"));
+
+        Collections.sort(list);
+
+        assertEquals("aaa", list.get(0).getKey());
     }
 }

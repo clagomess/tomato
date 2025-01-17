@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
 import com.github.clagomess.tomato.ui.ColorConstant;
+import com.github.clagomess.tomato.util.ExecutorUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +18,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,14 +30,13 @@ class EnvDocumentListener implements DocumentListener {
     private final List<UUID> listenerUuid = new ArrayList<>(2);
     private final WorkspaceSessionPublisher workspaceSessionPublisher = WorkspaceSessionPublisher.getInstance();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
+    private final ExecutorService singleThreadExecutor = ExecutorUtil.getSingleThreadExecutor();
 
     private final StyledDocument document;
     private final SimpleAttributeSet defaultStyle = new SimpleAttributeSet();
     private final SimpleAttributeSet envFilledStyle = new SimpleAttributeSet();
     private final SimpleAttributeSet envNotFilledStyle = new SimpleAttributeSet();
     protected final Pattern patternEnv = Pattern.compile("(\\{\\{.+?\\}\\}?)");
-
-    private final ExecutorService documentChangeExecutor = Executors.newSingleThreadExecutor();
 
     @Getter
     private final EnvMap envMap = new EnvMap();
@@ -57,8 +56,6 @@ class EnvDocumentListener implements DocumentListener {
     }
 
     public void dispose() {
-        documentChangeExecutor.shutdown();
-
         listenerUuid.forEach(uuid -> {
             workspaceSessionPublisher.getOnSave().removeListener(uuid);
             environmentPublisher.getOnSave().removeListener(uuid);
@@ -67,8 +64,7 @@ class EnvDocumentListener implements DocumentListener {
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        log.debug("insertUpdate");
-        documentChangeExecutor.submit(() -> {
+        singleThreadExecutor.submit(() -> {
             updateEnvStyle();
             triggerOnChange();
         });
@@ -76,17 +72,14 @@ class EnvDocumentListener implements DocumentListener {
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        log.debug("removeUpdate");
-        documentChangeExecutor.submit(() -> {
+        singleThreadExecutor.submit(() -> {
             updateEnvStyle();
             triggerOnChange();
         });
     }
 
     @Override
-    public void changedUpdate(DocumentEvent e) {
-        log.debug("changedUpdate");
-    }
+    public void changedUpdate(DocumentEvent e) {}
 
     public void triggerOnChange() {
         try {

@@ -11,7 +11,6 @@ import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
-import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextFieldOnChangeFI;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxBlockIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSaveIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSendIcon;
@@ -105,23 +104,12 @@ public class RequestSplitPaneUI extends JPanel {
             requestStagingMonitor.update();
         });
 
-        EnvTextFieldOnChangeFI txtRequestUrlChange = value -> {
+        txtRequestUrl.addOnChange(value -> {
             requestDto.setUrl(value);
             requestStagingMonitor.update();
-            requestPublisher.getOnUrlChange().publish(key, value);
-        };
-
-        txtRequestUrl.addOnChange(txtRequestUrlChange);
+        });
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
-
-        requestPublisher.getOnUrlParamChange().addListener(key, url -> {
-            txtRequestUrl.getOnChangeList().remove(txtRequestUrlChange);
-            txtRequestUrl.setText(url);
-            requestDto.setUrl(url);
-            requestStagingMonitor.update();
-            SwingUtilities.invokeLater(() -> txtRequestUrl.getOnChangeList().add(txtRequestUrlChange));
-        });
 
         // # REQUEST / RESPONSE
         var splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -129,7 +117,6 @@ public class RequestSplitPaneUI extends JPanel {
         splitPane.setDividerLocation(0.5);
 
         this.requestContent = new RequestTabContentUI(
-                key,
                 requestDto,
                 requestStagingMonitor
         );
@@ -204,6 +191,5 @@ public class RequestSplitPaneUI extends JPanel {
     public void dispose(){
         txtRequestName.dispose();
         txtRequestUrl.dispose();
-        requestContent.dispose();
     }
 }

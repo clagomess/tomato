@@ -3,37 +3,60 @@ package com.github.clagomess.tomato.io.http;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UrlBuilderTest {
     private EnvironmentRepository environmentDSMock;
 
+    private final List<EnvironmentDto.Env> envList = List.of(
+            new EnvironmentDto.Env("tomatoUri", "http://localhost"),
+            new EnvironmentDto.Env("foo", "bar"),
+            new EnvironmentDto.Env("date", "17/01/2025"),
+            new EnvironmentDto.Env("blank", " ")
+    );
+
+    private final List<RequestDto.KeyValueItem> paramList = List.of(
+            new RequestDto.KeyValueItem("foo", "bar"),
+            new RequestDto.KeyValueItem("date", "17/01/2025"),
+            new RequestDto.KeyValueItem("date_env", "{{date}}"),
+            new RequestDto.KeyValueItem("blank", " "),
+            new RequestDto.KeyValueItem(TEXT, "disabled", "disabled", false)
+    );
+
     @BeforeEach
-    public void setup(){
+    public void setup() throws IOException {
         environmentDSMock = Mockito.mock(
                 EnvironmentRepository.class,
                 Mockito.withSettings().useConstructor()
         );
+
+        EnvironmentDto dto = new EnvironmentDto();
+        dto.setEnvs(envList);
+
+        Mockito.when(environmentDSMock.getWorkspaceSessionEnvironment())
+                .thenReturn(Optional.of(dto));
     }
 
     @Test
     public void buildUri_whenEmptyEnv_returnsUri() throws IOException {
-        UrlBuilder urlBuilder = new UrlBuilder(
+        var requestDto = new RequestDto();
+        requestDto.setUrl("http://foo.bar");
+
+        var urlBuilder = new UrlBuilder(
                 environmentDSMock,
-                "http://foo.bar"
+                requestDto
         );
 
         var result = urlBuilder.buildUri();
@@ -41,10 +64,13 @@ public class UrlBuilderTest {
     }
 
     @Test
-    public void buildUri_whenNotInjectedEnvAnd_throwsException() {
+    public void buildUri_whenNotInjectedEnvAnd_throwsException() throws IOException {
+        var requestDto = new RequestDto();
+        requestDto.setUrl("{{xyz}}");
+
         UrlBuilder urlBuilder = new UrlBuilder(
                 environmentDSMock,
-                "{{foo}}"
+                requestDto
         );
 
         assertThrows(IllegalArgumentException.class, urlBuilder::buildUri);
@@ -52,18 +78,12 @@ public class UrlBuilderTest {
 
     @Test
     public void buildUri_whenInjectedEnv_expectedReplace() throws IOException {
-        EnvironmentDto dto = new EnvironmentDto();
-        dto.setEnvs(List.of(
-                new EnvironmentDto.Env("tomatoUri", "http://localhost"),
-                new EnvironmentDto.Env("foo", "bar")
-        ));
-
-        Mockito.when(environmentDSMock.getWorkspaceSessionEnvironment())
-                .thenReturn(Optional.of(dto));
+        var requestDto = new RequestDto();
+        requestDto.setUrl("{{tomatoUri}}/{{foo}}");
 
         UrlBuilder urlBuilder = new UrlBuilder(
                 environmentDSMock,
-                "{{tomatoUri}}/{{foo}}"
+                requestDto
         );
 
         var result = urlBuilder.buildUri();
@@ -71,131 +91,84 @@ public class UrlBuilderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {
-            "http://localhost?",
-            "http://localhost"
+    @CsvSource({
+            "{{tomatoUri}}/hello,http://localhost/hello",
+            "{{tomatoUri}}/{{foo}},http://localhost/bar",
+            "{{tomatoUri}}/{{foo}}/{{foo}},http://localhost/bar/bar",
     })
-    public void updateQueryParam_whenEmpty_returnsEmpty(String url) {
-        UrlBuilder urlBuilder = new UrlBuilder(
-                environmentDSMock,
-                url
-        );
+    public void buildUrlEnvironment(
+            String input,
+            String expected
+    ) throws IOException {
+        var urlBuffer = new StringBuilder(input);
 
-        var result = new ArrayList<RequestDto.KeyValueItem>();
-        urlBuilder.updateQueryParam(result);
-        Assertions.assertThat(result).isEmpty();
-    }
+        new UrlBuilder(environmentDSMock, new RequestDto())
+                .buildUrlEnvironment(urlBuffer);
 
-    @Test
-    public void updateQueryParam_whenEmpty_disableNotMached() {
-        UrlBuilder urlBuilder = new UrlBuilder(
-                environmentDSMock,
-                "http://localhost?"
-        );
-
-        var result = new ArrayList<RequestDto.KeyValueItem>();
-        result.add(new RequestDto.KeyValueItem("key", "value"));
-
-        urlBuilder.updateQueryParam(result);
-
-        Assertions.assertThat(result).isNotEmpty();
-        assertFalse(result.get(0).isSelected());
-    }
-
-    @Test
-    public void updateQueryParam_whenMatch_enable() {
-        UrlBuilder urlBuilder = new UrlBuilder(
-                environmentDSMock,
-                "http://localhost?key=value"
-        );
-
-        var result = new ArrayList<RequestDto.KeyValueItem>();
-        result.add(new RequestDto.KeyValueItem("key", "value"));
-
-        urlBuilder.updateQueryParam(result);
-
-        Assertions.assertThat(result).isNotEmpty();
-        assertTrue(result.get(0).isSelected());
-    }
-
-    @Test
-    public void updateQueryParam_whenHasValues_update() {
-        UrlBuilder urlBuilder = new UrlBuilder(
-                environmentDSMock,
-                "http://localhost?foo=bar&date=01%2F03%2F2021&a="
-        );
-
-        var result = new ArrayList<RequestDto.KeyValueItem>();
-
-        urlBuilder.updateQueryParam(result);
-
-        Assertions.assertThat(result)
-                .contains(new RequestDto.KeyValueItem("foo", "bar"))
-                .contains(new RequestDto.KeyValueItem("date", "01%2F03%2F2021"));
-    }
-
-    @Test
-    public void updateQueryParam_whenInjectedEnvAnd() throws IOException {
-        UrlBuilder urlBuilder = new UrlBuilder(
-                environmentDSMock,
-                "{{tomatoUri}}?foo={{bar}}"
-        );
-
-        EnvironmentDto dto = new EnvironmentDto();
-        dto.setEnvs(List.of(
-                new EnvironmentDto.Env("tomatoUri", "http://localhost"),
-                new EnvironmentDto.Env("bar", "bar")
-        ));
-
-        Mockito.when(environmentDSMock.getWorkspaceSessionEnvironment())
-                .thenReturn(Optional.of(dto));
-
-        var result = new ArrayList<RequestDto.KeyValueItem>();
-
-        urlBuilder.updateQueryParam(result);
-
-        Assertions.assertThat(result)
-                .contains(new RequestDto.KeyValueItem("foo", "{{bar}}"));
+        assertEquals(expected, urlBuffer.toString());
     }
 
     @ParameterizedTest
     @CsvSource({
-            "http://localhost,http://localhost?foo=bar",
-            "http://localhost,http://localhost?",
-            "http://localhost,http://localhost",
-            "{{tomatoUri}}/:opa,{{tomatoUri}}/:opa",
+            "hello,hello",
+            "{{blank}},+",
+            "{{date}},17%2F01%2F2025",
+            "17/01/2025,17%2F01%2F2025",
+            "{{foo}}/{{foo}},bar%2Fbar",
     })
-    public void recreateUrl_whenEmptyQuery(
-            String expected,
-            String input
-    ) {
-        UrlBuilder urlBuilder = new UrlBuilder(environmentDSMock, input);
+    public void buildEncodedParamValue(
+            String input,
+            String expected
+    ) throws IOException {
+        var result = new UrlBuilder(environmentDSMock, new RequestDto())
+                .buildEncodedParamValue(input);
 
-        var result = urlBuilder.recreateUrl(List.of());
         assertEquals(expected, result);
     }
 
     @ParameterizedTest
     @CsvSource({
-            "http://localhost?foo=bar,foo,bar",
-            "http://localhost?foo={{bar}},foo,{{bar}}",
-            "http://localhost?foo=01%2F01,foo,01/01",
-            "http://localhost,,",
-            "http://localhost,,aaa",
+            ":foo,bar",
+            ":date,17%2F01%2F2025",
+            ":date_env,17%2F01%2F2025",
+            ":foo/:foo,bar/bar",
+            ":disabled,:disabled",
+            ":notInjected,:notInjected",
     })
-    public void recreateUrl_whenNotEmptyQuery(
-            String expected,
-            String key,
-            String value
-    ){
-        UrlBuilder urlBuilder = new UrlBuilder(
-                environmentDSMock,
-                "http://localhost"
-        );
+    public void buildPathVariables(
+            String input,
+            String expected
+    ) throws IOException {
+        var request =  new RequestDto();
+        request.getUrlParam().setPath(paramList);
 
-        var param = new RequestDto.KeyValueItem(key, value);
+        var urlBuffer = new StringBuilder(input);
 
-        var result = urlBuilder.recreateUrl(List.of(param));
-        assertEquals(expected, result);
+        new UrlBuilder(environmentDSMock, request)
+                .buildPathVariables(urlBuffer);
+
+        assertEquals(expected, urlBuffer.toString());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "localhost,localhost?blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar",
+            "localhost?,localhost?blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar",
+            "localhost?xpto=aaa,localhost?xpto=aaa&blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar",
+            "localhost?xpto=aaa&ex=a,localhost?xpto=aaa&ex=a&blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar",
+    })
+    public void buildQueryParams(
+            String input,
+            String expected
+    ) throws IOException {
+        var request =  new RequestDto();
+        request.getUrlParam().setQuery(paramList);
+
+        var urlBuffer = new StringBuilder(input);
+
+        new UrlBuilder(environmentDSMock, request)
+                .buildQueryParams(urlBuffer);
+
+        assertEquals(expected, urlBuffer.toString());
     }
 }

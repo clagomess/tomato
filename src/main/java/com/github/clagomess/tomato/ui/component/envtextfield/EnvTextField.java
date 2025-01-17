@@ -5,7 +5,6 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 public class EnvTextField extends JPanel {
     private final EnvDocumentListener envDocumentListener;
@@ -16,6 +15,7 @@ public class EnvTextField extends JPanel {
         this.btnEnvView = new JButton(new BxListPlusIcon());
         this.btnEnvView.setToolTipText("View Injected Environment");
         this.btnEnvView.addActionListener(e -> btnEnvViewAction());
+        this.btnEnvView.setEnabled(false);
 
         this.textPane = new JTextPane();
 
@@ -35,15 +35,9 @@ public class EnvTextField extends JPanel {
         add(spTextPane, "height 100%");
     }
 
-    // @TODO: MERGE
     public void addOnChange(EnvTextFieldOnChangeFI value){
         envDocumentListener.getOnChangeList().add(value);
     }
-
-    public List<EnvTextFieldOnChangeFI> getOnChangeList(){
-        return envDocumentListener.getOnChangeList();
-    }
-    // <<<<
 
     private void setBtnEnvViewEnabledOrDisabled(){
         btnEnvView.setEnabled(
