@@ -87,13 +87,14 @@ public class ResponseTabContent extends JPanel {
             txtResponse.setText(responseDto.getHttpResponse().getBodyAsString());
 
             tblResponseHeader.getModel().clear();
-            responseDto.getHttpResponse().getHeaders()
-                    .forEach((key, value) -> {
-                        tblResponseHeader.getModel().addRow(new ResponseHeaderTMDto(
-                                key,
-                                String.join(",", value)
-                        ));
-                    });
+            responseDto.getHttpResponse().getHeaders().forEach((key, value) -> {
+                value.forEach(item -> {
+                    tblResponseHeader.getModel().addRow(new ResponseHeaderTMDto(
+                            key,
+                            item
+                    ));
+                });
+            });
         }
 
         statusResponseUI.update(responseDto);

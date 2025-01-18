@@ -17,6 +17,7 @@ import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Setter
@@ -39,12 +40,7 @@ public class HttpDebug {
         result.append(" ");
         result.append(request.uri());
         result.append("\n");
-
-        request.headers().map().forEach((key, value) -> {
-            result.append("> ");
-            result.append(assemblyHeaderItem(key, value));
-        });
-
+        result.append(assemblyHeader("> ", request.headers().map()));
         result.append("\n");
 
         if(requestBodyString != null){
@@ -69,12 +65,7 @@ public class HttpDebug {
         result.append(" ");
         result.append(HttpStatusEnum.getReasonPhrase(response.statusCode()));
         result.append("\n");
-
-        response.headers().map().forEach((key, value) -> {
-            result.append("< ");
-            result.append(assemblyHeaderItem(key, value));
-        });
-
+        result.append(assemblyHeader("< ", response.headers().map()));
         result.append("\n");
 
         if(responseBodyFile != null){
@@ -137,15 +128,21 @@ public class HttpDebug {
         return result;
     }
 
-    protected StringBuilder assemblyHeaderItem(String key, List<String> value){
+    protected StringBuilder assemblyHeader(
+            String arrow,
+            Map<String, List<String>> headers
+    ){
         StringBuilder result = new StringBuilder();
 
-        for (var item : value) {
-            result.append(key);
-            result.append(": ");
-            result.append(item);
-            result.append("\n");
-        }
+        headers.forEach((key, value) -> {
+            value.forEach(item -> {
+                result.append(arrow);
+                result.append(key);
+                result.append(": ");
+                result.append(item);
+                result.append("\n");
+            });
+        });
 
         return result;
     }

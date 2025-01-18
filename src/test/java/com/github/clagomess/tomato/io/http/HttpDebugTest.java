@@ -18,6 +18,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.model.HttpRequest.request;
@@ -91,21 +92,20 @@ public class HttpDebugTest {
     }
 
     @Test
-    public void assemblyHeaderItem_whenSingle(){
+    public void assemblyHeader_whenSingle(){
         var debug = new HttpDebug();
-        var result = debug.assemblyHeaderItem("key", List.of("value"));
-        assertEquals("key: value\n", result.toString());
+        var headers = Map.of("key", List.of("value"));
+        var result = debug.assemblyHeader("> ", headers);
+        assertEquals("> key: value\n", result.toString());
     }
 
     @Test
-    public void assemblyHeaderItem_whenMutiple(){
+    public void assemblyHeader_whenMutiple(){
         var debug = new HttpDebug();
-        var result = debug.assemblyHeaderItem(
-                "key",
-                List.of("value1", "value2")
-        );
+        var headers = Map.of("key", List.of("value1", "value2"));
+        var result = debug.assemblyHeader("< ", headers);
         assertEquals(
-                "key: value1\nkey: value2\n",
+                "< key: value1\n< key: value2\n",
                 result.toString()
         );
     }
