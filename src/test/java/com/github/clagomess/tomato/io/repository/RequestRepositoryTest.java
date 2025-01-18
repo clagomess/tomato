@@ -23,8 +23,13 @@ public class RequestRepositoryTest {
             "home/data"
     )).getFile());
 
+    private File mockData;
+
     @BeforeEach
     public void setup(){
+        mockData = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
+        assertTrue(mockData.mkdirs());
+
         RequestRepository.cacheHead.evictAll();
         RequestRepository.cacheListFiles.evictAll();
     }
@@ -43,10 +48,7 @@ public class RequestRepositoryTest {
 
     @Test
     public void save_whenBasePathIsDirectory_createNewFile() throws IOException {
-        var mockHome = new File("target", "home-" + RandomStringUtils.randomAlphanumeric(8));
-        assertTrue(mockHome.mkdirs());
-
-        var result = requestRepository.save(mockHome, new RequestDto());
+        var result = requestRepository.save(mockData, new RequestDto());
         Assertions.assertThat(result).isFile();
     }
 
@@ -75,7 +77,7 @@ public class RequestRepositoryTest {
 
     @Test
     public void delete() throws IOException {
-        File file = requestRepository.save(testData, new RequestDto());
+        File file = requestRepository.save(mockData, new RequestDto());
         RequestHeadDto head = requestRepository.loadHead(file).orElseThrow();
         head.setPath(file);
 
@@ -88,12 +90,12 @@ public class RequestRepositoryTest {
     @Test
     public void move() throws IOException {
         // create source
-        File file = requestRepository.save(testData, new RequestDto());
+        File file = requestRepository.save(mockData, new RequestDto());
         RequestHeadDto source = requestRepository.loadHead(file).orElseThrow();
         source.setPath(file);
 
         // create target
-        var targetDir = collectionRepository.save(testData, new CollectionDto());
+        var targetDir = collectionRepository.save(mockData, new CollectionDto());
         new RequestRepository().save(targetDir, new RequestDto());
 
         CollectionTreeDto targetTree = collectionRepository.load(targetDir).orElseThrow();
