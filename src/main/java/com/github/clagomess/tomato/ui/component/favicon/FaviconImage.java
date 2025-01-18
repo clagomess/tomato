@@ -68,12 +68,19 @@ public class FaviconImage {
         return image;
     }
 
+    /**
+     * @see Window#getIconImages()
+     */
     public static List<BufferedImage> getFrameIconImage(){
         var faviconImage = new FaviconImage();
 
         return List.of(
-                faviconImage.build(16, 16),
-                faviconImage.build(32, 32)
-        );
+                new Dimension(16, 16),
+                new Dimension(32, 32),
+                new Dimension(64, 64),
+                new Dimension(128, 128)
+        ).parallelStream()
+                .map(item -> faviconImage.build(item.width, item.height))
+                .toList();
     }
 }
