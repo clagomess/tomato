@@ -1,0 +1,17 @@
+{
+  "id" : "rUqpR5UJ",
+  "createTime" : "2025-01-20T14:00:36",
+  "updateTime" : "2025-01-20T14:01:30",
+  "name" : "/cookie.php",
+  "method" : "GET",
+  "url" : "{{echoServer}}/cookie.php",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ ]
+  },
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}

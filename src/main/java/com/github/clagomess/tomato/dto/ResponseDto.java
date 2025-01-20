@@ -13,9 +13,11 @@ import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -57,7 +59,7 @@ public class ResponseDto {
             this.status = response.statusCode();
             this.statusReason = HttpStatusEnum.getReasonPhrase(this.status);
             this.headers = response.headers().map();
-            this.cookies = Map.of(); //@TODO: impl. parse cookies?
+            this.cookies = parseSetCookies(this.headers);
 
             Optional<String> contentType = response.headers().firstValue("content-type");
             this.contentType = contentType.map(MediaType::new).orElse(MediaType.WILDCARD);
@@ -66,6 +68,29 @@ public class ResponseDto {
             this.bodySize = body.length();
 
             buildBodyString();
+        }
+
+        protected Map<String, String> parseSetCookies(
+                Map<String, List<String>> headers
+        ){
+            var cookieSet = headers.entrySet().stream()
+                    .filter(entry -> "set-cookie".equalsIgnoreCase(entry.getKey()))
+                    .collect(Collectors.toSet());
+
+            if(cookieSet.isEmpty()) return Map.of();
+
+            Map<String, String> result = new HashMap<>(cookieSet.size());
+            cookieSet.forEach(entry -> {
+                for(String value : entry.getValue()) {
+                    var param = value.split("=");
+                    var cookieKey = param[0];
+                    var cookieValue = param[1].split(";")[0];
+
+                    result.put(cookieKey, cookieValue);
+                }
+            });
+
+            return result;
         }
 
         protected void buildBodyString() {

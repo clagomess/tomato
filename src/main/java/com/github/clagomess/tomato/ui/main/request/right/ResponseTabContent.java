@@ -51,6 +51,7 @@ public class ResponseTabContent extends JPanel {
 
         var hsp = new JScrollPane(tblResponseHeader.getTable());
         hsp.setBorder(new MatteBorder(0, 1, 1, 1, Color.decode("#616365")));
+        // @TODO: add cookie viewer
 
         JTabbedPane tpResponse = new JTabbedPane();
         tpResponse.addTab("Response", TRSyntaxTextArea.createScroll(txtResponse));
