@@ -12,12 +12,10 @@ import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxBlockIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxGlobeIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSaveIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSendIcon;
-import com.github.clagomess.tomato.ui.main.request.left.HttpMethodComboBox;
-import com.github.clagomess.tomato.ui.main.request.left.RequestNameTextField;
-import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
-import com.github.clagomess.tomato.ui.main.request.left.RequestTabContentUI;
+import com.github.clagomess.tomato.ui.main.request.left.*;
 import com.github.clagomess.tomato.ui.main.request.right.ResponseTabContent;
 import com.github.clagomess.tomato.ui.request.RequestSaveUI;
 import lombok.Getter;
@@ -35,6 +33,9 @@ public class RequestSplitPaneUI extends JPanel {
     private final RequestDto requestDto;
 
     private final RequestNameTextField txtRequestName = new RequestNameTextField();
+    private final JButton btnViewRenderedUrl = new JButton(new BxGlobeIcon()){{
+       setToolTipText("View Rendered Url");
+    }};
     private final JButton btnSaveRequest = new JButton(new BxSaveIcon()){{
         setToolTipText("Save");
     }};
@@ -75,10 +76,11 @@ public class RequestSplitPaneUI extends JPanel {
 
         var paneRequestName = new JPanel(new MigLayout(
                 "insets 0 0 0 0",
-                "[grow,fill][]",
+                "[grow,fill][][]",
                 ""
         ));
         paneRequestName.add(txtRequestName, "width 300::100%");
+        paneRequestName.add(btnViewRenderedUrl);
         paneRequestName.add(btnSaveRequest);
         add(paneRequestName, "wrap");
 
@@ -89,7 +91,6 @@ public class RequestSplitPaneUI extends JPanel {
         ));
         paneUrl.add(cbHttpMethod);
         paneUrl.add(txtRequestUrl);
-        // @TODO: add option to view rendered URI
         paneUrl.add(btnSendRequest);
         paneUrl.add(btnCancelRequest);
         add(paneUrl, "width 300::100%, wrap");
@@ -110,6 +111,7 @@ public class RequestSplitPaneUI extends JPanel {
             requestStagingMonitor.update();
         });
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
+        btnViewRenderedUrl.addActionListener(l -> btnViewRenderedUrlAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
 
         // # REQUEST / RESPONSE
@@ -155,6 +157,13 @@ public class RequestSplitPaneUI extends JPanel {
             btnCancelRequest.setEnabled(false);
             requestThread.interrupt();
         });
+    }
+
+    public void btnViewRenderedUrlAction(){
+        new WaitExecution(
+                btnViewRenderedUrl,
+                () -> new ViewRenderedUrlUI(this, requestDto)
+        ).execute();
     }
 
     public void btnSaveRequestAction(){
