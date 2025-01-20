@@ -7,6 +7,7 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxExportIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxImportIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSliderAltIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTransferAltIcon;
+import com.github.clagomess.tomato.ui.environment.EnvironmentImportUI;
 import com.github.clagomess.tomato.ui.environment.EnvironmentNewUI;
 import com.github.clagomess.tomato.ui.main.collection.CollectionTreeUI;
 import com.github.clagomess.tomato.ui.main.request.RequestTabPaneUI;
@@ -75,7 +76,7 @@ public class MainUI extends JFrame {
                 addActionListener(l -> new EnvironmentNewUI(mainUI));
             }});
             add(new JMenuItem("Import", new BxImportIcon()){{
-                addActionListener(l -> {}); //@TODO: Implements - Import Environment
+                addActionListener(l -> new EnvironmentImportUI(mainUI));
             }});
             add(new JMenuItem("Export", new BxExportIcon()){{
                 addActionListener(l -> {}); //@TODO: Implements - Export Environment

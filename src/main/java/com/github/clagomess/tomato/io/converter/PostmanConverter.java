@@ -88,7 +88,7 @@ public class PostmanConverter {
         }
     }
 
-    public void pumpEnvironment(
+    public String pumpEnvironment(
             File postmanEnvironment
     ) throws IOException {
         var schema = JsonSchemaBuilder.getPostmanJsonSchema(ENVIRONMENT);
@@ -112,5 +112,7 @@ public class PostmanConverter {
         EnvironmentDto result = environmentPumpMapper.toEnvironmentDto(postmanEnvironmentDto);
 
         environmentRepository.save(result);
+
+        return result.getId();
     }
 }

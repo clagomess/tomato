@@ -86,9 +86,10 @@ public class EnvironmentComboBox extends JPanel {
             var environmentId = selected == null ? null : selected.getId();
 
             var session = workspaceSessionRepository.load();
-            session.setEnvironmentId(environmentId);
 
             if(Objects.equals(session.getEnvironmentId(), environmentId)) return;
+
+            session.setEnvironmentId(environmentId);
 
             workspaceSessionRepository.save(session);
             workspaceSessionPublisher.getOnSave().publish(session);
