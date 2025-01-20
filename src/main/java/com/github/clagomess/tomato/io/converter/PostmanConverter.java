@@ -1,11 +1,15 @@
 package com.github.clagomess.tomato.io.converter;
 
 import com.github.clagomess.tomato.dto.data.CollectionDto;
+import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
+import com.github.clagomess.tomato.dto.external.PostmanEnvironmentDto;
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
+import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.mapper.PostmanCollectionPumpMapper;
+import com.github.clagomess.tomato.mapper.PostmanEnvironmentPumpMapper;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import com.networknt.schema.ValidationMessage;
 import lombok.RequiredArgsConstructor;
@@ -17,23 +21,27 @@ import java.util.List;
 import java.util.Set;
 
 import static com.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.COLLECTION;
+import static com.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.ENVIRONMENT;
 
 @Slf4j
 @RequiredArgsConstructor
 public class PostmanConverter {
     private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
-    private final PostmanCollectionPumpMapper pumpMapper = PostmanCollectionPumpMapper.INSTANCE;
+    private final PostmanCollectionPumpMapper colectionPumpMapper = PostmanCollectionPumpMapper.INSTANCE;
+    private final PostmanEnvironmentPumpMapper environmentPumpMapper = PostmanEnvironmentPumpMapper.INSTANCE;
     private final CollectionRepository collectionRepository;
     private final RequestRepository requestRepository;
+    private final EnvironmentRepository environmentRepository;
 
     public PostmanConverter() {
         this(
                 new CollectionRepository(),
-                new RequestRepository()
+                new RequestRepository(),
+                new EnvironmentRepository()
         );
     }
 
-    public void pumpPostmanCollection(
+    public void pumpCollection(
             File destination,
             File postmanCollection
     ) throws IOException {
@@ -58,10 +66,10 @@ public class PostmanConverter {
         List<PostmanCollectionV210Dto.Item> itens = postmanCollectionV210.getItem();
         if(itens.isEmpty()) throw new IOException("Empty postman collection");
 
-        pumpPostmanCollection(destination, itens);
+        pumpCollection(destination, itens);
     }
 
-    protected void pumpPostmanCollection(
+    protected void pumpCollection(
             File destination,
             List<PostmanCollectionV210Dto.Item> itens
     ) throws IOException {
@@ -69,14 +77,40 @@ public class PostmanConverter {
             log.debug("processing item: {}", item.getName());
 
             if(item.getRequest() == null){
-                CollectionDto collection = pumpMapper.toCollectionDto(item);
+                CollectionDto collection = colectionPumpMapper.toCollectionDto(item);
                 File collectionDir = collectionRepository.save(destination, collection);
-                pumpPostmanCollection(collectionDir, item.getItem());
+                pumpCollection(collectionDir, item.getItem());
                 continue;
             }
 
-            RequestDto request = pumpMapper.toRequestDto(item);
+            RequestDto request = colectionPumpMapper.toRequestDto(item);
             requestRepository.save(destination, request);
         }
+    }
+
+    public void pumpEnvironment(
+            File postmanEnvironment
+    ) throws IOException {
+        var schema = JsonSchemaBuilder.getPostmanJsonSchema(ENVIRONMENT);
+
+        Set<ValidationMessage> validations  = schema.validate(
+                mapper.readTree(postmanEnvironment)
+        );
+
+        if(!validations.isEmpty()) throw new IOException(validations.toString());
+
+        PostmanEnvironmentDto postmanEnvironmentDto = mapper.readValue(
+                postmanEnvironment,
+                PostmanEnvironmentDto.class
+        );
+
+        // validate parse
+        schema.validate(mapper.readTree(
+                mapper.writeValueAsString(postmanEnvironmentDto)
+        ));
+
+        EnvironmentDto result = environmentPumpMapper.toEnvironmentDto(postmanEnvironmentDto);
+
+        environmentRepository.save(result);
     }
 }

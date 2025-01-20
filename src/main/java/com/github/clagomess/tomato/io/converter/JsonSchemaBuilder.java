@@ -22,7 +22,7 @@ public class JsonSchemaBuilder {
 
     public static JsonSchema getPostmanJsonSchema(PostmanJsonSchemaEnum schemaEnum){
         JsonSchemaFactory factory = JsonSchemaFactory.getInstance(
-                SpecVersion.VersionFlag.V4
+                SpecVersion.VersionFlag.V7
         );
 
         return factory.getSchema(PostmanConverter.class.getResourceAsStream(

@@ -62,7 +62,7 @@ public class CollectionImportUI extends JFrame {
             CollectionTreeDto parent = cbCollectionParent.getSelectedItem();
             if(parent == null) throw new Exception("Parent is null");
 
-            postmanConverter.pumpPostmanCollection(
+            postmanConverter.pumpCollection(
                     parent.getPath(),
                     fileChooser.getValue()
             );
