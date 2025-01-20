@@ -41,6 +41,7 @@ public class TabTitleUI extends JPanel {
         add(title, "width ::200");
         add(btnClose);
         addMouseListener(new TabTitleMouseListener(tabKey, parent));
+        setToolTipText(requestDto.getName());
 
         // set data
         httpMethod.setIcon(requestDto.getMethod().getIcon());

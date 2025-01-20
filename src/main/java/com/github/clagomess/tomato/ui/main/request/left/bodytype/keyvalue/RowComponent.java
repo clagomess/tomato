@@ -58,7 +58,6 @@ class RowComponent extends JPanel {
         cbSelected.addActionListener(l -> cbSelectedOnChange());
         txtKey.addOnChange(this::txtKeyOnChange);
         txtValue.addOnChange(this::txtValueOnChange);
-        // @TODO: add possibility to expand to new window
         btnRemove.addActionListener(l -> remove());
 
         // layout
