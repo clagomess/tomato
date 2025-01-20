@@ -30,6 +30,7 @@ public class TabTitleUI extends JPanel {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public TabTitleUI(
+            RequestTabPaneUI parent,
             TabKey tabKey,
             RequestDto requestDto
     ){
@@ -39,6 +40,7 @@ public class TabTitleUI extends JPanel {
         add(httpMethod);
         add(title, "width ::200");
         add(btnClose);
+        addMouseListener(new TabTitleMouseListener(tabKey, parent));
 
         // set data
         httpMethod.setIcon(requestDto.getMethod().getIcon());
@@ -53,12 +55,6 @@ public class TabTitleUI extends JPanel {
                 tabKey,
                 event -> changeIcon.setIcon(event ? iconHasChanged : iconHasNotChanged)
         ));
-
-        // @TODO: impl. mouse middle click close
-        // @TODO: impl. mouse right click options - Close Tab
-        // @TODO: impl. mouse right click options - Close Left Tabs
-        // @TODO: impl. mouse right click options - Close Right Tabs
-        // @TODO: impl. mouse right click options - Detach
     }
 
     public void onClose(ActionListener listener) {

@@ -8,12 +8,14 @@ import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
+import lombok.Getter;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RequestTabPaneUI extends JTabbedPane {
+    @Getter
     private final List<Tab> tabs = new ArrayList<>();
 
     private final RequestRepository requestRepository = new RequestRepository();
@@ -79,7 +81,11 @@ public class RequestTabPaneUI extends JTabbedPane {
         );
 
         // setup tab title
-        var tabTitle = new TabTitleUI(requestSplitPaneUI.getKey(), requestDto);
+        var tabTitle = new TabTitleUI(
+                this,
+                requestSplitPaneUI.getKey(),
+                requestDto
+        );
         tabTitle.onClose(l -> removeTab(requestSplitPaneUI.getKey()));
 
         setTabComponentAt(indexOfTab(tabId), tabTitle);
@@ -93,7 +99,7 @@ public class RequestTabPaneUI extends JTabbedPane {
         setSelectedIndex(getTabCount() -2);
     }
 
-    private void removeTab(Tab tab){
+    protected void removeTab(Tab tab){
         // @TODO: check if unsaved before remove
         var tabId = tab.tabKey().getUuid().toString();
         removeTabAt(indexOfTab(tabId));
@@ -102,14 +108,14 @@ public class RequestTabPaneUI extends JTabbedPane {
         tabs.remove(tab);
     }
 
-    private void removeTab(TabKey tabKey){
+    protected void removeTab(TabKey tabKey){
         tabs.stream()
                 .filter(tab -> tab.tabKey().equals(tabKey))
                 .findFirst()
                 .ifPresent(this::removeTab);
     }
 
-    private record Tab(
+    protected record Tab(
             TabKey tabKey,
             TabTitleUI tabTitleUI,
             RequestSplitPaneUI tabContent
