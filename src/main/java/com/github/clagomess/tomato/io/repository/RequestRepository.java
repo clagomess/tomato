@@ -89,7 +89,10 @@ public class RequestRepository {
                         log.error(e.getMessage(), e);
                         return null;
                     }
-                }).filter(Objects::nonNull);
+                })
+                .filter(Objects::nonNull)
+                .sorted()
+                ;
     }
 
     public void cacheEvict(File requestFile) {

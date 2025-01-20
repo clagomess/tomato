@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.dto.tree;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.stream.Stream;
@@ -10,7 +11,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CollectionTreeDto {
+public class CollectionTreeDto implements Comparable<CollectionTreeDto> {
     private String id;
     private String name;
     private File path;
@@ -36,6 +37,11 @@ public class CollectionTreeDto {
     public String getFlattenedParentString() {
         if(parent == null) return name;
         return parent.getFlattenedParentString() + " / " + name;
+    }
+
+    @Override
+    public int compareTo(CollectionTreeDto o) {
+        return StringUtils.compare(this.getName(), o.getName());
     }
 
     @FunctionalInterface

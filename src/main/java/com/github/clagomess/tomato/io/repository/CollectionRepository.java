@@ -110,7 +110,9 @@ public class CollectionRepository {
                         log.error(e.getMessage(), e);
                         return null;
                     }
-                }).filter(Objects::nonNull);
+                })
+                .filter(Objects::nonNull)
+                .sorted();
     }
 
     public CollectionTreeDto getCollectionRootTree(
