@@ -7,6 +7,7 @@ import java.awt.*;
 
 @Slf4j
 public class DialogFactory {
+    // @TODO: impl. wrap word
     public static void createDialogException(Component parent, Throwable e){
         log.error(DialogFactory.class.getName(), e);
         JOptionPane.showMessageDialog(
