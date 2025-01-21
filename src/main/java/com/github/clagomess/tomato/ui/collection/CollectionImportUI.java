@@ -34,18 +34,17 @@ public class CollectionImportUI extends JFrame {
 
         cbCollectionParent = new CollectionComboBox(selectedCollectionTreeParent);
 
-        JPanel panel = new JPanel(new MigLayout(
+        setLayout(new MigLayout(
                 "insets 10",
                 "[grow]"
         ));
-        panel.add(new JLabel("File"), "wrap");
-        panel.add(fileChooser, "width 300!, wrap");
-        panel.add(new JLabel("Type"), "wrap");
-        panel.add(cbType, "width 300!, wrap");
-        panel.add(new JLabel("Destination"), "wrap");
-        panel.add(cbCollectionParent, "width 300!, wrap");
-        panel.add(btnImport, "align right");
-        add(panel);
+        add(new JLabel("File"), "wrap");
+        add(fileChooser, "width 300!, wrap");
+        add(new JLabel("Type"), "wrap");
+        add(cbType, "width 300!, wrap");
+        add(new JLabel("Destination"), "wrap");
+        add(cbCollectionParent, "width 300!, wrap");
+        add(btnImport, "align right");
 
         getRootPane().setDefaultButton(btnImport);
 

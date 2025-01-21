@@ -34,16 +34,15 @@ public class CollectionMoveUI extends JFrame {
         lblCollectionName.setText(collectionTree.getName());
         cbCollectionDestination = new CollectionComboBox(collectionTree.getParent());
 
-        JPanel panel = new JPanel(new MigLayout(
+        setLayout(new MigLayout(
                 "insets 10",
                 "[grow]"
         ));
-        panel.add(new JLabel("Collection"), "wrap");
-        panel.add(lblCollectionName, "width 300!, wrap");
-        panel.add(new JLabel("Parent"), "wrap");
-        panel.add(cbCollectionDestination, "width 300!, wrap");
-        panel.add(btnMove, "align right");
-        add(panel);
+        add(new JLabel("Collection"), "wrap");
+        add(lblCollectionName, "width 300!, wrap");
+        add(new JLabel("Parent"), "wrap");
+        add(cbCollectionDestination, "width 300!, wrap");
+        add(btnMove, "align right");
 
         getRootPane().setDefaultButton(btnMove);
 

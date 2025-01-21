@@ -37,16 +37,15 @@ public class RequestMoveUI extends JFrame {
         lblRequestName.setText(requestHead.getName());
         cbCollectionDestination = new CollectionComboBox(requestHead.getParent());
 
-        JPanel panel = new JPanel(new MigLayout(
+        setLayout(new MigLayout(
                 "insets 10",
                 "[grow]"
         ));
-        panel.add(new JLabel("Request"), "wrap");
-        panel.add(lblRequestName, "width 300!, wrap");
-        panel.add(new JLabel("Parent"), "wrap");
-        panel.add(cbCollectionDestination, "width 300!, wrap");
-        panel.add(btnMove, "align right");
-        add(panel);
+        add(new JLabel("Request"), "wrap");
+        add(lblRequestName, "width 300!, wrap");
+        add(new JLabel("Parent"), "wrap");
+        add(cbCollectionDestination, "width 300!, wrap");
+        add(btnMove, "align right");
 
         getRootPane().setDefaultButton(btnMove);
 

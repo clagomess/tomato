@@ -18,22 +18,22 @@ public class AboutUI extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        JPanel panel = new JPanel(new MigLayout(
+        setLayout(new MigLayout(
                 "insets 10",
                 "[center, grow]"
         ));
 
         // icon
-        panel.add(new JLabel(new FaviconIcon()), "wrap");
+        add(new JLabel(new FaviconIcon()), "wrap");
 
         // title
         var title = new JLabel("Tomato");
         title.putClientProperty("FlatLaf.styleClass", "h1");
-        panel.add(title, "wrap 10");
+        add(title, "wrap 10");
 
         // uri
         var uri = new JLabel("https://github.com/clagomess/tomato");
-        panel.add(uri, "wrap");
+        add(uri, "wrap");
 
         // release
         var release = new JLabel(String.format(
@@ -42,9 +42,7 @@ public class AboutUI extends JFrame {
                 RevisionUtil.getInstance().getDeployCommit()
         ));
         release.putClientProperty("FlatLaf.styleClass", "small");
-        panel.add(release);
-
-        add(panel);
+        add(release);
 
         pack();
         setLocationRelativeTo(

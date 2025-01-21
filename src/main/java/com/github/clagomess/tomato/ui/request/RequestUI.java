@@ -27,15 +27,13 @@ public class RequestUI extends JFrame {
         setMinimumSize(new Dimension(600, 600));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JPanel panel = new JPanel(new MigLayout(
+        setLayout(new MigLayout(
                 "debug, insets 0 10 5 5"
         ));
 
         RequestDto requestDto = requestRepository.load(requestHead).orElseThrow();
         requestSplitPaneUI = new RequestSplitPaneUI(requestHead, requestDto);
-        panel.add(requestSplitPaneUI);
-
-        add(panel);
+        add(requestSplitPaneUI);
 
         pack();
         setLocationRelativeTo(null);

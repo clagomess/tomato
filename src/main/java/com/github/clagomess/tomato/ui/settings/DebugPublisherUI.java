@@ -19,17 +19,15 @@ public class DebugPublisherUI extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(600, 400));
 
-        JPanel panel = new JPanel(new MigLayout(
+        setLayout(new MigLayout(
                 "insets 10",
                 "[grow, fill]"
         ));
 
-        panel.add(new JScrollPane(console), "height 100%, wrap");
-        panel.add(btnRefresh);
+        add(new JScrollPane(console), "height 100%, wrap");
+        add(btnRefresh);
 
         btnRefresh.addActionListener(e -> refresh());
-
-        add(panel);
 
         pack();
         setLocationRelativeTo(null);

@@ -24,14 +24,13 @@ public class WorkspaceSwitchUI extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        JPanel panel = new JPanel(new MigLayout(
+        setLayout(new MigLayout(
                 "insets 10",
                 "[grow]"
         ));
-        panel.add(new JLabel("Select workspace:"), "wrap");
-        panel.add(cbWorkspace, "width 300!, wrap");
-        panel.add(btnSwitch, "align right");
-        add(panel);
+        add(new JLabel("Select workspace:"), "wrap");
+        add(cbWorkspace, "width 300!, wrap");
+        add(btnSwitch, "align right");
 
         getRootPane().setDefaultButton(btnSwitch);
 

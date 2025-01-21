@@ -28,13 +28,11 @@ public class ViewInjectedEnvironmentUI extends JFrame {
             tableManager.getModel().addRow(new KeyValueTMDto(key, value));
         });
 
-        JPanel panel = new JPanel(new MigLayout(
+        setLayout(new MigLayout(
                 "insets 10",
                 "[grow, fill]"
         ));
-        panel.add(new JScrollPane(tableManager.getTable()), "height 100%");
-
-        add(panel);
+        add(new JScrollPane(tableManager.getTable()), "height 100%");
 
         pack();
         setLocationRelativeTo(parent);

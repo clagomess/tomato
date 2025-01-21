@@ -24,14 +24,13 @@ public class EnvironmentNewUI extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
 
-        JPanel panel = new JPanel(new MigLayout(
+        setLayout(new MigLayout(
                 "insets 10",
                 "[grow]"
         ));
-        panel.add(new JLabel("Name"), "wrap");
-        panel.add(txtName, "width 300!, wrap");
-        panel.add(btnSave, "align right");
-        add(panel);
+        add(new JLabel("Name"), "wrap");
+        add(txtName, "width 300!, wrap");
+        add(btnSave, "align right");
 
         getRootPane().setDefaultButton(btnSave);
 

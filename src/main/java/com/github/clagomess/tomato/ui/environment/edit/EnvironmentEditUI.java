@@ -34,15 +34,14 @@ public class EnvironmentEditUI extends JFrame {
         txtName.setText(environment.getName());
         EnvUI envUI = new EnvUI(environment.getEnvs());
 
-        JPanel panel = new JPanel(new MigLayout(
+        setLayout(new MigLayout(
                 "insets 10",
                 "[grow]"
         ));
-        panel.add(new JLabel("Name"), "wrap");
-        panel.add(txtName, "width 100%, wrap");
-        panel.add(envUI, "width 100%, height 100%, wrap");
-        panel.add(btnSave, "align right");
-        add(panel);
+        add(new JLabel("Name"), "wrap");
+        add(txtName, "width 100%, wrap");
+        add(envUI, "width 100%, height 100%, wrap");
+        add(btnSave, "align right");
 
         btnSave.addActionListener(l -> btnSaveAction());
 
