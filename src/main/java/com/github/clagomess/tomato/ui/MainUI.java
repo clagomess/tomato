@@ -16,6 +16,7 @@ import com.github.clagomess.tomato.ui.settings.AboutUI;
 import com.github.clagomess.tomato.ui.settings.DebugPublisherUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceNewUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceSwitchUI;
+import com.github.clagomess.tomato.ui.workspace.list.WorkspaceListUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +55,7 @@ public class MainUI extends JFrame {
                 addActionListener(l -> new WorkspaceNewUI(mainUI));
             }});
             add(new JMenuItem("Edit Workspaces"){{
-                addActionListener(l -> {}); //@TODO: Implements - Edit Workspaces
+                addActionListener(l -> new WorkspaceListUI(mainUI));
             }});
         }});
 
