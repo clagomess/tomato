@@ -20,6 +20,10 @@ public class KeyValueUI extends JPanel {
     private final RequestStagingMonitor requestStagingMonitor;
     private final JButton btnAddNew = new JButton(new BxPlusIcon()){{
         setToolTipText("Add new");
+        setBorderPainted(false);
+        setBackground(null);
+        setFocusable(false);
+        setMargin(new Insets(0,0,0,0));
     }};
     private final JPanel rowsPanel;
 

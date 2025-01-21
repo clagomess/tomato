@@ -22,8 +22,11 @@ public class TabTitleUI extends JPanel {
     private final JLabel httpMethod = new JLabel();
     private final JLabel title = new JLabel();
     private final JButton btnClose = new JButton(new BxXIcon()){{
-        setBorder(BorderFactory.createEmptyBorder());
         setToolTipText("Close");
+        setBorderPainted(false);
+        setBackground(null);
+        setFocusable(false);
+        setMargin(new Insets(0,0,0,0));
     }};
 
     private final List<UUID> listenerUuid = new ArrayList<>(2);

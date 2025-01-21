@@ -16,6 +16,10 @@ public class EnvUI extends JPanel {
     private final List<EnvironmentDto.Env> list;
     private final JButton btnAddNew = new JButton(new BxPlusIcon()){{
         setToolTipText("Add a new environment");
+        setBorderPainted(false);
+        setBackground(null);
+        setFocusable(false);
+        setMargin(new Insets(0,0,0,0));
     }};
     private final JPanel rowsPanel;
 

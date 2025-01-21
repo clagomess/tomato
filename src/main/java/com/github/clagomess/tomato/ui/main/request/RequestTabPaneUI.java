@@ -11,6 +11,7 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import lombok.Getter;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,14 +55,17 @@ public class RequestTabPaneUI extends JTabbedPane {
 
         JButton btnPlus = new JButton(new BxPlusIcon());
         btnPlus.setToolTipText("Add a new request");
-
-        setTabComponentAt(indexOfTab("+"), btnPlus);
-
+        btnPlus.setBorderPainted(false);
+        btnPlus.setContentAreaFilled(false);
+        btnPlus.setFocusable(false);
+        btnPlus.setMargin(new Insets(0,0,0,0));
         btnPlus.addActionListener(l -> {
             new WaitExecution(() -> {
                 addNewTab(null, new RequestDto());
             }).execute();
         });
+
+        setTabComponentAt(indexOfTab("+"), btnPlus);
     }
 
     public void addNewTab(
