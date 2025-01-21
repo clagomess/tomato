@@ -57,6 +57,8 @@ class RowComponent extends JPanel {
         add(btnRemove);
     }
 
+    // @TODO: impl. change feedback
+
     private void btnRemoveAction(){
         list.remove(item);
         parent.remove(ComponentUtil.getComponentIndex(parent, this));

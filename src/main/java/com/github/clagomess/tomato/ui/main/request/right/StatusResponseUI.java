@@ -43,6 +43,8 @@ public class StatusResponseUI extends JPanel {
             add(new CharsetBadge(dto.getHttpResponse()));
         }
 
+        // @TODO: impl warning when Invalid Cert
+
         revalidate();
         repaint();
     }

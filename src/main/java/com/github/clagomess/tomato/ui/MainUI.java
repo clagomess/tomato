@@ -75,6 +75,9 @@ public class MainUI extends JFrame {
             add(new JMenuItem("New Environment"){{
                 addActionListener(l -> new EnvironmentNewUI(mainUI));
             }});
+            add(new JMenuItem("Edit Environments"){{
+                addActionListener(l -> {}); //@TODO: Implements - Edit Environments
+            }});
             add(new JMenuItem("Import", new BxImportIcon()){{
                 addActionListener(l -> new EnvironmentImportUI(mainUI));
             }});

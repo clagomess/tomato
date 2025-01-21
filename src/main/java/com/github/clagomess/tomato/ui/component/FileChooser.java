@@ -30,6 +30,8 @@ public class FileChooser extends JPanel {
         txtFilepath.setEditable(false);
     }
 
+    // @TODO: impl. remember last selected
+
     private void btnSelectAction(){
         JFileChooser file = new JFileChooser();
         file.setFileSelectionMode(JFileChooser.FILES_ONLY);

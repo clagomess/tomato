@@ -79,6 +79,8 @@ class RowComponent extends JPanel {
         add(btnRemove);
     }
 
+    // @TODO: implement option to fill Content-Type when 'type File'
+
     private void cbTypeOnChange(){
         item.setType((KeyValueTypeEnum) cbType.getSelectedItem());
         requestStagingMonitor.update();
