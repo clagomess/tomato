@@ -9,7 +9,11 @@ import java.awt.*;
 
 public class TabTitleUI extends JPanel {
     @Getter
-    private String title;
+    private final String title;
+
+    @Getter
+    private boolean hasContent;
+
     private final BxsCircleIcon iconHasContent = new BxsCircleIcon(Color.ORANGE);
     private final JLabel contentIcon = new JLabel();
 
@@ -18,6 +22,7 @@ public class TabTitleUI extends JPanel {
             boolean hasContent
     ) {
         this.title = title;
+        this.hasContent = hasContent;
 
         setLayout(new MigLayout("insets 0 0 0 0"));
         setOpaque(false);

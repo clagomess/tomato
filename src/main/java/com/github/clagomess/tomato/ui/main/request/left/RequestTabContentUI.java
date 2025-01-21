@@ -8,6 +8,7 @@ import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,9 +21,12 @@ public class RequestTabContentUI extends JPanel {
         setLayout(new MigLayout("insets 5 0 0 5", "[grow,fill]", ""));
 
         // titles
-        var paramsTabTitle = new TabTitleUI(
-                "Params",
-                !requestDto.getUrlParam().getQuery().isEmpty() ||
+        var queryParamsTabTitle = new TabTitleUI(
+                "Query Params",
+                !requestDto.getUrlParam().getQuery().isEmpty()
+        );
+        var pathVariablesTabTitle = new TabTitleUI(
+                "Path Variables",
                 !requestDto.getUrlParam().getPath().isEmpty()
         );
         var bodyTabTabTitle = new TabTitleUI(
@@ -40,8 +44,13 @@ public class RequestTabContentUI extends JPanel {
 
         JTabbedPane tpRequest = new JTabbedPane();
 
-        tpRequest.addTab(paramsTabTitle.getTitle(), new URIParamUI(
-                requestDto.getUrlParam(),
+        tpRequest.addTab(queryParamsTabTitle.getTitle(), new KeyValueUI(
+                requestDto.getUrlParam().getQuery(),
+                requestStagingMonitor
+        ));
+
+        tpRequest.addTab(pathVariablesTabTitle.getTitle(), new KeyValueUI(
+                requestDto.getUrlParam().getPath(),
                 requestStagingMonitor
         ));
 
@@ -63,10 +72,24 @@ public class RequestTabContentUI extends JPanel {
         add(tpRequest, "span, height 100%");
 
         // init tab-title
-        tpRequest.setTabComponentAt(tpRequest.indexOfTab(paramsTabTitle.getTitle()), paramsTabTitle);
-        tpRequest.setTabComponentAt(tpRequest.indexOfTab(bodyTabTabTitle.getTitle()), bodyTabTabTitle);
-        tpRequest.setTabComponentAt(tpRequest.indexOfTab(headersTabTitle.getTitle()), headersTabTitle);
-        tpRequest.setTabComponentAt(tpRequest.indexOfTab(cookiesTabTitle.getTitle()), cookiesTabTitle);
+        tpRequest.setTabComponentAt(0, queryParamsTabTitle);
+        tpRequest.setTabComponentAt(1, pathVariablesTabTitle);
+        tpRequest.setTabComponentAt(2, bodyTabTabTitle);
+        tpRequest.setTabComponentAt(3, headersTabTitle);
+        tpRequest.setTabComponentAt(4, cookiesTabTitle);
+
+        // select tab with content
+        List<TabTitleUI> tabs = List.of(
+                queryParamsTabTitle, pathVariablesTabTitle, bodyTabTabTitle,
+                headersTabTitle, cookiesTabTitle
+        );
+
+        for (var i = 0; i < tabs.size(); i++) {
+            if(tabs.get(i).isHasContent()){
+                tpRequest.setSelectedIndex(i);
+                break;
+            }
+        }
 
         // @TODO: update tab title when modify content
     }
