@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import net.miginfocom.swing.MigLayout;
 
@@ -14,13 +15,7 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 public class EnvUI extends JPanel {
     private final List<EnvironmentDto.Env> list;
-    private final JButton btnAddNew = new JButton(new BxPlusIcon()){{
-        setToolTipText("Add a new environment");
-        setBorderPainted(false);
-        setBackground(null);
-        setFocusable(false);
-        setMargin(new Insets(0,0,0,0));
-    }};
+    private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add a new environment");
     private final JPanel rowsPanel;
 
     public EnvUI(

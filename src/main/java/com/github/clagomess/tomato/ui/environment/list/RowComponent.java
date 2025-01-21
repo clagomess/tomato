@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.environment.list;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditUI;
@@ -25,23 +26,13 @@ public class RowComponent extends JPanel {
         setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
 
         // edit
-        var btnEdit = new JButton(new BxEditIcon());
-        btnEdit.setToolTipText("Edit environment");
-        btnEdit.setBorderPainted(false);
-        btnEdit.setBackground(null);
-        btnEdit.setFocusable(false);
-        btnEdit.setMargin(new Insets(0,0,0,0));
+        var btnEdit = new IconButton(new BxEditIcon(), "Edit environment");
         btnEdit.addActionListener(l -> {
             invokeLater(() -> new EnvironmentEditUI(parent, environment));
         });
 
         // delete
-        var btnDelete = new JButton(new BxTrashIcon());
-        btnDelete.setToolTipText("Delete environment");
-        btnDelete.setBorderPainted(false);
-        btnDelete.setBackground(null);
-        btnDelete.setFocusable(false);
-        btnDelete.setMargin(new Insets(0,0,0,0));
+        var btnDelete = new IconButton(new BxTrashIcon(), "Delete environment");
         btnDelete.addActionListener(l -> {
             System.out.println("action deleted");
         }); // @TODO: impl. environment delete

@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.main.request;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxXIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import net.miginfocom.swing.MigLayout;
@@ -21,13 +22,7 @@ public class TabTitleUI extends JPanel {
     private final JLabel changeIcon = new JLabel();
     private final JLabel httpMethod = new JLabel();
     private final JLabel title = new JLabel();
-    private final JButton btnClose = new JButton(new BxXIcon()){{
-        setToolTipText("Close");
-        setBorderPainted(false);
-        setBackground(null);
-        setFocusable(false);
-        setMargin(new Insets(0,0,0,0));
-    }};
+    private final IconButton btnClose = new IconButton(new BxXIcon(), "Close");
 
     private final List<UUID> listenerUuid = new ArrayList<>(2);
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();

@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.left.bodytype.multipartform;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import net.miginfocom.swing.MigLayout;
@@ -16,13 +17,7 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 public class MultiPartFormUI extends JPanel {
     private final List<RequestDto.KeyValueItem> multiPartFormItems;
     private final RequestStagingMonitor requestStagingMonitor;
-    private final JButton btnAddNew = new JButton(new BxPlusIcon()){{
-        setToolTipText("Add new");
-        setBorderPainted(false);
-        setBackground(null);
-        setFocusable(false);
-        setMargin(new Insets(0,0,0,0));
-    }};
+    private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add new");
     private final JPanel rowsPanel;
 
     public MultiPartFormUI(

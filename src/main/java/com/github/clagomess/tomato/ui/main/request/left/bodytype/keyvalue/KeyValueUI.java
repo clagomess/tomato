@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.Setter;
@@ -18,13 +19,7 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 public class KeyValueUI extends JPanel {
     private final List<RequestDto.KeyValueItem> list;
     private final RequestStagingMonitor requestStagingMonitor;
-    private final JButton btnAddNew = new JButton(new BxPlusIcon()){{
-        setToolTipText("Add new");
-        setBorderPainted(false);
-        setBackground(null);
-        setFocusable(false);
-        setMargin(new Insets(0,0,0,0));
-    }};
+    private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add new");
     private final JPanel rowsPanel;
 
     @Setter
