@@ -16,43 +16,77 @@ import java.util.stream.IntStream;
 public class TableManagerUI<T> {
     private final DtoTableModel<T> model;
     private final JTable table;
-    private final List<TableCellRenderer> cellRenderer;
 
     public TableManagerUI(Class<T> clazz) {
         this(clazz, Collections.emptyList());
     }
 
-    public TableManagerUI(Class<T> clazz, List<TableCellRenderer> cellRenderer) {
-        this.cellRenderer = cellRenderer;
+    public TableManagerUI(
+            Class<T> clazz,
+            List<TableCellRenderer> cellRenderer
+    ) {
         this.model = new DtoTableModel<>(clazz, new LinkedList<>());
-        this.table = new JTable(model);
-        table.setFocusable(false);
-        table.setShowGrid(true);
-        table.setAutoCreateRowSorter(true);
-        setTableColumnsWidth();
+        this.table = new CustomJTable<>(model, cellRenderer);
     }
 
-    private void setTableColumnsWidth(){
-        Field[] fields = model.getClazz().getDeclaredFields();
+    private static class CustomJTable<T> extends JTable {
+        private final DtoTableModel<T> model;
+        private final List<TableCellRenderer> cellRenderer;
 
-        IntStream.range(0, fields.length).forEach(i -> {
-            if(!fields[i].isAnnotationPresent(ModelColumn.class)) return;
-            ModelColumn column = fields[i].getAnnotation(ModelColumn.class);
+        private CustomJTable(
+                DtoTableModel<T> model,
+                List<TableCellRenderer> cellRenderer
+        ) {
+            super(model);
+            this.model = model;
+            this.cellRenderer = cellRenderer;
 
-            // set width
-            if(column.width() > 0) {
-                table.getColumnModel().getColumn(i).setMinWidth(column.width());
-                table.getColumnModel().getColumn(i).setMaxWidth(column.width());
+            setFocusable(false);
+            setShowGrid(true);
+            setAutoCreateRowSorter(true);
+            setModelProperties();
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            Field[] fields = model.getClazz().getDeclaredFields();
+
+            if(fields[column].isAnnotationPresent(ModelColumn.class) &&
+                    fields[column].getAnnotation(ModelColumn.class)
+                            .cellRenderer() != null
+            ){
+                return false;
             }
 
-            // set render
-            cellRenderer.stream()
-                    .filter(item -> item.getClass() == column.cellRenderer())
-                    .findFirst()
-                    .ifPresent(item -> {
-                        table.getColumn(model.getColumnName(i))
-                                .setCellRenderer(item);
-                    });
-        });
+            return super.isCellEditable(row, column);
+        }
+
+        private void setModelProperties() {
+            Field[] fields = model.getClazz().getDeclaredFields();
+
+            IntStream.range(0, fields.length).forEach(i -> {
+                if(!fields[i].isAnnotationPresent(ModelColumn.class)) return;
+                ModelColumn column = fields[i].getAnnotation(ModelColumn.class);
+
+                // set width
+                if(column.width() > 0) {
+                    var col = getColumnModel().getColumn(i);
+                    col.setMinWidth(column.width());
+                    col.setMaxWidth(column.width());
+                }
+
+                // set render
+                if(column.cellRenderer() != null) {
+                    cellRenderer.stream()
+                            .filter(item -> item.getClass() == column.cellRenderer())
+                            .findFirst()
+                            .ifPresent(item -> {
+                                var col = getColumn(model.getColumnName(i));
+                                col.setCellEditor(null);
+                                col.setCellRenderer(item);
+                            });
+                }
+            });
+        }
     }
 }
