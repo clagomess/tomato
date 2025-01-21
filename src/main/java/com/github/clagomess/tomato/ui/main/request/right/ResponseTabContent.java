@@ -41,8 +41,7 @@ public class ResponseTabContent extends JPanel {
     public ResponseTabContent(){
         setLayout(new MigLayout(
                 "insets 5 5 0 0",
-                "[grow,fill][][]",
-                ""
+                "[grow,fill][][]"
         ));
 
         add(statusResponseUI, "width 100%");

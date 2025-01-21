@@ -18,7 +18,10 @@ public class RequestTabContentUI extends JPanel {
             RequestStagingMonitor requestStagingMonitor
     ){
         // layout definitions
-        setLayout(new MigLayout("insets 5 0 0 5", "[grow,fill]", ""));
+        setLayout(new MigLayout(
+                "insets 5 0 0 5",
+                "[grow,fill]"
+        ));
 
         // titles
         var queryParamsTabTitle = new TabTitleUI(

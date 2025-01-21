@@ -9,11 +9,7 @@ import javax.swing.*;
 
 public class StatusResponseUI extends JPanel {
     public StatusResponseUI(){
-        setLayout(new MigLayout(
-                "insets 0 0 0 0",
-                "",
-                ""
-        ));
+        setLayout(new MigLayout("insets 0 0 0 0"));
         add(new InfoBadge("Waiting new request"));
     }
 

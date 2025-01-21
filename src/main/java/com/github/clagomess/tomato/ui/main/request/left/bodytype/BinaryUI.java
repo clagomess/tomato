@@ -16,7 +16,10 @@ public class BinaryUI extends JPanel {
             RequestDto.BinaryBody binaryBody,
             RequestStagingMonitor requestStagingMonitor
     ){
-        setLayout(new MigLayout("insets 5 0 0 0", "[grow, fill]", ""));
+        setLayout(new MigLayout(
+                "insets 5 0 0 0",
+                "[grow, fill]"
+        ));
 
         contentType.setText(binaryBody.getContentType());
         contentType.addOnChange(value -> {

@@ -18,7 +18,10 @@ public class FileChooser extends JPanel {
     private File value;
 
     public FileChooser() {
-        setLayout(new MigLayout("insets 0 0 0 0", "[grow, fill]", ""));
+        setLayout(new MigLayout(
+                "insets 0 0 0 0",
+                "[grow, fill]"
+        ));
 
         add(txtFilepath, "width 100%");
         add(btnSelect);

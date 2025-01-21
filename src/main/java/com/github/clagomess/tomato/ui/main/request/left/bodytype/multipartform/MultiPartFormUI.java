@@ -39,8 +39,7 @@ public class MultiPartFormUI extends JPanel {
 
         JPanel header = new JPanel(new MigLayout(
                 "insets 5 0 5 0",
-                "[][][][grow, fill][]",
-                ""
+                "[][][][grow, fill][]"
         ));
         header.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
         header.add(new JLabel(), "width 25!");

@@ -28,7 +28,10 @@ public class RawBodyUI extends JPanel {
         this.rawBody = rawBody;
         this.requestStagingMonitor = requestStagingMonitor;
 
-        setLayout(new MigLayout("insets 5 0 0 0", "[grow, fill]", ""));
+        setLayout(new MigLayout(
+                "insets 5 0 0 0",
+                "[grow, fill]"
+        ));
 
         cbContentType.setSelectedItem(rawBody.getType());
         cbContentType.addActionListener(l -> cbContentTypeAction());

@@ -28,14 +28,12 @@ public class BodyUI extends JPanel {
 
         setLayout(new MigLayout(
                 "insets 0 0 0 0",
-                "[grow, fill]",
-                ""
+                "[grow, fill]"
         ));
 
         JPanel pRadioBodyType = new JPanel(new MigLayout(
                 "insets 5 0 5 0",
-                "[]",
-                ""
+                "[]"
         ));
         pRadioBodyType.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
 
