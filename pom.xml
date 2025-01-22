@@ -168,6 +168,32 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resource</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/release</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources</directory>
+                                    <includes>
+                                        <include>splash.png</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
                 <configuration>
@@ -220,6 +246,9 @@
                             <classpathPrefix>libs</classpathPrefix>
                             <mainClass>com.github.clagomess.tomato.Main</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <SplashScreen-Image>splash.png</SplashScreen-Image>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

@@ -22,19 +22,7 @@ $env:Path += ";build-windows/wix"
 
 # View Mods
 .\build-windows\jdk-17.0.13+11\bin\jdeps `
-    ./target/release/tomato-0.0.1-alpha.jar
-
-# build custom JRE
-If(!(Test-Path -Path '.\build-windows\jre')){
-    .\build-windows\jdk-17.0.13+11\bin\jlink `
-    --add-modules java.base,java.desktop,java.naming,java.net.http `
-    --output ./build-windows/jre `
-    --no-header-files `
-    --no-man-pages `
-    --strip-debug `
-    --compress=2 `
-    --verbose
-}
+    ./target/release/tomato-0.0.2.jar
 
 # build
 [System.IO.Directory]::CreateDirectory('target/dist')
@@ -42,13 +30,14 @@ If(!(Test-Path -Path '.\build-windows\jre')){
 .\build-windows\jdk-17.0.13+11\bin\jpackage `
 --type msi `
 --name Tomato `
---app-version 0.0.1 `
+--app-version 0.0.2 `
 --vendor Tomato `
 --icon ./src/main/resources/com/github/clagomess/tomato/ui/component/favicon/favicon.ico `
 --input ./target/release `
---main-jar tomato-0.0.1-alpha.jar `
+--main-jar tomato-0.0.2.jar `
 --main-class com.github.clagomess.tomato.Main `
---runtime-image ./build-windows/jre `
+--add-modules java.base,java.desktop,java.naming,java.net.http `
+--java-options "-splash:`$APPDIR/splash.png" `
 --win-dir-chooser `
 --win-per-user-install `
 --win-menu `

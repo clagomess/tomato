@@ -100,17 +100,6 @@ jobs:
           name: Tomato-${{env.GIT_TAG}}
           path: ./target/dist
 
-      - name: Build JRE
-        run: |
-          jlink `
-          --add-modules java.base,java.desktop,java.naming,java.net.http `
-          --output ./build-windows/jre `
-          --no-header-files `
-          --no-man-pages `
-          --strip-debug `
-          --compress=2 `
-          --verbose
-
       - name: Build MSI
         run: |
           jpackage `
@@ -122,7 +111,8 @@ jobs:
           --input ./target/dist/Tomato-$env:GIT_TAG `
           --main-jar tomato-$env:GIT_TAG.jar `
           --main-class com.github.clagomess.tomato.Main `
-          --runtime-image ./build-windows/jre `
+          --add-modules java.base,java.desktop,java.naming,java.net.http `
+          --java-options "-splash:`$APPDIR/splash.png" `
           --win-dir-chooser `
           --win-per-user-install `
           --win-menu `
