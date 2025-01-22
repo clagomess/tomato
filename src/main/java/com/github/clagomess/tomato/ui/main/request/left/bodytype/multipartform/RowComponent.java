@@ -104,10 +104,7 @@ class RowComponent extends JPanel {
     private void btnRemoveAction(){
         multiPartFormItems.remove(item);
         requestStagingMonitor.update();
-
-        if(cValue instanceof EnvTextField){
-            ((EnvTextField) cValue).dispose();
-        }
+        dispose();
 
         parent.remove(ComponentUtil.getComponentIndex(parent, this));
         parent.revalidate();
@@ -139,5 +136,11 @@ class RowComponent extends JPanel {
         txtKey.setEnabled(enabled);
         cValue.setEnabled(enabled);
         btnRemove.setEnabled(enabled);
+    }
+
+    public void dispose(){
+        if(cValue instanceof EnvTextField envTextField){
+            envTextField.dispose();
+        }
     }
 }

@@ -114,4 +114,11 @@ public class KeyValueUI extends JPanel {
             if(ret) addRow(item);
         }
     }
+
+    public void dispose(){
+        Arrays.stream(rowsPanel.getComponents())
+                .filter(row -> row instanceof RowComponent)
+                .map(row -> (RowComponent) row)
+                .forEach(RowComponent::dispose);
+    }
 }

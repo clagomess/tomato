@@ -13,6 +13,12 @@ import java.util.List;
 @Getter
 @Setter
 public class RequestTabContentUI extends JPanel {
+    private final KeyValueUI queryParamsUI;
+    private final KeyValueUI pathVariablesUI;
+    private final BodyUI bodyUI;
+    private final KeyValueUI headersUI;
+    private final KeyValueUI cookiesUI;
+
     public RequestTabContentUI(
             RequestDto requestDto,
             RequestStagingMonitor requestStagingMonitor
@@ -23,54 +29,63 @@ public class RequestTabContentUI extends JPanel {
                 "[grow,fill]"
         ));
 
-        // titles
+        JTabbedPane tpRequest = new JTabbedPane();
+
+        // Query Params
         var queryParamsTabTitle = new TabTitleUI(
                 "Query Params",
                 !requestDto.getUrlParam().getQuery().isEmpty()
         );
+        queryParamsUI = new KeyValueUI(
+                requestDto.getUrlParam().getQuery(),
+                requestStagingMonitor
+        );
+        tpRequest.addTab(queryParamsTabTitle.getTitle(), queryParamsUI);
+
+
+        // Path Variables
         var pathVariablesTabTitle = new TabTitleUI(
                 "Path Variables",
                 !requestDto.getUrlParam().getPath().isEmpty()
         );
+        pathVariablesUI = new KeyValueUI(
+                requestDto.getUrlParam().getPath(),
+                requestStagingMonitor
+        );
+        tpRequest.addTab(pathVariablesTabTitle.getTitle(), pathVariablesUI);
+
+        // Body
         var bodyTabTabTitle = new TabTitleUI(
                 "Body",
                 requestDto.getBody().getType() != BodyTypeEnum.NO_BODY
         );
+        bodyUI = new BodyUI(
+                requestDto.getBody(),
+                requestStagingMonitor
+        );
+        tpRequest.addTab(bodyTabTabTitle.getTitle(), bodyUI);
+
+        // Headers
         var headersTabTitle = new TabTitleUI(
                 "Headers",
                 !requestDto.getHeaders().isEmpty()
         );
+        headersUI = new KeyValueUI(
+                requestDto.getHeaders(),
+                requestStagingMonitor
+        );
+        tpRequest.addTab(headersTabTitle.getTitle(), headersUI);
+
+        // Cookies
         var cookiesTabTitle = new TabTitleUI(
                 "Cookies",
                 !requestDto.getCookies().isEmpty()
         );
-
-        JTabbedPane tpRequest = new JTabbedPane();
-
-        tpRequest.addTab(queryParamsTabTitle.getTitle(), new KeyValueUI(
-                requestDto.getUrlParam().getQuery(),
-                requestStagingMonitor
-        ));
-
-        tpRequest.addTab(pathVariablesTabTitle.getTitle(), new KeyValueUI(
-                requestDto.getUrlParam().getPath(),
-                requestStagingMonitor
-        ));
-
-        tpRequest.addTab(bodyTabTabTitle.getTitle(), new BodyUI(
-                requestDto.getBody(),
-                requestStagingMonitor
-        ));
-
-        tpRequest.addTab(headersTabTitle.getTitle(), new KeyValueUI(
-                requestDto.getHeaders(),
-                requestStagingMonitor
-        ));
-
-        tpRequest.addTab(cookiesTabTitle.getTitle(), new KeyValueUI(
+        cookiesUI = new KeyValueUI(
                 requestDto.getCookies(),
                 requestStagingMonitor
-        ));
+        );
+        tpRequest.addTab(cookiesTabTitle.getTitle(), cookiesUI);
 
         add(tpRequest, "span, height 100%");
 
@@ -95,5 +110,13 @@ public class RequestTabContentUI extends JPanel {
         }
 
         // @TODO: update tab title when modify content
+    }
+
+    public void dispose(){
+        queryParamsUI.dispose();
+        pathVariablesUI.dispose();
+        bodyUI.dispose();
+        headersUI.dispose();
+        cookiesUI.dispose();
     }
 }

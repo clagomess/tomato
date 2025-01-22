@@ -99,8 +99,8 @@ class RowComponent extends JPanel {
     public void remove(){
         list.remove(item);
         requestStagingMonitor.update();
-        onChange.run(null);
-        txtValue.dispose();
+        dispose();
+
         parent.remove(ComponentUtil.getComponentIndex(parent, this));
         parent.revalidate();
         parent.repaint();
@@ -110,6 +110,11 @@ class RowComponent extends JPanel {
         txtKey.setEnabled(enabled);
         txtValue.setEnabled(enabled);
         btnRemove.setEnabled(enabled);
+    }
+
+    public void dispose(){
+        onChange.run(null);
+        txtValue.dispose();
     }
 
     @FunctionalInterface

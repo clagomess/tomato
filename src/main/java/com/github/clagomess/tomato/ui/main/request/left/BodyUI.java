@@ -18,6 +18,7 @@ public class BodyUI extends JPanel {
     private final RequestDto.Body body;
     private final RequestStagingMonitor requestStagingMonitor;
     private final ButtonGroup bgBodyType = new ButtonGroup();
+    private Component currentBodyType;
 
     public BodyUI(
             RequestDto.Body body,
@@ -42,10 +43,13 @@ public class BodyUI extends JPanel {
             rbBodyType.setSelected(item == body.getType());
 
             rbBodyType.addActionListener(l -> {
+                dispose();
                 remove(1);
                 body.setType(item);
                 requestStagingMonitor.update();
-                add(getBodyType(), "height 100%");
+
+                currentBodyType = getBodyType();
+                add(currentBodyType, "height 100%");
                 revalidate();
                 repaint();
             });
@@ -55,7 +59,8 @@ public class BodyUI extends JPanel {
         });
 
         add(pRadioBodyType, "wrap 0");
-        add(getBodyType(), "height 100%");
+        currentBodyType = getBodyType();
+        add(currentBodyType, "height 100%");
     }
 
     private Component getBodyType(){
@@ -78,5 +83,15 @@ public class BodyUI extends JPanel {
             );
             default -> new NoBodyUI();
         };
+    }
+
+    public void dispose() {
+        if(currentBodyType instanceof MultiPartFormUI bodyType){
+            bodyType.dispose();
+        }
+
+        if(currentBodyType instanceof KeyValueUI bodyType){
+            bodyType.dispose();
+        }
     }
 }

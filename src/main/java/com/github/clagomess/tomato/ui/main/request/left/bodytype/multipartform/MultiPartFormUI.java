@@ -9,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
@@ -78,5 +79,12 @@ public class MultiPartFormUI extends JPanel {
 
         rowsPanel.add(row, "wrap");
         rowsPanel.revalidate();
+    }
+
+    public void dispose(){
+        Arrays.stream(rowsPanel.getComponents())
+                .filter(row -> row instanceof RowComponent)
+                .map(row -> (RowComponent) row)
+                .forEach(RowComponent::dispose);
     }
 }
