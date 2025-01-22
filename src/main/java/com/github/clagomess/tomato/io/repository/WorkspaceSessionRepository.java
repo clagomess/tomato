@@ -14,7 +14,7 @@ import java.util.Optional;
 public class WorkspaceSessionRepository {
     private final Repository repository;
     private final WorkspaceRepository workspaceRepository;
-    protected static final CacheManager<String, WorkspaceSessionDto> cache = new CacheManager<>("workspaceSession");
+    protected static final CacheManager<File, WorkspaceSessionDto> cache = new CacheManager<>();
 
     public WorkspaceSessionRepository() {
         this(
@@ -30,11 +30,12 @@ public class WorkspaceSessionRepository {
     }
 
     public WorkspaceSessionDto load() throws IOException {
-        return cache.get(() -> {
+        File filePath = getWorkspaceSessionFile();
+
+        return cache.get(filePath, () -> {
             Optional<WorkspaceSessionDto> opt = repository.readFile(
                     getWorkspaceSessionFile(),
-                    new TypeReference<>() {
-                    }
+                    new TypeReference<>() {}
             );
 
             return opt.orElseGet(WorkspaceSessionDto::new);
@@ -45,7 +46,7 @@ public class WorkspaceSessionRepository {
         File filePath = getWorkspaceSessionFile();
 
         repository.writeFile(filePath, dto);
-        cache.evict();
+        cache.evict(filePath);
 
         return filePath;
     }

@@ -14,8 +14,10 @@ import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditUI;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.Objects;
 
+import static javax.swing.SwingUtilities.invokeAndWait;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class EnvironmentComboBox extends JPanel {
@@ -43,8 +45,6 @@ public class EnvironmentComboBox extends JPanel {
         environmentPublisher.getOnInsert().addListener(event -> addItens());
         workspacePublisher.getOnSwitch().addListener(event -> addItens());
 
-        comboBox.addActionListener(event -> setWorkspaceSessionSelected());
-
         btnEdit.addActionListener(event -> {
             setBtnEditEnabledOrDisabled();
             if(comboBox.getSelectedItem() == null) return;
@@ -55,21 +55,30 @@ public class EnvironmentComboBox extends JPanel {
 
     private void addItens() {
         try {
-            invokeLater(comboBox::removeAllItems);
+            Arrays.stream(comboBox.getActionListeners()).forEach(comboBox::removeActionListener);
+            invokeAndWait(comboBox::removeAllItems);
 
             var session = workspaceSessionRepository.load();
+            var list = environmentRepository.list();
 
-            environmentRepository.list().forEach(item -> {
-                invokeLater(() -> comboBox.addItem(item));
+            invokeAndWait(() -> {
+                comboBox.addItem(null);
+                comboBox.setSelectedItem(null);
 
-                if(item.getId().equals(session.getEnvironmentId())){
-                    invokeLater(() -> comboBox.setSelectedItem(item));
-                }
+                list.forEach(item -> {
+                    comboBox.addItem(item);
+
+                    if(item.getId().equals(session.getEnvironmentId())){
+                        comboBox.setSelectedItem(item);
+                    }
+                });
             });
 
             setBtnEditEnabledOrDisabled();
         } catch (Throwable e){
             DialogFactory.createDialogException(this, e);
+        } finally {
+            comboBox.addActionListener(event -> setWorkspaceSessionSelected());
         }
     }
 

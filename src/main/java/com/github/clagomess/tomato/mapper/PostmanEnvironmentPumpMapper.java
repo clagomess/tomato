@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface PostmanEnvironmentPumpMapper {
     PostmanEnvironmentPumpMapper INSTANCE = Mappers.getMapper(PostmanEnvironmentPumpMapper.class);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "createTime", ignore = true)
     @Mapping(target = "envs", source = "values")

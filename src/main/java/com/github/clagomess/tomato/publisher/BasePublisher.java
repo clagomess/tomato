@@ -3,9 +3,7 @@ package com.github.clagomess.tomato.publisher;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 abstract class BasePublisher<K, T> {
@@ -17,14 +15,16 @@ abstract class BasePublisher<K, T> {
     }
 
     public void removeListener(UUID uuid) {
-        listeners.removeIf(listener -> {
-            if(listener.uuid.equals(uuid)){
-                log.debug("RemoveListener: {}", uuid);
-                return true;
-            }else{
-                return false;
-            }
-        });
+        var noConcurrentList = new ArrayList<>(listeners);
+
+        Optional<Listener<K, T>> opt = noConcurrentList.stream()
+                .filter(listener -> listener.uuid.equals(uuid))
+                .findFirst();
+
+        if(opt.isPresent()) {
+            log.debug("RemoveListener: {}", uuid);
+            listeners.remove(opt.get());
+        }
     }
 
     @FunctionalInterface
