@@ -64,7 +64,7 @@ public class DtoTableModel<T> extends AbstractTableModel {
                 return opt.get().getReadMethod().invoke(data.get(rowIndex));
             }
         } catch (Throwable e) {
-            log.warn(log.getName(), e);
+            log.warn(e.getMessage(), e);
         }
 
         return null;
@@ -79,7 +79,7 @@ public class DtoTableModel<T> extends AbstractTableModel {
                 opt.get().getWriteMethod().invoke(data.get(row), aValue);
             }
         } catch (Throwable e) {
-            log.warn(log.getName(), e);
+            log.warn(e.getMessage(), e);
         }
 
         fireTableCellUpdated(row, column);

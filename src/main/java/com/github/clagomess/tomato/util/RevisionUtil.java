@@ -24,7 +24,7 @@ public class RevisionUtil {
             deployCommit = properties.getProperty("git.commit.id.abbrev");
             deployTag = properties.getProperty("git.closest.tag.name").replace("v", "");
         }catch (Throwable e){
-            log.error(log.getName(), e);
+            log.error(e.getMessage(), e);
         }
     }
 

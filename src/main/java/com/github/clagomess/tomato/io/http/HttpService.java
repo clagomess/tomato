@@ -73,13 +73,13 @@ public class HttpService {
             result.setHttpResponse(resultHttp);
         } catch (InterruptedException e){
             result.setRequestMessage("Request failed");
-            log.error(log.getName(), e);
+            log.error(e.getMessage(), e);
         } catch (ConnectException e){
             result.setRequestMessage("Connection refused");
-            log.error(log.getName(), e);
+            log.error(e.getMessage(), e);
         } catch (Throwable e) {
             result.setRequestMessage(e.getMessage());
-            log.error(log.getName(), e);
+            log.error(e.getMessage(), e);
         } finally {
             result.setRequestDebug(debug.assembly());
         }

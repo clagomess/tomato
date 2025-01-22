@@ -2,8 +2,8 @@ package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
+import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 
 import javax.swing.*;
 
@@ -28,7 +28,7 @@ public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
                     invokeLater(() -> setSelectedItem(selectedCollectionTree));
                 }
             } catch (Throwable e){
-                invokeLater(() -> DialogFactory.createDialogException(this, e));
+                invokeLater(() -> new ExceptionDialog(this, e));
             }
         }, "CollectionComboBox").start();
     }

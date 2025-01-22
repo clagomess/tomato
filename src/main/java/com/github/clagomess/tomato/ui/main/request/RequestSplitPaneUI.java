@@ -8,7 +8,7 @@ import com.github.clagomess.tomato.io.http.HttpService;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxBlockIcon;
@@ -142,7 +142,7 @@ public class RequestSplitPaneUI extends JPanel {
                 ResponseDto responseDto = new HttpService(requestDto).perform();
                 responseContent.update(responseDto);
             } catch (Throwable e) {
-                DialogFactory.createDialogException(this, e);
+                new ExceptionDialog(this, e);
             } finally {
                 btnSendRequest.setEnabled(true);
                 btnCancelRequest.setEnabled(false);

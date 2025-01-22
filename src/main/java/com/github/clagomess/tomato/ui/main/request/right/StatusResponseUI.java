@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.right;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.main.request.right.statusbadge.*;
 import net.miginfocom.swing.MigLayout;
 
@@ -34,7 +34,7 @@ public class StatusResponseUI extends JPanel {
         removeAll();
 
         if(!dto.isRequestStatus()){
-            DialogFactory.createDialogWarning(this, dto.getRequestMessage());
+            new ExceptionDialog(this, dto.getRequestMessage());
             add(new ErrorBadge("ERROR"));
         }else {
             add(new HttpStatusBadge(dto.getHttpResponse()));

@@ -6,8 +6,8 @@ import com.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
 import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
+import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditUI;
@@ -76,7 +76,7 @@ public class EnvironmentComboBox extends JPanel {
 
             setBtnEditEnabledOrDisabled();
         } catch (Throwable e){
-            DialogFactory.createDialogException(this, e);
+            new ExceptionDialog(this, e);
         } finally {
             comboBox.addActionListener(event -> setWorkspaceSessionSelected());
         }

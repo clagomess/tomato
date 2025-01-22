@@ -83,7 +83,7 @@ public class HttpDebug {
                     .findFirst()
                     .orElse(dn);
         }catch (InvalidNameException e){
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
 
         return dn;
@@ -122,7 +122,7 @@ public class HttpDebug {
                         }
                     });
         }catch (Throwable e){
-            log.warn(e.getMessage());
+            log.warn(e.getMessage(), e);
         }
 
         return result;

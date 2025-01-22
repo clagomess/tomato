@@ -4,7 +4,7 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -43,7 +43,7 @@ public class RequestNameTextField extends JPanel {
             try {
                 parent.setText(workspaceRepository.getDataSessionWorkspace().getName());
             } catch (Throwable e) {
-                DialogFactory.createDialogException(this, e);
+                new ExceptionDialog(this, e);
             }
         }
 

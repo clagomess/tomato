@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.ui.main.collection;
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxHomeIcon;
 import com.github.clagomess.tomato.ui.environment.EnvironmentComboBox;
 import com.github.clagomess.tomato.ui.main.collection.node.CollectionTreeNode;
@@ -72,7 +72,7 @@ public class CollectionTreeUI extends JPanel {
             treeModel.setRoot(rootNode);
             rootNode.loadChildren();
         }catch (Exception e){
-            DialogFactory.createDialogException(null, e);
+            new ExceptionDialog(null, e);
         }
     }
 }

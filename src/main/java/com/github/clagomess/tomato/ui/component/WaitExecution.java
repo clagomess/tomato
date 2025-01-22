@@ -45,7 +45,7 @@ public class WaitExecution {
                 setButtonEnabled(false);
                 execute.run();
             } catch (Throwable e){
-                DialogFactory.createDialogException(component, e);
+                new ExceptionDialog(component, e);
             } finally {
                 setButtonEnabled(true);
                 setCursor(Cursor.getDefaultCursor());

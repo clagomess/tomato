@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.ui.main.request.left;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.io.http.UrlBuilder;
-import com.github.clagomess.tomato.ui.component.DialogFactory;
+import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import com.github.clagomess.tomato.ui.main.request.RequestSplitPaneUI;
 import net.miginfocom.swing.MigLayout;
@@ -38,7 +38,7 @@ public class ViewRenderedUrlUI extends JFrame {
             textArea.setText(result.toString());
             setVisible(true);
         } catch (Throwable e){
-            DialogFactory.createDialogException(parent, e);
+            new ExceptionDialog(parent, e);
             dispose();
         }
     }
