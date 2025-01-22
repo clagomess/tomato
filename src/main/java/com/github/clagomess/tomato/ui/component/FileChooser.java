@@ -30,10 +30,14 @@ public class FileChooser extends JPanel {
         txtFilepath.setEditable(false);
     }
 
-    // @TODO: impl. remember last selected
+    private File getCurrentDirectory(){
+        if(value == null) return null;
+        if(value.isFile()) return value.getParentFile();
+        return value;
+    }
 
     private void btnSelectAction(){
-        JFileChooser file = new JFileChooser();
+        JFileChooser file = new JFileChooser(getCurrentDirectory());
         file.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         if(file.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
