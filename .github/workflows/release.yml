@@ -1,0 +1,137 @@
+name: release
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  version:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+
+      - name: Get Git tag
+        id: extract_git_tag
+        run: |
+          git_tag=$(git describe --tags --abbrev=0)
+          echo "GIT_TAG=${git_tag#v}" >> $GITHUB_ENV
+          echo "git_tag=${git_tag#v}" >> $GITHUB_OUTPUT
+          echo "Tag: ${git_tag#v}"
+
+      - name: Install xmllint (libxml2-utils)
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
+      - name: Maven Project Version
+        run: |
+          version=$(xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)
+          echo "PROJECT_VERSION=$version" >> $GITHUB_ENV
+          echo "Version: $version"
+
+      - name: Validate Maven version against Git tag
+        run: |
+          if [ "$PROJECT_VERSION" != "$GIT_TAG" ]; then
+            echo "Version mismatch: pom.xml version ($PROJECT_VERSION) does not match Git tag ($GIT_TAG)."
+            exit 1
+          fi
+
+    outputs:
+      git_tag: ${{ steps.extract_git_tag.outputs.git_tag }}
+
+  build:
+    needs: version
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    env:
+      GIT_TAG: ${{ needs.version.outputs.git_tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'maven'
+
+      - name: Maven
+        run: mvn -B clean compile package -DskipTests
+
+      - name: List Mods
+        run: jdeps ./target/release/tomato-$GIT_TAG.jar
+
+      - name: Dist
+        run: |
+          mkdir -p ./target/dist/Tomato-$GIT_TAG
+          cp -R ./target/release/** ./target/dist/Tomato-$GIT_TAG
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Tomato-${{env.GIT_TAG}}
+          compression-level: 0
+          path: ./target/dist
+
+  release-windows:
+    needs: [version, build]
+    timeout-minutes: 10
+    runs-on: windows-latest
+
+    env:
+      GIT_TAG: ${{ needs.version.outputs.git_tag }}
+
+    steps:
+      - uses: microsoft/setup-msbuild@v2
+
+      - name: Install WiX
+        run: dotnet tool install --global wix
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Tomato-${{env.GIT_TAG}}
+          path: ./target/dist
+
+      - name: Build JRE
+        run: |
+          jlink `
+          --add-modules java.base,java.desktop,java.naming,java.net.http `
+          --output ./build-windows/jre `
+          --no-header-files `
+          --no-man-pages `
+          --strip-debug `
+          --compress=2 `
+          --verbose
+
+      - name: Build MSI
+        run: |
+          jpackage `
+          --type msi `
+          --name Tomato `
+          --app-version $env:GIT_TAG `
+          --vendor Tomato `
+          --icon ./src/main/resources/com/github/clagomess/tomato/ui/component/favicon/favicon.ico `
+          --input ./target/dist/Tomato-$env:GIT_TAG `
+          --main-jar tomato-$env:GIT_TAG.jar `
+          --main-class com.github.clagomess.tomato.Main `
+          --runtime-image ./build-windows/jre `
+          --win-dir-chooser `
+          --win-per-user-install `
+          --win-menu `
+          --win-shortcut `
+          --dest ./target/dist `
+          --verbose
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Tomato-${{env.GIT_TAG}}-amd64-msi
+          compression-level: 0
+          path: ./target/dist/Tomato-${{env.GIT_TAG}}.msi

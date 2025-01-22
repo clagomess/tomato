@@ -20,16 +20,20 @@ If(!(Test-Path -Path 'build-windows/wix')){
 
 $env:Path += ";build-windows/wix"
 
+# View Mods
+.\build-windows\jdk-17.0.13+11\bin\jdeps `
+    ./target/release/tomato-0.0.1-alpha.jar
+
 # build custom JRE
 If(!(Test-Path -Path '.\build-windows\jre')){
     .\build-windows\jdk-17.0.13+11\bin\jlink `
-    --module-path=.\build-windows\jdk-17.0.13+11\jmods `
-    --add-modules java.base,java.desktop,java.instrument,java.logging `
+    --add-modules java.base,java.desktop,java.naming,java.net.http `
     --output ./build-windows/jre `
     --no-header-files `
     --no-man-pages `
     --strip-debug `
-    --compress=2
+    --compress=2 `
+    --verbose
 }
 
 # build
