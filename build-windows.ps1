@@ -22,7 +22,7 @@ $env:Path += ";build-windows/wix"
 
 # View Mods
 .\build-windows\jdk-17.0.13+11\bin\jdeps `
-    ./target/release/tomato-0.0.2.jar
+    ./target/release/tomato-0.0.3.jar
 
 # build
 [System.IO.Directory]::CreateDirectory('target/dist')
@@ -30,11 +30,11 @@ $env:Path += ";build-windows/wix"
 .\build-windows\jdk-17.0.13+11\bin\jpackage `
 --type msi `
 --name Tomato `
---app-version 0.0.2 `
+--app-version 0.0.3 `
 --vendor Tomato `
 --icon ./src/main/resources/com/github/clagomess/tomato/ui/component/favicon/favicon.ico `
 --input ./target/release `
---main-jar tomato-0.0.2.jar `
+--main-jar tomato-0.0.3.jar `
 --main-class com.github.clagomess.tomato.Main `
 --add-modules java.base,java.desktop,java.naming,java.net.http `
 --java-options "-splash:`$APPDIR/splash.png" `
