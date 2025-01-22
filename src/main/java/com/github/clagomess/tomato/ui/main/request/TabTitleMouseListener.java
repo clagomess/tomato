@@ -18,6 +18,15 @@ public class TabTitleMouseListener extends MouseAdapter {
     private final TabKey tabKey;
     private final RequestTabPaneUI parent;
 
+    public void mouseClicked(MouseEvent e) {
+        redispatch(e);
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        redispatch(e);
+    }
+
     @Override
     public void mouseReleased(MouseEvent e) {
         if(e.getButton() == BUTTON2) {
@@ -27,7 +36,25 @@ public class TabTitleMouseListener extends MouseAdapter {
 
         if(e.getButton() == BUTTON3){
             showPopupMenu(e);
+            return;
         }
+
+        redispatch(e);
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        redispatch(e);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        redispatch(e);
+    }
+
+    private void redispatch(MouseEvent e) {
+        MouseEvent event = SwingUtilities.convertMouseEvent(e.getComponent(), e, parent);
+        parent.dispatchEvent(event);
     }
 
     private void showPopupMenu(MouseEvent e) {
