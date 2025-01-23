@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.ui.component;
 
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxFolderOpenIcon;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +13,9 @@ import java.util.List;
 public class FileChooser extends JPanel {
     private final List<OnChangeFI> onChangeList = new LinkedList<>();
     private final JTextField txtFilepath = new JTextField();
-    private final JButton btnSelect = new JButton("Select");
+    private final JButton btnSelect = new JButton(new BxFolderOpenIcon()){{
+        setToolTipText("Select");
+    }};
 
     @Getter
     private File value;
@@ -20,7 +23,7 @@ public class FileChooser extends JPanel {
     public FileChooser() {
         setLayout(new MigLayout(
                 "insets 0 0 0 0",
-                "[grow, fill]"
+                "[grow, fill][]"
         ));
 
         add(txtFilepath, "width 100%");
