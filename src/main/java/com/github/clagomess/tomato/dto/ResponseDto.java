@@ -29,6 +29,7 @@ public class ResponseDto {
     private boolean requestStatus = false;
     private String requestMessage;
     private String requestDebug;
+    private String requestCertIssue;
     private Response httpResponse;
 
     public ResponseDto(String requestId) {

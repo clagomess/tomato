@@ -79,6 +79,7 @@ public class HttpService {
             log.error(e.getMessage(), e);
         } finally {
             result.setRequestDebug(debug.assembly());
+            result.setRequestCertIssue(debug.getCertIssue());
         }
 
         return result;

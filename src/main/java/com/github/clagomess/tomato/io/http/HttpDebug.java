@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.enums.HttpStatusEnum;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +27,7 @@ public class HttpDebug {
     private String requestBodyString;
     private File requestBodyFile;
 
+    @Getter
     private String certIssue;
     private HttpResponse<Path> response;
     private File responseBodyFile;

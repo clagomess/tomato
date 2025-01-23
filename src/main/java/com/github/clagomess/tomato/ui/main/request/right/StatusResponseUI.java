@@ -40,10 +40,13 @@ public class StatusResponseUI extends JPanel {
             add(new HttpStatusBadge(dto.getHttpResponse()));
             add(new ResponseTimeBadge(dto.getHttpResponse()));
             add(new ResponseSizeBadge(dto.getHttpResponse()));
+
+            if(dto.getRequestCertIssue() != null){
+                add(new ErrorBadge("Invalid Certificate"));
+            }
+
             add(new CharsetBadge(dto.getHttpResponse()));
         }
-
-        // @TODO: impl warning when Invalid Cert
 
         revalidate();
         repaint();
