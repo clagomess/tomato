@@ -11,14 +11,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-tags: true
-          fetch-depth: 0
 
       - name: Get Git tag
         id: extract_git_tag
         run: |
-          git_tag=$(git describe --tags --abbrev=0)
+          git_tag=${GITHUB_REF##*/}
           echo "GIT_TAG=${git_tag#v}" >> $GITHUB_ENV
           echo "git_tag=${git_tag#v}" >> $GITHUB_OUTPUT
           echo "Tag: ${git_tag#v}"
