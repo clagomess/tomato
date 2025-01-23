@@ -96,15 +96,15 @@ class EnvDocumentListener implements DocumentListener {
             envMap.getInjected().clear();
             if(document.getLength() == 0) return;
 
+            String text = document.getText(0, document.getLength());
+            if(StringUtils.isBlank(text)) return;
+
             document.setCharacterAttributes(
                     0,
                     document.getLength(),
                     defaultStyle,
                     true
             );
-
-            String text = document.getText(0, document.getLength());
-            if(StringUtils.isBlank(text)) return;
 
             Matcher matcher = patternEnv.matcher(text);
             while (matcher.find()) {
@@ -113,7 +113,7 @@ class EnvDocumentListener implements DocumentListener {
 
                 document.setCharacterAttributes(
                         matcher.start(),
-                        matcher.end(),
+                        token.length(),
                         envMap.containsKey(token) ? envFilledStyle : envNotFilledStyle,
                         true
                 );
