@@ -115,13 +115,19 @@ public class HttpService {
     private HttpRequest buildBodyRaw(
             HttpRequest.Builder httpRequestBuilder
     ){
-        httpRequestBuilder.header(
-                "Content-Type",
-                requestDto.getBody()
-                        .getRaw()
-                        .getType()
-                        .getContentType().toString()
-        );
+        if(requestDto.getHeaders().stream()
+                .noneMatch(item ->
+                        "content-type".equalsIgnoreCase(item.getKey())
+                )
+        ) {
+            httpRequestBuilder.header(
+                    "Content-Type",
+                    requestDto.getBody()
+                            .getRaw()
+                            .getType()
+                            .getContentType().toString()
+            );
+        }
 
         debug.setRequestBodyString(requestDto.getBody().getRaw().getRaw());
 
