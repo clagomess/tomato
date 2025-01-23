@@ -28,6 +28,11 @@
               "key": "file",
               "type": "file",
               "src": "/home/claudio/Imagens/youtube-en-VTV.jpg"
+            },
+            {
+              "key": "file-2",
+              "type": "file",
+              "src": []
             }
           ]
         },

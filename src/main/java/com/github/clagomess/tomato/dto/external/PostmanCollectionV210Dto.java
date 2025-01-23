@@ -104,11 +104,15 @@ public class PostmanCollectionV210Dto {
                 public static class FormData {
                     private String key;
                     private String type;
-                    private String src;
+                    private Object src;
                     private String value;
 
                     @JsonInclude(JsonInclude.Include.NON_NULL)
                     private Boolean disabled;
+
+                    public String getSrc() {
+                        return src == null ? null : src.toString();
+                    }
                 }
 
                 @Getter
