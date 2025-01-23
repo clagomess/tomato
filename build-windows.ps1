@@ -36,8 +36,9 @@ $env:Path += ";build-windows/wix"
 --input ./target/release `
 --main-jar tomato-0.0.3.jar `
 --main-class com.github.clagomess.tomato.Main `
---add-modules java.base,java.desktop,java.naming,java.net.http `
+--add-modules java.base,java.desktop,java.naming,java.net.http,jdk.security.auth `
 --java-options "-splash:`$APPDIR/splash.png" `
+--win-upgrade-uuid "a6f3d5f2-ad83-4fc7-97ce-6444c991e2fe" `
 --win-dir-chooser `
 --win-per-user-install `
 --win-menu `
