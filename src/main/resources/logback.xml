@@ -1,11 +1,15 @@
 <configuration>
+    <!-- Example: -DTOMATO_LOG_LEVEL=DEBUG -->
+
+    <variable name="TOMATO_LOG_LEVEL" value="${TOMATO_LOG_LEVEL:-INFO}" />
+
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %cyan(%logger{32}:%L) - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="com.github.clagomess.tomato" level="debug" />
+    <logger name="com.github.clagomess.tomato" level="${TOMATO_LOG_LEVEL}" />
 
     <root level="info">
         <appender-ref ref="console" />
