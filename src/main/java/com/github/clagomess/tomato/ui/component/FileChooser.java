@@ -33,8 +33,9 @@ public class FileChooser extends JPanel {
         txtFilepath.setEditable(false);
     }
 
+    private static File currentDir = null;
     private File getCurrentDirectory(){
-        if(value == null) return null;
+        if(value == null) return currentDir;
         if(value.isFile()) return value.getParentFile();
         return value;
     }
@@ -46,6 +47,7 @@ public class FileChooser extends JPanel {
         if(file.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
             setValue(file.getSelectedFile());
             onChangeList.forEach(ch -> ch.change(value));
+            currentDir = file.getSelectedFile().getParentFile();
         }
     }
 

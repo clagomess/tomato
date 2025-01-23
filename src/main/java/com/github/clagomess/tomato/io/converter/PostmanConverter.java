@@ -41,7 +41,7 @@ public class PostmanConverter {
         );
     }
 
-    public void pumpCollection(
+    public CollectionDto pumpCollection(
             File destination,
             File postmanCollection
     ) throws IOException {
@@ -66,7 +66,13 @@ public class PostmanConverter {
         List<PostmanCollectionV210Dto.Item> itens = postmanCollectionV210.getItem();
         if(itens.isEmpty()) throw new IOException("Empty postman collection");
 
-        pumpCollection(destination, itens);
+        // create a 'root' collection
+        CollectionDto root = new CollectionDto(postmanCollectionV210.getInfo().getName());
+        File collectionDir = collectionRepository.save(destination, root);
+
+        pumpCollection(collectionDir, itens);
+
+        return root;
     }
 
     protected void pumpCollection(

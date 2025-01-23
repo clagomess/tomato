@@ -1,7 +1,9 @@
 package com.github.clagomess.tomato.ui.collection;
 
+import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.converter.PostmanConverter;
+import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
@@ -20,6 +22,7 @@ public class CollectionImportUI extends JFrame {
     private final CollectionComboBox cbCollectionParent;
 
     private final PostmanConverter postmanConverter = new PostmanConverter();
+    private final CollectionRepository collectionRepository = new CollectionRepository();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionImportUI(
@@ -61,13 +64,18 @@ public class CollectionImportUI extends JFrame {
             CollectionTreeDto parent = cbCollectionParent.getSelectedItem();
             if(parent == null) throw new Exception("Parent is null");
 
-            postmanConverter.pumpCollection(
+            CollectionDto dto = postmanConverter.pumpCollection(
                     parent.getPath(),
                     fileChooser.getValue()
             );
 
-            var key = new CollectionPublisher.ParentCollectionId(parent.getParent().getId());
-            collectionPublisher.getOnSave().publish(key, parent);
+            var collectionTree = collectionRepository.getCollectionRootTree(
+                    parent,
+                    dto.getId()
+            );
+
+            var key = new CollectionPublisher.ParentCollectionId(parent.getId());
+            collectionPublisher.getOnSave().publish(key, collectionTree);
 
             setVisible(false);
             dispose();
