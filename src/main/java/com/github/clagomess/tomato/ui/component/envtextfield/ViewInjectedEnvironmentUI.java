@@ -11,7 +11,7 @@ import java.awt.*;
 public class ViewInjectedEnvironmentUI extends JFrame {
     public ViewInjectedEnvironmentUI(
             Component parent,
-            EnvDocumentListener.EnvMap envMap
+            EnvMap envMap
     ) {
         setTitle("View Injected Environment");
         setIconImages(FaviconImage.getFrameIconImage());

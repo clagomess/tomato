@@ -52,6 +52,7 @@ class EnvDocumentListener implements DocumentListener {
         listenerUuid.add(workspaceSessionPublisher.getOnSave().addListener(event -> {
             updateEnvMap();
             updateEnvStyle();
+            triggerOnChange();
         }));
     }
 
@@ -140,32 +141,6 @@ class EnvDocumentListener implements DocumentListener {
             }));
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
-        }
-    }
-
-    @Getter
-    public static class EnvMap {
-        private final Map<String, String> avaliable = new HashMap<>();
-        private final Map<String, String> injected = new HashMap<>();
-
-        public void put(EnvironmentDto dto) {
-            dto.getEnvs().forEach(env -> {
-                avaliable.put("{{" + env.getKey() + "}}", env.getValue());
-            });
-        }
-
-        public boolean containsKey(String token){
-            if(avaliable.containsKey(token)){
-                injected.putIfAbsent(token, avaliable.get(token));
-                return true;
-            }
-
-            return false;
-        }
-
-        public void reset(){
-            avaliable.clear();
-            injected.clear();
         }
     }
 }
