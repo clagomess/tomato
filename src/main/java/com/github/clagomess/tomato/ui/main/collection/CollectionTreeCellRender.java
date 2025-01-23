@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.ui.main.collection;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsFolderIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxFolderIcon;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -34,7 +34,7 @@ public class CollectionTreeCellRender extends DefaultTreeCellRenderer {
         if(userObject instanceof CollectionTreeDto dto){
             return new JLabel(
                     dto.getName(),
-                    new BxsFolderIcon(),
+                    new BxFolderIcon(),
                     SwingConstants.LEFT
             );
         }
