@@ -13,9 +13,10 @@ import java.security.cert.X509Certificate;
 
 @Slf4j
 public class SSLContextBuilder extends X509ExtendedTrustManager {
+    private final HttpDebug debug;
     private final X509ExtendedTrustManager defaultTrustManager;
 
-    public SSLContextBuilder() {
+    public SSLContextBuilder(HttpDebug debug) {
         X509ExtendedTrustManager defaultTrustManager = null;
 
         try {
@@ -29,61 +30,38 @@ public class SSLContextBuilder extends X509ExtendedTrustManager {
             log.warn(e.getMessage(), e);
         }
 
+        this.debug = debug;
         this.defaultTrustManager = defaultTrustManager;
     }
 
     @Override
     public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) {
-        try {
-            defaultTrustManager.checkClientTrusted(chain, authType, socket);
-        } catch (CertificateException e) {
-            log.warn(e.getMessage(), e);
-        }
+        runCertificateCheck(() -> defaultTrustManager.checkClientTrusted(chain, authType, socket));
     }
 
     @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket) {
-        try {
-            defaultTrustManager.checkServerTrusted(chain, authType, socket);
-        } catch (CertificateException e) {
-            log.warn(e.getMessage(), e);
-        }
+        runCertificateCheck(() -> defaultTrustManager.checkServerTrusted(chain, authType, socket));
     }
 
     @Override
     public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine) {
-        try {
-            defaultTrustManager.checkClientTrusted(chain, authType, engine);
-        }catch (CertificateException e) {
-            log.warn(e.getMessage(), e);
-        }
+        runCertificateCheck(() -> defaultTrustManager.checkClientTrusted(chain, authType, engine));
     }
 
     @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType, SSLEngine engine) {
-        try {
-            defaultTrustManager.checkServerTrusted(chain, authType, engine);
-        } catch (CertificateException e) {
-            log.warn(e.getMessage(), e);
-        }
+        runCertificateCheck(() -> defaultTrustManager.checkServerTrusted(chain, authType, engine));
     }
 
     @Override
     public void checkClientTrusted(X509Certificate[] chain, String authType) {
-        try {
-            defaultTrustManager.checkClientTrusted(chain, authType);
-        } catch (CertificateException e) {
-            log.warn(e.getMessage(), e);
-        }
+        runCertificateCheck(() -> defaultTrustManager.checkClientTrusted(chain, authType));
     }
 
     @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType) {
-        try {
-            defaultTrustManager.checkServerTrusted(chain, authType);
-        } catch (CertificateException e) {
-            log.warn(e.getMessage(), e);
-        }
+        runCertificateCheck(() -> defaultTrustManager.checkServerTrusted(chain, authType));
     }
 
     @Override
@@ -91,6 +69,20 @@ public class SSLContextBuilder extends X509ExtendedTrustManager {
         return defaultTrustManager != null ?
                 defaultTrustManager.getAcceptedIssuers() :
                 new X509Certificate[0];
+    }
+
+    private void runCertificateCheck(CertificateCheckRunnable runnable) {
+        try {
+            runnable.run();
+        } catch (CertificateException e) {
+            debug.setCertIssue(e.getMessage());
+            log.warn(e.getMessage(), e);
+        }
+    }
+
+    @FunctionalInterface
+    private interface CertificateCheckRunnable {
+        void run() throws CertificateException;
     }
 
     public SSLContext build() throws NoSuchAlgorithmException, KeyManagementException {

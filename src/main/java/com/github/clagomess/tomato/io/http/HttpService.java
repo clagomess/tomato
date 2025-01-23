@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.POST;
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.PUT;
@@ -31,15 +32,11 @@ public class HttpService {
         this.debug = new HttpDebug();
     }
 
-    private static HttpClient client;
     private HttpClient getClient() throws NoSuchAlgorithmException, KeyManagementException {
-        if(client != null) return client;
-
-        client = HttpClient.newBuilder()
-                .sslContext(new SSLContextBuilder().build())
+        return HttpClient.newBuilder()
+                .sslContext(new SSLContextBuilder(debug).build())
+                .executor(ForkJoinPool.commonPool())
                 .build();
-
-        return client;
     }
 
     public ResponseDto perform(){

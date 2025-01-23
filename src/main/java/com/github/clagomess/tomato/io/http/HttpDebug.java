@@ -26,6 +26,7 @@ public class HttpDebug {
     private String requestBodyString;
     private File requestBodyFile;
 
+    private String certIssue;
     private HttpResponse<Path> response;
     private File responseBodyFile;
 
@@ -95,6 +96,12 @@ public class HttpDebug {
         result.append("# CERTIFICATE CHAIN - ");
         result.append(session.getProtocol()).append(" - ");
         result.append(session.getCipherSuite()).append("\n");
+
+        if(certIssue != null){
+            result.append("Cert Issue: ");
+            result.append(certIssue);
+            result.append("\n");
+        }
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
