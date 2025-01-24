@@ -1,0 +1,8 @@
+Package: tomato
+Version: 0.0.4
+Section: java
+Priority: optional
+Architecture: all
+Maintainer: Claudio Gomes <cla.gomess@gmail.com>
+Description: Foo
+Depends: openjdk-17-jre
