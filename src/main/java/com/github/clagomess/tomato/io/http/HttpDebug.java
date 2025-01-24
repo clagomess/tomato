@@ -56,11 +56,13 @@ public class HttpDebug {
 
         if(response == null) return result.toString();
 
+        result.append("-".repeat(40)).append("\n");
+
         if(response.sslSession().isPresent()){
             result.append(assemblyCertificates(response.sslSession().get()));
+            result.append("-".repeat(40)).append("\n");
         }
 
-        result.append("\n");
         result.append("< ");
         result.append(response.version());
         result.append(" ");
