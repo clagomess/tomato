@@ -80,7 +80,7 @@ public class HttpDebugTest {
                         > Content-Type: application/json
                         
                         hello world
-                        
+                        ----------------------------------------
                         < HTTP_1_1 200 OK
                         < connection: keep-alive
                         < content-length: 5
