@@ -41,3 +41,5 @@ $env:Path += ";build-windows/wix"
 --win-shortcut `
 --dest ./target/dist `
 --verbose
+
+mv ./target/dist/Tomato-$git_tag.msi ./target/dist/tomato-$git_tag-amd64.msi

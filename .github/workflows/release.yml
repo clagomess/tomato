@@ -12,6 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+          cache: 'maven'
+
       - name: Get Git tag
         id: extract_git_tag
         run: |
@@ -20,12 +26,9 @@ jobs:
           echo "git_tag=${git_tag#v}" >> $GITHUB_OUTPUT
           echo "Tag: ${git_tag#v}"
 
-      - name: Install xmllint (libxml2-utils)
-        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
-
-      - name: Maven Project Version
+      - name: Get Maven Project Version
         run: |
-          version=$(xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" pom.xml)
+          version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`
           echo "PROJECT_VERSION=$version" >> $GITHUB_ENV
           echo "Version: $version"
 
@@ -58,18 +61,14 @@ jobs:
       - name: Maven
         run: mvn -B clean compile package -DskipTests
 
-      - name: List Mods
-        run: jdeps ./target/release/tomato-$GIT_TAG.jar
-
       - name: Dist
         run: |
-          mkdir -p ./target/dist/Tomato-$GIT_TAG
-          cp -R ./target/release/** ./target/dist/Tomato-$GIT_TAG
+          mkdir -p ./target/dist/tomato-$GIT_TAG
+          cp -R ./target/release/** ./target/dist/tomato-$GIT_TAG
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Tomato-${{env.GIT_TAG}}
-          compression-level: 0
+          name: tomato-${{env.GIT_TAG}}
           path: ./target/dist
 
   release-windows:
@@ -94,7 +93,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: Tomato-${{env.GIT_TAG}}
+          name: tomato-${{env.GIT_TAG}}
           path: ./target/dist
 
       - name: Build MSI
@@ -105,10 +104,9 @@ jobs:
           --app-version $env:GIT_TAG `
           --vendor Tomato `
           --icon ./src/main/resources/com/github/clagomess/tomato/ui/component/favicon/favicon.ico `
-          --input ./target/dist/Tomato-$env:GIT_TAG `
+          --input ./target/dist/tomato-$env:GIT_TAG `
           --main-jar tomato-$env:GIT_TAG.jar `
           --main-class com.github.clagomess.tomato.Main `
-          --add-modules java.base,java.desktop,java.naming,java.net.http,java.security.sasl,jdk.crypto.ec,jdk.crypto.cryptoki,jdk.security.auth,jdk.security.jgss `
           --java-options "-splash:`$APPDIR/splash.png -Dfile.encoding=UTF-8" `
           --win-upgrade-uuid "a6f3d5f2-ad83-4fc7-97ce-6444c991e2fe" `
           --win-dir-chooser `
@@ -117,9 +115,72 @@ jobs:
           --win-shortcut `
           --dest ./target/dist `
           --verbose
+          mv ./target/dist/Tomato-$env:GIT_TAG.msi ./target/dist/tomato-$env:GIT_TAG-amd64.msi
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Tomato-${{env.GIT_TAG}}-amd64-msi
+          name: tomato-${{env.GIT_TAG}}-amd64.msi
           compression-level: 0
-          path: ./target/dist/Tomato-${{env.GIT_TAG}}.msi
+          path: ./target/dist/Tomato-${{env.GIT_TAG}}-amd64.msi
+
+  release-debian:
+    needs: [version, build]
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    env:
+      GIT_TAG: ${{ needs.version.outputs.git_tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: tomato-${{env.GIT_TAG}}
+          path: ./target/dist
+
+      - name: Prepare
+        run: |
+          mkdir -p tomato/DEBIAN
+          mkdir -p tomato/usr/share/tomato
+          mkdir -p tomato/usr/bin
+
+      - name: Copy Release
+        run: |
+          cp -R ./target/dist/tomato-${GIT_TAG}/** ./tomato/usr/share/tomato
+
+      - name: Copy executable
+        run: |
+          cp ./build-debian/tomato.sh ./tomato/usr/bin/tomato
+          echo "/usr/share/tomato/tomato-${GIT_TAG}.jar" >> ./tomato/usr/bin/tomato
+          chmod +x ./tomato/usr/bin/tomato
+          
+      - name: Copy icons
+        run: |
+          mkdir -p ./tomato/usr/share/icons/hicolor/64x64/apps
+          mkdir -p ./tomato/usr/share/icons/hicolor/128x128/apps
+          cp ./build-debian/icon-64x64.png ./tomato/usr/share/icons/hicolor/64x64/apps/tomato.png
+          cp ./build-debian/icon-128x128.png ./tomato/usr/share/icons/hicolor/128x128/apps/tomato.png
+
+      - name: Copy desktop entry
+        run: |
+          mkdir -p ./tomato/usr/share/applications
+          cp ./build-debian/tomato.desktop ./tomato/usr/share/applications/tomato.desktop
+          echo "Version=${GIT_TAG}" >> ./tomato/usr/share/applications/tomato.desktop
+
+      - name: Copy control
+        run: |
+          cp ./build-debian/control ./tomato/DEBIAN/
+          echo "Version: ${GIT_TAG}" >> ./tomato/DEBIAN/control
+          chmod -R 0755 ./tomato/DEBIAN
+
+      - name: Build
+        run: |
+          dpkg-deb --build ./tomato
+          mv ./tomato.deb ./tomato-${GIT_TAG}-all.deb
+          
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tomato-${{env.GIT_TAG}}-all.deb
+          compression-level: 0
+          path: ./tomato-${{env.GIT_TAG}}-all.deb
+

@@ -1,11 +1,9 @@
 #!/bin/bash
 
 # prepare
-rm -rf /tmp/tomato
-mkdir -p /tmp/tomato
-git_tag=`git describe --tags --abbrev=0 | sed 's/v//'`
+GIT_TAG=`git describe --tags --abbrev=0 | sed 's/v//'`
 
-# base dirs
+rm -rf /tmp/tomato**
 mkdir -p /tmp/tomato/DEBIAN
 mkdir -p /tmp/tomato/usr/share/tomato
 mkdir -p /tmp/tomato/usr/bin
@@ -15,7 +13,7 @@ cp -R ./target/release/** /tmp/tomato/usr/share/tomato
 
 # copy executable
 cp ./build-debian/tomato.sh /tmp/tomato/usr/bin/tomato
-echo "/usr/share/tomato/tomato-$git_tag.jar" >> /tmp/tomato/usr/bin/tomato
+echo "/usr/share/tomato/tomato-${GIT_TAG}.jar" >> /tmp/tomato/usr/bin/tomato
 chmod +x /tmp/tomato/usr/bin/tomato
 
 # copy icons
@@ -26,16 +24,17 @@ cp ./build-debian/icon-128x128.png /tmp/tomato/usr/share/icons/hicolor/128x128/a
 
 # copy desktop entry
 mkdir -p /tmp/tomato/usr/share/applications
-echo "Version=$git_tag" >> /tmp/tomato/usr/share/applications/tomato.desktop
 cp ./build-debian/tomato.desktop /tmp/tomato/usr/share/applications/tomato.desktop
+echo "Version=${GIT_TAG}" >> /tmp/tomato/usr/share/applications/tomato.desktop
 
 # copy control
 cp ./build-debian/control /tmp/tomato/DEBIAN/
-echo "Version: $git_tag" >> /tmp/tomato/DEBIAN/control
+echo "Version: ${GIT_TAG}" >> /tmp/tomato/DEBIAN/control
 chmod -R 0755 /tmp/tomato/DEBIAN
 
 # build
 dpkg-deb --build /tmp/tomato
+mv /tmp/tomato.deb /tmp/tomato-${GIT_TAG}-all.deb
 
 # install (Test Only)
 # sudo apt install /tmp/tomato.deb -y
