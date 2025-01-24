@@ -19,7 +19,7 @@ cp ./build-debian/icon-64x64.png /tmp/tomato/usr/share/icons/hicolor/64x64/apps/
 
 # copy desktop entry
 mkdir -p /tmp/tomato/usr/share/applications
-cp ./build-debian/.desktop /tmp/tomato/usr/share/applications/tomato.desktop
+cp ./build-debian/tomato.desktop /tmp/tomato/usr/share/applications/tomato.desktop
 
 # copy control
 cp ./build-debian/control /tmp/tomato/DEBIAN/
