@@ -1,5 +1,6 @@
 # prepare
 [System.IO.Directory]::CreateDirectory('build-windows')
+$git_tag = $(git describe --tags --abbrev=0).Replace('v', '')
 
 # download JDK
 If(!(Test-Path -Path 'build-windows/termurim-17.zip')){
@@ -20,23 +21,18 @@ If(!(Test-Path -Path 'build-windows/wix')){
 
 $env:Path += ";build-windows/wix"
 
-# View Mods
-.\build-windows\jdk-17.0.13+11\bin\jdeps `
-    ./target/release/tomato-0.0.4.jar
-
 # build
 [System.IO.Directory]::CreateDirectory('target/dist')
 
 .\build-windows\jdk-17.0.13+11\bin\jpackage `
 --type msi `
 --name Tomato `
---app-version 0.0.4 `
+--app-version $git_tag `
 --vendor Tomato `
 --icon ./src/main/resources/com/github/clagomess/tomato/ui/component/favicon/favicon.ico `
 --input ./target/release `
---main-jar tomato-0.0.4.jar `
+--main-jar tomato-$git_tag.jar `
 --main-class com.github.clagomess.tomato.Main `
---add-modules java.base,java.desktop,java.naming,java.net.http,java.security.sasl,jdk.crypto.ec,jdk.crypto.cryptoki,jdk.security.auth,jdk.security.jgss `
 --java-options "-splash:`$APPDIR/splash.png -Dfile.encoding=UTF-8" `
 --win-upgrade-uuid "a6f3d5f2-ad83-4fc7-97ce-6444c991e2fe" `
 --win-dir-chooser `

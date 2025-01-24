@@ -1,5 +1,4 @@
 Package: tomato
-Version: 0.0.4
 Section: java
 Priority: optional
 Architecture: all
