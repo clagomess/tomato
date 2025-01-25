@@ -21,7 +21,7 @@ Avaiable binaries:
 
 - Windows MSI Installer - amd64
 - Debian and derivatives - multiarch
-- Zip without JRE (Required Java JRE => 17)
+- Zip without JRE (Required Java JRE >= 17)
 
 ## Data structure
 
