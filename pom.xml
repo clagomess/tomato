@@ -17,7 +17,7 @@
         <jackson.version>2.18.2</jackson.version>
         <mockserver.version>5.15.0</mockserver.version>
         <mapstruct.version>1.6.3</mapstruct.version>
-        <lombok.version>1.18.24</lombok.version>
+        <lombok.version>1.18.36</lombok.version>
     </properties>
 
     <dependencies>
