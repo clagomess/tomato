@@ -4,40 +4,40 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.ui.component.StagingMonitor;
 
-public class RequestStagingMonitor {
+public class RequestStagingMonitor extends StagingMonitor<RequestDto> {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     private final TabKey tabKey;
-    private final RequestDto requestDto;
-    private int currentHashCode;
-    private int actualHashCode;
 
     public RequestStagingMonitor(
             TabKey tabKey,
             RequestHeadDto requestHeadDto,
             RequestDto dto
     ) {
-        this.requestDto = dto;
+        super(dto);
         this.tabKey = tabKey;
-        this.currentHashCode = requestHeadDto == null ? 0 : dto.hashCode();
-        this.actualHashCode = dto.hashCode();
+
+        if(requestHeadDto == null) {
+            this.currentHashCode = 0;
+        }
     }
 
+    @Override
     public void reset(){
-        this.currentHashCode = requestDto.hashCode();
-        this.actualHashCode = requestDto.hashCode();
+        super.reset();
+
         requestPublisher.getOnStaging().publish(tabKey, false);
     }
 
+    @Override
     public void update(){
-        int newHashCode = requestDto.hashCode();
-        if(this.actualHashCode == newHashCode) return;
+        super.update();
 
-        this.actualHashCode = newHashCode;
         requestPublisher.getOnStaging().publish(
                 tabKey,
-                currentHashCode != actualHashCode
+                isDiferent()
         );
     }
 }

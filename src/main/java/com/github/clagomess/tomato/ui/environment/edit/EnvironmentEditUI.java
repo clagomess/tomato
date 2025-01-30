@@ -3,6 +3,8 @@ package com.github.clagomess.tomato.ui.environment.edit;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
+import com.github.clagomess.tomato.ui.component.ListenableTextField;
+import com.github.clagomess.tomato.ui.component.StagingMonitor;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -10,9 +12,14 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 
+import static javax.swing.SwingUtilities.invokeLater;
+
 public class EnvironmentEditUI extends JFrame {
     private final JButton btnSave = new JButton("Save");
-    private final JTextField txtName = new JTextField();
+    private final ListenableTextField txtName = new ListenableTextField();
+    private final EnvUI envUI;
+    private final StagingMonitor<EnvironmentDto> stagingMonitor;
+    private final String title;
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
@@ -23,8 +30,10 @@ public class EnvironmentEditUI extends JFrame {
             EnvironmentDto environment //@TODO: pass ID instead, causing UI problem on combobox
     ){
         this.environment = environment;
+        this.stagingMonitor = new StagingMonitor<>(environment);
+        this.title = "Environment - " + environment.getName();
 
-        setTitle("Environment - " + environment.getName());
+        setTitle(title);
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(600, 500));
         setPreferredSize(new Dimension(600, 500));
@@ -32,7 +41,11 @@ public class EnvironmentEditUI extends JFrame {
         setResizable(true);
 
         txtName.setText(environment.getName());
-        EnvUI envUI = new EnvUI(environment.getEnvs());
+        txtName.addOnChange(value -> {
+            environment.setName(value);
+            updateStagingMonitor();
+        });
+        envUI = new EnvUI(environment.getEnvs());
 
         setLayout(new MigLayout(
                 "insets 10",
@@ -52,11 +65,27 @@ public class EnvironmentEditUI extends JFrame {
         setVisible(true);
     }
 
+    public void updateStagingMonitor(){
+        stagingMonitor.update();
+
+        if(stagingMonitor.isDiferent()){
+            invokeLater(() -> setTitle("[*] " + title));
+        }else{
+            invokeLater(() -> setTitle(title));
+        }
+    }
+
+    public void resetStagingMonitor(){
+        envUI.resetStagingMonitor();
+        stagingMonitor.reset();
+        invokeLater(() -> setTitle(title));
+    }
+
     private void btnSaveAction(){
         new WaitExecution(this, btnSave, () -> {
-            environment.setName(txtName.getText());
-
             environmentRepository.save(environment);
+
+            resetStagingMonitor();
 
             environmentPublisher.getOnSave().publish(
                     environment.getId(),

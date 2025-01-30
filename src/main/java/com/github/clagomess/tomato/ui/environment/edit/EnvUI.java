@@ -8,10 +8,12 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
+import static javax.swing.SwingUtilities.getAncestorOfClass;
 
 public class EnvUI extends JPanel {
     private final List<EnvironmentDto.Env> list;
@@ -33,7 +35,7 @@ public class EnvUI extends JPanel {
                 "[][][grow, fill][]"
         ));
         header.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
-
+        header.add(new JLabel(), "width 8!");
         header.add(new JLabel("Key"), "width 150!");
         header.add(new JLabel("Value"), "width 100%");
         header.add(btnAddNew);
@@ -54,6 +56,9 @@ public class EnvUI extends JPanel {
         add(scrollPane, "width ::100%, height 100%");
         btnAddNew.addActionListener(l -> {
             addRow(new EnvironmentDto.Env());
+
+            var parent = (EnvironmentEditUI) getAncestorOfClass(EnvironmentEditUI.class, this);
+            parent.updateStagingMonitor();
         });
 
         SwingUtilities.invokeLater(() -> {
@@ -70,5 +75,12 @@ public class EnvUI extends JPanel {
 
         rowsPanel.add(row, "wrap");
         rowsPanel.revalidate();
+    }
+
+    public void resetStagingMonitor(){
+        Arrays.stream(rowsPanel.getComponents())
+                .filter(row -> row instanceof RowComponent)
+                .map(row -> (RowComponent) row)
+                .forEach(RowComponent::resetStagingMonitor);
     }
 }
