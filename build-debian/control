@@ -1,7 +1,13 @@
 Package: tomato
-Section: java
+Source: tomato
+Section: devel
 Priority: optional
 Architecture: all
 Maintainer: Claudio Gomes <cla.gomess@gmail.com>
-Description: Foo
+Replaces: tomato
+Provides: tomato
+License: MIT
+Homepage: https://github.com/clagomess/tomato
+Description: Tomato
+ The open source and 100% offline REST Client tool.
 Depends: openjdk-17-jre

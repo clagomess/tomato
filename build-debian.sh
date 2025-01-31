@@ -5,6 +5,7 @@ GIT_TAG=`git describe --tags --abbrev=0 | sed 's/v//'`
 
 rm -rf /tmp/tomato**
 mkdir -p /tmp/tomato/DEBIAN
+mkdir -p /tmp/tomato/usr/share/doc/tomato
 mkdir -p /tmp/tomato/usr/share/tomato
 mkdir -p /tmp/tomato/usr/bin
 
@@ -30,7 +31,10 @@ echo "Version=${GIT_TAG}" >> /tmp/tomato/usr/share/applications/tomato.desktop
 # copy control
 cp ./build-debian/control /tmp/tomato/DEBIAN/
 echo "Version: ${GIT_TAG}" >> /tmp/tomato/DEBIAN/control
-chmod -R 0755 /tmp/tomato/DEBIAN
+chmod -R 755 /tmp/tomato/DEBIAN
+
+# copy copyright
+cp ./build-debian/copyright /tmp/tomato/usr/share/doc/tomato/
 
 # build
 dpkg-deb --build /tmp/tomato

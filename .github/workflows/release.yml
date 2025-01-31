@@ -155,6 +155,7 @@ jobs:
       - name: Prepare
         run: |
           mkdir -p tomato/DEBIAN
+          mkdir -p /tmp/tomato/usr/share/doc/tomato
           mkdir -p tomato/usr/share/tomato
           mkdir -p tomato/usr/bin
 
@@ -185,7 +186,11 @@ jobs:
         run: |
           cp ./build-debian/control ./tomato/DEBIAN/
           echo "Version: ${GIT_TAG}" >> ./tomato/DEBIAN/control
-          chmod -R 0755 ./tomato/DEBIAN
+          chmod -R 755 ./tomato/DEBIAN
+
+      - name: Copy copyright
+        run: |
+          cp ./build-debian/copyright ./tomato/usr/share/doc/tomato/
 
       - name: Build
         run: |
