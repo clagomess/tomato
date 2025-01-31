@@ -62,7 +62,9 @@ public class EnvUI extends JPanel {
         });
 
         SwingUtilities.invokeLater(() -> {
-            this.list.forEach(this::addRow);
+            this.list.stream()
+                    .sorted()
+                    .forEach(this::addRow);
         });
     }
 

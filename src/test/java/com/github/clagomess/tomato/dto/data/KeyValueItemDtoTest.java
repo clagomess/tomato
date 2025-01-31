@@ -49,7 +49,7 @@ public class KeyValueItemDtoTest {
     @ParameterizedTest
     @CsvSource({
             "TEXT,text/plain,text/plain",
-            "TEXT,xx,text/plain",
+            "TEXT,text/xml,text/xml",
             "TEXT, ,text/plain",
             "FILE,text/xml,text/xml",
             "FILE, ,application/octet-stream",

@@ -32,7 +32,7 @@ public class KeyValueItemDto implements Comparable<KeyValueItemDto> {
     }
 
     public String getValueContentType() {
-        if(type == TEXT && !TEXT_PLAIN_TYPE.equals(valueContentType)){
+        if(type == TEXT && StringUtils.isBlank(valueContentType)){
             valueContentType = TEXT_PLAIN_TYPE;
         }
 
