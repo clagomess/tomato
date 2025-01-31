@@ -75,6 +75,9 @@ public class HttpDebug {
 
         if(responseBodyFile != null){
             result.append(assemblyBody(responseBodyFile, defaultLimitBody)).append("\n");
+            result.append("-".repeat(40)).append("\n");
+            result.append("Written response in:\n");
+            result.append(responseBodyFile.getAbsolutePath());
         }
 
         return result.toString();
