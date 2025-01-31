@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -61,10 +60,7 @@ public class ResponseDto {
             this.statusReason = HttpStatusEnum.getReasonPhrase(this.status);
             this.headers = response.headers().map();
             this.cookies = parseSetCookies(this.headers);
-
-            Optional<String> contentType = response.headers().firstValue("content-type");
-            this.contentType = contentType.map(MediaType::new).orElse(MediaType.WILDCARD);
-
+            this.contentType = new MediaType(response.headers());
             this.body = response.body().toFile();
             this.bodySize = body.length();
 
@@ -120,7 +116,7 @@ public class ResponseDto {
                 return;
             }
 
-            try (FileReader reader = new FileReader(body)){
+            try (FileReader reader = new FileReader(body, contentType.getCharsetOrDefault())){
                 char[] buffer = new char[limit];
                 int n = reader.read(buffer);
                 bodyAsString = new String(buffer, 0, n);

@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.http.HttpHeaders;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -60,9 +62,20 @@ public class MediaType {
         }
     }
 
+    public MediaType(HttpHeaders headers){
+        this(headers.firstValue("content-type")
+                .orElse("*/*")
+        );
+    }
+
     public boolean isCompatible(MediaType other){
         return Objects.equals(type, other.getType()) &&
                 Objects.equals(subtype, other.getSubtype());
+    }
+
+    public Charset getCharsetOrDefault(){
+        if(charset == null) return StandardCharsets.UTF_8;
+        return charset;
     }
 
     public String toString(){

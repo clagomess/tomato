@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
@@ -179,8 +180,9 @@ public class HttpDebug {
         if(fileSize == 0) return "";
 
         StringBuilder result = new StringBuilder();
+        Charset charset = new MediaType(response.headers()).getCharsetOrDefault();
 
-        try (FileReader reader = new FileReader(body)){
+        try (FileReader reader = new FileReader(body, charset)){
             char[] buffer = new char[limit];
             int n = reader.read(buffer);
             result.append(buffer, 0, n);
