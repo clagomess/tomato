@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
 import javax.net.ssl.SSLSession;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -182,9 +183,12 @@ public class HttpDebug {
         StringBuilder result = new StringBuilder();
         Charset charset = new MediaType(response.headers()).getCharsetOrDefault();
 
-        try (FileReader reader = new FileReader(body, charset)){
+        try (BufferedReader br = new BufferedReader(new FileReader(
+                body,
+                charset
+        ))){
             char[] buffer = new char[limit];
-            int n = reader.read(buffer);
+            int n = br.read(buffer);
             result.append(buffer, 0, n);
 
             if(fileSize > limit){

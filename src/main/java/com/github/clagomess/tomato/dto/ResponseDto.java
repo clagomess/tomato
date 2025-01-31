@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -116,9 +117,12 @@ public class ResponseDto {
                 return;
             }
 
-            try (FileReader reader = new FileReader(body, contentType.getCharsetOrDefault())){
+            try (BufferedReader br = new BufferedReader(new FileReader(
+                    body,
+                    contentType.getCharsetOrDefault()
+            ))){
                 char[] buffer = new char[limit];
-                int n = reader.read(buffer);
+                int n = br.read(buffer);
                 bodyAsString = new String(buffer, 0, n);
             }catch (IOException e){
                 log.error(e.getMessage(), e);
