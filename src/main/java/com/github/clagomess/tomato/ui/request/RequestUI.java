@@ -19,7 +19,7 @@ public class RequestUI extends JFrame {
 
     public RequestUI(
             RequestHeadDto requestHead
-    ) throws IOException, InterruptedException {
+    ) throws IOException {
         // @TODO: add title listener when change name
         // @TODO: add '*' when change request
         setTitle(requestHead.getName());
@@ -28,12 +28,13 @@ public class RequestUI extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
-                "debug, insets 0 10 5 5"
+                "insets 0 10 5 5",
+                "[grow,fill]"
         ));
 
         RequestDto requestDto = requestRepository.load(requestHead).orElseThrow();
         requestSplitPaneUI = new RequestSplitPaneUI(requestHead, requestDto);
-        add(requestSplitPaneUI);
+        add(requestSplitPaneUI, "height 100%");
 
         pack();
         setLocationRelativeTo(null);
