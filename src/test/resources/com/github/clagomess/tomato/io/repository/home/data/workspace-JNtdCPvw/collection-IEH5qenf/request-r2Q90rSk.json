@@ -1,0 +1,24 @@
+{
+  "id" : "r2Q90rSk",
+  "createTime" : "2025-01-31T17:12:59",
+  "updateTime" : "2025-01-31T17:14:34",
+  "name" : "url-encoded-form",
+  "method" : "POST",
+  "url" : "{{echoServer}}/echo-iso-8859-1.php",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ ]
+  },
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "URL_ENCODED_FORM",
+    "urlEncodedForm" : [ {
+      "type" : "TEXT",
+      "key" : "param1",
+      "value" : "Ação Açucar",
+      "valueContentType" : "text/plain",
+      "selected" : true
+    } ]
+  }
+}

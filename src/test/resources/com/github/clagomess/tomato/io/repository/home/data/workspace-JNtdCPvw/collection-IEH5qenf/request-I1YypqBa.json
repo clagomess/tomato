@@ -1,0 +1,24 @@
+{
+  "id" : "I1YypqBa",
+  "createTime" : "2025-01-31T17:11:52",
+  "updateTime" : "2025-01-31T17:13:46",
+  "name" : "multipart-form",
+  "method" : "POST",
+  "url" : "{{echoServer}}/echo-iso-8859-1.php",
+  "urlParam" : {
+    "path" : [ ],
+    "query" : [ ]
+  },
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "MULTIPART_FORM",
+    "multiPartForm" : [ {
+      "type" : "TEXT",
+      "key" : "param1",
+      "value" : "Ação Açucar",
+      "valueContentType" : "text/plain",
+      "selected" : true
+    } ]
+  }
+}

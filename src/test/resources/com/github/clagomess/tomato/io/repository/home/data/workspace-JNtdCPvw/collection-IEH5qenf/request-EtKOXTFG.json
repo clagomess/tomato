@@ -1,0 +1,29 @@
+{
+  "id" : "EtKOXTFG",
+  "createTime" : "2025-01-31T17:05:45",
+  "updateTime" : "2025-01-31T17:11:38",
+  "name" : "query-param",
+  "method" : "GET",
+  "url" : "{{echoServer}}/echo-iso-8859-1.php?param2=:param2",
+  "urlParam" : {
+    "path" : [ {
+      "type" : "TEXT",
+      "key" : "param2",
+      "value" : "Ação Açucar 2",
+      "valueContentType" : "text/plain",
+      "selected" : true
+    } ],
+    "query" : [ {
+      "type" : "TEXT",
+      "key" : "param1",
+      "value" : "Ação Açucar",
+      "valueContentType" : "text/plain",
+      "selected" : true
+    } ]
+  },
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY"
+  }
+}
