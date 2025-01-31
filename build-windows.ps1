@@ -42,4 +42,18 @@ $env:Path += ";build-windows/wix"
 --dest ./target/dist `
 --verbose
 
+# rename
 mv ./target/dist/Tomato-$git_tag.msi ./target/dist/tomato-$git_tag-amd64.msi
+
+# sign
+$SignToolPath = Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin\**\x64" `
+-Recurse -Filter "signtool.exe" | Select-Object -ExpandProperty FullName -First 1
+echo "SignTool Path: $SignToolPath"
+
+& $SignToolPath sign /v `
+/td SHA256 `
+/tr http://timestamp.digicert.com `
+/f "./build-windows/code-sign-ks.pfx" `
+/p "password" `
+/fd SHA256 `
+"./target/dist/tomato-$git_tag-amd64.msi"
