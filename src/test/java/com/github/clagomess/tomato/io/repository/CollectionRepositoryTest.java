@@ -28,7 +28,7 @@ public class CollectionRepositoryTest {
 
     @BeforeEach
     public void setup() {
-        mockDataDir = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
+        mockDataDir = new File("target", "datadir-" + RandomStringUtils.secure().nextAlphanumeric(8));
         assertTrue(mockDataDir.mkdirs());
 
         // reset cache

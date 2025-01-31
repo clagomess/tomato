@@ -20,10 +20,10 @@ public class EnvironmentDtoTest {
     @Test
     public void toJson() throws JsonProcessingException {
         EnvironmentDto dto = new EnvironmentDto();
-        dto.setName(RandomStringUtils.randomAlphabetic(10));
+        dto.setName(RandomStringUtils.secure().nextAlphabetic(10));
         dto.getEnvs().add(new KeyValueItemDto(
-                RandomStringUtils.randomAlphabetic(10),
-                RandomStringUtils.randomAlphabetic(10)
+                RandomStringUtils.secure().nextAlphabetic(10),
+                RandomStringUtils.secure().nextAlphabetic(10)
         ));
 
         var json = mapper.writeValueAsString(dto);

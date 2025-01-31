@@ -27,7 +27,7 @@ public class DataSessionRepositoryTest {
 
     @BeforeEach
     public void setup() throws IOException {
-        mockDataDir = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
+        mockDataDir = new File("target", "datadir-" + RandomStringUtils.secure().nextAlphanumeric(8));
         assertTrue(mockDataDir.mkdirs());
 
         mockDataSessionFile = new File(mockDataDir, "data-session.json");
@@ -67,7 +67,7 @@ public class DataSessionRepositoryTest {
 
         // test
         var dto = new DataSessionDto();
-        dto.setWorkspaceId(RandomStringUtils.randomAlphanumeric(8));
+        dto.setWorkspaceId(RandomStringUtils.secure().nextAlphanumeric(8));
 
         dataSessionRepositoryMock.save(dto);
 

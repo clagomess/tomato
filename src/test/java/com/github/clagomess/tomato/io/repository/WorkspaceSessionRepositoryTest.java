@@ -25,7 +25,7 @@ public class WorkspaceSessionRepositoryTest {
 
     @BeforeEach
     public void setup(){
-        mockData = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
+        mockData = new File("target", "datadir-" + RandomStringUtils.secure().nextAlphanumeric(8));
         assertTrue(mockData.mkdirs());
 
         // reset cache

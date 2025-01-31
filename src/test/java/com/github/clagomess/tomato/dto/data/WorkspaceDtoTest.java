@@ -20,7 +20,7 @@ public class WorkspaceDtoTest {
     @Test
     public void toJson() throws JsonProcessingException {
         WorkspaceDto dto = new WorkspaceDto();
-        dto.setName(RandomStringUtils.randomAlphabetic(10));
+        dto.setName(RandomStringUtils.secure().nextAlphabetic(10));
 
         var json = mapper.writeValueAsString(dto);
 

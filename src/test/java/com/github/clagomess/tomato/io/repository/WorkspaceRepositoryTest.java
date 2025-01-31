@@ -20,7 +20,7 @@ public class WorkspaceRepositoryTest {
 
     @BeforeEach
     public void setup(){
-        mockDataDir = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
+        mockDataDir = new File("target", "datadir-" + RandomStringUtils.secure().nextAlphanumeric(8));
         assertTrue(mockDataDir.mkdirs());
 
         // reset cache
@@ -43,7 +43,7 @@ public class WorkspaceRepositoryTest {
         );
 
         var result =workspaceDS.getWorkspaceDirectory(
-                RandomStringUtils.randomAlphanumeric(8)
+                RandomStringUtils.secure().nextAlphanumeric(8)
         );
 
         Assertions.assertThat(result).isDirectory();

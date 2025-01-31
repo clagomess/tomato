@@ -13,7 +13,7 @@ import java.io.IOException;
 public class PostmanConverterTest {
     @Test
     public void pumpCollection() throws IOException {
-        var mockDataDir = new File("target", "datadir-" + RandomStringUtils.randomAlphanumeric(8));
+        var mockDataDir = new File("target", "datadir-" + RandomStringUtils.secure().nextAlphanumeric(8));
 
         PostmanConverter postmanConverter = new PostmanConverter();
 

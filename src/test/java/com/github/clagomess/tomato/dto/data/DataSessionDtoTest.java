@@ -20,7 +20,7 @@ public class DataSessionDtoTest {
     @Test
     public void toJson() throws JsonProcessingException {
         var dto = new DataSessionDto();
-        dto.setWorkspaceId(RandomStringUtils.randomAlphabetic(10));
+        dto.setWorkspaceId(RandomStringUtils.secure().nextAlphabetic(10));
 
         var json = mapper.writeValueAsString(dto);
 

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @EqualsAndHashCode(of = {"id"})
 public abstract class MetadataDto {
-    private String id = RandomStringUtils.randomAlphanumeric(8);
+    private String id = RandomStringUtils.secure().nextAlphanumeric(8);
 
     @JsonFormat(pattern = "uuuu-MM-dd'T'HH:mm:ss")
     private LocalDateTime createTime = LocalDateTime.now();

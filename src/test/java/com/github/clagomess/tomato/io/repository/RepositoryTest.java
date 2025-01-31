@@ -38,7 +38,7 @@ public class RepositoryTest {
                 "target",
                 String.format(
                         "read_e_write_File_json_%s.json",
-                        RandomStringUtils.randomAlphanumeric(8)
+                        RandomStringUtils.secure().nextAlphanumeric(8)
                 )
         );
 
@@ -58,7 +58,7 @@ public class RepositoryTest {
 
     @BeforeEach
     public void setMockDataDir(){
-        mockHome = new File("target", "home-" + RandomStringUtils.randomAlphanumeric(8));
+        mockHome = new File("target", "home-" + RandomStringUtils.secure().nextAlphanumeric(8));
         assertTrue(mockHome.mkdirs());
     }
 
