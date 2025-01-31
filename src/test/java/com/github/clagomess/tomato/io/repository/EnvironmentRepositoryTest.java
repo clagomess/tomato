@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.io.repository;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
@@ -75,7 +76,7 @@ public class EnvironmentRepositoryTest {
     @Test
     public void save() throws IOException {
         var environment = new EnvironmentDto();
-        environment.getEnvs().add(new EnvironmentDto.Env("AAA", "BBB"));
+        environment.getEnvs().add(new KeyValueItemDto("AAA", "BBB"));
         var envFile = new File(mockData, "environment-"+environment.getId()+".json");
 
         Repository repositoryMock = Mockito.mock(Repository.class);

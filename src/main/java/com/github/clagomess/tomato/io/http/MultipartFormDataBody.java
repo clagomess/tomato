@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -18,9 +18,9 @@ public class MultipartFormDataBody {
     private final EnvironmentRepository environmentRepository;
 
     private final String boundary;
-    private final List<RequestDto.KeyValueItem> form;
+    private final List<KeyValueItemDto> form;
 
-    public MultipartFormDataBody(List<RequestDto.KeyValueItem> form) {
+    public MultipartFormDataBody(List<KeyValueItemDto> form) {
         this(
                 new EnvironmentRepository(),
                 "tomato-" + System.currentTimeMillis(),
@@ -36,7 +36,7 @@ public class MultipartFormDataBody {
         var file = File.createTempFile("tomato-request-", ".bin");
         file.deleteOnExit();
 
-        List<EnvironmentDto.Env> envs = environmentRepository.getWorkspaceSessionEnvironment()
+        List<KeyValueItemDto> envs = environmentRepository.getWorkspaceSessionEnvironment()
                 .map(EnvironmentDto::getEnvs)
                 .orElse(Collections.emptyList());
 
@@ -71,7 +71,7 @@ public class MultipartFormDataBody {
 
     protected void writeTextBoundary(
             OutputStream os,
-            List<EnvironmentDto.Env> envs,
+            List<KeyValueItemDto> envs,
             String key,
             String value
     ) throws IOException {

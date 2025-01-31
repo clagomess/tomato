@@ -3,13 +3,13 @@ package com.github.clagomess.tomato.dto.data;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
-import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import lombok.*;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.github.clagomess.tomato.io.http.MediaType.APPLICATION_OCTET_STREAM_TYPE;
 
 @Getter
 @Setter
@@ -20,8 +20,8 @@ public class RequestDto extends MetadataDto {
     private HttpMethodEnum method = HttpMethodEnum.GET;
     private String url = "http://";
     private UrlParam urlParam = new UrlParam();
-    private List<KeyValueItem> headers = new ArrayList<>();
-    private List<KeyValueItem> cookies = new ArrayList<>();
+    private List<KeyValueItemDto> headers = new ArrayList<>();
+    private List<KeyValueItemDto> cookies = new ArrayList<>();
     private Body body = new Body();
 
     public UrlParam getUrlParam() {
@@ -34,12 +34,12 @@ public class RequestDto extends MetadataDto {
         return body;
     }
 
-    public List<KeyValueItem> getCookies() {
+    public List<KeyValueItemDto> getCookies() {
         if(cookies == null) cookies = new ArrayList<>();
         return cookies;
     }
 
-    public List<KeyValueItem> getHeaders() {
+    public List<KeyValueItemDto> getHeaders() {
         if(headers == null) headers = new ArrayList<>();
         return headers;
     }
@@ -48,15 +48,15 @@ public class RequestDto extends MetadataDto {
     @Setter
     @EqualsAndHashCode
     public static class UrlParam {
-        private List<KeyValueItem> path  = new ArrayList<>();
-        private List<KeyValueItem> query  = new ArrayList<>();
+        private List<KeyValueItemDto> path = new ArrayList<>();
+        private List<KeyValueItemDto> query = new ArrayList<>();
 
-        public List<KeyValueItem> getPath() {
+        public List<KeyValueItemDto> getPath() {
             if(path == null) path = new ArrayList<>();
             return path;
         }
 
-        public List<KeyValueItem> getQuery() {
+        public List<KeyValueItemDto> getQuery() {
             if(query == null) query = new ArrayList<>();
             return query;
         }
@@ -69,8 +69,8 @@ public class RequestDto extends MetadataDto {
         private BodyTypeEnum type = BodyTypeEnum.NO_BODY;
         private RawBody raw;
         private BinaryBody binary;
-        private List<KeyValueItem> urlEncodedForm  = new ArrayList<>();
-        private List<KeyValueItem> multiPartForm = new ArrayList<>();
+        private List<KeyValueItemDto> urlEncodedForm  = new ArrayList<>();
+        private List<KeyValueItemDto> multiPartForm = new ArrayList<>();
 
         public BodyTypeEnum getType() {
             if(type == null) type = BodyTypeEnum.NO_BODY;
@@ -92,14 +92,14 @@ public class RequestDto extends MetadataDto {
         }
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        public List<KeyValueItem> getUrlEncodedForm() {
+        public List<KeyValueItemDto> getUrlEncodedForm() {
             if(type != BodyTypeEnum.URL_ENCODED_FORM) return null;
             if(urlEncodedForm == null) urlEncodedForm = new ArrayList<>();
             return urlEncodedForm;
         }
 
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        public List<KeyValueItem> getMultiPartForm() {
+        public List<KeyValueItemDto> getMultiPartForm() {
             if(type != BodyTypeEnum.MULTIPART_FORM) return null;
             if(multiPartForm == null) multiPartForm = new ArrayList<>();
             return multiPartForm;
@@ -122,29 +122,7 @@ public class RequestDto extends MetadataDto {
     @AllArgsConstructor
     @EqualsAndHashCode
     public static class BinaryBody {
-        private String contentType = "application/octet-stream";
+        private String contentType = APPLICATION_OCTET_STREAM_TYPE;
         private String file;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @EqualsAndHashCode
-    public static class KeyValueItem implements Comparable<KeyValueItem> {
-        private KeyValueTypeEnum type = KeyValueTypeEnum.TEXT;
-        private String key;
-        private String value;
-        private boolean selected = true;
-
-        public KeyValueItem(String key, String value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        @Override
-        public int compareTo(KeyValueItem o) {
-            return StringUtils.compare(this.getKey(), o.getKey());
-        }
     }
 }

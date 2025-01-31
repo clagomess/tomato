@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.environment.edit;
 
-import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.StagingMonitor;
@@ -21,9 +21,9 @@ import static javax.swing.SwingUtilities.invokeLater;
 @Setter
 class RowComponent extends JPanel {
     private final Container parent;
-    private final List<EnvironmentDto.Env> list;
-    private final EnvironmentDto.Env item;
-    private final StagingMonitor<EnvironmentDto.Env> stagingMonitor;
+    private final List<KeyValueItemDto> list;
+    private final KeyValueItemDto item;
+    private final StagingMonitor<KeyValueItemDto> stagingMonitor;
 
     private final BxsCircleIcon iconHasChanged = new BxsCircleIcon(Color.ORANGE);
     private final BxsCircleIcon iconHasNotChanged = new BxsCircleIcon(Color.GRAY);
@@ -37,8 +37,8 @@ class RowComponent extends JPanel {
 
     public RowComponent(
             Container parent,
-            List<EnvironmentDto.Env> list,
-            EnvironmentDto.Env item
+            List<KeyValueItemDto> list,
+            KeyValueItemDto item
     ){
         this.parent = parent;
         this.list = list;

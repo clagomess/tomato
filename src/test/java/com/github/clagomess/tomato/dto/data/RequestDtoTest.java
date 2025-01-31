@@ -11,12 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import static com.github.clagomess.tomato.enums.TomatoJsonSchemaEnum.REQUEST;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.github.clagomess.tomato.io.http.MediaType.TEXT_PLAIN_TYPE;
 
 @Slf4j
 public class RequestDtoTest {
@@ -40,8 +36,8 @@ public class RequestDtoTest {
     public void toJson_UrlParam() throws JsonProcessingException {
         var dto = new RequestDto();
         dto.setUrl("http://localhost:8080/tomato");
-        dto.getUrlParam().getPath().add(new RequestDto.KeyValueItem("key", "value"));
-        dto.getUrlParam().getQuery().add(new RequestDto.KeyValueItem("key", "value"));
+        dto.getUrlParam().getPath().add(new KeyValueItemDto("key", "value"));
+        dto.getUrlParam().getQuery().add(new KeyValueItemDto("key", "value"));
 
         var json = mapper.writeValueAsString(dto);
         log.info(json);
@@ -55,8 +51,8 @@ public class RequestDtoTest {
     public void toJson_Header() throws JsonProcessingException {
         var dto = new RequestDto();
         dto.setUrl("http://localhost:8080/tomato");
-        dto.getHeaders().add(new RequestDto.KeyValueItem("key", "value"));
-        dto.getHeaders().add(new RequestDto.KeyValueItem("key", "value"));
+        dto.getHeaders().add(new KeyValueItemDto("key", "value"));
+        dto.getHeaders().add(new KeyValueItemDto("key", "value"));
 
         var json = mapper.writeValueAsString(dto);
         log.info(json);
@@ -70,7 +66,7 @@ public class RequestDtoTest {
     public void toJson_Cookie() throws JsonProcessingException {
         var dto = new RequestDto();
         dto.setUrl("http://localhost:8080/tomato");
-        dto.getCookies().add(new RequestDto.KeyValueItem("key", "value"));
+        dto.getCookies().add(new KeyValueItemDto("key", "value"));
 
         var json = mapper.writeValueAsString(dto);
         log.info(json);
@@ -101,7 +97,7 @@ public class RequestDtoTest {
         dto.setUrl("http://localhost:8080/tomato");
         dto.getBody().setType(BodyTypeEnum.BINARY);
         dto.getBody().setBinary(new RequestDto.BinaryBody(
-                "text/plain",
+                TEXT_PLAIN_TYPE,
                 "file"
         ));
 
@@ -119,7 +115,7 @@ public class RequestDtoTest {
         dto.setUrl("http://localhost:8080/tomato");
         dto.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
         dto.getBody().getUrlEncodedForm().add(
-                new RequestDto.KeyValueItem("key", "value")
+                new KeyValueItemDto("key", "value")
         );
 
         var json = mapper.writeValueAsString(dto);
@@ -136,7 +132,7 @@ public class RequestDtoTest {
         dto.setUrl("http://localhost:8080/tomato");
         dto.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
         dto.getBody().getMultiPartForm().add(
-                new RequestDto.KeyValueItem("key", "value")
+                new KeyValueItemDto("key", "value")
         );
 
         var json = mapper.writeValueAsString(dto);
@@ -181,22 +177,5 @@ public class RequestDtoTest {
     public void BinaryBody_equalsHashCode(){
         Assertions.assertThat(new RequestDto.BinaryBody())
                 .isEqualTo(new RequestDto.BinaryBody());
-    }
-
-    @Test
-    public void KeyValueItem_equalsHashCode(){
-        Assertions.assertThat(new RequestDto.KeyValueItem())
-                .isEqualTo(new RequestDto.KeyValueItem());
-    }
-
-    @Test
-    public void KeyValueItem_sort(){
-        List<RequestDto.KeyValueItem> list = new ArrayList<>(2);
-        list.add(new RequestDto.KeyValueItem("bbb", "value"));
-        list.add(new RequestDto.KeyValueItem("aaa", "value"));
-
-        Collections.sort(list);
-
-        assertEquals("aaa", list.get(0).getKey());
     }
 }

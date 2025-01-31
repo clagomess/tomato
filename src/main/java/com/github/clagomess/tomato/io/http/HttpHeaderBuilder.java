@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.util.RevisionUtil;
@@ -30,7 +31,7 @@ public class HttpHeaderBuilder {
     }
 
     protected String buildValue(
-            List<EnvironmentDto.Env> envs,
+            List<KeyValueItemDto> envs,
             String value
     ){
         if(value == null) return "";
@@ -53,19 +54,19 @@ public class HttpHeaderBuilder {
                 "Tomato/" + RevisionUtil.getInstance().getDeployTag()
         );
 
-        List<EnvironmentDto.Env> envs = environmentRepository.getWorkspaceSessionEnvironment()
+        List<KeyValueItemDto> envs = environmentRepository.getWorkspaceSessionEnvironment()
                 .map(EnvironmentDto::getEnvs)
                 .orElse(Collections.emptyList());
 
         requestDto.getHeaders().stream()
-                .filter(RequestDto.KeyValueItem::isSelected)
+                .filter(KeyValueItemDto::isSelected)
                 .forEach(header -> requestBuilder.setHeader(
                         header.getKey(),
                         buildValue(envs, header.getValue())
                 ));
 
         requestDto.getCookies().stream()
-                .filter(RequestDto.KeyValueItem::isSelected)
+                .filter(KeyValueItemDto::isSelected)
                 .forEach(cookie -> requestBuilder.header(
                         "Cookie",
                         cookie.getKey() + "=" + buildValue(envs, cookie.getValue())

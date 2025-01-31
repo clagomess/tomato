@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.right;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
-import com.github.clagomess.tomato.dto.table.ResponseHeaderTMDto;
+import com.github.clagomess.tomato.dto.table.KeyValueTMDto;
 import com.github.clagomess.tomato.io.http.MediaType;
 import com.github.clagomess.tomato.ui.component.RawTextArea;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
@@ -25,8 +25,8 @@ public class ResponseTabContent extends JPanel {
     private final RawTextArea txtHTTPDebug = new RawTextArea();
     private final TRSyntaxTextArea txtResponse = new TRSyntaxTextArea();
     private final StatusResponseUI statusResponseUI = new StatusResponseUI();
-    private final TableManagerUI<ResponseHeaderTMDto> tblResponseHeader = new TableManagerUI<>(
-            ResponseHeaderTMDto.class
+    private final TableManagerUI<KeyValueTMDto> tblResponseHeader = new TableManagerUI<>(
+            KeyValueTMDto.class
     );
     private final JButton btnBeautify = new JButton(new BxsMagicWandIcon()){{
         setToolTipText("Beautify response");
@@ -89,7 +89,7 @@ public class ResponseTabContent extends JPanel {
             tblResponseHeader.getModel().clear();
             responseDto.getHttpResponse().getHeaders().forEach((key, value) -> {
                 value.forEach(item -> {
-                    tblResponseHeader.getModel().addRow(new ResponseHeaderTMDto(
+                    tblResponseHeader.getModel().addRow(new KeyValueTMDto(
                             key,
                             item
                     ));

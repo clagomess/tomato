@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue;
 
-import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
@@ -17,7 +17,7 @@ import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 public class KeyValueUI extends JPanel {
-    private final List<RequestDto.KeyValueItem> list;
+    private final List<KeyValueItemDto> list;
     private final RequestStagingMonitor requestStagingMonitor;
     private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add new");
     private final JPanel rowsPanel;
@@ -26,7 +26,7 @@ public class KeyValueUI extends JPanel {
     private RowComponent.OnChange onChange = item -> {};
 
     public KeyValueUI(
-            List<RequestDto.KeyValueItem> list,
+            List<KeyValueItemDto> list,
             RequestStagingMonitor requestStagingMonitor
     ) {
         this.list = list;
@@ -64,7 +64,7 @@ public class KeyValueUI extends JPanel {
         add(scrollPane, "width ::100%, height 100%");
 
         btnAddNew.addActionListener(l -> {
-            var item = new RequestDto.KeyValueItem();
+            var item = new KeyValueItemDto();
             addRow(item);
             onChange.run(item);
             requestStagingMonitor.update();
@@ -75,7 +75,7 @@ public class KeyValueUI extends JPanel {
         });
     }
 
-    private void addRow(RequestDto.KeyValueItem item){
+    private void addRow(KeyValueItemDto item){
         var row = new RowComponent(
                 rowsPanel,
                 this.requestStagingMonitor,

@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,25 +15,26 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
+import static com.github.clagomess.tomato.io.http.MediaType.TEXT_PLAIN_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UrlBuilderTest {
     private EnvironmentRepository environmentDSMock;
 
-    private final List<EnvironmentDto.Env> envList = List.of(
-            new EnvironmentDto.Env("tomatoUri", "http://localhost"),
-            new EnvironmentDto.Env("foo", "bar"),
-            new EnvironmentDto.Env("date", "17/01/2025"),
-            new EnvironmentDto.Env("blank", " ")
+    private final List<KeyValueItemDto> envList = List.of(
+            new KeyValueItemDto("tomatoUri", "http://localhost"),
+            new KeyValueItemDto("foo", "bar"),
+            new KeyValueItemDto("date", "17/01/2025"),
+            new KeyValueItemDto("blank", " ")
     );
 
-    private final List<RequestDto.KeyValueItem> paramList = List.of(
-            new RequestDto.KeyValueItem("foo", "bar"),
-            new RequestDto.KeyValueItem("date", "17/01/2025"),
-            new RequestDto.KeyValueItem("date_env", "{{date}}"),
-            new RequestDto.KeyValueItem("blank", " "),
-            new RequestDto.KeyValueItem(TEXT, "disabled", "disabled", false)
+    private final List<KeyValueItemDto> paramList = List.of(
+            new KeyValueItemDto("foo", "bar"),
+            new KeyValueItemDto("date", "17/01/2025"),
+            new KeyValueItemDto("date_env", "{{date}}"),
+            new KeyValueItemDto("blank", " "),
+            new KeyValueItemDto(TEXT, "disabled", "disabled", TEXT_PLAIN_TYPE, false)
     );
 
     @BeforeEach

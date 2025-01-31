@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -31,10 +31,10 @@ public class MultipartFormDataBodyTest {
                 .getFile();
 
         var form = List.of(
-                new RequestDto.KeyValueItem(TEXT, "myparam", "myvalue", true),
-                new RequestDto.KeyValueItem(TEXT, null, null, true),
-                new RequestDto.KeyValueItem(TEXT,  " ", null, true),
-                new RequestDto.KeyValueItem(FILE, "myfile", formFile, true)
+                new KeyValueItemDto(TEXT, "myparam", "myvalue", null, true),
+                new KeyValueItemDto(TEXT, null, null, null, true),
+                new KeyValueItemDto(TEXT,  " ", null, null, true),
+                new KeyValueItemDto(FILE, "myfile", formFile, null, true)
         );
 
         var multipart = new MultipartFormDataBody(form);
@@ -64,7 +64,7 @@ public class MultipartFormDataBodyTest {
     @Test
     public void build_whenNullTextParam_sendEmpty() throws IOException {
         var form = List.of(
-                new RequestDto.KeyValueItem(TEXT, "myparam", null, true)
+                new KeyValueItemDto(TEXT, "myparam", null, null, true)
         );
 
         var multipart = new MultipartFormDataBody(form);
@@ -82,7 +82,7 @@ public class MultipartFormDataBodyTest {
     @ValueSource(strings = {"foo/bar"})
     public void build_whenNullOrInvalidFileParam_throws(String fileParam) {
         var form = List.of(
-                new RequestDto.KeyValueItem(FILE, "myfile", fileParam, true)
+                new KeyValueItemDto(FILE, "myfile", fileParam, null, true)
         );
 
         var multipart = new MultipartFormDataBody(form);
@@ -93,8 +93,8 @@ public class MultipartFormDataBodyTest {
     @Test
     public void build_whenNotSelectedParam_notSend() throws IOException {
         var form = List.of(
-                new RequestDto.KeyValueItem(TEXT, "myparam", "myvalue", true),
-                new RequestDto.KeyValueItem(TEXT, "mysecondparam", "myvalue", false)
+                new KeyValueItemDto(TEXT, "myparam", "myvalue", null, true),
+                new KeyValueItemDto(TEXT, "mysecondparam", "myvalue", null, false)
         );
 
         var multipart = new MultipartFormDataBody(form);
@@ -112,7 +112,7 @@ public class MultipartFormDataBodyTest {
     public void build_whenEnvDefined_replace() throws IOException {
         EnvironmentDto dto = new EnvironmentDto();
         dto.setEnvs(List.of(
-                new EnvironmentDto.Env("foo", "bar")
+                new KeyValueItemDto("foo", "bar")
         ));
 
         EnvironmentRepository environmentDSMock = Mockito.mock(
@@ -124,7 +124,7 @@ public class MultipartFormDataBodyTest {
                 .thenReturn(Optional.of(dto));
 
         var form = List.of(
-                new RequestDto.KeyValueItem(TEXT, "myparam", "{{foo}}", true)
+                new KeyValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
         );
 
         var multipart = new MultipartFormDataBody(
@@ -149,8 +149,8 @@ public class MultipartFormDataBodyTest {
     })
     public void writeTextBoundary_assertEnvInject(String input, String expected) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        List<EnvironmentDto.Env> envs = List.of(
-                new EnvironmentDto.Env("foo", "bar")
+        List<KeyValueItemDto> envs = List.of(
+                new KeyValueItemDto("foo", "bar")
         );
 
         var form = new MultipartFormDataBody(List.of());

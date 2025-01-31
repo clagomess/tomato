@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -81,7 +82,7 @@ public class UrlBuilder {
         if(request.getUrlParam().getPath().isEmpty()) return;
 
         var list = request.getUrlParam().getPath().stream()
-                .filter(RequestDto.KeyValueItem::isSelected)
+                .filter(KeyValueItemDto::isSelected)
                 .filter(item -> StringUtils.isNotBlank(item.getKey()))
                 .sorted(Collections.reverseOrder())
                 .toList();
@@ -101,7 +102,7 @@ public class UrlBuilder {
         if(request.getUrlParam().getQuery().isEmpty()) return;
 
         var list = request.getUrlParam().getQuery().stream()
-                .filter(RequestDto.KeyValueItem::isSelected)
+                .filter(KeyValueItemDto::isSelected)
                 .filter(item -> StringUtils.isNotBlank(item.getKey()))
                 .sorted()
                 .toList();

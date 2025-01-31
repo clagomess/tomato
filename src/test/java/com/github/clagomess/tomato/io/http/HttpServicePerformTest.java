@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
@@ -17,6 +18,7 @@ import org.mockserver.model.*;
 import java.util.Collections;
 
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
+import static com.github.clagomess.tomato.io.http.MediaType.APPLICATION_OCTET_STREAM_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpServicePerformTest {
@@ -120,7 +122,7 @@ public class HttpServicePerformTest {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/set_headers");
         request.setMethod(HttpMethodEnum.GET);
-        request.setHeaders(Collections.singletonList(new RequestDto.KeyValueItem("foo", "bar")));
+        request.setHeaders(Collections.singletonList(new KeyValueItemDto("foo", "bar")));
 
         ResponseDto response = new HttpService(request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
@@ -228,7 +230,7 @@ public class HttpServicePerformTest {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/set_cookie");
         request.setMethod(HttpMethodEnum.GET);
-        request.getCookies().add(new RequestDto.KeyValueItem("foo", "bar"));
+        request.getCookies().add(new KeyValueItemDto("foo", "bar"));
 
         ResponseDto response = new HttpService(request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
@@ -281,7 +283,7 @@ public class HttpServicePerformTest {
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new RequestDto.Body());
         request.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
-        request.getBody().setUrlEncodedForm(Collections.singletonList(new RequestDto.KeyValueItem("foo", "bar")));
+        request.getBody().setUrlEncodedForm(Collections.singletonList(new KeyValueItemDto("foo", "bar")));
 
         ResponseDto response = new HttpService(request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
@@ -349,7 +351,7 @@ public class HttpServicePerformTest {
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new RequestDto.Body());
         request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
-        request.getBody().getMultiPartForm().add(new RequestDto.KeyValueItem("foo", "bar"));
+        request.getBody().getMultiPartForm().add(new KeyValueItemDto("foo", "bar"));
 
         ResponseDto response = new HttpService(request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
@@ -376,10 +378,11 @@ public class HttpServicePerformTest {
                 .getResource("HttpServicePerformTest/dummy.txt")
                 .getFile();
 
-        request.getBody().getMultiPartForm().add(new RequestDto.KeyValueItem(
+        request.getBody().getMultiPartForm().add(new KeyValueItemDto(
                 FILE,
                 "key",
                 formFile,
+                null,
                 true
         ));
 
@@ -438,7 +441,7 @@ public class HttpServicePerformTest {
         request.setBody(new RequestDto.Body());
         request.getBody().setType(BodyTypeEnum.BINARY);
         request.getBody().setBinary(new RequestDto.BinaryBody(
-                "application/octet-stream",
+                APPLICATION_OCTET_STREAM_TYPE,
                 ".gitignore"
         ));
 

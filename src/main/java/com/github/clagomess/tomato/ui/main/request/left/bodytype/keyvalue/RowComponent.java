@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue;
 
-import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
@@ -20,8 +20,8 @@ import java.util.Objects;
 class RowComponent extends JPanel {
     private final Container parent;
     private final RequestStagingMonitor requestStagingMonitor;
-    private final List<RequestDto.KeyValueItem> list;
-    private final RequestDto.KeyValueItem item;
+    private final List<KeyValueItemDto> list;
+    private final KeyValueItemDto item;
     private OnChange onChange;
 
     private final JCheckBox cbSelected = new JCheckBox();
@@ -34,8 +34,8 @@ class RowComponent extends JPanel {
     public RowComponent(
             Container parent,
             RequestStagingMonitor requestStagingMonitor,
-            List<RequestDto.KeyValueItem> list,
-            RequestDto.KeyValueItem item,
+            List<KeyValueItemDto> list,
+            KeyValueItemDto item,
             OnChange onChange
     ){
         this.parent = parent;
@@ -119,6 +119,6 @@ class RowComponent extends JPanel {
 
     @FunctionalInterface
     public interface OnChange {
-        void run(RequestDto.KeyValueItem item);
+        void run(KeyValueItemDto item);
     }
 }

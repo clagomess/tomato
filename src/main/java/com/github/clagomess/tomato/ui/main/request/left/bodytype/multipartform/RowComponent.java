@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.main.request.left.bodytype.multipartform;
 
-import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.FileChooser;
@@ -23,8 +23,8 @@ import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 class RowComponent extends JPanel {
     private final Container parent;
     private final RequestStagingMonitor requestStagingMonitor;
-    private final List<RequestDto.KeyValueItem> multiPartFormItems;
-    private final RequestDto.KeyValueItem item;
+    private final List<KeyValueItemDto> multiPartFormItems;
+    private final KeyValueItemDto item;
 
     private final JComboBox<KeyValueTypeEnum> cbType = new JComboBox<>(
             KeyValueTypeEnum.values()
@@ -39,8 +39,8 @@ class RowComponent extends JPanel {
     public RowComponent(
             Container parent,
             RequestStagingMonitor requestStagingMonitor,
-            List<RequestDto.KeyValueItem> multiPartFormItems,
-            RequestDto.KeyValueItem item
+            List<KeyValueItemDto> multiPartFormItems,
+            KeyValueItemDto item
     ){
         this.parent = parent;
         this.requestStagingMonitor = requestStagingMonitor;

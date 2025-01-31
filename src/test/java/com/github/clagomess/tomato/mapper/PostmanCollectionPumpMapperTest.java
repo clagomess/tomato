@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.mapper;
 
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
@@ -40,7 +41,7 @@ public class PostmanCollectionPumpMapperTest {
         param.setValue("87");
         param.setDisabled(true);
 
-        RequestDto.KeyValueItem result = pumpMapper.map(param);
+        KeyValueItemDto result = pumpMapper.map(param);
 
         assertEquals(param.getKey(), result.getKey());
         assertEquals(KeyValueTypeEnum.TEXT, result.getType());
@@ -71,7 +72,7 @@ public class PostmanCollectionPumpMapperTest {
         item.setType("file");
         item.setSrc("/home/claudio/Imagens/youtube-en-VTV.jpg");
 
-        RequestDto.KeyValueItem result = pumpMapper.map(item);
+        KeyValueItemDto result = pumpMapper.map(item);
         assertEquals(item.getKey(), result.getKey());
         assertEquals(KeyValueTypeEnum.FILE, result.getType());
         assertEquals(item.getSrc(), result.getValue());
@@ -85,7 +86,7 @@ public class PostmanCollectionPumpMapperTest {
         item.setValue("password");
         item.setDisabled(true);
 
-        RequestDto.KeyValueItem result = pumpMapper.map(item);
+        KeyValueItemDto result = pumpMapper.map(item);
         assertEquals(item.getKey(), result.getKey());
         assertEquals(KeyValueTypeEnum.TEXT, result.getType());
         assertEquals(item.getValue(), result.getValue());
@@ -100,7 +101,7 @@ public class PostmanCollectionPumpMapperTest {
         item.setValue("password");
         item.setDisabled(true);
 
-        RequestDto.KeyValueItem result = pumpMapper.map(item);
+        KeyValueItemDto result = pumpMapper.map(item);
         assertEquals(item.getKey(), result.getKey());
         assertEquals(KeyValueTypeEnum.TEXT, result.getType());
         assertEquals(item.getValue(), result.getValue());
@@ -114,7 +115,7 @@ public class PostmanCollectionPumpMapperTest {
         item.setValue("json");
         item.setDisabled(true);
 
-        RequestDto.KeyValueItem result = pumpMapper.map(item);
+        KeyValueItemDto result = pumpMapper.map(item);
         assertEquals(item.getKey(), result.getKey());
         assertEquals(KeyValueTypeEnum.TEXT, result.getType());
         assertEquals(item.getValue(), result.getValue());

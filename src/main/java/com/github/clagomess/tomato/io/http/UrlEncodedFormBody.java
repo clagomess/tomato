@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UrlEncodedFormBody {
     private final EnvironmentRepository environmentRepository;
-    private final List<RequestDto.KeyValueItem> form;
+    private final List<KeyValueItemDto> form;
 
     @Getter
     private final String contentType = "application/x-www-form-urlencoded";
 
-    public UrlEncodedFormBody(List<RequestDto.KeyValueItem> form) {
+    public UrlEncodedFormBody(List<KeyValueItemDto> form) {
         this(
                 new EnvironmentRepository(),
                 form
@@ -32,7 +32,7 @@ public class UrlEncodedFormBody {
         StringBuilder urlEncoded = new StringBuilder();
         boolean first = true;
 
-        List<EnvironmentDto.Env> envs = environmentRepository.getWorkspaceSessionEnvironment()
+        List<KeyValueItemDto> envs = environmentRepository.getWorkspaceSessionEnvironment()
                 .map(EnvironmentDto::getEnvs)
                 .orElse(Collections.emptyList());
 
@@ -51,7 +51,7 @@ public class UrlEncodedFormBody {
     }
 
     protected String buildValue(
-            List<EnvironmentDto.Env> envs,
+            List<KeyValueItemDto> envs,
             String value
     ){
         if(value == null) return "";

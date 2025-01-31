@@ -21,7 +21,7 @@ public class EnvironmentDtoTest {
     public void toJson() throws JsonProcessingException {
         EnvironmentDto dto = new EnvironmentDto();
         dto.setName(RandomStringUtils.randomAlphabetic(10));
-        dto.getEnvs().add(new EnvironmentDto.Env(
+        dto.getEnvs().add(new KeyValueItemDto(
                 RandomStringUtils.randomAlphabetic(10),
                 RandomStringUtils.randomAlphabetic(10)
         ));
@@ -44,11 +44,5 @@ public class EnvironmentDtoTest {
 
         Assertions.assertThat(dtoA)
                 .isEqualTo(dtoB);
-    }
-
-    @Test
-    public void Env_equalsHashCode(){
-        Assertions.assertThat(new EnvironmentDto.Env())
-                .isEqualTo(new EnvironmentDto.Env());
     }
 }

@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.assertj.core.api.Assertions;
@@ -39,7 +40,7 @@ public class HttpHeaderBuilderTest {
 
         var request = new RequestDto();
         request.setHeaders(List.of(
-                new RequestDto.KeyValueItem("User-Agent", "foo")
+                new KeyValueItemDto("User-Agent", "foo")
         ));
 
         new HttpHeaderBuilder(requestBuilder, request).build();
@@ -56,8 +57,8 @@ public class HttpHeaderBuilderTest {
 
         var request = new RequestDto();
         request.setHeaders(List.of(
-                new RequestDto.KeyValueItem("Content-Type", "foo"),
-                new RequestDto.KeyValueItem("Content-Type", "bar")
+                new KeyValueItemDto("Content-Type", "foo"),
+                new KeyValueItemDto("Content-Type", "bar")
         ));
 
         new HttpHeaderBuilder(requestBuilder, request).build();
@@ -74,8 +75,8 @@ public class HttpHeaderBuilderTest {
 
         var request = new RequestDto();
         request.setCookies(List.of(
-                new RequestDto.KeyValueItem("JSESSIONID", "foo"),
-                new RequestDto.KeyValueItem("FOO", "bar")
+                new KeyValueItemDto("JSESSIONID", "foo"),
+                new KeyValueItemDto("FOO", "bar")
         ));
 
         new HttpHeaderBuilder(requestBuilder, request).build();
@@ -89,7 +90,7 @@ public class HttpHeaderBuilderTest {
     public void build_whenEnvDefinedHeader_replace() throws IOException {
         EnvironmentDto dto = new EnvironmentDto();
         dto.setEnvs(List.of(
-                new EnvironmentDto.Env("foo", "bar")
+                new KeyValueItemDto("foo", "bar")
         ));
 
         EnvironmentRepository environmentDSMock = Mockito.mock(
@@ -106,7 +107,7 @@ public class HttpHeaderBuilderTest {
 
         var request = new RequestDto();
         request.setHeaders(List.of(
-                new RequestDto.KeyValueItem("Content-Type", "{{foo}}")
+                new KeyValueItemDto("Content-Type", "{{foo}}")
         ));
 
         new HttpHeaderBuilder(environmentDSMock, requestBuilder, request).build();
@@ -120,7 +121,7 @@ public class HttpHeaderBuilderTest {
     public void build_whenEnvDefinedCookie_replace() throws IOException {
         EnvironmentDto dto = new EnvironmentDto();
         dto.setEnvs(List.of(
-                new EnvironmentDto.Env("foo", "bar")
+                new KeyValueItemDto("foo", "bar")
         ));
 
         EnvironmentRepository environmentDSMock = Mockito.mock(
@@ -137,7 +138,7 @@ public class HttpHeaderBuilderTest {
 
         var request = new RequestDto();
         request.setCookies(List.of(
-                new RequestDto.KeyValueItem("JSESSIONID", "{{foo}}")
+                new KeyValueItemDto("JSESSIONID", "{{foo}}")
         ));
 
         new HttpHeaderBuilder(environmentDSMock, requestBuilder, request).build();
@@ -154,8 +155,8 @@ public class HttpHeaderBuilderTest {
             "a-{{bar}},a-{{bar}}",
     })
     public void buildValue_assertEnvInject(String input, String expected){
-        List<EnvironmentDto.Env> envs = List.of(
-                new EnvironmentDto.Env("foo", "bar")
+        List<KeyValueItemDto> envs = List.of(
+                new KeyValueItemDto("foo", "bar")
         );
 
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()

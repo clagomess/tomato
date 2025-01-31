@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,12 +20,12 @@ public class UrlEncodedFormBodyTest {
     @Test
     public void build() throws IOException {
         var form = List.of(
-                new RequestDto.KeyValueItem(TEXT, "myparam", "myvalue", true),
-                new RequestDto.KeyValueItem(TEXT, "utf8param", "AçãoAçucar", true),
-                new RequestDto.KeyValueItem(TEXT, "nullparam", null, true),
-                new RequestDto.KeyValueItem(TEXT, "hidden", "hidden", false),
-                new RequestDto.KeyValueItem(TEXT, null, null, true),
-                new RequestDto.KeyValueItem(TEXT,  " ", null, true)
+                new KeyValueItemDto(TEXT, "myparam", "myvalue", null, true),
+                new KeyValueItemDto(TEXT, "utf8param", "AçãoAçucar", null, true),
+                new KeyValueItemDto(TEXT, "nullparam", null, null, true),
+                new KeyValueItemDto(TEXT, "hidden", "hidden", null, false),
+                new KeyValueItemDto(TEXT, null, null, null, true),
+                new KeyValueItemDto(TEXT,  " ", null, null, true)
         );
 
         var urlencoded = new UrlEncodedFormBody(form);
@@ -41,7 +41,7 @@ public class UrlEncodedFormBodyTest {
     public void build_whenEnvDefined_replace() throws IOException {
         EnvironmentDto dto = new EnvironmentDto();
         dto.setEnvs(List.of(
-                new EnvironmentDto.Env("foo", "bar")
+                new KeyValueItemDto("foo", "bar")
         ));
 
         EnvironmentRepository environmentDSMock = Mockito.mock(
@@ -53,7 +53,7 @@ public class UrlEncodedFormBodyTest {
                 .thenReturn(Optional.of(dto));
 
         var form = List.of(
-                new RequestDto.KeyValueItem(TEXT, "myparam", "{{foo}}", true)
+                new KeyValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
         );
 
         var urlencoded = new UrlEncodedFormBody(environmentDSMock, form);
@@ -72,8 +72,8 @@ public class UrlEncodedFormBodyTest {
             "a-{{bar}},a-%7B%7Bbar%7D%7D",
     })
     public void buildValue_assertEnvInject(String input, String expected) {
-        List<EnvironmentDto.Env> envs = List.of(
-                new EnvironmentDto.Env("foo", "bar")
+        List<KeyValueItemDto> envs = List.of(
+                new KeyValueItemDto("foo", "bar")
         );
 
         var form = new UrlEncodedFormBody(List.of());

@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.environment.edit;
 
-import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import net.miginfocom.swing.MigLayout;
@@ -16,12 +16,12 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 import static javax.swing.SwingUtilities.getAncestorOfClass;
 
 public class EnvUI extends JPanel {
-    private final List<EnvironmentDto.Env> list;
+    private final List<KeyValueItemDto> list;
     private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add a new environment");
     private final JPanel rowsPanel;
 
     public EnvUI(
-            List<EnvironmentDto.Env> list
+            List<KeyValueItemDto> list
     ) {
         this.list = list;
 
@@ -55,7 +55,7 @@ public class EnvUI extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, "width ::100%, height 100%");
         btnAddNew.addActionListener(l -> {
-            addRow(new EnvironmentDto.Env());
+            addRow(new KeyValueItemDto());
 
             var parent = (EnvironmentEditUI) getAncestorOfClass(EnvironmentEditUI.class, this);
             parent.updateStagingMonitor();
@@ -66,7 +66,7 @@ public class EnvUI extends JPanel {
         });
     }
 
-    private void addRow(EnvironmentDto.Env item){
+    private void addRow(KeyValueItemDto item){
         var row = new RowComponent(
                 rowsPanel,
                 this.list,
