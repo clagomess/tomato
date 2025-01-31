@@ -80,7 +80,7 @@ public class RequestSaveUI extends JFrame {
             var key = new RequestPublisher.ParentCollectionId(parent.getId());
             requestPublisher.getOnInsert().publish(key, requestHead);
             requestPublisher.getOnSave().publish(requestHead.getId(), requestHead);
-            onSaveListener.reponse(requestHead);
+            onSaveListener.response(requestHead);
 
             setVisible(false);
             dispose();
@@ -89,6 +89,6 @@ public class RequestSaveUI extends JFrame {
 
     @FunctionalInterface
     public interface OnSaveFI {
-        void reponse(RequestHeadDto requestHead);
+        void response(RequestHeadDto requestHead);
     }
 }

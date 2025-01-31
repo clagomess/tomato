@@ -52,15 +52,15 @@ public class HttpService {
             HttpRequest request = buildBody(requestBuilder);
             debug.setRequest(request);
 
-            var reponseFile = File.createTempFile("tomato-reponse-", ".bin");
-            reponseFile.deleteOnExit();
-            debug.setResponseBodyFile(reponseFile);
+            var responseFile = File.createTempFile("tomato-response-", ".bin");
+            responseFile.deleteOnExit();
+            debug.setResponseBodyFile(responseFile);
 
             long requestTime = System.currentTimeMillis();
 
             HttpResponse<Path> response = getClient().send(
                     request,
-                    HttpResponse.BodyHandlers.ofFile(reponseFile.toPath())
+                    HttpResponse.BodyHandlers.ofFile(responseFile.toPath())
             );
             debug.setResponse(response);
 
