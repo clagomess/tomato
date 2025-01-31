@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Slf4j
 @Setter
 public class HttpDebug {
@@ -53,7 +55,12 @@ public class HttpDebug {
         }
 
         if(requestBodyFile != null){
-            result.append(assemblyBody(requestBodyFile, defaultLimitBody)).append("\n");
+            result.append(assemblyBody(
+                    requestBodyFile,
+                    UTF_8,
+                    defaultLimitBody
+            ));
+            result.append("\n");
         }
 
         if(response == null) return result.toString();
@@ -76,7 +83,12 @@ public class HttpDebug {
         result.append("\n");
 
         if(responseBodyFile != null){
-            result.append(assemblyBody(responseBodyFile, defaultLimitBody)).append("\n");
+            result.append(assemblyBody(
+                    responseBodyFile,
+                    new MediaType(response.headers()).getCharsetOrDefault(),
+                    defaultLimitBody
+            ));
+            result.append("\n");
             result.append("-".repeat(40)).append("\n");
             result.append("Written response in:\n");
             result.append(responseBodyFile.getAbsolutePath());
@@ -176,12 +188,15 @@ public class HttpDebug {
         }
     }
 
-    protected String assemblyBody(File body, int limit){
+    protected String assemblyBody(
+            File body,
+            Charset charset,
+            int limit
+    ){
         long fileSize = body.length();
         if(fileSize == 0) return "";
 
         StringBuilder result = new StringBuilder();
-        Charset charset = new MediaType(response.headers()).getCharsetOrDefault();
 
         try (BufferedReader br = new BufferedReader(new FileReader(
                 body,

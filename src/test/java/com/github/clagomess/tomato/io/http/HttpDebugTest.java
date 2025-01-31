@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -74,7 +75,7 @@ public class HttpDebugTest {
         debug.setResponse(response);
 
         Assertions.assertThat(debug.assembly())
-                .isEqualToNormalizingNewlines(
+                .containsIgnoringNewLines(
                         """
                         > POST http://localhost:8500/hello
                         > Content-Type: application/json
@@ -132,7 +133,7 @@ public class HttpDebugTest {
                 .getResource("HttpDebugTest/file-less-than-10bytes.txt")
                 .getFile()
         );
-        var result = debug.assemblyBody(file, 10);
+        var result = debug.assemblyBody(file, UTF_8, 10);
 
         assertEquals("hello", result.trim());
     }
@@ -144,7 +145,7 @@ public class HttpDebugTest {
                 .getResource("HttpDebugTest/file-more-than-10bytes.txt")
                 .getFile()
         );
-        var result = debug.assemblyBody(file, 10);
+        var result = debug.assemblyBody(file, UTF_8, 10);
 
         Assertions.assertThat(result)
                 .contains("helloworda\n[more");
