@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -48,25 +49,23 @@ public class TableManagerUI<T> {
         }
 
         @Override
-        public boolean isCellEditable(int row, int column) {
+        public boolean isCellEditable(int row, int col) {
             Field[] fields = model.getClazz().getDeclaredFields();
+            ModelColumn column = fields[col].getAnnotation(ModelColumn.class);
 
-            if(fields[column].isAnnotationPresent(ModelColumn.class) &&
-                    fields[column].getAnnotation(ModelColumn.class)
-                            .cellRenderer() != null
-            ){
+            if(column != null && column.cellRenderer() != DefaultTableCellRenderer.class){
                 return false;
             }
 
-            return super.isCellEditable(row, column);
+            return super.isCellEditable(row, col);
         }
 
         private void setModelProperties() {
             Field[] fields = model.getClazz().getDeclaredFields();
 
             IntStream.range(0, fields.length).forEach(i -> {
-                if(!fields[i].isAnnotationPresent(ModelColumn.class)) return;
                 ModelColumn column = fields[i].getAnnotation(ModelColumn.class);
+                if(column == null) return;
 
                 // set width
                 if(column.width() > 0) {
@@ -76,7 +75,7 @@ public class TableManagerUI<T> {
                 }
 
                 // set render
-                if(column.cellRenderer() != null) {
+                if(column.cellRenderer() != DefaultTableCellRenderer.class) {
                     cellRenderer.stream()
                             .filter(item -> item.getClass() == column.cellRenderer())
                             .findFirst()

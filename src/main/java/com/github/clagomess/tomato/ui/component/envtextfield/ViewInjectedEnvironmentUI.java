@@ -8,7 +8,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 
-public class ViewInjectedEnvironmentUI extends JFrame {
+class ViewInjectedEnvironmentUI extends JFrame {
     public ViewInjectedEnvironmentUI(
             Component parent,
             EnvMap envMap
