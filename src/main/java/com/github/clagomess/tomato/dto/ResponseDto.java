@@ -91,7 +91,7 @@ public class ResponseDto {
         }
 
         protected void buildBodyString() {
-            int limit = 8192; // 8KB
+            int limit = 131_072; // 128KB
 
             if(bodySize == 0){
                 renderBodyByContentType = false;
@@ -110,7 +110,7 @@ public class ResponseDto {
             if(bodySize > limit){
                 renderBodyByContentType = false;
                 bodyAsString = """
-                < Response content size execeds render limit of 8KB.
+                < Response content size execeds render limit of 128KB.
                 < Download instead
                 """;
                 return;
