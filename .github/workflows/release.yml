@@ -117,6 +117,20 @@ jobs:
           --verbose
           mv ./target/dist/Tomato-$env:GIT_TAG.msi ./target/dist/tomato-$env:GIT_TAG-amd64.msi
 
+      - name: Sign MSI
+        run: |
+          $SignToolPath = Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin\**\x64" `
+          -Recurse -Filter "signtool.exe" | Select-Object -ExpandProperty FullName -First 1
+          echo "SignTool Path: $SignToolPath"
+          [System.Convert]::FromBase64String("${{ secrets.CODE_SIGN_CERT_PFX }}") | Set-Content -Path ./target/dist/code-sign-ks.pfx -AsByteStream
+          & $SignToolPath sign /v `
+          /td SHA256 `
+          /tr http://timestamp.digicert.com `
+          /f "./target/dist/code-sign-ks.pfx" `
+          /p "${{ secrets.CODE_SIGN_CERT_PASS }}" `
+          /fd SHA256 `
+          "./target/dist/tomato-$env:GIT_TAG-amd64.msi"
+
       - uses: actions/upload-artifact@v4
         with:
           name: tomato-${{env.GIT_TAG}}-amd64.msi
