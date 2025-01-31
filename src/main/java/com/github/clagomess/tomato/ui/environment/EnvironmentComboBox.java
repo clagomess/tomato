@@ -102,6 +102,8 @@ public class EnvironmentComboBox extends JPanel {
 
             workspaceSessionRepository.save(session);
             workspaceSessionPublisher.getOnSave().publish(session);
+
+            setBtnEditEnabledOrDisabled();
         }).execute();
     }
 
