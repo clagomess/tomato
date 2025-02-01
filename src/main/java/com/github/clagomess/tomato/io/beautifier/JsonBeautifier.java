@@ -15,6 +15,7 @@ public class JsonBeautifier extends Beautifier {
         if(jsonCurrentSize - pos <= 0) {
             bufferReadSize = reader.read(buffer);
             jsonCurrentSize += bufferReadSize;
+            progress.setValue(jsonCurrentSize);
         }
 
         if(pos < bufferReadSize){

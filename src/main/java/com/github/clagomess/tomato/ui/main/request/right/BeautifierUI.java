@@ -52,6 +52,10 @@ public class BeautifierUI extends JDialog {
         progress.setStringPainted(true);
         progress.setMinimum(0);
         progress.setMaximum((int) response.getHttpResponse().getBodySize());
+        beautifier.setProgress(value -> {
+            invokeLater(() -> progress.setValue(value));
+        });
+
         add(progress);
 
         pack();

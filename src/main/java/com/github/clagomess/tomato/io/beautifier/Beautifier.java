@@ -10,6 +10,12 @@ import java.io.IOException;
 public abstract class Beautifier {
     protected BufferedReader reader;
     protected BufferedWriter writer;
+    protected ProgressFI progress = value -> {};
 
     public abstract void parse() throws IOException;
+
+    @FunctionalInterface
+    public interface ProgressFI {
+        void setValue(int value);
+    }
 }
