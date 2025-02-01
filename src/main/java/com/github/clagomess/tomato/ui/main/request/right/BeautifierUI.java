@@ -1,6 +1,5 @@
 package com.github.clagomess.tomato.ui.main.request.right;
 
-import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.io.beautifier.Beautifier;
 import com.github.clagomess.tomato.io.beautifier.JsonBeautifier;
 import com.github.clagomess.tomato.io.http.MediaType;
@@ -14,18 +13,17 @@ import java.io.*;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class BeautifierUI extends JDialog {
-    public BeautifierUI(
-            ResponseTabContent parent,
-            ResponseDto response
-    ) {
+    public BeautifierUI(ResponseTabContent parent) {
         super(
                 SwingUtilities.getWindowAncestor(parent),
                 "Beautifier",
                 Dialog.DEFAULT_MODALITY_TYPE
         );
 
+        MediaType contentType = parent.getResponseDto()
+                .getHttpResponse()
+                .getContentType();
 
-        MediaType contentType = response.getHttpResponse().getContentType();
         Beautifier beautifier = getBeautifier(contentType);
         if(beautifier == null) {
             new ExceptionDialog(parent, String.format(
@@ -37,21 +35,25 @@ public class BeautifierUI extends JDialog {
 
         setMinimumSize(new Dimension(350, 100));
         setResizable(false);
-//        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); //@TODO: enable!
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setLayout(new MigLayout(
                 "",
                 "[grow, fill]"
         ));
 
+        long bodySize = parent.getResponseDto()
+                .getHttpResponse()
+                .getBodySize();
+
         add(new JLabel(String.format(
                 "Processing %s bytes:",
-                response.getHttpResponse().getBodySize()
+                bodySize
         )), "wrap");
 
         JProgressBar progress = new JProgressBar();
         progress.setStringPainted(true);
         progress.setMinimum(0);
-        progress.setMaximum((int) response.getHttpResponse().getBodySize());
+        progress.setMaximum((int) bodySize);
         beautifier.setProgress(value -> {
             invokeLater(() -> progress.setValue(value));
         });
@@ -67,7 +69,7 @@ public class BeautifierUI extends JDialog {
                 newResponseFile.deleteOnExit();
 
                 try(
-                    var reader = new BufferedReader(new FileReader(response.getHttpResponse().getBody()));
+                    var reader = new BufferedReader(new FileReader(parent.getResponseDto().getHttpResponse().getBody()));
                     var writer = new BufferedWriter(new FileWriter(newResponseFile))
                 ){
                     beautifier.setReader(reader);
@@ -75,8 +77,11 @@ public class BeautifierUI extends JDialog {
                     beautifier.parse();
                 }
 
-                response.getHttpResponse().setBody(newResponseFile);
-                invokeLater(() -> parent.update(response));
+                parent.getResponseDto().getHttpResponse().setBody(newResponseFile);
+                invokeLater(() -> {
+                    parent.getBtnBeautify().setEnabled(false);
+                    parent.refreshResponseContent();
+                });
             }catch (Throwable e) {
                 invokeLater(() -> new ExceptionDialog(parent, e));
             }
