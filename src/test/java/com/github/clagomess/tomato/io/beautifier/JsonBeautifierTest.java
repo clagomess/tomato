@@ -25,16 +25,20 @@ public class JsonBeautifierTest {
 
             var writer = new BufferedWriter(new FileWriter("target/JsonBeautifierTest.performance.json"));
         ) {
-            new JsonBeautifier(reader, writer).parse();
+            var beautifier = new JsonBeautifier();
+            beautifier.setReader(reader);
+            beautifier.setWriter(writer);
+            beautifier.parse();
         }
     }
 
     private void assertJson(String input, String expected) throws IOException {
         var result = new StringWriter();
-        new JsonBeautifier(
-                new BufferedReader(new StringReader(input)),
-                new BufferedWriter(result)
-        ).parse();
+
+        var beautifier = new JsonBeautifier();
+        beautifier.setReader(new BufferedReader(new StringReader(input)));
+        beautifier.setWriter(new BufferedWriter(result));
+        beautifier.parse();
 
         Assertions.assertThat(result.toString())
                 .isEqualToIgnoringNewLines(expected);

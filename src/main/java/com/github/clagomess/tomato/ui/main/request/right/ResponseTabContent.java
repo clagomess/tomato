@@ -34,6 +34,7 @@ public class ResponseTabContent extends JPanel {
     }};
     private final JButton btnDownload = new JButton(new BxDownloadIcon()){{
         setToolTipText("Download");
+        setEnabled(false);
     }};
 
     private ResponseDto responseDto = null;
@@ -59,12 +60,12 @@ public class ResponseTabContent extends JPanel {
         add(tpResponse, "span, height 100%");
 
         // configure
-        // @TODO: impl. btnBeautify
+        btnBeautify.addActionListener(l -> new BeautifierUI(this, responseDto));
         btnDownload.addActionListener(l -> btnDownloadAction());
-        btnDownload.setEnabled(false);
     }
 
     public void reset(){
+        btnBeautify.setSelected(false);
         btnDownload.setEnabled(false);
         txtHTTPDebug.reset();
         txtResponse.reset();
@@ -77,6 +78,7 @@ public class ResponseTabContent extends JPanel {
 
         if(responseDto.isRequestStatus()) {
             btnDownload.setEnabled(true);
+            btnBeautify.setEnabled(true);
 
             txtResponse.setSyntaxStyle(
                     responseDto.getHttpResponse().isRenderBodyByContentType() ?

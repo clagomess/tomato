@@ -2,23 +2,10 @@ package com.github.clagomess.tomato.io.beautifier;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 
 @Slf4j
-public class JsonBeautifier {
-    private final BufferedReader reader;
-    private final BufferedWriter writer;
-
-    public JsonBeautifier(
-            BufferedReader reader,
-            BufferedWriter writer
-    ) {
-        this.reader = reader;
-        this.writer = writer;
-    }
-
+public class JsonBeautifier extends Beautifier {
     private final char[] buffer = new char[8192];
     private int bufferReadSize = 0;
     private int pos = 0;

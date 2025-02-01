@@ -47,8 +47,8 @@ public class ResponseDto {
         private final Map<String, String> cookies;
         private final MediaType contentType;
 
-        private final File body;
-        private final long bodySize;
+        private File body;
+        private long bodySize;
         private String bodyAsString = "< Empty Body";
         private boolean renderBodyByContentType = true;
 
@@ -62,7 +62,12 @@ public class ResponseDto {
             this.headers = response.headers().map();
             this.cookies = parseSetCookies(this.headers);
             this.contentType = new MediaType(response.headers());
-            this.body = response.body().toFile();
+
+            setBody(response.body().toFile());
+        }
+
+        public void setBody(File body) {
+            this.body = body;
             this.bodySize = body.length();
 
             buildBodyString();
