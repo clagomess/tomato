@@ -24,6 +24,15 @@ public class ConfigurationRepositoryTest extends RepositoryStubs {
     }
 
     @Test
+    public void getConfigurationFile(){
+        var result = configurationRepositoryMock.getConfigurationFile();
+        assertEquals(
+                new File(mockHomeDir, "configuration.json").getAbsolutePath(),
+                result.getAbsolutePath()
+        );
+    }
+
+    @Test
     public void load_whenNotExists_ReturnsAndCreateDefault() throws IOException {
         var result = configurationRepositoryMock.load();
 
@@ -48,6 +57,12 @@ public class ConfigurationRepositoryTest extends RepositoryStubs {
                 mockDataDir.getAbsolutePath(),
                 result.getDataDirectory().getAbsolutePath()
         );
+    }
+
+    @Test
+    public void save() throws IOException {
+        var dto = new ConfigurationDto();
+        configurationRepositoryMock.save(dto);
     }
 
     @Test

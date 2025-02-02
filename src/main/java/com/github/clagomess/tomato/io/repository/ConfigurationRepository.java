@@ -12,15 +12,19 @@ import java.util.Optional;
 public class ConfigurationRepository extends AbstractRepository {
     protected static final CacheManager<String, ConfigurationDto> cache = new CacheManager<>("configuration");
 
-    protected ConfigurationDto load() throws IOException {
+    protected File getConfigurationFile() {
+        return new File(
+                getHomeDir(),
+                "configuration.json"
+        );
+    }
+
+    public ConfigurationDto load() throws IOException {
         return cache.get(() -> {
-            var file = new File(
-                    getHomeDir(),
-                    "configuration.json"
-            );
+            File configurationFile = getConfigurationFile();
 
             Optional<ConfigurationDto> configuration = readFile(
-                    file,
+                    configurationFile,
                     new TypeReference<>(){}
             );
 
@@ -34,10 +38,16 @@ public class ConfigurationRepository extends AbstractRepository {
                     "data"
             ));
 
-            writeFile(file, defaultConfiguration);
+            writeFile(configurationFile, defaultConfiguration);
 
             return defaultConfiguration;
         });
+    }
+
+    public void save(ConfigurationDto configuration) throws IOException {
+        File configurationFile = getConfigurationFile();
+        writeFile(configurationFile, configuration);
+        cache.evict();
     }
 
     protected static final CacheManager<String, File> cacheDatadir = new CacheManager<>("dataDir");
