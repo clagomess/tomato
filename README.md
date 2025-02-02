@@ -49,3 +49,10 @@ The `~/.tomato/data` can be changed to be in another location like One Drive, Dr
 │       └── request-{ID}.json
 └── configuration.json
 ```
+
+## Development
+
+JVM properties:
+
+- Enable debug Log: `TOMATO_LOG_LEVEL=DEBUG`
+- Aways point to test data: `TOMATO_AWAYS_USE_TEST_DATA=true`
