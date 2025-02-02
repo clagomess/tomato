@@ -42,6 +42,9 @@ public class DataSessionRepositoryTest {
         Mockito.when(repositoryMock.readFile(Mockito.any(), Mockito.any()))
                 .thenCallRealMethod();
 
+        Mockito.when(repositoryMock.getDataDir())
+                .thenReturn(mockDataDir);
+
         // mock DataSessionRepository
         Mockito.reset(dataSessionRepositoryMock);
 
@@ -54,8 +57,7 @@ public class DataSessionRepositoryTest {
 
     @Test
     public void getDataSessionFile() throws IOException {
-        var dataSessionRepository = new DataSessionRepository();
-        Assertions.assertThat(dataSessionRepository.getDataSessionFile())
+        Assertions.assertThat(dataSessionRepositoryMock.getDataSessionFile())
                 .hasFileName("data-session.json");
     }
 
