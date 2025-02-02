@@ -58,7 +58,7 @@ public class FaviconImage {
         g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
 
         document.renderWithPlatform(
-                new NullPlatformSupport(),
+                NullPlatformSupport.INSTANCE,
                 g2,
                 new ViewBox(0, 0, nWidth, nHeight)
         );
