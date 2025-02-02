@@ -15,34 +15,27 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WorkspaceRepositoryTest {
-    private File mockDataDir;
+public class WorkspaceRepositoryTest extends RepositoryStubs {
+    private final ConfigurationRepository configurationRepositoryMock = Mockito.mock(ConfigurationRepository.class);
+    private final DataSessionRepository dataSessionRepositoryMock = Mockito.spy(
+            new DataSessionRepository(configurationRepositoryMock)
+    );
+    private final WorkspaceRepository workspaceRepository = Mockito.spy(new WorkspaceRepository(
+            configurationRepositoryMock,
+            dataSessionRepositoryMock
+    ));
 
     @BeforeEach
-    public void setup(){
-        mockDataDir = new File("target", "datadir-" + RandomStringUtils.secure().nextAlphanumeric(8));
-        assertTrue(mockDataDir.mkdirs());
-
-        // reset cache
-        WorkspaceRepository.cacheList.evictAll();
-        WorkspaceRepository.cacheLoad.evictAll();
+    public void setup() throws IOException {
+        // mock ConfigurationRepository
+        Mockito.reset(configurationRepositoryMock);
+        Mockito.when(configurationRepositoryMock.getDataDir())
+                .thenReturn(mockDataDir);
     }
 
     @Test
     public void getWorkspaceDirectory_whenNotExists_create() throws IOException {
-        Repository repositoryMock = Mockito.mock(Repository.class);
-        Mockito.when(repositoryMock.createDirectoryIfNotExists(Mockito.any()))
-                .thenCallRealMethod();
-        Mockito.when(repositoryMock.getDataDir())
-                .thenReturn(mockDataDir);
-
-
-        WorkspaceRepository workspaceDS = new WorkspaceRepository(
-                repositoryMock,
-                new DataSessionRepository()
-        );
-
-        var result =workspaceDS.getWorkspaceDirectory(
+        var result = workspaceRepository.getWorkspaceDirectory(
                 RandomStringUtils.secure().nextAlphanumeric(8)
         );
 
@@ -51,24 +44,10 @@ public class WorkspaceRepositoryTest {
 
     @Test
     public void save_whenNotExists_CreateAndWriteDto() throws IOException {
-        Repository repositoryMock = Mockito.mock(Repository.class);
-        Mockito.when(repositoryMock.getDataDir())
-                .thenReturn(mockDataDir);
-        Mockito.when(repositoryMock.createDirectoryIfNotExists(Mockito.any()))
-                .thenCallRealMethod();
-        Mockito.doCallRealMethod()
-                .when(repositoryMock)
-                .writeFile(Mockito.any(), Mockito.any());
-
-        WorkspaceRepository workspaceDS = new WorkspaceRepository(
-                repositoryMock,
-                new DataSessionRepository()
-        );
-
         var dto = new WorkspaceDto();
         dto.setName("OPA");
 
-        workspaceDS.save(dto);
+        workspaceRepository.save(dto);
 
         var result = new File(
                 mockDataDir,
@@ -84,25 +63,7 @@ public class WorkspaceRepositoryTest {
 
     @Test
     public void list_whenDataDirIsEmpty_ReturnDefault() throws IOException {
-        Repository repositoryMock = Mockito.mock(Repository.class);
-        Mockito.when(repositoryMock.getDataDir())
-                .thenReturn(mockDataDir);
-        Mockito.when(repositoryMock.listFiles(Mockito.any()))
-                .thenCallRealMethod();
-        Mockito.when(repositoryMock.readFile(Mockito.any(), Mockito.any()))
-                .thenCallRealMethod();
-        Mockito.when(repositoryMock.createDirectoryIfNotExists(Mockito.any()))
-                .thenCallRealMethod();
-        Mockito.doCallRealMethod()
-                .when(repositoryMock)
-                .writeFile(Mockito.any(), Mockito.any());
-
-        WorkspaceRepository workspaceDS = new WorkspaceRepository(
-                repositoryMock,
-                new DataSessionRepository()
-        );
-
-        Assertions.assertThat(workspaceDS.list())
+        Assertions.assertThat(workspaceRepository.list())
                 .isNotEmpty()
                 .allMatch(item -> item.getPath().isDirectory())
         ;
@@ -112,23 +73,10 @@ public class WorkspaceRepositoryTest {
     public void getDataSessionWorkspace_whenNotDefined_thenGetFirst() throws IOException {
         var workspace = new WorkspaceDto();
 
-        DataSessionRepository dataSessionRepositoryMock = Mockito.mock(DataSessionRepository.class);
-        Mockito.when(dataSessionRepositoryMock.load())
-                .thenReturn(new DataSessionDto());
-
-        WorkspaceRepository workspaceDSMock = Mockito.mock(
-                WorkspaceRepository.class,
-                Mockito.withSettings().useConstructor(
-                        new Repository(),
-                        dataSessionRepositoryMock
-                )
-        );
-        Mockito.when(workspaceDSMock.list())
+        Mockito.when(workspaceRepository.list())
                 .thenReturn(List.of(workspace));
-        Mockito.when(workspaceDSMock.getDataSessionWorkspace())
-                .thenCallRealMethod();
 
-        var result = workspaceDSMock.getDataSessionWorkspace();
+        var result = workspaceRepository.getDataSessionWorkspace();
         assertEquals(result.getId(), workspace.getId());
     }
 
@@ -138,23 +86,12 @@ public class WorkspaceRepositoryTest {
         var dataSession = new DataSessionDto();
         dataSession.setWorkspaceId(workspace.getId());
 
-        DataSessionRepository dataSessionRepositoryMock = Mockito.mock(DataSessionRepository.class);
         Mockito.when(dataSessionRepositoryMock.load())
                 .thenReturn(dataSession);
-
-        WorkspaceRepository workspaceDS = Mockito.mock(
-                WorkspaceRepository.class,
-                Mockito.withSettings().useConstructor(
-                        new Repository(),
-                        dataSessionRepositoryMock
-                )
-        );
-        Mockito.when(workspaceDS.list())
+        Mockito.when(workspaceRepository.list())
                 .thenReturn(List.of(new WorkspaceDto(), workspace));
-        Mockito.when(workspaceDS.getDataSessionWorkspace())
-                .thenCallRealMethod();
 
-        var result = workspaceDS.getDataSessionWorkspace();
+        var result = workspaceRepository.getDataSessionWorkspace();
         assertEquals(result.getId(), workspace.getId());
     }
 }

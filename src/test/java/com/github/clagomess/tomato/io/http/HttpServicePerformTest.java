@@ -6,10 +6,13 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
+import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedConstruction;
+import org.mockito.Mockito;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.matchers.MatchType;
 import org.mockserver.model.MediaType;
@@ -23,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpServicePerformTest {
     private static ClientAndServer mockServer;
+    private static MockedConstruction<EnvironmentRepository> environmentRepositoryMockedConstruction;
 
     @BeforeAll
     public static void setup(){
@@ -38,11 +42,14 @@ public class HttpServicePerformTest {
                                 .withContentType(MediaType.TEXT_PLAIN)
                                 .withBody("hello")
                 );
+
+        environmentRepositoryMockedConstruction = Mockito.mockConstruction(EnvironmentRepository.class);
     }
 
     @AfterAll
     public static void terminate(){
         mockServer.stop();
+        environmentRepositoryMockedConstruction.close();
     }
 
     @Test

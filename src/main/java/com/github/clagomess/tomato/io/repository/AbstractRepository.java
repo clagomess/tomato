@@ -1,13 +1,11 @@
 package com.github.clagomess.tomato.io.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.github.clagomess.tomato.dto.data.ConfigurationDto;
 import com.github.clagomess.tomato.dto.data.MetadataDto;
 import com.github.clagomess.tomato.exception.DirectoryCreateException;
 import com.github.clagomess.tomato.util.CacheManager;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -15,9 +13,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
-class Repository {
+abstract class AbstractRepository {
+    private final String msgNotAllowedOnTest = "No allowed outside dir in test mode";
 
     protected File createDirectoryIfNotExists(File path){
+        assert path.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
+
         if(path.isDirectory()){
             log.debug("DIR: {}", path);
             return path;
@@ -33,6 +34,7 @@ class Repository {
 
     protected <T> Optional<T> readFile(File filepath, TypeReference<T> type) throws IOException {
         log.debug("READ: {}", filepath);
+        assert filepath.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
 
         if(!filepath.isFile()) return Optional.empty();
 
@@ -49,6 +51,7 @@ class Repository {
             T content
     ) throws IOException {
         log.info("WRITE: {}", filepath);
+        assert filepath.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
 
         content.setUpdateTime(LocalDateTime.now());
 
@@ -67,53 +70,12 @@ class Repository {
         )));
     }
 
-    protected static final CacheManager<String, ConfigurationDto> cacheConfiguration = new CacheManager<>("configuration");
-    protected ConfigurationDto getConfiguration() throws IOException {
-        return cacheConfiguration.get(() -> {
-            var file = new File(
-                    getHomeDir(),
-                    "configuration.json"
-            );
-
-            Optional<ConfigurationDto> configuration = readFile(
-                    file,
-                    new TypeReference<>() {
-                    }
-            );
-
-            if (configuration.isPresent()) {
-                return configuration.get();
-            } else {
-                var defaultConfiguration = new ConfigurationDto();
-                defaultConfiguration.setDataDirectory(new File(
-                        getHomeDir(),
-                        "data"
-                ));
-
-                writeFile(file, defaultConfiguration);
-
-                return defaultConfiguration;
-            }
-        });
-    }
-
-    protected static final CacheManager<String, File> cacheDatadir = new CacheManager<>("dataDir");
-    protected File getDataDir() throws IOException {
-        return cacheDatadir.get(() -> {
-            if(StringUtils.isNotBlank(System.getProperty("TOMATO_AWAYS_USE_TEST_DATA"))){
-                return new File("src/test/resources/com/github/clagomess/tomato/io/repository/home/data");
-            }
-
-            return createDirectoryIfNotExists(
-                    getConfiguration().getDataDirectory()
-            );
-        });
-    }
-
     protected File[] listFiles(File basepath){
         log.debug("LIST-DIR: {}", basepath);
 
         if(basepath == null || !basepath.isDirectory()) return new File[0];
+
+        assert basepath.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
 
         return Objects.requireNonNullElseGet(
                 basepath.listFiles(),

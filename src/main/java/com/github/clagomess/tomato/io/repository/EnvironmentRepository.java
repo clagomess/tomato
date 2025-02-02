@@ -17,15 +17,13 @@ import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
-public class EnvironmentRepository {
-    private final Repository repository;
+public class EnvironmentRepository extends AbstractRepository {
     private final WorkspaceRepository workspaceRepository;
     private final WorkspaceSessionRepository workspaceSessionRepository;
     protected static final CacheManager<String, Optional<EnvironmentDto>> cache = new CacheManager<>();
 
     public EnvironmentRepository() {
         this(
-                new Repository(),
                 new WorkspaceRepository(),
                 new WorkspaceSessionRepository()
         );
@@ -41,7 +39,7 @@ public class EnvironmentRepository {
     }
 
     public Optional<EnvironmentDto> load(String id) throws IOException {
-        return cache.get(id, () -> repository.readFile(
+        return cache.get(id, () -> readFile(
                 getEnvironmentFile(id),
                 new TypeReference<>(){}
         ));
@@ -50,7 +48,7 @@ public class EnvironmentRepository {
     public File save(EnvironmentDto environmentDto) throws IOException {
         File filePath = getEnvironmentFile(environmentDto.getId());
 
-        repository.writeFile(filePath, environmentDto);
+        writeFile(filePath, environmentDto);
         cache.evict(environmentDto.getId());
 
         return filePath;
@@ -59,7 +57,7 @@ public class EnvironmentRepository {
     public Stream<EnvironmentDto> list() throws IOException {
         WorkspaceDto workspace = workspaceRepository.getDataSessionWorkspace();
 
-        return Arrays.stream(repository.listFiles(workspace.getPath()))
+        return Arrays.stream(listFiles(workspace.getPath()))
                 .filter(File::isFile)
                 .filter(item -> item.getName().startsWith("environment"))
                 .map(item -> {
