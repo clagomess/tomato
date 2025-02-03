@@ -9,11 +9,7 @@ public class RawTextArea extends JTextArea {
         setLineWrap(true);
         setWrapStyleWord(true);
         setEditable(false);
-        setFont(new Font(
-                "Consolas",
-                this.getFont().getStyle(),
-                this.getFont().getSize()
-        ));
+        putClientProperty("FlatLaf.style", "font: monospaced -1");
     }
 
     public void reset(){

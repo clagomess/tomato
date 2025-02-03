@@ -14,7 +14,7 @@
     <background color="3c3f41" />
     <caret color="c1cbc2" />
     <selection useFG="false" bg="404E51" roundedEdges="false" />
-    <currentLineHighlight color="2F393C" fade="false" />
+    <currentLineHighlight color="46494b" fade="false" />
     <marginLine fg="394448" />
     <markAllHighlight color="6b8189" />
     <markOccurrencesHighlight color="5b7179" border="false" />
@@ -28,7 +28,7 @@
 
     <!-- Gutter styling. -->
     <gutterBorder color="616365" />
-    <lineNumbers fg="616365" currentFG="a9b7c6"/>
+    <lineNumbers fg="616365" />
     <foldIndicator fg="6A8088" armedFg="a9b7c6" iconBg="2f383c" iconArmedBg="3f484c" />
     <iconRowHeader activeLineRange="3399ff" />
 
@@ -52,11 +52,11 @@
         <style token="LITERAL_STRING_DOUBLE_QUOTE" fg="EC7600" />
         <style token="LITERAL_CHAR" fg="EC7600" />
         <style token="LITERAL_BACKQUOTE" fg="EC7600" />
-        <style token="MARKUP_TAG_DELIMITER" fg="678CB1" />
-        <style token="MARKUP_TAG_NAME" fg="ABBFD3" bold="true" />
-        <style token="MARKUP_TAG_ATTRIBUTE" fg="B3B689" />
-        <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="e1e2cf" />
-        <style token="MARKUP_COMMENT" fg="66747B" />
+        <style token="MARKUP_TAG_DELIMITER" fg="e3bc68" />
+        <style token="MARKUP_TAG_NAME" fg="e3bc68" />
+        <style token="MARKUP_TAG_ATTRIBUTE" fg="bababa" />
+        <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="628449" />
+        <style token="MARKUP_COMMENT" fg="808080" />
         <style token="MARKUP_DTD" fg="A082BD" />
         <style token="MARKUP_PROCESSING_INSTRUCTION" fg="A082BD" />
         <style token="MARKUP_CDATA" fg="d5e6f0" />
