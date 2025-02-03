@@ -2,13 +2,14 @@ package com.github.clagomess.tomato.ui.main.request.right;
 
 import com.github.clagomess.tomato.io.beautifier.Beautifier;
 import com.github.clagomess.tomato.io.beautifier.JsonBeautifier;
+import com.github.clagomess.tomato.io.beautifier.XmlBeautifier;
 import com.github.clagomess.tomato.io.http.MediaType;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
+import java.io.File;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
@@ -68,14 +69,9 @@ public class BeautifierUI extends JDialog {
                 var newResponseFile = File.createTempFile("tomato-response-", ".bin");
                 newResponseFile.deleteOnExit();
 
-                try(
-                    var reader = new BufferedReader(new FileReader(parent.getResponseDto().getHttpResponse().getBody()));
-                    var writer = new BufferedWriter(new FileWriter(newResponseFile))
-                ){
-                    beautifier.setReader(reader);
-                    beautifier.setWriter(writer);
-                    beautifier.parse();
-                }
+                beautifier.setInputFile(parent.getResponseDto().getHttpResponse().getBody());
+                beautifier.setOutputFile(newResponseFile);
+                beautifier.parse();
 
                 parent.getResponseDto().getHttpResponse().setBody(newResponseFile);
                 invokeLater(() -> {
@@ -97,7 +93,9 @@ public class BeautifierUI extends JDialog {
             return new JsonBeautifier();
         }
 
-        // @TODO: implements XML beautifier
+        if(mediaType.isCompatible(MediaType.TEXT_XML)){
+            return new XmlBeautifier();
+        }
 
         return null;
     }

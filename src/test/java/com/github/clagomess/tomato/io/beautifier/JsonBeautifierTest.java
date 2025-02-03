@@ -9,7 +9,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -18,29 +20,30 @@ public class JsonBeautifierTest {
     @Test
     @Disabled
     public void performance() throws IOException {
-        try(
-            var reader = new BufferedReader(new FileReader(
-                    Objects.requireNonNull(getClass().getResource("large.json")).getFile()
-            ));
+        File inputFile = new File(Objects.requireNonNull(
+                getClass().getResource("large.json")
+        ).getFile());
 
-            var writer = new BufferedWriter(new FileWriter("target/JsonBeautifierTest.performance.json"));
-        ) {
-            var beautifier = new JsonBeautifier();
-            beautifier.setReader(reader);
-            beautifier.setWriter(writer);
-            beautifier.parse();
-        }
+        var beautifier = new JsonBeautifier();
+        beautifier.setInputFile(inputFile);
+        beautifier.setOutputFile(new File("target/JsonBeautifierTest.performance.json"));
+        beautifier.parse();
     }
 
     private void assertJson(String input, String expected) throws IOException {
-        var result = new StringWriter();
+        File inputFile = new File("target/JsonBeautifierTest.assertXml.input.json");
+        Files.writeString(inputFile.toPath(), input);
+
+        File outputFile = new File("target/JsonBeautifierTest.assertXml.output.json");
+        Files.writeString(outputFile.toPath(), input);
 
         var beautifier = new JsonBeautifier();
-        beautifier.setReader(new BufferedReader(new StringReader(input)));
-        beautifier.setWriter(new BufferedWriter(result));
+        beautifier.setInputFile(inputFile);
+        beautifier.setOutputFile(outputFile);
         beautifier.parse();
 
-        Assertions.assertThat(result.toString())
+        Assertions.assertThat(outputFile)
+                .content()
                 .isEqualToIgnoringNewLines(expected);
     }
 
