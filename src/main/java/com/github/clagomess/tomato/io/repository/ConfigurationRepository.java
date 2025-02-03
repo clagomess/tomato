@@ -3,7 +3,6 @@ package com.github.clagomess.tomato.io.repository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.ConfigurationDto;
 import com.github.clagomess.tomato.util.CacheManager;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,14 +51,8 @@ public class ConfigurationRepository extends AbstractRepository {
 
     protected static final CacheManager<String, File> cacheDatadir = new CacheManager<>("dataDir");
     protected File getDataDir() throws IOException {
-        return cacheDatadir.get(() -> {
-            if(StringUtils.isNotBlank(System.getProperty("TOMATO_AWAYS_USE_TEST_DATA"))){
-                return new File("src/test/resources/com/github/clagomess/tomato/io/repository/home/data");
-            }
-
-            return createDirectoryIfNotExists(
-                    load().getDataDirectory()
-            );
-        });
+        return cacheDatadir.get(() -> createDirectoryIfNotExists(
+                load().getDataDirectory()
+        ));
     }
 }

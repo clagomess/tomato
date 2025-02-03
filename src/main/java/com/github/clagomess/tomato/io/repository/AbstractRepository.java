@@ -64,10 +64,16 @@ abstract class AbstractRepository {
 
     protected static final CacheManager<String, File> cacheHomeDir = new CacheManager<>("homeDir");
     protected File getHomeDir(){
-        return cacheHomeDir.get(() -> createDirectoryIfNotExists(new File(
-                System.getProperty("user.home"),
-                ".tomato"
-        )));
+        return cacheHomeDir.get(() -> {
+            if("true".equals(System.getProperty("TOMATO_AWAYS_USE_TEST_DATA"))){
+                return new File("src/test/resources/com/github/clagomess/tomato/io/repository/home");
+            }
+
+            return createDirectoryIfNotExists(new File(
+                    System.getProperty("user.home"),
+                    ".tomato"
+            ));
+        });
     }
 
     protected File[] listFiles(File basepath){
