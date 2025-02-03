@@ -17,6 +17,8 @@ import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UrlEncodedFormBodyTest {
+    private final EnvironmentRepository environmentRepositoryMock = Mockito.mock(EnvironmentRepository.class);
+
     @Test
     public void build() throws IOException {
         var form = List.of(
@@ -28,7 +30,7 @@ public class UrlEncodedFormBodyTest {
                 new KeyValueItemDto(TEXT,  " ", null, null, true)
         );
 
-        var urlencoded = new UrlEncodedFormBody(form);
+        var urlencoded = new UrlEncodedFormBody(environmentRepositoryMock, form);
         var result = urlencoded.build();
 
         assertEquals(
@@ -44,19 +46,14 @@ public class UrlEncodedFormBodyTest {
                 new KeyValueItemDto("foo", "bar")
         ));
 
-        EnvironmentRepository environmentDSMock = Mockito.mock(
-                EnvironmentRepository.class,
-                Mockito.withSettings().useConstructor()
-        );
-
-        Mockito.when(environmentDSMock.getWorkspaceSessionEnvironment())
+        Mockito.when(environmentRepositoryMock.getWorkspaceSessionEnvironment())
                 .thenReturn(Optional.of(dto));
 
         var form = List.of(
                 new KeyValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
         );
 
-        var urlencoded = new UrlEncodedFormBody(environmentDSMock, form);
+        var urlencoded = new UrlEncodedFormBody(environmentRepositoryMock, form);
         var result = urlencoded.build();
 
         assertEquals(
@@ -76,7 +73,7 @@ public class UrlEncodedFormBodyTest {
                 new KeyValueItemDto("foo", "bar")
         );
 
-        var form = new UrlEncodedFormBody(List.of());
+        var form = new UrlEncodedFormBody(environmentRepositoryMock, List.of());
         var result = form.buildValue(envs, input);
 
         Assertions.assertThat(result).contains(expected);

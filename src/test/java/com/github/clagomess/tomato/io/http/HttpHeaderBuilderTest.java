@@ -19,6 +19,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HttpHeaderBuilderTest {
+    private final EnvironmentRepository environmentRepositoryMock = Mockito.mock(EnvironmentRepository.class);
+
     @Test
     public void build_expectedDefaultUserAgent() throws IOException {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
@@ -26,7 +28,7 @@ public class HttpHeaderBuilderTest {
 
         var request = new RequestDto();
 
-        new HttpHeaderBuilder(requestBuilder, request).build();
+        new HttpHeaderBuilder(environmentRepositoryMock, requestBuilder, request).build();
         var result = requestBuilder.build().headers();
 
         Assertions.assertThat(result.firstValue("User-Agent").orElseThrow())
@@ -43,7 +45,7 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("User-Agent", "foo")
         ));
 
-        new HttpHeaderBuilder(requestBuilder, request).build();
+        new HttpHeaderBuilder(environmentRepositoryMock, requestBuilder, request).build();
         var result = requestBuilder.build().headers();
 
         Assertions.assertThat(result.firstValue("User-Agent").orElseThrow())
@@ -61,7 +63,7 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("Content-Type", "bar")
         ));
 
-        new HttpHeaderBuilder(requestBuilder, request).build();
+        new HttpHeaderBuilder(environmentRepositoryMock, requestBuilder, request).build();
         var result = requestBuilder.build().headers();
 
         Assertions.assertThat(result.allValues("Content-Type"))
@@ -79,7 +81,7 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("FOO", "bar")
         ));
 
-        new HttpHeaderBuilder(requestBuilder, request).build();
+        new HttpHeaderBuilder(environmentRepositoryMock, requestBuilder, request).build();
         var result = requestBuilder.build().headers();
 
         Assertions.assertThat(result.allValues("Cookie"))
@@ -93,12 +95,7 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("foo", "bar")
         ));
 
-        EnvironmentRepository environmentDSMock = Mockito.mock(
-                EnvironmentRepository.class,
-                Mockito.withSettings().useConstructor()
-        );
-
-        Mockito.when(environmentDSMock.getWorkspaceSessionEnvironment())
+        Mockito.when(environmentRepositoryMock.getWorkspaceSessionEnvironment())
                 .thenReturn(Optional.of(dto));
 
         // ---
@@ -110,7 +107,7 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("Content-Type", "{{foo}}")
         ));
 
-        new HttpHeaderBuilder(environmentDSMock, requestBuilder, request).build();
+        new HttpHeaderBuilder(environmentRepositoryMock, requestBuilder, request).build();
         var result = requestBuilder.build().headers();
 
         Assertions.assertThat(result.firstValue("Content-Type").orElseThrow())
@@ -124,12 +121,7 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("foo", "bar")
         ));
 
-        EnvironmentRepository environmentDSMock = Mockito.mock(
-                EnvironmentRepository.class,
-                Mockito.withSettings().useConstructor()
-        );
-
-        Mockito.when(environmentDSMock.getWorkspaceSessionEnvironment())
+        Mockito.when(environmentRepositoryMock.getWorkspaceSessionEnvironment())
                 .thenReturn(Optional.of(dto));
 
         // ---
@@ -141,7 +133,7 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("JSESSIONID", "{{foo}}")
         ));
 
-        new HttpHeaderBuilder(environmentDSMock, requestBuilder, request).build();
+        new HttpHeaderBuilder(environmentRepositoryMock, requestBuilder, request).build();
         var result = requestBuilder.build().headers();
 
         Assertions.assertThat(result.firstValue("Cookie").orElseThrow())
@@ -163,7 +155,7 @@ public class HttpHeaderBuilderTest {
                 .uri(URI.create("http://localhost"));
         var request = new RequestDto();
 
-        var result = new HttpHeaderBuilder(requestBuilder, request)
+        var result = new HttpHeaderBuilder(environmentRepositoryMock, requestBuilder, request)
                 .buildValue(envs, input);
 
         assertEquals(expected, result);

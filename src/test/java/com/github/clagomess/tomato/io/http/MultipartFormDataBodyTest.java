@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
@@ -24,10 +25,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 public class MultipartFormDataBodyTest {
+    private final EnvironmentRepository environmentRepositoryMock = Mockito.mock(EnvironmentRepository.class);
+    private final String boundary = "tomato-test";
+
     @Test
     public void build() throws IOException {
-        String formFile = getClass()
-                .getResource("MultipartFormDataBodyTest/dummy.txt")
+        String formFile = Objects.requireNonNull(getClass()
+                        .getResource("MultipartFormDataBodyTest/dummy.txt"))
                 .getFile();
 
         var form = List.of(
@@ -37,7 +41,7 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto(FILE, "myfile", formFile, null, true)
         );
 
-        var multipart = new MultipartFormDataBody(form);
+        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, form);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -67,7 +71,7 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto(TEXT, "myparam", null, null, true)
         );
 
-        var multipart = new MultipartFormDataBody(form);
+        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, form);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -85,7 +89,7 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto(FILE, "myfile", fileParam, null, true)
         );
 
-        var multipart = new MultipartFormDataBody(form);
+        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, form);
 
         assertThrows(FileNotFoundException.class, multipart::build);
     }
@@ -97,7 +101,7 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto(TEXT, "mysecondparam", "myvalue", null, false)
         );
 
-        var multipart = new MultipartFormDataBody(form);
+        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, form);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -115,12 +119,7 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto("foo", "bar")
         ));
 
-        EnvironmentRepository environmentDSMock = Mockito.mock(
-                EnvironmentRepository.class,
-                Mockito.withSettings().useConstructor()
-        );
-
-        Mockito.when(environmentDSMock.getWorkspaceSessionEnvironment())
+        Mockito.when(environmentRepositoryMock.getWorkspaceSessionEnvironment())
                 .thenReturn(Optional.of(dto));
 
         var form = List.of(
@@ -128,7 +127,7 @@ public class MultipartFormDataBodyTest {
         );
 
         var multipart = new MultipartFormDataBody(
-                environmentDSMock,
+                environmentRepositoryMock,
                 "tomato-1",
                 form
         );
