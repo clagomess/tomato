@@ -4,7 +4,6 @@ import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,34 +11,21 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CollectionRepositoryTest {
-    private final CollectionRepository collectionRepository = new CollectionRepository();
-
-    private final File testData = new File(Objects.requireNonNull(getClass().getResource(
-            "home/data"
-    )).getFile());
-
-    private File mockDataDir;
+public class CollectionRepositoryTest extends RepositoryStubs {
+    private final CollectionRepository collectionRepositoryMock = Mockito.spy(new CollectionRepository());
 
     @BeforeEach
     public void setup() {
-        mockDataDir = new File("target", "datadir-" + RandomStringUtils.secure().nextAlphanumeric(8));
-        assertTrue(mockDataDir.mkdirs());
-
-        // reset cache
-        CollectionRepository.cacheCollection.evictAll();
-        CollectionRepository.cacheCollectionTree.evictAll();
-        CollectionRepository.cacheListFiles.evictAll();
+        // mock ConfigurationRepository
+        Mockito.reset(collectionRepositoryMock);
     }
 
     @Test
     public void getCollectionFilePath(){
-        Assertions.assertThat(collectionRepository.getCollectionFilePath(testData, "foo"))
+        Assertions.assertThat(collectionRepositoryMock.getCollectionFilePath(testData, "foo"))
                 .hasFileName("collection-foo.json");
     }
 
@@ -49,7 +35,7 @@ public class CollectionRepositoryTest {
         tree.setPath(new File(testData, "workspace-JNtdCPvw/collection-a70uf9Xv"));
         tree.setId("a70uf9Xv");
 
-        var result = collectionRepository.load(tree);
+        var result = collectionRepositoryMock.load(tree);
         assertEquals(tree.getId(), result.orElseThrow().getId());
     }
 
@@ -57,7 +43,7 @@ public class CollectionRepositoryTest {
     public void load_FromDir() throws IOException {
         var collectionDir = new File(testData, "workspace-JNtdCPvw/collection-a70uf9Xv");
 
-        var result = collectionRepository.load(collectionDir);
+        var result = collectionRepositoryMock.load(collectionDir);
         assertEquals("a70uf9Xv", result.orElseThrow().getId());
     }
 
@@ -65,13 +51,13 @@ public class CollectionRepositoryTest {
     public void save_whenNew_create() throws IOException {
         var collection = new CollectionDto();
 
-        var result = collectionRepository.save(mockDataDir, collection);
+        var result = collectionRepositoryMock.save(mockDataDir, collection);
         Assertions.assertThat(result).isDirectory();
     }
 
     @Test
-    public void listFiles(){
-        var result = collectionRepository.listFiles(new File(testData, "workspace-JNtdCPvw"));
+    public void listCollectionFiles(){
+        var result = collectionRepositoryMock.listCollectionFiles(new File(testData, "workspace-JNtdCPvw"));
         Assertions.assertThat(result).isNotEmpty();
     }
 
@@ -83,7 +69,7 @@ public class CollectionRepositoryTest {
                 "workspace-nPUaq0TC"
         ));
 
-        var result = collectionRepository.getCollectionChildrenTree(collectionStart).toList();
+        var result = collectionRepositoryMock.getCollectionChildrenTree(collectionStart).toList();
 
         Assertions.assertThat(result)
                 .hasSize(1)
@@ -98,7 +84,7 @@ public class CollectionRepositoryTest {
                 .allMatch(item -> item.getRequests() != null)
         ;
 
-        collectionRepository.getCollectionChildrenTree(collectionStart).toList().get(0).getRequests().toList();
+        collectionRepositoryMock.getCollectionChildrenTree(collectionStart).toList().get(0).getRequests().toList();
 
         var parent = result.get(0);
         Assertions.assertThat(parent.getRequests())
@@ -117,7 +103,6 @@ public class CollectionRepositoryTest {
                 .thenReturn(workspaceDto);
 
         CollectionRepository collectionDS = new CollectionRepository(
-                new Repository(),
                 new RequestRepository(),
                 workspaceRepositoryMock
         );
@@ -131,13 +116,13 @@ public class CollectionRepositoryTest {
 
     @Test
     public void delete() throws IOException {
-        var dir = collectionRepository.save(mockDataDir, new CollectionDto());
+        var dir = collectionRepositoryMock.save(mockDataDir, new CollectionDto());
         new RequestRepository().save(dir, new RequestDto());
 
-        CollectionTreeDto tree = collectionRepository.load(dir).orElseThrow();
+        CollectionTreeDto tree = collectionRepositoryMock.load(dir).orElseThrow();
         tree.setPath(dir);
 
-        collectionRepository.delete(tree);
+        collectionRepositoryMock.delete(tree);
 
         Assertions.assertThat(dir)
                 .doesNotExist();
@@ -146,21 +131,21 @@ public class CollectionRepositoryTest {
     @Test
     public void move() throws IOException {
         // create source
-        var sourceDir = collectionRepository.save(mockDataDir, new CollectionDto());
+        var sourceDir = collectionRepositoryMock.save(mockDataDir, new CollectionDto());
         new RequestRepository().save(sourceDir, new RequestDto());
 
-        CollectionTreeDto sourceTree = collectionRepository.load(sourceDir).orElseThrow();
+        CollectionTreeDto sourceTree = collectionRepositoryMock.load(sourceDir).orElseThrow();
         sourceTree.setPath(sourceDir);
 
         // create target
-        var targetDir = collectionRepository.save(mockDataDir, new CollectionDto());
+        var targetDir = collectionRepositoryMock.save(mockDataDir, new CollectionDto());
         new RequestRepository().save(targetDir, new RequestDto());
 
-        CollectionTreeDto targetTree = collectionRepository.load(targetDir).orElseThrow();
+        CollectionTreeDto targetTree = collectionRepositoryMock.load(targetDir).orElseThrow();
         targetTree.setPath(targetDir);
 
         // test
-        collectionRepository.move(sourceTree, targetTree);
+        collectionRepositoryMock.move(sourceTree, targetTree);
 
         Assertions.assertThat(new File(targetDir, sourceDir.getName()))
                 .isDirectory();

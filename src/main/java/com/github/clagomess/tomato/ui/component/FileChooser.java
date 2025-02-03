@@ -10,6 +10,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import static javax.swing.JFileChooser.FILES_ONLY;
+
 public class FileChooser extends JPanel {
     private final List<OnChangeFI> onChangeList = new LinkedList<>();
     private final JTextField txtFilepath = new JTextField();
@@ -19,6 +21,8 @@ public class FileChooser extends JPanel {
 
     @Getter
     private File value;
+
+    private int fileSelectionMode = FILES_ONLY;
 
     public FileChooser() {
         setLayout(new MigLayout(
@@ -33,6 +37,11 @@ public class FileChooser extends JPanel {
         txtFilepath.setEditable(false);
     }
 
+    public FileChooser(int fileSelectionMode) {
+        this();
+        this.fileSelectionMode = fileSelectionMode;
+    }
+
     private static File currentDir = null;
     private File getCurrentDirectory(){
         if(value == null) return currentDir;
@@ -42,7 +51,7 @@ public class FileChooser extends JPanel {
 
     private void btnSelectAction(){
         JFileChooser file = new JFileChooser(getCurrentDirectory());
-        file.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        file.setFileSelectionMode(fileSelectionMode);
 
         if(file.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
             setValue(file.getSelectedFile());

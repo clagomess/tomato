@@ -5,7 +5,6 @@ import com.github.clagomess.tomato.dto.data.ConfigurationDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -13,19 +12,11 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 public class RepositoryTest {
-    private final Repository repository = new Repository();
-
-    @BeforeEach
-    public void setup(){
-        Repository.cacheHomeDir.evictAll();
-        Repository.cacheConfiguration.evictAll();
-        Repository.cacheDatadir.evictAll();
-    }
+    private final AbstractRepository abstractRepository = Mockito.spy(new AbstractRepository(){});
 
     @Test
     public void read_e_write_File_json() throws IOException {
@@ -43,8 +34,8 @@ public class RepositoryTest {
         );
 
         // write
-        repository.writeFile(file, dto);
-        var result = repository.readFile(
+        abstractRepository.writeFile(file, dto);
+        var result = abstractRepository.readFile(
                 file,
                 new TypeReference<ConfigurationDto>(){}
         );
@@ -54,82 +45,19 @@ public class RepositoryTest {
                 .isAfter(dto.getCreateTime());
     }
 
-    private File mockHome;
-
-    @BeforeEach
-    public void setMockDataDir(){
-        mockHome = new File("target", "home-" + RandomStringUtils.secure().nextAlphanumeric(8));
-        assertTrue(mockHome.mkdirs());
-    }
-
     @Test
     public void getHomeDir(){
-        assertNotNull(repository.getHomeDir());
-    }
-
-    @Test
-    public void getConfiguration_whenNotExists_ReturnsAndCreateDefault() throws IOException {
-        Repository repositoryMock = Mockito.mock(Repository.class);
-        Mockito.when(repositoryMock.getHomeDir())
-                .thenReturn(mockHome);
-        Mockito.doCallRealMethod()
-                .when(repositoryMock)
-                .writeFile(Mockito.any(), Mockito.any());
-        Mockito.when(repositoryMock.getConfiguration())
-                .thenCallRealMethod();
-
-        var result = repositoryMock.getConfiguration();
-        Assertions.assertThat(result.getDataDirectory().getAbsolutePath())
-                .contains(mockHome + File.separator + "data");
-    }
-
-    @Test
-    public void getConfiguration_whenExists_Returns() throws IOException {
-        var dto = new ConfigurationDto();
-        dto.setDataDirectory(new File(mockHome, "data-foo"));
-
-        repository.writeFile(new File(
-                mockHome, "configuration.json"
-        ), dto);
-
-        Repository repositoryMock = Mockito.mock(Repository.class);
-        Mockito.when(repositoryMock.getHomeDir())
-                .thenReturn(mockHome);
-        Mockito.when(repositoryMock.readFile(Mockito.any(), Mockito.any()))
-                .thenCallRealMethod();
-        Mockito.when(repositoryMock.getConfiguration())
-                .thenCallRealMethod();
-
-        var result = repositoryMock.getConfiguration();
-        Assertions.assertThat(result.getDataDirectory().getAbsolutePath())
-                .contains(mockHome + File.separator + "data-foo");
-    }
-
-    @Test
-    public void getDataDir_whenNotExists_CreateAndReturnDirectory() throws IOException {
-        var dto = new ConfigurationDto();
-        dto.setDataDirectory(new File(mockHome, "data"));
-
-        Repository repositoryMock = Mockito.mock(Repository.class);
-        Mockito.when(repositoryMock.getConfiguration())
-                .thenReturn(dto);
-        Mockito.when(repositoryMock.createDirectoryIfNotExists(Mockito.any()))
-                .thenCallRealMethod();
-        Mockito.when(repositoryMock.getDataDir())
-                .thenCallRealMethod();
-
-        var result = repositoryMock.getDataDir();
-        assertTrue(result.isDirectory());
+        assertThrows(AssertionError.class, abstractRepository::getHomeDir);
     }
 
     @Test
     public void listFiles_whenInvalidDirectory_returnEmpty() {
         Assertions.assertThat(
-                repository.listFiles(null)
+                abstractRepository.listFiles(null)
         ).isEmpty();
 
         Assertions.assertThat(
-                repository.listFiles(new File("xyz"))
+                abstractRepository.listFiles(new File("xyz"))
         ).isEmpty();
     }
 }

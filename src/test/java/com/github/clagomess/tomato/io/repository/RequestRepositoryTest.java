@@ -4,35 +4,15 @@ import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-public class RequestRepositoryTest {
+public class RequestRepositoryTest extends RepositoryStubs {
     private final RequestRepository requestRepository = new RequestRepository();
     private final CollectionRepository collectionRepository = new CollectionRepository();
-
-    private final File testData = new File(Objects.requireNonNull(getClass().getResource(
-            "home/data"
-    )).getFile());
-
-    private File mockData;
-
-    @BeforeEach
-    public void setup(){
-        mockData = new File("target", "datadir-" + RandomStringUtils.secure().nextAlphanumeric(8));
-        assertTrue(mockData.mkdirs());
-
-        RequestRepository.cacheHead.evictAll();
-        RequestRepository.cacheListFiles.evictAll();
-    }
 
     @Test
     public void load() throws IOException {
@@ -48,7 +28,7 @@ public class RequestRepositoryTest {
 
     @Test
     public void save_whenBasePathIsDirectory_createNewFile() throws IOException {
-        var result = requestRepository.save(mockData, new RequestDto());
+        var result = requestRepository.save(mockDataDir, new RequestDto());
         Assertions.assertThat(result).isFile();
     }
 
@@ -77,7 +57,7 @@ public class RequestRepositoryTest {
 
     @Test
     public void delete() throws IOException {
-        File file = requestRepository.save(mockData, new RequestDto());
+        File file = requestRepository.save(mockDataDir, new RequestDto());
         RequestHeadDto head = requestRepository.loadHead(file).orElseThrow();
         head.setPath(file);
 
@@ -90,12 +70,12 @@ public class RequestRepositoryTest {
     @Test
     public void move() throws IOException {
         // create source
-        File file = requestRepository.save(mockData, new RequestDto());
+        File file = requestRepository.save(mockDataDir, new RequestDto());
         RequestHeadDto source = requestRepository.loadHead(file).orElseThrow();
         source.setPath(file);
 
         // create target
-        var targetDir = collectionRepository.save(mockData, new CollectionDto());
+        var targetDir = collectionRepository.save(mockDataDir, new CollectionDto());
         new RequestRepository().save(targetDir, new RequestDto());
 
         CollectionTreeDto targetTree = collectionRepository.load(targetDir).orElseThrow();

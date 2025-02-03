@@ -10,29 +10,29 @@ import java.io.IOException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class DataSessionRepository {
-    private final Repository repository;
+public class DataSessionRepository extends AbstractRepository {
+    private final ConfigurationRepository configurationRepository;
     protected static final CacheManager<String, DataSessionDto> cache = new CacheManager<>("dataSession");
 
     public DataSessionRepository() {
-        this(new Repository());
+        this(new ConfigurationRepository());
     }
 
     protected File getDataSessionFile() throws IOException {
         return new File(
-                repository.getDataDir(),
+                configurationRepository.getDataDir(),
                 "data-session.json"
         );
     }
 
     public void save(DataSessionDto dto) throws IOException {
-        repository.writeFile(getDataSessionFile(), dto);
+        writeFile(getDataSessionFile(), dto);
         cache.evict();
     }
 
     public DataSessionDto load() throws IOException {
         return cache.getSynchronized(() -> {
-            Optional<DataSessionDto> dataSession = repository.readFile(
+            Optional<DataSessionDto> dataSession = readFile(
                     getDataSessionFile(),
                     new TypeReference<>(){}
             );

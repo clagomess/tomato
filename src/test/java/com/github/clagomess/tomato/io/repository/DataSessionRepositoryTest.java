@@ -13,46 +13,27 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DataSessionRepositoryTest {
-    private final Repository repositoryMock = Mockito.mock(Repository.class);
-    private final DataSessionRepository dataSessionRepositoryMock = Mockito.mock(
-            DataSessionRepository.class,
-            Mockito.withSettings().useConstructor(
-                    repositoryMock
-            )
+public class DataSessionRepositoryTest extends RepositoryStubs {
+    private final ConfigurationRepository configurationRepositoryMock = Mockito.mock(ConfigurationRepository.class);
+    private final DataSessionRepository dataSessionRepositoryMock = Mockito.spy(
+            new DataSessionRepository(configurationRepositoryMock)
     );
 
-    private File mockDataDir;
     private File mockDataSessionFile;
 
     @BeforeEach
     public void setup() throws IOException {
-        mockDataDir = new File("target", "datadir-" + RandomStringUtils.secure().nextAlphanumeric(8));
-        assertTrue(mockDataDir.mkdirs());
-
         mockDataSessionFile = new File(mockDataDir, "data-session.json");
 
-        // mock Repository
-        Mockito.reset(repositoryMock);
-
-        Mockito.doCallRealMethod()
-                .when(repositoryMock)
-                .writeFile(Mockito.any(), Mockito.any());
-
-        Mockito.when(repositoryMock.readFile(Mockito.any(), Mockito.any()))
-                .thenCallRealMethod();
-
-        Mockito.when(repositoryMock.getDataDir())
+        // mock ConfigurationRepository
+        Mockito.reset(configurationRepositoryMock);
+        Mockito.when(configurationRepositoryMock.getDataDir())
                 .thenReturn(mockDataDir);
 
         // mock DataSessionRepository
         Mockito.reset(dataSessionRepositoryMock);
-
         Mockito.when(dataSessionRepositoryMock.getDataSessionFile())
                 .thenReturn(mockDataSessionFile);
-
-        // reset cache
-        DataSessionRepository.cache.evictAll();
     }
 
     @Test

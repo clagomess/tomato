@@ -3,7 +3,6 @@ package com.github.clagomess.tomato.io.repository;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,25 +10,21 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-public class EnvironmentRepositoryTest {
-
-    private final File testData = new File(Objects.requireNonNull(getClass().getResource(
-            "home/data"
-    )).getFile());
-
-    private File mockData;
+public class EnvironmentRepositoryTest extends RepositoryStubs {
+    private final WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
+    private final EnvironmentRepository environmentRepositoryMock = Mockito.spy(new EnvironmentRepository(
+            workspaceRepositoryMock,
+            new WorkspaceSessionRepository()
+    ));
 
     @BeforeEach
-    public void setMockDataDir(){
-        mockData = new File("target", "datadir-" + RandomStringUtils.secure().nextAlphanumeric(8));
-        assertTrue(mockData.mkdirs());
+    public void setup(){
+        // mock WorkspaceRepository
+        Mockito.reset(workspaceRepositoryMock);
 
-        // reset cache
-        EnvironmentRepository.cache.evictAll();
+        // mock EnvironmentRepository
+        Mockito.reset(environmentRepositoryMock);
     }
 
     @Test
@@ -37,39 +32,23 @@ public class EnvironmentRepositoryTest {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(new File("target"));
 
-        WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
         Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
-        EnvironmentRepository environmentDS = new EnvironmentRepository(
-                new Repository(),
-                workspaceRepositoryMock,
-                new WorkspaceSessionRepository()
-        );
-
-        var result = environmentDS.getEnvironmentFile("AAA");
+        var result = environmentRepositoryMock.getEnvironmentFile("AAA");
         Assertions.assertThat(result).hasFileName("environment-AAA.json");
     }
+
 
     @Test
     public void load() throws IOException {
         var envFile = new File(testData, "workspace-nPUaq0TC/environment-7rZO7Z1T.json");
 
-        Repository repositoryMock = Mockito.mock(Repository.class);
-        Mockito.doCallRealMethod()
-                .when(repositoryMock)
-                .readFile(Mockito.any(), Mockito.any());
+        Mockito.doReturn(envFile)
+                .when(environmentRepositoryMock)
+                .getEnvironmentFile(Mockito.anyString());
 
-        EnvironmentRepository environmentDSMock = Mockito.mock(
-                EnvironmentRepository.class,
-                Mockito.withSettings().useConstructor()
-        );
-        Mockito.when(environmentDSMock.getEnvironmentFile(Mockito.any()))
-                .thenReturn(envFile);
-        Mockito.when(environmentDSMock.load(Mockito.any()))
-                .thenCallRealMethod();
-
-        var result = environmentDSMock.load("7rZO7Z1T");
+        var result = environmentRepositoryMock.load("7rZO7Z1T");
         Assertions.assertThat(result).isNotEmpty();
     }
 
@@ -77,23 +56,13 @@ public class EnvironmentRepositoryTest {
     public void save() throws IOException {
         var environment = new EnvironmentDto();
         environment.getEnvs().add(new KeyValueItemDto("AAA", "BBB"));
-        var envFile = new File(mockData, "environment-"+environment.getId()+".json");
+        var envFile = new File(mockDataDir, "environment-"+environment.getId()+".json");
 
-        Repository repositoryMock = Mockito.mock(Repository.class);
-        Mockito.doCallRealMethod()
-                .when(repositoryMock)
-                .writeFile(Mockito.any(), Mockito.any());
+        Mockito.doReturn(envFile)
+                .when(environmentRepositoryMock)
+                .getEnvironmentFile(Mockito.anyString());
 
-        EnvironmentRepository environmentDSMock = Mockito.mock(
-                EnvironmentRepository.class,
-                Mockito.withSettings().useConstructor()
-        );
-        Mockito.when(environmentDSMock.getEnvironmentFile(Mockito.any()))
-                .thenReturn(envFile);
-        Mockito.when(environmentDSMock.save(Mockito.any()))
-                .thenCallRealMethod();
-
-        var result = environmentDSMock.save(environment);
+        var result = environmentRepositoryMock.save(environment);
         Assertions.assertThat(result).isFile();
     }
 
@@ -102,17 +71,10 @@ public class EnvironmentRepositoryTest {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(new File(testData, "workspace-nPUaq0TC"));
 
-        WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
         Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
-        EnvironmentRepository environmentDS = new EnvironmentRepository(
-                new Repository(),
-                workspaceRepositoryMock,
-                new WorkspaceSessionRepository()
-        );
-
-        var result = environmentDS.list();
+        var result = environmentRepositoryMock.list();
         Assertions.assertThat(result).isNotEmpty();
     }
 }
