@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/response-binary"
+  },
+  "response": {
+    "status": 200,
+    "body": "%PDF",
+    "headers": {
+      "Content-Type": "application/pdf"
+    }
+  }
+}

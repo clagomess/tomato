@@ -1,0 +1,17 @@
+{
+  "request": {
+    "url": "/raw",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"foo\": \"bar\"}"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "hello",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}

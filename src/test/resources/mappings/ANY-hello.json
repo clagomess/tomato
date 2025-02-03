@@ -1,0 +1,13 @@
+{
+  "id": "afe1ec08-4106-4f93-8dab-a4a7cc4e9241",
+  "request": {
+    "url": "/hello"
+  },
+  "response": {
+    "status": 200,
+    "body": "hello",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}

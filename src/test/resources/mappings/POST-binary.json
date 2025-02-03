@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/binary",
+    "headers": {
+      "Content-Type": {
+        "equalTo": "application/octet-stream"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": "hello",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}

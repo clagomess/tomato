@@ -5,7 +5,6 @@
         </encoder>
     </appender>
 
-    <logger name="org.mockserver" level="warn" />
     <logger name="com.github.clagomess.tomato" level="debug" />
 
     <root level="info">

@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/response-500"
+  },
+  "response": {
+    "status": 500,
+    "body": "hello",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}

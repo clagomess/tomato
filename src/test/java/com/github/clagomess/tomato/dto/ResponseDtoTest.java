@@ -1,11 +1,8 @@
 package com.github.clagomess.tomato.dto;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockserver.integration.ClientAndServer;
-import org.mockserver.model.MediaType;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,27 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
 
+@WireMockTest(httpPort = 8500)
 public class ResponseDtoTest {
-    private static ClientAndServer mockServer;
-
-    @BeforeAll
-    public static void setup() {
-        mockServer = ClientAndServer.startClientAndServer(8500);
-        mockServer.when(request().withPath("/hello")).respond(response()
-                .withStatusCode(200)
-                .withContentType(MediaType.TEXT_PLAIN)
-                .withBody("hello")
-        );
-    }
-
-    @AfterAll
-    public static void terminate(){
-        mockServer.stop();
-    }
-
     @ParameterizedTest
     @CsvSource({
             "PHPSESSID=xyz; path=/,PHPSESSID,xyz",

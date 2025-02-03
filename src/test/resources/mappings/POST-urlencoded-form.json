@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/urlencoded-form",
+    "formParameters": {
+      "foo":{
+        "equalTo": "bar"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {},
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

@@ -1,13 +1,10 @@
 package com.github.clagomess.tomato.io.http;
 
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockserver.integration.ClientAndServer;
-import org.mockserver.model.MediaType;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,27 +19,9 @@ import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
 
+@WireMockTest(httpPort = 8500)
 public class HttpDebugTest {
-    private static ClientAndServer mockServer;
-
-    @BeforeAll
-    public static void setup(){
-        mockServer = ClientAndServer.startClientAndServer(8500);
-        mockServer.when(request().withPath("/hello")).respond(response()
-                .withStatusCode(200)
-                .withContentType(MediaType.TEXT_PLAIN)
-                .withBody("hello")
-        );
-    }
-
-    @AfterAll
-    public static void terminate(){
-        mockServer.stop();
-    }
-
     @Test
     public void assembly_whenRequestIsNull(){
         var debug = new HttpDebug();
@@ -83,9 +62,9 @@ public class HttpDebugTest {
                         hello world
                         ----------------------------------------
                         < HTTP_1_1 200 OK
-                        < connection: keep-alive
-                        < content-length: 5
                         < content-type: text/plain
+                        < matched-stub-id: afe1ec08-4106-4f93-8dab-a4a7cc4e9241
+                        < transfer-encoding: chunked
                         
                         hello
                         """
