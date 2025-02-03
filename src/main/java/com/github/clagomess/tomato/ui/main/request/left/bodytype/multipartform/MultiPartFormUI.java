@@ -77,7 +77,7 @@ public class MultiPartFormUI extends JPanel {
                 item
         );
 
-        rowsPanel.add(row, "wrap");
+        rowsPanel.add(row, "wrap 4");
         rowsPanel.revalidate();
     }
 

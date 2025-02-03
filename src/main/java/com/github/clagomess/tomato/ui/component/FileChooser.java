@@ -26,7 +26,7 @@ public class FileChooser extends JPanel {
 
     public FileChooser() {
         setLayout(new MigLayout(
-                "insets 0 0 0 0",
+                "insets 2",
                 "[grow, fill][]"
         ));
 

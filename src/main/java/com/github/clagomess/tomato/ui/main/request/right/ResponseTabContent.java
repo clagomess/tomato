@@ -41,7 +41,7 @@ public class ResponseTabContent extends JPanel {
 
     public ResponseTabContent(){
         setLayout(new MigLayout(
-                "insets 5 5 0 0",
+                "insets 5 5 2 2",
                 "[grow,fill][][]"
         ));
 

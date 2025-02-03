@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.settings;
 
 import com.github.clagomess.tomato.publisher.KeyPublisher;
+import com.github.clagomess.tomato.ui.MainUI;
 import com.github.clagomess.tomato.ui.component.RawTextArea;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -8,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 public class DebugPublisherUI extends JFrame {
     private final RawTextArea console = new RawTextArea();
@@ -30,7 +32,12 @@ public class DebugPublisherUI extends JFrame {
         btnRefresh.addActionListener(e -> refresh());
 
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(
+                Arrays.stream(Window.getWindows())
+                        .filter(item -> item instanceof MainUI)
+                        .findFirst()
+                        .orElse(null)
+        );
         setVisible(true);
 
         refresh();

@@ -84,7 +84,7 @@ public class KeyValueUI extends JPanel {
                 onChange
         );
 
-        rowsPanel.add(row, "wrap");
+        rowsPanel.add(row, "wrap 4");
         rowsPanel.revalidate();
     }
 

@@ -8,6 +8,7 @@ import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
 import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
+import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditUI;
@@ -22,9 +23,7 @@ import static javax.swing.SwingUtilities.invokeLater;
 
 public class EnvironmentComboBox extends JPanel {
     private final ComboBox comboBox = new ComboBox();
-    private final JButton btnEdit = new JButton(new BxEditIcon()){{
-        setToolTipText("Edit Environment");
-    }};
+    private final JButton btnEdit = new IconButton(new BxEditIcon(), "Edit Environment");
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
@@ -34,7 +33,7 @@ public class EnvironmentComboBox extends JPanel {
 
     public EnvironmentComboBox(){
         setLayout(new MigLayout(
-                "insets 0 0 0 0",
+                "insets 2",
                 "[grow, fill][]"
         ));
         add(comboBox, "width ::100% - 32px");

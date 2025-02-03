@@ -29,7 +29,7 @@ public class RawBodyUI extends JPanel {
         this.requestStagingMonitor = requestStagingMonitor;
 
         setLayout(new MigLayout(
-                "insets 5 0 0 0",
+                "insets 5 2 2 2",
                 "[grow, fill]"
         ));
 

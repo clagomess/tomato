@@ -31,7 +31,7 @@ public class CollectionTreeUI extends JPanel {
 
     public CollectionTreeUI() {
         setLayout(new MigLayout(
-                "insets 10 10 10 5",
+                "insets 5",
                 "[grow, fill]"
         ));
         tree.setRootVisible(false);

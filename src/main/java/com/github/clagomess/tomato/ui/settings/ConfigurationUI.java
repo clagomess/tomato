@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.settings;
 
 import com.github.clagomess.tomato.dto.data.ConfigurationDto;
 import com.github.clagomess.tomato.io.repository.ConfigurationRepository;
+import com.github.clagomess.tomato.ui.MainUI;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
@@ -11,6 +12,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static javax.swing.JFileChooser.DIRECTORIES_ONLY;
 import static javax.swing.SwingUtilities.invokeLater;
@@ -53,7 +55,12 @@ public class ConfigurationUI extends JFrame {
         }, "ConfigurationUI").start();
 
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(
+                Arrays.stream(Window.getWindows())
+                        .filter(item -> item instanceof MainUI)
+                        .findFirst()
+                        .orElse(null)
+        );
         setVisible(true);
     }
 

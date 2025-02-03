@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.request;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
+import com.github.clagomess.tomato.ui.MainUI;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import com.github.clagomess.tomato.ui.main.request.RequestSplitPaneUI;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Slf4j
 public class RequestUI extends JFrame {
@@ -28,7 +30,7 @@ public class RequestUI extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
-                "insets 0 10 5 5",
+                "insets 5",
                 "[grow,fill]"
         ));
 
@@ -37,7 +39,12 @@ public class RequestUI extends JFrame {
         add(requestSplitPaneUI, "height 100%");
 
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(
+                Arrays.stream(Window.getWindows())
+                        .filter(item -> item instanceof MainUI)
+                        .findFirst()
+                        .orElse(null)
+        );
         setVisible(true);
     }
 

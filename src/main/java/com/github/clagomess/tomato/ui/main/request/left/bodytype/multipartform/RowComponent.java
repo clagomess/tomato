@@ -69,7 +69,7 @@ class RowComponent extends JPanel {
 
         // layout
         setLayout(new MigLayout(
-                "insets 0 0 0 0",
+                "insets 2",
                 "[][][][grow, fill][]"
         ));
         add(cbSelected);
