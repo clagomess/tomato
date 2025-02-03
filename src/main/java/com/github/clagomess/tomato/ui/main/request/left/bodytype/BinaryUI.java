@@ -17,7 +17,7 @@ public class BinaryUI extends JPanel {
             RequestStagingMonitor requestStagingMonitor
     ){
         setLayout(new MigLayout(
-                "insets 5 0 0 0",
+                "insets 5 2 2 2",
                 "[grow, fill]"
         ));
 
