@@ -17,6 +17,18 @@ import java.util.List;
 import static com.github.clagomess.tomato.io.http.MediaType.*;
 
 public class TRSyntaxTextArea extends RSyntaxTextArea {
+    private static final Theme theme;
+
+    static {
+        try {
+            theme = Theme.load(TRSyntaxTextArea.class.getResourceAsStream(
+                    "trsyntax-textarea-theme.xml"
+            ));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private final List<OnChangeFI> onChangeList = new LinkedList<>();
 
     public TRSyntaxTextArea() {
@@ -25,16 +37,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
         setLineWrap(true);
         setWrapStyleWord(true);
         setAntiAliasingEnabled(true);
-
-        try {
-            var theme = Theme.load(getClass().getResourceAsStream(
-                    "trsyntax-textarea-theme.xml"
-            ));
-
-            theme.apply(this);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        theme.apply(this);
 
         getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -93,8 +96,12 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
     }
 
     public static RTextScrollPane createScroll(RSyntaxTextArea textArea){
+        var color = Color.decode("#616365");
+
         var sp = new RTextScrollPane(textArea);
-        sp.setBorder(new MatteBorder(0, 1, 1, 1, Color.decode("#616365")));
+        sp.setBorder(new MatteBorder(0, 1, 1, 1, color));
+        sp.getGutter().setBorderColor(color);
+
         return sp;
     }
 }
