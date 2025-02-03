@@ -13,6 +13,7 @@ import com.github.clagomess.tomato.ui.environment.list.EnvironmentListUI;
 import com.github.clagomess.tomato.ui.main.collection.CollectionTreeUI;
 import com.github.clagomess.tomato.ui.main.request.RequestTabPaneUI;
 import com.github.clagomess.tomato.ui.settings.AboutUI;
+import com.github.clagomess.tomato.ui.settings.ConfigurationUI;
 import com.github.clagomess.tomato.ui.settings.DebugPublisherUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceNewUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceSwitchUI;
@@ -91,7 +92,7 @@ public class MainUI extends JFrame {
         // about
         menuBar.add(new JMenu("Settings"){{
             add(new JMenuItem("Configuration", new BxSliderAltIcon()){{
-                addActionListener(l -> {}); //@TODO: Implements - Settings -> Configuration
+                addActionListener(l -> new ConfigurationUI());
             }});
             add(new JMenuItem("About"){{
                 addActionListener(l -> new AboutUI());

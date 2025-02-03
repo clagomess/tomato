@@ -5,7 +5,6 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.util.CacheManager;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -17,18 +16,12 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
-@RequiredArgsConstructor
-public class RequestRepository {
-    private final Repository repository;
-
-    public RequestRepository() {
-        this(new Repository());
-    }
+public class RequestRepository extends AbstractRepository {
 
     public Optional<RequestDto> load(
             RequestHeadDto request
     ) throws IOException {
-        return repository.readFile(
+        return readFile(
                 request.getPath(),
                 new TypeReference<>() {}
         );
@@ -36,7 +29,7 @@ public class RequestRepository {
 
     protected static final CacheManager<File, Optional<RequestHeadDto>> cacheHead = new CacheManager<>();
     protected Optional<RequestHeadDto> loadHead(File file) throws IOException {
-        return cacheHead.get(file, () -> repository.readFile(
+        return cacheHead.get(file, () -> readFile(
                 file,
                 new TypeReference<>() {}
         ));
@@ -54,16 +47,16 @@ public class RequestRepository {
             requestFile = basepath;
         }
 
-        repository.writeFile(requestFile, request);
+        writeFile(requestFile, request);
         cacheEvict(requestFile);
 
         return requestFile;
     }
 
     protected static final CacheManager<File, List<File>> cacheListFiles = new CacheManager<>();
-    private List<File> listFiles(File rootPath) {
+    private List<File> listRequestFiles(File rootPath) {
         return cacheListFiles.get(rootPath, () ->
-                Arrays.stream(repository.listFiles(rootPath))
+                Arrays.stream(listFiles(rootPath))
                         .filter(File::isFile)
                         .filter(item -> item.getName().startsWith("request-"))
                         .toList()
@@ -73,7 +66,7 @@ public class RequestRepository {
     public Stream<RequestHeadDto> getRequestList(
             CollectionTreeDto collectionParent
     ){
-        return listFiles(collectionParent.getPath()).stream()
+        return listRequestFiles(collectionParent.getPath()).stream()
                 .map(item -> {
                     try {
                         Optional<RequestHeadDto> result = loadHead(item);

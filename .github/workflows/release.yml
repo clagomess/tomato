@@ -155,7 +155,7 @@ jobs:
       - name: Prepare
         run: |
           mkdir -p tomato/DEBIAN
-          mkdir -p /tmp/tomato/usr/share/doc/tomato
+          mkdir -p tomato/usr/share/doc/tomato
           mkdir -p tomato/usr/share/tomato
           mkdir -p tomato/usr/bin
 

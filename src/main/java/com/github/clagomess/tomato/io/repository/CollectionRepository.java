@@ -17,14 +17,12 @@ import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
-public class CollectionRepository {
-    private final Repository repository;
+public class CollectionRepository extends AbstractRepository {
     private final RequestRepository requestRepository;
     private final WorkspaceRepository workspaceRepository;
 
     public CollectionRepository() {
         this(
-                new Repository(),
                 new RequestRepository(),
                 new WorkspaceRepository()
         );
@@ -39,7 +37,7 @@ public class CollectionRepository {
 
     protected static final CacheManager<String, Optional<CollectionDto>> cacheCollection = new CacheManager<>();
     public Optional<CollectionDto> load(CollectionTreeDto collection) throws IOException {
-        return cacheCollection.get(collection.getId(), () -> repository.readFile(getCollectionFilePath(
+        return cacheCollection.get(collection.getId(), () -> readFile(getCollectionFilePath(
                 collection.getPath(),
                 collection.getId()
         ), new TypeReference<>(){}));
@@ -49,7 +47,7 @@ public class CollectionRepository {
     protected Optional<CollectionTreeDto> load(File collectionDir) throws IOException {
         String id = collectionDir.getName().replace("collection-", "");
 
-        return cacheCollectionTree.get(id, () -> repository.readFile(
+        return cacheCollectionTree.get(id, () -> readFile(
                 getCollectionFilePath(collectionDir, id),
                 new TypeReference<>() {}
         ));
@@ -64,7 +62,7 @@ public class CollectionRepository {
             File parentPath,
             CollectionDto collection
     ) throws IOException {
-        var collectionDir = repository.createDirectoryIfNotExists(new File(
+        var collectionDir = createDirectoryIfNotExists(new File(
                 parentPath,
                 String.format("collection-%s", collection.getId())
         ));
@@ -74,16 +72,16 @@ public class CollectionRepository {
                 collection.getId()
         );
 
-        repository.writeFile(collectionFile, collection);
+        writeFile(collectionFile, collection);
         cacheEvict(collection.getId(), collectionDir);
 
         return collectionDir;
     }
 
     protected static final CacheManager<File, List<File>> cacheListFiles = new CacheManager<>();
-    protected List<File> listFiles(File rootPath) {
+    protected List<File> listCollectionFiles(File rootPath) {
         return cacheListFiles.get(rootPath, () ->
-                Arrays.stream(repository.listFiles(rootPath))
+                Arrays.stream(listFiles(rootPath))
                         .filter(File::isDirectory)
                         .filter(item -> item.getName().startsWith("collection"))
                         .toList()
@@ -93,7 +91,7 @@ public class CollectionRepository {
     public Stream<CollectionTreeDto> getCollectionChildrenTree(
             CollectionTreeDto collectionStart
     ){
-        return listFiles(collectionStart.getPath()).stream()
+        return listCollectionFiles(collectionStart.getPath()).stream()
                 .map(item -> {
                     try {
                         Optional<CollectionTreeDto> optResult = load(item);

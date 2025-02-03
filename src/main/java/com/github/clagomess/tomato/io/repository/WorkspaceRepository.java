@@ -16,20 +16,20 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-public class WorkspaceRepository {
-    private final Repository repository;
+public class WorkspaceRepository extends AbstractRepository {
+    private final ConfigurationRepository configurationRepository;
     private final DataSessionRepository dataSessionRepository;
 
     public WorkspaceRepository() {
         this(
-                new Repository(),
+                new ConfigurationRepository(),
                 new DataSessionRepository()
         );
     }
 
     protected File getWorkspaceDirectory(String id) throws IOException {
-        return repository.createDirectoryIfNotExists(new File(
-                repository.getDataDir(),
+        return createDirectoryIfNotExists(new File(
+                configurationRepository.getDataDir(),
                 String.format("workspace-%s", id)
         ));
     }
@@ -37,7 +37,7 @@ public class WorkspaceRepository {
     public void save(WorkspaceDto dto) throws IOException {
         File workspaceDir = getWorkspaceDirectory(dto.getId());
 
-        repository.writeFile(new File(
+        writeFile(new File(
                 workspaceDir,
                 String.format(
                         "workspace-%s.json",
@@ -50,9 +50,9 @@ public class WorkspaceRepository {
     }
 
     private List<File> listDirectories() throws IOException {
-        File dataDir = repository.getDataDir();
+        File dataDir = configurationRepository.getDataDir();
 
-        List<File> result = Arrays.stream(repository.listFiles(dataDir))
+        List<File> result = Arrays.stream(listFiles(dataDir))
                 .filter(File::isDirectory)
                 .filter(item -> item.getName().startsWith("workspace"))
                 .toList();
@@ -72,7 +72,7 @@ public class WorkspaceRepository {
     protected Optional<WorkspaceDto> load(File workspaceDir) throws IOException {
         String id = workspaceDir.getName().replace("workspace-", "");
 
-        return cacheLoad.get(id, () -> repository.readFile(
+        return cacheLoad.get(id, () -> readFile(
                 new File(
                         workspaceDir,
                         String.format("workspace-%s.json", id)

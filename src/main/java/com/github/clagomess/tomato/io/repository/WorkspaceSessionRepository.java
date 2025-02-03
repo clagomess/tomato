@@ -11,14 +11,12 @@ import java.io.IOException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class WorkspaceSessionRepository {
-    private final Repository repository;
+public class WorkspaceSessionRepository extends AbstractRepository {
     private final WorkspaceRepository workspaceRepository;
     protected static final CacheManager<File, WorkspaceSessionDto> cache = new CacheManager<>();
 
     public WorkspaceSessionRepository() {
         this(
-                new Repository(),
                 new WorkspaceRepository()
         );
     }
@@ -33,7 +31,7 @@ public class WorkspaceSessionRepository {
         File filePath = getWorkspaceSessionFile();
 
         return cache.get(filePath, () -> {
-            Optional<WorkspaceSessionDto> opt = repository.readFile(
+            Optional<WorkspaceSessionDto> opt = readFile(
                     getWorkspaceSessionFile(),
                     new TypeReference<>() {}
             );
@@ -45,7 +43,7 @@ public class WorkspaceSessionRepository {
     public File save(WorkspaceSessionDto dto) throws IOException {
         File filePath = getWorkspaceSessionFile();
 
-        repository.writeFile(filePath, dto);
+        writeFile(filePath, dto);
         cache.evict(filePath);
 
         return filePath;

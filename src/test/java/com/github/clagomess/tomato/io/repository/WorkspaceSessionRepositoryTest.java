@@ -2,7 +2,6 @@ package com.github.clagomess.tomato.io.repository;
 
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,26 +9,22 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WorkspaceSessionRepositoryTest {
-
-    private final File testData = new File(Objects.requireNonNull(getClass().getResource(
-            "home/data"
-    )).getFile());
-
-    private File mockData;
+public class WorkspaceSessionRepositoryTest extends RepositoryStubs {
+    private final WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
+    private final WorkspaceSessionRepository workspaceSessionRepositoryMock = Mockito.spy(
+            new WorkspaceSessionRepository(workspaceRepositoryMock)
+    );
 
     @BeforeEach
     public void setup(){
-        mockData = new File("target", "datadir-" + RandomStringUtils.secure().nextAlphanumeric(8));
-        assertTrue(mockData.mkdirs());
+        // mock WorkspaceRepository
+        Mockito.reset(workspaceRepositoryMock);
 
-        // reset cache
-        WorkspaceSessionRepository.cache.evictAll();
+        // mock WorkspaceSessionRepository
+        Mockito.reset(workspaceSessionRepositoryMock);
     }
 
     @Test
@@ -37,16 +32,10 @@ public class WorkspaceSessionRepositoryTest {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(new File("target"));
 
-        WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
         Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
-        WorkspaceSessionRepository workspaceSessionDS = new WorkspaceSessionRepository(
-                new Repository(),
-                workspaceRepositoryMock
-        );
-
-        var result = workspaceSessionDS.getWorkspaceSessionFile();
+        var result = workspaceSessionRepositoryMock.getWorkspaceSessionFile();
         Assertions.assertThat(result).hasFileName("workspace-session.json");
     }
 
@@ -54,43 +43,23 @@ public class WorkspaceSessionRepositoryTest {
     public void load() throws IOException {
         var envFile = new File(testData, "workspace-nPUaq0TC/workspace-session.json");
 
-        Repository repositoryMock = Mockito.mock(Repository.class);
-        Mockito.doCallRealMethod()
-                .when(repositoryMock)
-                .readFile(Mockito.any(), Mockito.any());
+        Mockito.doReturn(envFile)
+                .when(workspaceSessionRepositoryMock)
+                .getWorkspaceSessionFile();
 
-        WorkspaceSessionRepository workspaceSessionDSMock = Mockito.mock(
-                WorkspaceSessionRepository.class,
-                Mockito.withSettings().useConstructor()
-        );
-        Mockito.when(workspaceSessionDSMock.getWorkspaceSessionFile())
-                .thenReturn(envFile);
-        Mockito.when(workspaceSessionDSMock.load())
-                .thenCallRealMethod();
-
-        var result = workspaceSessionDSMock.load();
+        var result = workspaceSessionRepositoryMock.load();
         assertEquals("ELQkYBrD", result.getId());
     }
 
     @Test
     public void save() throws IOException {
-        var envFile = new File(mockData, "workspace-session.json");
+        var envFile = new File(mockDataDir, "workspace-session.json");
 
-        Repository repositoryMock = Mockito.mock(Repository.class);
-        Mockito.doCallRealMethod()
-                .when(repositoryMock)
-                .writeFile(Mockito.any(), Mockito.any());
+        Mockito.doReturn(envFile)
+                .when(workspaceSessionRepositoryMock)
+                .getWorkspaceSessionFile();
 
-        WorkspaceSessionRepository workspaceSessionDSMock = Mockito.mock(
-                WorkspaceSessionRepository.class,
-                Mockito.withSettings().useConstructor()
-        );
-        Mockito.when(workspaceSessionDSMock.getWorkspaceSessionFile())
-                .thenReturn(envFile);
-        Mockito.when(workspaceSessionDSMock.save(Mockito.any()))
-                .thenCallRealMethod();
-
-        var result = workspaceSessionDSMock.save(new WorkspaceSessionDto());
+        var result = workspaceSessionRepositoryMock.save(new WorkspaceSessionDto());
         Assertions.assertThat(result).isFile();
     }
 }

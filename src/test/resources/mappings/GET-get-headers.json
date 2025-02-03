@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/get-headers"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {},
+    "headers": {
+      "Content-Type": "application/json",
+      "foo": "bar"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/redirect"
+  },
+  "response": {
+    "status": 301,
+    "headers": {
+      "Location": "http://localhost:8500/hello"
+    }
+  }
+}
