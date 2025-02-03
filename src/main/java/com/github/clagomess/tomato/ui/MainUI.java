@@ -18,6 +18,7 @@ import com.github.clagomess.tomato.ui.settings.DebugPublisherUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceNewUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceSwitchUI;
 import com.github.clagomess.tomato.ui.workspace.list.WorkspaceListUI;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +32,8 @@ public class MainUI extends JFrame {
         setJMenuBar(getMenu());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        setLayout(new MigLayout("insets 5", "[grow, fill]"));
+
         JSplitPane splitPane = new JSplitPane(
                 JSplitPane.HORIZONTAL_SPLIT,
                 new CollectionTreeUI(),
@@ -38,7 +41,7 @@ public class MainUI extends JFrame {
         );
         splitPane.setDividerLocation(250);
 
-        add(splitPane);
+        add(splitPane, "height 100%");
         pack();
         setVisible(true);
     }

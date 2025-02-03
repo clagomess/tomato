@@ -70,7 +70,7 @@ public class RequestSplitPaneUI extends JPanel {
         );
 
         setLayout(new MigLayout(
-                "insets 5 5 10 10",
+                "insets 5",
                 "[grow,fill]"
         ));
 
@@ -84,7 +84,7 @@ public class RequestSplitPaneUI extends JPanel {
         add(paneRequestName, "wrap");
 
         var paneUrl = new JPanel(new MigLayout(
-                "insets 2 2 5 2",
+                "insets 2",
                 "[][grow,fill][]"
         ));
         paneUrl.add(cbHttpMethod);
