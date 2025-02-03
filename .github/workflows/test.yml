@@ -20,4 +20,4 @@ jobs:
           cache: 'maven'
 
       - name: Maven
-        run: mvn -B clean test
+        run: mvn test package
