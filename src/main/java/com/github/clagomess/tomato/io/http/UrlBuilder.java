@@ -14,8 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 public class UrlBuilder {
     private final RequestDto request;
     private final Map<String, String> environment;
@@ -75,7 +73,7 @@ public class UrlBuilder {
             paramValue = paramValue.replace(env.getKey(), env.getValue());
         }
 
-        return URLEncoder.encode(paramValue, UTF_8);
+        return URLEncoder.encode(paramValue, request.getUrlParam().getCharset());
     }
 
     protected void buildPathVariables(StringBuilder urlBuilder) {
