@@ -117,6 +117,38 @@ public class BeautifierUI extends JDialog {
         invokeLater(() -> setVisible(true));
     }
 
+    public void beautify(
+            String inputString,
+            OnCompleteFI<String> onComplete
+    ){
+        if(beautifier == null) return;
+
+        progress.setMaximum(inputString.length());
+
+        new Thread(() -> {
+            try {
+                var strWriter = new StringWriter();
+
+                try (
+                        var reader = new BufferedReader(new StringReader(inputString));
+                        var writer = new BufferedWriter(strWriter);
+                ) {
+                    beautifier.setReader(reader);
+                    beautifier.setWriter(writer);
+                    beautifier.parse();
+                }
+
+                onComplete.run(strWriter.toString());
+            }catch (Throwable e){
+                invokeLater(() -> new ExceptionDialog(parent, e));
+            }
+
+            invokeLater(this::dispose);
+        }, "BeautifierUI").start();
+
+        invokeLater(() -> setVisible(true));
+    }
+
     @FunctionalInterface
     public interface OnCompleteFI<T> {
         void run(T result);
