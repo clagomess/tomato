@@ -104,9 +104,9 @@ public class BeautifierUI extends JDialog {
                     beautifier.setReader(reader);
                     beautifier.setWriter(writer);
                     beautifier.parse();
-
-                    onComplete.run(newResponseFile);
                 }
+
+                onComplete.run(newResponseFile);
             }catch (Throwable e){
                 invokeLater(() -> new ExceptionDialog(parent, e));
             }

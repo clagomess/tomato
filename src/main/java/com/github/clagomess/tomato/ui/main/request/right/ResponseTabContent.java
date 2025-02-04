@@ -106,6 +106,7 @@ public class ResponseTabContent extends JPanel {
         new BeautifierUI(this, responseDto.getHttpResponse().getContentType())
                 .beautify(responseDto.getHttpResponse().getBody(), result -> {
                     responseDto.getHttpResponse().setBody(result);
+
                     SwingUtilities.invokeLater(() -> {
                         txtResponse.setText(responseDto.getHttpResponse().getBodyAsString());
                         txtResponse.setCaretPosition(0);
