@@ -6,10 +6,12 @@ import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import lombok.*;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.clagomess.tomato.io.http.MediaType.APPLICATION_OCTET_STREAM_TYPE;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Getter
 @Setter
@@ -48,8 +50,14 @@ public class RequestDto extends MetadataDto {
     @Setter
     @EqualsAndHashCode
     public static class UrlParam {
+        private Charset charset;
         private List<KeyValueItemDto> path = new ArrayList<>();
         private List<KeyValueItemDto> query = new ArrayList<>();
+
+        public Charset getCharset() {
+            if(charset == null) charset = UTF_8;
+            return charset;
+        }
 
         public List<KeyValueItemDto> getPath() {
             if(path == null) path = new ArrayList<>();
@@ -67,10 +75,16 @@ public class RequestDto extends MetadataDto {
     @EqualsAndHashCode
     public static class Body {
         private BodyTypeEnum type = BodyTypeEnum.NO_BODY;
+        private Charset charset;
         private RawBody raw;
         private BinaryBody binary;
         private List<KeyValueItemDto> urlEncodedForm  = new ArrayList<>();
         private List<KeyValueItemDto> multiPartForm = new ArrayList<>();
+
+        public Charset getCharset() {
+            if(charset == null) charset = UTF_8;
+            return charset;
+        }
 
         public BodyTypeEnum getType() {
             if(type == null) type = BodyTypeEnum.NO_BODY;
