@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.github.clagomess.tomato.enums.BodyTypeEnum.MULTIPART_FORM;
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -41,7 +43,11 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto(FILE, "myfile", formFile, null, true)
         );
 
-        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, form);
+        var body = new RequestDto.Body();
+        body.setType(MULTIPART_FORM);
+        body.setMultiPartForm(form);
+
+        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, body);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -71,7 +77,11 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto(TEXT, "myparam", null, null, true)
         );
 
-        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, form);
+        var body = new RequestDto.Body();
+        body.setType(MULTIPART_FORM);
+        body.setMultiPartForm(form);
+
+        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, body);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -89,7 +99,11 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto(FILE, "myfile", fileParam, null, true)
         );
 
-        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, form);
+        var body = new RequestDto.Body();
+        body.setType(MULTIPART_FORM);
+        body.setMultiPartForm(form);
+
+        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, body);
 
         assertThrows(FileNotFoundException.class, multipart::build);
     }
@@ -101,7 +115,11 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto(TEXT, "mysecondparam", "myvalue", null, false)
         );
 
-        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, form);
+        var body = new RequestDto.Body();
+        body.setType(MULTIPART_FORM);
+        body.setMultiPartForm(form);
+
+        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, body);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -126,10 +144,14 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
         );
 
+        var body = new RequestDto.Body();
+        body.setType(MULTIPART_FORM);
+        body.setMultiPartForm(form);
+
         var multipart = new MultipartFormDataBody(
                 environmentRepositoryMock,
                 "tomato-1",
-                form
+                body
         );
         var tmpFile = multipart.build();
 
@@ -152,7 +174,11 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto("foo", "bar")
         );
 
-        var form = new MultipartFormDataBody(List.of());
+        var body = new RequestDto.Body();
+        body.setType(MULTIPART_FORM);
+        body.setMultiPartForm(List.of());
+
+        var form = new MultipartFormDataBody(body);
         form.writeTextBoundary(baos, envs, "mykey", input);
 
         Assertions.assertThat(baos.toString()).contains(expected);
@@ -162,7 +188,11 @@ public class MultipartFormDataBodyTest {
     public void writeTextBoundary_whenEnvListIsNull_doNothing() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        var form = new MultipartFormDataBody(List.of());
+        var body = new RequestDto.Body();
+        body.setType(MULTIPART_FORM);
+        body.setMultiPartForm(List.of());
+
+        var form = new MultipartFormDataBody(body);
         form.writeTextBoundary(baos, null, "mykey", "myvalue");
 
         Assertions.assertThat(baos.toString()).contains("myvalue");

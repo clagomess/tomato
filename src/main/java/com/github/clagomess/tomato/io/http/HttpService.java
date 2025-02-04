@@ -187,7 +187,7 @@ public class HttpService {
     private HttpRequest buildBodyMultipart(
             HttpRequest.Builder httpRequestBuilder
     ) throws IOException {
-        var form = new MultipartFormDataBody(requestDto.getBody().getMultiPartForm());
+        var form = new MultipartFormDataBody(requestDto.getBody());
 
         httpRequestBuilder.header(
                 "Content-Type",
