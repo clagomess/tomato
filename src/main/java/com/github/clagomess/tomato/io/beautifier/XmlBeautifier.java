@@ -15,6 +15,8 @@ public class XmlBeautifier extends Beautifier {
     @Override
     public void parse() throws IOException {
         try {
+            progress.setValue(-1);
+
             Source style = new StreamSource(getClass()
                     .getResourceAsStream("transform-style.xsl"));
 
@@ -25,6 +27,8 @@ public class XmlBeautifier extends Beautifier {
                     new StreamSource(reader),
                     new StreamResult(writer)
             );
+
+            progress.setValue(0);
         } catch (TransformerException e) {
             log.warn(e.getMessage());
             writer.write('\n');

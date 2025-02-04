@@ -51,9 +51,13 @@ public class BeautifierUI extends JDialog {
 
         progress.setStringPainted(true);
         progress.setMinimum(0);
-        beautifier.setProgress(value -> {
-            invokeLater(() -> progress.setValue(value));
-        });
+        beautifier.setProgress(value -> invokeLater(() -> {
+            if (value == -1) {
+                progress.setIndeterminate(true);
+            } else {
+                progress.setValue(value);
+            }
+        }));
 
         add(progress);
 
@@ -66,7 +70,8 @@ public class BeautifierUI extends JDialog {
             return new JsonBeautifier();
         }
 
-        if(mediaType.isCompatible(MediaType.TEXT_XML)){
+        if(mediaType.isCompatible(MediaType.TEXT_XML) ||
+                mediaType.isCompatible(MediaType.APPLICATION_XML)) {
             return new XmlBeautifier();
         }
 
@@ -77,6 +82,8 @@ public class BeautifierUI extends JDialog {
             File inputFile,
             OnCompleteFI<File> onComplete
     ){
+        if(beautifier == null) return this;
+
         progress.setMaximum((int) inputFile.length());
 
         new Thread(() -> {
