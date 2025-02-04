@@ -6,7 +6,7 @@
 
     <groupId>com.github.clagomess</groupId>
     <artifactId>tomato</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -88,6 +88,16 @@
             <groupId>com.networknt</groupId>
             <artifactId>json-schema-validator</artifactId>
             <version>1.5.5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.ethlo.time</groupId>
+                    <artifactId>itu</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-yaml</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- ######## SCOPE TEST ######## -->
