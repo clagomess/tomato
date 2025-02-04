@@ -134,7 +134,8 @@ public class HttpService {
         httpRequestBuilder.method(
                 requestDto.getMethod().getMethod(),
                 HttpRequest.BodyPublishers.ofString(
-                        requestDto.getBody().getRaw().getRaw()
+                        requestDto.getBody().getRaw().getRaw(),
+                        requestDto.getBody().getCharset()
                 )
         );
 
