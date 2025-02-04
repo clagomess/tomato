@@ -78,11 +78,11 @@ public class BeautifierUI extends JDialog {
         return null;
     }
 
-    public BeautifierUI beautify(
+    public void beautify(
             File inputFile,
             OnCompleteFI<File> onComplete
     ){
-        if(beautifier == null) return this;
+        if(beautifier == null) return;
 
         progress.setMaximum((int) inputFile.length());
 
@@ -114,7 +114,7 @@ public class BeautifierUI extends JDialog {
             invokeLater(this::dispose);
         }, "BeautifierUI").start();
 
-        return this;
+        invokeLater(() -> setVisible(true));
     }
 
     @FunctionalInterface

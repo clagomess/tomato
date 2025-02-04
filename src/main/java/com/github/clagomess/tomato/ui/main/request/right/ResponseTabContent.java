@@ -112,8 +112,7 @@ public class ResponseTabContent extends JPanel {
                         txtResponse.setCaretPosition(0);
                         statusResponseUI.update(responseDto);
                     });
-                })
-                .setVisible(true);
+                });
     }
 
     private void btnDownloadAction(){
