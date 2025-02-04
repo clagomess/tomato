@@ -64,7 +64,7 @@ while (false !== ($line = fgets(STDIN))) {
         }
     }
 
-    $xml->addChild('commit', $item['commit']);
+    $xml->addChild('commit', str_replace('&', '&amp;', $item['commit']));
     fwrite($fpXml, explode("\n", $xml->asXML(), 2)[1]);
 
     if($isFirstLine) $isFirstLine = false;

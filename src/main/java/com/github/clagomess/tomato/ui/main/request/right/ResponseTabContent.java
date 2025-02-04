@@ -60,7 +60,7 @@ public class ResponseTabContent extends JPanel {
         add(tpResponse, "span, height 100%");
 
         // configure
-        btnBeautify.addActionListener(l -> new BeautifierUI(this));
+        btnBeautify.addActionListener(l -> btnBeautifyAction());
         btnDownload.addActionListener(l -> btnDownloadAction());
     }
 
@@ -102,10 +102,17 @@ public class ResponseTabContent extends JPanel {
         statusResponseUI.update(responseDto);
     }
 
-    public void refreshResponseContent(){
-        txtResponse.setText(responseDto.getHttpResponse().getBodyAsString());
-        txtResponse.setCaretPosition(0);
-        statusResponseUI.update(responseDto);
+    private void btnBeautifyAction(){
+        new BeautifierUI(this, responseDto.getHttpResponse().getContentType())
+                .beautify(responseDto.getHttpResponse().getBody(), result -> {
+                    responseDto.getHttpResponse().setBody(result);
+
+                    SwingUtilities.invokeLater(() -> {
+                        txtResponse.setText(responseDto.getHttpResponse().getBodyAsString());
+                        txtResponse.setCaretPosition(0);
+                        statusResponseUI.update(responseDto);
+                    });
+                });
     }
 
     private void btnDownloadAction(){

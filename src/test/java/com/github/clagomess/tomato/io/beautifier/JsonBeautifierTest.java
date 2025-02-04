@@ -19,11 +19,11 @@ public class JsonBeautifierTest {
     @Disabled
     public void performance() throws IOException {
         try(
-            var reader = new BufferedReader(new FileReader(
-                    Objects.requireNonNull(getClass().getResource("large.json")).getFile()
-            ));
+                var reader = new BufferedReader(new FileReader(
+                        Objects.requireNonNull(getClass().getResource("large.json")).getFile()
+                ));
 
-            var writer = new BufferedWriter(new FileWriter("target/JsonBeautifierTest.performance.json"));
+                var writer = new BufferedWriter(new FileWriter("target/JsonBeautifierTest.performance.json"));
         ) {
             var beautifier = new JsonBeautifier();
             beautifier.setReader(reader);
@@ -35,10 +35,15 @@ public class JsonBeautifierTest {
     private void assertJson(String input, String expected) throws IOException {
         var result = new StringWriter();
 
-        var beautifier = new JsonBeautifier();
-        beautifier.setReader(new BufferedReader(new StringReader(input)));
-        beautifier.setWriter(new BufferedWriter(result));
-        beautifier.parse();
+        try(
+                var reader = new BufferedReader(new StringReader(input));
+                var writer = new BufferedWriter(result)
+        ){
+            var beautifier = new JsonBeautifier();
+            beautifier.setReader(reader);
+            beautifier.setWriter(writer);
+            beautifier.parse();
+        }
 
         Assertions.assertThat(result.toString())
                 .isEqualToIgnoringNewLines(expected);

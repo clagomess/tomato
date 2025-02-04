@@ -31,6 +31,7 @@ public class JsonBeautifier extends Beautifier {
         writer.write(identBuff, 0, identLevel * 2);
     }
 
+    @Override
     public void parse() throws IOException {
         char c;
         while (allowedWhitespace(c = currentChar())) pos++;
@@ -52,13 +53,11 @@ public class JsonBeautifier extends Beautifier {
                 default:
                     throw new BeautifierException(c, pos);
             }
-        }catch (BeautifierException e) {
+        } catch (BeautifierException e) {
             log.warn(e.getMessage());
             writer.newLine();
             writer.write(e.getMessage());
         }
-
-        writer.flush();
     }
 
     protected boolean allowedWhitespace(char c) {
