@@ -28,6 +28,7 @@ public interface PostmanCollectionPumpMapper {
     @Mapping(target = "createTime", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "url", source = "request.url.raw")
+    @Mapping(target = "urlParam.charset", ignore = true)
     @Mapping(target = "urlParam.query", source = "request.url.query")
     @Mapping(target = "urlParam.path", source = "request.url.variable")
     @Mapping(target = "method", source = "request.method")
@@ -82,6 +83,7 @@ public interface PostmanCollectionPumpMapper {
     }
 
     @Mapping(target = "type", source = "mode")
+    @Mapping(target = "charset", ignore = true)
     @Mapping(target = "raw.raw", source = "raw")
     @Mapping(target = "binary", ignore = true)
     @Mapping(target = "urlEncodedForm", source = "urlencoded")
