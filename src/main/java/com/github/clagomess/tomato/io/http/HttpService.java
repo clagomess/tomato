@@ -134,7 +134,8 @@ public class HttpService {
         httpRequestBuilder.method(
                 requestDto.getMethod().getMethod(),
                 HttpRequest.BodyPublishers.ofString(
-                        requestDto.getBody().getRaw().getRaw()
+                        requestDto.getBody().getRaw().getRaw(),
+                        requestDto.getBody().getCharset()
                 )
         );
 
@@ -166,7 +167,7 @@ public class HttpService {
     private HttpRequest buildBodyUrlEncoded(
             HttpRequest.Builder httpRequestBuilder
     ) throws IOException {
-        var form = new UrlEncodedFormBody(requestDto.getBody().getUrlEncodedForm());
+        var form = new UrlEncodedFormBody(requestDto.getBody());
 
         httpRequestBuilder.header(
                 "Content-Type",
@@ -187,7 +188,7 @@ public class HttpService {
     private HttpRequest buildBodyMultipart(
             HttpRequest.Builder httpRequestBuilder
     ) throws IOException {
-        var form = new MultipartFormDataBody(requestDto.getBody().getMultiPartForm());
+        var form = new MultipartFormDataBody(requestDto.getBody());
 
         httpRequestBuilder.header(
                 "Content-Type",

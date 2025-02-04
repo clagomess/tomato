@@ -1,11 +1,12 @@
 {
   "id" : "I1YypqBa",
   "createTime" : "2025-01-31T17:11:52",
-  "updateTime" : "2025-01-31T17:13:46",
+  "updateTime" : "2025-02-04T16:55:56",
   "name" : "multipart-form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo-iso-8859-1.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
@@ -13,6 +14,7 @@
   "cookies" : [ ],
   "body" : {
     "type" : "MULTIPART_FORM",
+    "charset" : "ISO-8859-1",
     "multiPartForm" : [ {
       "type" : "TEXT",
       "key" : "param1",

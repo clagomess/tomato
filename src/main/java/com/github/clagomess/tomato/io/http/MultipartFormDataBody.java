@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -18,13 +19,13 @@ public class MultipartFormDataBody {
     private final EnvironmentRepository environmentRepository;
 
     private final String boundary;
-    private final List<KeyValueItemDto> form;
+    private final RequestDto.Body body;
 
-    public MultipartFormDataBody(List<KeyValueItemDto> form) {
+    public MultipartFormDataBody(RequestDto.Body body) {
         this(
                 new EnvironmentRepository(),
                 "tomato-" + System.currentTimeMillis(),
-                form
+                body
         );
     }
 
@@ -41,7 +42,7 @@ public class MultipartFormDataBody {
                 .orElse(Collections.emptyList());
 
         try(BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))){
-            for (var item : form) {
+            for (var item : body.getMultiPartForm()) {
                 if(!item.isSelected()) continue;
                 if(StringUtils.isBlank(item.getKey())) continue;
 
@@ -93,7 +94,7 @@ public class MultipartFormDataBody {
             }
         }
 
-        os.write(value.getBytes());
+        os.write(value.getBytes(body.getCharset()));
     }
 
     protected void writeFileBoundary(

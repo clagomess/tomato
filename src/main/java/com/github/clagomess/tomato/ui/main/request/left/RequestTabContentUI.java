@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.main.request.left;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
+import com.github.clagomess.tomato.ui.component.CharsetComboBox;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue.KeyValueUI;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +39,8 @@ public class RequestTabContentUI extends JPanel {
         );
         queryParamsUI = new KeyValueUI(
                 requestDto.getUrlParam().getQuery(),
-                requestStagingMonitor
+                requestStagingMonitor,
+                getCharsetComboBox(requestDto.getUrlParam(), requestStagingMonitor)
         );
         tpRequest.addTab(queryParamsTabTitle.getTitle(), queryParamsUI);
 
@@ -50,7 +52,8 @@ public class RequestTabContentUI extends JPanel {
         );
         pathVariablesUI = new KeyValueUI(
                 requestDto.getUrlParam().getPath(),
-                requestStagingMonitor
+                requestStagingMonitor,
+                getCharsetComboBox(requestDto.getUrlParam(), requestStagingMonitor)
         );
         tpRequest.addTab(pathVariablesTabTitle.getTitle(), pathVariablesUI);
 
@@ -110,6 +113,20 @@ public class RequestTabContentUI extends JPanel {
         }
 
         // @TODO: update tab title when modify content
+    }
+
+    private CharsetComboBox getCharsetComboBox(
+            RequestDto.UrlParam urlParam,
+            RequestStagingMonitor requestStagingMonitor
+    ){
+        CharsetComboBox comboBox = new CharsetComboBox();
+        comboBox.setSelectedItem(urlParam.getCharset());
+        comboBox.addActionListener(l -> {
+            urlParam.setCharset(comboBox.getSelectedItem());
+            requestStagingMonitor.update();
+        });
+
+        return comboBox;
     }
 
     public void dispose(){

@@ -1,11 +1,12 @@
 {
   "id" : "8EJRkvf4",
   "createTime" : "2025-01-31T17:15:07",
-  "updateTime" : "2025-01-31T17:17:06",
+  "updateTime" : "2025-02-04T17:00:44",
   "name" : "body-xml",
   "method" : "POST",
   "url" : "{{echoServer}}/echo-iso-8859-1.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
@@ -13,6 +14,7 @@
   "cookies" : [ ],
   "body" : {
     "type" : "RAW",
+    "charset" : "ISO-8859-1",
     "raw" : {
       "type" : "XML",
       "raw" : "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n<root>\n    <foo>Ação Açucar</foo>\n</root>"

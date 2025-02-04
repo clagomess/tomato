@@ -1,11 +1,12 @@
 {
   "id" : "r2Q90rSk",
   "createTime" : "2025-01-31T17:12:59",
-  "updateTime" : "2025-01-31T17:14:34",
+  "updateTime" : "2025-02-04T16:48:23",
   "name" : "url-encoded-form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo-iso-8859-1.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
@@ -13,6 +14,7 @@
   "cookies" : [ ],
   "body" : {
     "type" : "URL_ENCODED_FORM",
+    "charset" : "ISO-8859-1",
     "urlEncodedForm" : [ {
       "type" : "TEXT",
       "key" : "param1",
