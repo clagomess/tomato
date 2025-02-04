@@ -3,6 +3,8 @@ package com.github.clagomess.tomato.ui.component.envtextfield;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
+import com.github.clagomess.tomato.ui.main.request.right.BeautifierUI;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -16,6 +18,10 @@ public class ValueEditorUI extends JFrame {
             RawBodyTypeEnum.values()
     );
 
+    private final JButton btnBeautify = new JButton(new BxsMagicWandIcon()){{
+        setToolTipText("Beautify value");
+    }};
+
     private final TRSyntaxTextArea textArea = new TRSyntaxTextArea();
 
     public ValueEditorUI(EnvTextField parent){
@@ -28,16 +34,18 @@ public class ValueEditorUI extends JFrame {
 
         setLayout(new MigLayout(
                 "insets 10",
-                "[grow]"
+                "[grow, fill][]"
         ));
 
-        add(cbContentType, "wrap");
+        add(cbContentType);
+        add(btnBeautify, "wrap");
         var sp = TRSyntaxTextArea.createScroll(textArea);
         sp.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode("#616365")));
-        add(sp, "height 100%, width 100%");
+        add(sp, "height 100%, span 2");
 
         // set data
         cbContentType.addActionListener(l -> cbContentTypeAction());
+        btnBeautify.addActionListener(l -> btnBeautifyAction());
         textArea.setText(parent.getText());
 
         pack();
@@ -49,6 +57,19 @@ public class ValueEditorUI extends JFrame {
         RawBodyTypeEnum type = (RawBodyTypeEnum) cbContentType.getSelectedItem();
         if(type == null) return;
         textArea.setSyntaxEditingStyle(type.getSyntaxStyle());
+    }
+
+    private void btnBeautifyAction(){
+        var type = (RawBodyTypeEnum) cbContentType.getSelectedItem();
+        if(type == null) return;
+
+        new BeautifierUI(this, type.getContentType())
+                .beautify(textArea.getText(), result -> {
+                    SwingUtilities.invokeLater(() -> {
+                        textArea.setText(result);
+                        textArea.setCaretPosition(0);
+                    });
+                });
     }
 
     @Override

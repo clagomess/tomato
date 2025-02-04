@@ -14,13 +14,13 @@ import java.io.*;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class BeautifierUI extends JDialog {
-    private final JComponent parent;
+    private final Component parent;
     private final MediaType contentType;
     private final Beautifier beautifier;
 
     private final JProgressBar progress = new JProgressBar();
 
-    public BeautifierUI(JComponent parent, MediaType contentType) {
+    public BeautifierUI(Component parent, MediaType contentType) {
         super(
                 SwingUtilities.getWindowAncestor(parent),
                 "Beautifier",
