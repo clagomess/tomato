@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.io.beautifier;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -20,17 +20,22 @@ public class XmlBeautifier extends Beautifier {
                 var fis = new FileInputStream(inputFile);
                 var fos = new FileOutputStream(outputFile);
         ) {
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            try {
+                Source style = new StreamSource(getClass()
+                        .getResourceAsStream("transform-style.xsl"));
 
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+                Transformer transformer = TransformerFactory.newInstance()
+                        .newTransformer(style);
 
-            transformer.transform(
-                    new StreamSource(fis),
-                    new StreamResult(fos)
-            );
-        } catch (TransformerException e) {
-            log.warn(e.getMessage());
+                transformer.transform(
+                        new StreamSource(fis),
+                        new StreamResult(fos)
+                );
+            } catch (TransformerException e) {
+                log.warn(e.getMessage());
+                fos.write('\n');
+                fos.write(e.getMessage().getBytes());
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ public class XmlBeautifierTest {
 
         Assertions.assertThat(outputFile)
                 .content()
-                .isEqualToIgnoringNewLines(expected);
+                .containsIgnoringNewLines(expected);
     }
 
     private static Stream<Arguments> provide_parseBasic(){
@@ -62,13 +62,49 @@ public class XmlBeautifierTest {
                     <child1/>
                     <child2/>
                 </root>
-                """)
+                """),
+                Arguments.of(
+                        """
+                        <root>
+                            <foo>bar</foo>
+                        </root>
+                        """,
+                        """
+                        <root>
+                            <foo>bar</foo>
+                        </root>
+                        """
+                )
+
         );
     }
 
     @ParameterizedTest
     @MethodSource("provide_parseBasic")
     public void parseBasic(
+            String input,
+            String expected
+    ) throws IOException {
+        assertXml(input, expected);
+    }
+
+    private static Stream<Arguments> provide_parseBasicError(){
+        return Stream.of(
+                Arguments.of("<root>&foo</root>", "\njavax.xml.transform.TransformerException:"),
+                Arguments.of("<root><child><subchild></subchild></child></root>", """
+                <root>
+                    <child>
+                        <subchild/>
+                    </child>
+                </root>
+                """)
+
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provide_parseBasicError")
+    public void parseBasicError(
             String input,
             String expected
     ) throws IOException {
