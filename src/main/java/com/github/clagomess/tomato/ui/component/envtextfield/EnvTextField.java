@@ -42,7 +42,14 @@ public class EnvTextField extends JPanel {
         ));
         add(btnEnvView);
         add(btnExpand);
-        add(spTextPane);
+
+        int spTextPaneHeight = spTextPane.getPreferredSize().height - 4;
+        add(spTextPane, String.format(
+                "height %s:%s:%s",
+                spTextPaneHeight,
+                spTextPaneHeight,
+                spTextPaneHeight
+        ));
     }
 
     public void addOnChange(EnvTextFieldOnChangeFI value){
