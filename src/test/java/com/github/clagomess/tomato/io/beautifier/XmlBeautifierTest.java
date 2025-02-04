@@ -8,9 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.io.*;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -20,30 +18,34 @@ public class XmlBeautifierTest {
     @Test
     @Disabled
     public void performance() throws IOException {
-        File inputFile = new File(Objects.requireNonNull(
-                getClass().getResource("large.xml")
-        ).getFile());
+        try(
+                var reader = new BufferedReader(new FileReader(
+                        Objects.requireNonNull(getClass().getResource("large.xml")).getFile()
+                ));
 
-        var beautifier = new XmlBeautifier();
-        beautifier.setInputFile(inputFile);
-        beautifier.setOutputFile(new File("target/JsonBeautifierTest.performance.xml"));
-        beautifier.parse();
+                var writer = new BufferedWriter(new FileWriter("target/XmlBeautifierTest.performance.xml"));
+        ) {
+            var beautifier = new XmlBeautifier();
+            beautifier.setReader(reader);
+            beautifier.setWriter(writer);
+            beautifier.parse();
+        }
     }
 
     private void assertXml(String input, String expected) throws IOException {
-        File inputFile = new File("target/JsonBeautifierTest.assertXml.input.xml");
-        Files.writeString(inputFile.toPath(), input);
+        var result = new StringWriter();
 
-        File outputFile = new File("target/JsonBeautifierTest.assertXml.output.xml");
-        Files.writeString(outputFile.toPath(), input);
+        try(
+                var reader = new BufferedReader(new StringReader(input));
+                var writer = new BufferedWriter(result)
+        ){
+            var beautifier = new XmlBeautifier();
+            beautifier.setReader(reader);
+            beautifier.setWriter(writer);
+            beautifier.parse();
+        }
 
-        var beautifier = new XmlBeautifier();
-        beautifier.setInputFile(inputFile);
-        beautifier.setOutputFile(outputFile);
-        beautifier.parse();
-
-        Assertions.assertThat(outputFile)
-                .content()
+        Assertions.assertThat(result.toString())
                 .containsIgnoringNewLines(expected);
     }
 
