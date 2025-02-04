@@ -14,13 +14,13 @@ import java.io.*;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class BeautifierUI extends JDialog {
-    private final JComponent parent;
+    private final Component parent;
     private final MediaType contentType;
     private final Beautifier beautifier;
 
     private final JProgressBar progress = new JProgressBar();
 
-    public BeautifierUI(JComponent parent, MediaType contentType) {
+    public BeautifierUI(Component parent, MediaType contentType) {
         super(
                 SwingUtilities.getWindowAncestor(parent),
                 "Beautifier",
@@ -107,6 +107,38 @@ public class BeautifierUI extends JDialog {
                 }
 
                 onComplete.run(newResponseFile);
+            }catch (Throwable e){
+                invokeLater(() -> new ExceptionDialog(parent, e));
+            }
+
+            invokeLater(this::dispose);
+        }, "BeautifierUI").start();
+
+        invokeLater(() -> setVisible(true));
+    }
+
+    public void beautify(
+            String inputString,
+            OnCompleteFI<String> onComplete
+    ){
+        if(beautifier == null) return;
+
+        progress.setMaximum(inputString.length());
+
+        new Thread(() -> {
+            try {
+                var strWriter = new StringWriter();
+
+                try (
+                        var reader = new BufferedReader(new StringReader(inputString));
+                        var writer = new BufferedWriter(strWriter);
+                ) {
+                    beautifier.setReader(reader);
+                    beautifier.setWriter(writer);
+                    beautifier.parse();
+                }
+
+                onComplete.run(strWriter.toString());
             }catch (Throwable e){
                 invokeLater(() -> new ExceptionDialog(parent, e));
             }

@@ -3,7 +3,9 @@ package com.github.clagomess.tomato.ui.main.request.left.bodytype;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
+import com.github.clagomess.tomato.ui.main.request.right.BeautifierUI;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
@@ -19,6 +21,9 @@ public class RawBodyUI extends JPanel {
     private final JComboBox<RawBodyTypeEnum> cbContentType = new JComboBox<>(
             RawBodyTypeEnum.values()
     );
+    private final JButton btnBeautify = new JButton(new BxsMagicWandIcon()){{
+        setToolTipText("Beautify body");
+    }};
     private final TRSyntaxTextArea textArea = new TRSyntaxTextArea();
 
     public RawBodyUI(
@@ -30,16 +35,19 @@ public class RawBodyUI extends JPanel {
 
         setLayout(new MigLayout(
                 "insets 5 2 2 2",
-                "[grow, fill]"
+                "[grow, fill][]"
         ));
 
         cbContentType.setSelectedItem(rawBody.getType());
         cbContentType.addActionListener(l -> cbContentTypeAction());
 
-        add(cbContentType, "wrap");
+        btnBeautify.addActionListener(l -> btnBeautifyAction());
+
+        add(cbContentType);
+        add(btnBeautify, "wrap");
         var sp = TRSyntaxTextArea.createScroll(textArea);
         sp.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode("#616365")));
-        add(sp, "height 100%");
+        add(sp, "height 100%, span 2");
 
         textArea.setSyntaxEditingStyle(rawBody.getType().getSyntaxStyle());
         textArea.setText(rawBody.getRaw());
@@ -55,5 +63,15 @@ public class RawBodyUI extends JPanel {
         textArea.setSyntaxEditingStyle(type.getSyntaxStyle());
         rawBody.setType(type);
         requestStagingMonitor.update();
+    }
+
+    private void btnBeautifyAction(){
+        new BeautifierUI(this, rawBody.getType().getContentType())
+                .beautify(rawBody.getRaw(), result -> {
+                    SwingUtilities.invokeLater(() -> {
+                        textArea.setText(result);
+                        textArea.setCaretPosition(0);
+                    });
+                });
     }
 }
