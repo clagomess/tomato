@@ -2,13 +2,10 @@ package com.github.clagomess.tomato.io.beautifier;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.*;
+import java.io.IOException;
 
 @Slf4j
 public class JsonBeautifier extends Beautifier {
-    private BufferedReader reader;
-    private BufferedWriter writer;
-
     private final char[] buffer = new char[8192];
     private int bufferReadSize = 0;
     private int pos = 0;
@@ -36,38 +33,30 @@ public class JsonBeautifier extends Beautifier {
 
     @Override
     public void parse() throws IOException {
-        try(
-                var nReader = new BufferedReader(new FileReader(inputFile, charset));
-                var nRriter = new BufferedWriter(new FileWriter(outputFile, charset))
-        ) {
-            reader = nReader;
-            writer = nRriter;
+        char c;
+        while (allowedWhitespace(c = currentChar())) pos++;
 
-            char c;
-            while (allowedWhitespace(c = currentChar())) pos++;
-
-            try {
-                switch (c) {
-                    case '{': {
-                        writer.write("{\n");
-                        parseObject();
-                        writer.write("\n}");
-                        break;
-                    }
-                    case '[': {
-                        writer.write("[\n");
-                        parseArray();
-                        writer.write("\n]");
-                        break;
-                    }
-                    default:
-                        throw new BeautifierException(c, pos);
+        try {
+            switch (c) {
+                case '{': {
+                    writer.write("{\n");
+                    parseObject();
+                    writer.write("\n}");
+                    break;
                 }
-            } catch (BeautifierException e) {
-                log.warn(e.getMessage());
-                writer.newLine();
-                writer.write(e.getMessage());
+                case '[': {
+                    writer.write("[\n");
+                    parseArray();
+                    writer.write("\n]");
+                    break;
+                }
+                default:
+                    throw new BeautifierException(c, pos);
             }
+        } catch (BeautifierException e) {
+            log.warn(e.getMessage());
+            writer.newLine();
+            writer.write(e.getMessage());
         }
     }
 

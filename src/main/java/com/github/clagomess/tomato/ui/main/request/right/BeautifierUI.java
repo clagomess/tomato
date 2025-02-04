@@ -9,23 +9,28 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.io.*;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class BeautifierUI extends JDialog {
-    public BeautifierUI(ResponseTabContent parent) {
+    private final JComponent parent;
+    private final MediaType contentType;
+    private final Beautifier beautifier;
+
+    private final JProgressBar progress = new JProgressBar();
+
+    public BeautifierUI(JComponent parent, MediaType contentType) {
         super(
                 SwingUtilities.getWindowAncestor(parent),
                 "Beautifier",
                 Dialog.DEFAULT_MODALITY_TYPE
         );
 
-        MediaType contentType = parent.getResponseDto()
-                .getHttpResponse()
-                .getContentType();
+        this.parent = parent;
+        this.contentType = contentType;
 
-        Beautifier beautifier = getBeautifier(contentType);
+        beautifier = getBeautifier(contentType);
         if(beautifier == null) {
             new ExceptionDialog(parent, String.format(
                     "%s is not supported",
@@ -42,19 +47,10 @@ public class BeautifierUI extends JDialog {
                 "[grow, fill]"
         ));
 
-        long bodySize = parent.getResponseDto()
-                .getHttpResponse()
-                .getBodySize();
+        add(new JLabel("Processing: "), "wrap");
 
-        add(new JLabel(String.format(
-                "Processing %s bytes:",
-                bodySize
-        )), "wrap");
-
-        JProgressBar progress = new JProgressBar();
         progress.setStringPainted(true);
         progress.setMinimum(0);
-        progress.setMaximum((int) bodySize);
         beautifier.setProgress(value -> {
             invokeLater(() -> progress.setValue(value));
         });
@@ -63,30 +59,6 @@ public class BeautifierUI extends JDialog {
 
         pack();
         setLocationRelativeTo(parent);
-
-        new Thread(() -> {
-            try {
-                var newResponseFile = File.createTempFile("tomato-response-", ".bin");
-                newResponseFile.deleteOnExit();
-
-                beautifier.setCharset(parent.getResponseDto().getHttpResponse().getContentType().getCharsetOrDefault());
-                beautifier.setInputFile(parent.getResponseDto().getHttpResponse().getBody());
-                beautifier.setOutputFile(newResponseFile);
-                beautifier.parse();
-
-                parent.getResponseDto().getHttpResponse().setBody(newResponseFile);
-                invokeLater(() -> {
-                    parent.getBtnBeautify().setEnabled(false);
-                    parent.refreshResponseContent();
-                });
-            }catch (Throwable e) {
-                invokeLater(() -> new ExceptionDialog(parent, e));
-            }
-
-            invokeLater(this::dispose);
-        }, "BeautifierUI").start();
-
-        setVisible(true);
     }
 
     protected Beautifier getBeautifier(MediaType mediaType) {
@@ -99,5 +71,47 @@ public class BeautifierUI extends JDialog {
         }
 
         return null;
+    }
+
+    public BeautifierUI beautify(
+            File inputFile,
+            OnCompleteFI<File> onComplete
+    ){
+        progress.setMaximum((int) inputFile.length());
+
+        new Thread(() -> {
+            try {
+                var newResponseFile = File.createTempFile("tomato-response-", ".bin");
+                newResponseFile.deleteOnExit();
+
+                try (
+                        var reader = new BufferedReader(new FileReader(
+                                inputFile,
+                                contentType.getCharsetOrDefault()
+                        ));
+                        var writer = new BufferedWriter(new FileWriter(
+                                newResponseFile,
+                                contentType.getCharsetOrDefault()
+                        ))
+                ) {
+                    beautifier.setReader(reader);
+                    beautifier.setWriter(writer);
+                    beautifier.parse();
+
+                    onComplete.run(newResponseFile);
+                }
+            }catch (Throwable e){
+                invokeLater(() -> new ExceptionDialog(parent, e));
+            }
+
+            invokeLater(this::dispose);
+        }, "BeautifierUI").start();
+
+        return this;
+    }
+
+    @FunctionalInterface
+    public interface OnCompleteFI<T> {
+        void run(T result);
     }
 }
