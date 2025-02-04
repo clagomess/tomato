@@ -37,8 +37,8 @@ public class JsonBeautifier extends Beautifier {
     @Override
     public void parse() throws IOException {
         try(
-                var nReader = new BufferedReader(new FileReader(inputFile));
-                var nRriter = new BufferedWriter(new FileWriter(outputFile))
+                var nReader = new BufferedReader(new FileReader(inputFile, charset));
+                var nRriter = new BufferedWriter(new FileWriter(outputFile, charset))
         ) {
             reader = nReader;
             writer = nRriter;

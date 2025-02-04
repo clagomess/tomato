@@ -8,17 +8,15 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 @Slf4j
 public class XmlBeautifier extends Beautifier {
     @Override
     public void parse() throws IOException {
         try(
-                var fis = new FileInputStream(inputFile);
-                var fos = new FileOutputStream(outputFile);
+                var reader = new BufferedReader(new FileReader(inputFile, charset));
+                var writer = new BufferedWriter(new FileWriter(outputFile, charset));
         ) {
             try {
                 Source style = new StreamSource(getClass()
@@ -28,13 +26,13 @@ public class XmlBeautifier extends Beautifier {
                         .newTransformer(style);
 
                 transformer.transform(
-                        new StreamSource(fis),
-                        new StreamResult(fos)
+                        new StreamSource(reader),
+                        new StreamResult(writer)
                 );
             } catch (TransformerException e) {
                 log.warn(e.getMessage());
-                fos.write('\n');
-                fos.write(e.getMessage().getBytes());
+                writer.write('\n');
+                writer.write(e.getMessage());
             }
         }
     }

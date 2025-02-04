@@ -69,6 +69,7 @@ public class BeautifierUI extends JDialog {
                 var newResponseFile = File.createTempFile("tomato-response-", ".bin");
                 newResponseFile.deleteOnExit();
 
+                beautifier.setCharset(parent.getResponseDto().getHttpResponse().getContentType().getCharsetOrDefault());
                 beautifier.setInputFile(parent.getResponseDto().getHttpResponse().getBody());
                 beautifier.setOutputFile(newResponseFile);
                 beautifier.parse();
