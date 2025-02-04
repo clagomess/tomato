@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue;
 
 import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
+import com.github.clagomess.tomato.ui.component.CharsetComboBox;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
@@ -28,6 +29,14 @@ public class KeyValueUI extends JPanel {
     public KeyValueUI(
             List<KeyValueItemDto> list,
             RequestStagingMonitor requestStagingMonitor
+    ){
+        this(list, requestStagingMonitor, null);
+    }
+
+    public KeyValueUI(
+            List<KeyValueItemDto> list,
+            RequestStagingMonitor requestStagingMonitor,
+            CharsetComboBox charsetComboBox
     ) {
         this.list = list;
         this.requestStagingMonitor = requestStagingMonitor;
@@ -37,15 +46,13 @@ public class KeyValueUI extends JPanel {
                 "[grow,fill]"
         ));
 
-        JPanel header = new JPanel(new MigLayout(
-                "insets 5 0 5 0",
-                "[][][grow,fill][]"
-        ));
+        JPanel header = new JPanel(new MigLayout("insets 5 0 5 0"));
         header.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
 
         header.add(new JLabel(), "width 25!");
         header.add(new JLabel("Key"), "width 150!");
-        header.add(new JLabel("Value"), "width 100%");
+        header.add(new JLabel("Value"), "grow, width 100%");
+        if(charsetComboBox != null) header.add(charsetComboBox);
         header.add(btnAddNew);
 
         add(header, "width 100%, wrap");
