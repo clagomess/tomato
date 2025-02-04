@@ -166,7 +166,7 @@ public class HttpService {
     private HttpRequest buildBodyUrlEncoded(
             HttpRequest.Builder httpRequestBuilder
     ) throws IOException {
-        var form = new UrlEncodedFormBody(requestDto.getBody().getUrlEncodedForm());
+        var form = new UrlEncodedFormBody(requestDto.getBody());
 
         httpRequestBuilder.header(
                 "Content-Type",

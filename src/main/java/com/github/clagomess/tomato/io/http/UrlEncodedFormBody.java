@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,22 +10,21 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
 public class UrlEncodedFormBody {
     private final EnvironmentRepository environmentRepository;
-    private final List<KeyValueItemDto> form;
+    private final RequestDto.Body body;
 
     @Getter
     private final String contentType = "application/x-www-form-urlencoded";
 
-    public UrlEncodedFormBody(List<KeyValueItemDto> form) {
+    public UrlEncodedFormBody(RequestDto.Body body) {
         this(
                 new EnvironmentRepository(),
-                form
+                body
         );
     }
 
@@ -36,7 +36,7 @@ public class UrlEncodedFormBody {
                 .map(EnvironmentDto::getEnvs)
                 .orElse(Collections.emptyList());
 
-        for(var item : form){
+        for(var item : body.getUrlEncodedForm()){
             if(!item.isSelected()) continue;
             if(StringUtils.isBlank(item.getKey())) continue;
 
@@ -65,6 +65,6 @@ public class UrlEncodedFormBody {
             }
         }
 
-        return URLEncoder.encode(value, StandardCharsets.UTF_8);
+        return URLEncoder.encode(value, body.getCharset());
     }
 }
