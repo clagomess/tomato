@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.ui.main.request.left.bodytype.multipartform;
+package com.github.clagomess.tomato.ui.main.request.keyvalue;
 
 import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
@@ -15,6 +15,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 
 import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 
@@ -23,8 +24,9 @@ import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 class RowComponent extends JPanel {
     private final Container parent;
     private final RequestStagingMonitor requestStagingMonitor;
-    private final List<KeyValueItemDto> multiPartFormItems;
+    private final List<KeyValueItemDto> listItens;
     private final KeyValueItemDto item;
+    private Options options;
 
     private final JComboBox<KeyValueTypeEnum> cbType = new JComboBox<>(
             KeyValueTypeEnum.values()
@@ -39,16 +41,18 @@ class RowComponent extends JPanel {
     public RowComponent(
             Container parent,
             RequestStagingMonitor requestStagingMonitor,
-            List<KeyValueItemDto> multiPartFormItems,
-            KeyValueItemDto item
+            List<KeyValueItemDto> listItens,
+            KeyValueItemDto item,
+            Options options
     ){
         this.parent = parent;
         this.requestStagingMonitor = requestStagingMonitor;
-        this.multiPartFormItems = multiPartFormItems;
+        this.listItens = listItens;
         this.item = item;
+        this.options = options;
 
-        if(!this.multiPartFormItems.contains(this.item)){
-            this.multiPartFormItems.add(this.item);
+        if(!this.listItens.contains(this.item)){
+            this.listItens.add(this.item);
         }
 
         // set values
@@ -59,23 +63,21 @@ class RowComponent extends JPanel {
         setEnabled(item.isSelected());
 
         // listeners
-        cbType.addActionListener(l -> cbTypeOnChange());
-        txtKey.addOnChange(value -> {
-            item.setKey(value);
-            requestStagingMonitor.update();
-        });
         cbSelected.addActionListener(l -> cbSelectedOnChange());
-        btnRemove.addActionListener(l -> btnRemoveAction());
+        cbType.addActionListener(l -> cbTypeOnChange());
+        txtKey.addOnChange(this::txtKeyOnChange);
+        btnRemove.addActionListener(l -> remove());
 
         // layout
-        setLayout(new MigLayout(
-                "insets 2",
-                "[][][][grow, fill][]"
-        ));
+        setLayout(new MigLayout("insets 2"));
         add(cbSelected);
-        add(cbType, "width 70!");
+
+        if(options.isEnableTypeColumn()) {
+            add(cbType, "width 70!");
+        }
+
         add(txtKey, "width 100!");
-        add(cValue, "width 100:100:100%");
+        add(cValue, "grow, width 100:100:100%");
         add(btnRemove);
     }
 
@@ -90,19 +92,39 @@ class RowComponent extends JPanel {
 
         cValue = createCValue(item.getType(), item.getValue());
 
-        add(cValue, "width 100:100:100%", index);
+        add(cValue, "grow, width 100:100:100%", index);
         revalidate();
         repaint();
     }
 
     private void cbSelectedOnChange(){
+        if(Objects.equals(item.isSelected(), cbSelected.isSelected())) return;
+
         item.setSelected(cbSelected.isSelected());
         requestStagingMonitor.update();
         setEnabled(cbSelected.isSelected());
+        requestStagingMonitor.update();
+        options.getOnChange().run(item);
     }
 
-    private void btnRemoveAction(){
-        multiPartFormItems.remove(item);
+    private void txtKeyOnChange(String value){
+        if(Objects.equals(value, item.getKey())) return;
+
+        item.setKey(value);
+        requestStagingMonitor.update();
+        options.getOnChange().run(item);
+    }
+
+    private void valueOnChange(String value){
+        if(Objects.equals(value, item.getValue())) return;
+
+        item.setValue(value);
+        requestStagingMonitor.update();
+        options.getOnChange().run(item);
+    }
+
+    public void remove(){
+        listItens.remove(item);
         requestStagingMonitor.update();
         dispose();
 
@@ -112,22 +134,28 @@ class RowComponent extends JPanel {
     }
 
     public JComponent createCValue(KeyValueTypeEnum type, String value){
-        if(type == TEXT){
+        if(type == TEXT || !options.isEnableTypeColumn()) {
             var textField = new EnvTextField();
             textField.setText(value);
-            textField.addOnChange(vl -> {
-                item.setValue(vl);
-                requestStagingMonitor.update();
-            });
+            textField.addOnChange(this::valueOnChange);
             return textField;
         }else{
             var fileChooser = new FileChooser();
             fileChooser.setValue(value);
             fileChooser.addOnChange(file -> {
-                item.setValue(file != null ? file.getAbsolutePath() : null);
-                requestStagingMonitor.update();
+                valueOnChange(file != null ? file.getAbsolutePath() : null);
             });
             return fileChooser;
+        }
+    }
+
+    public void setValue(String value){
+        if(cValue instanceof EnvTextField txt){
+            txt.setText(value);
+        }
+
+        if(cValue instanceof FileChooser fc){
+            fc.setValue(value);
         }
     }
 
@@ -139,8 +167,14 @@ class RowComponent extends JPanel {
     }
 
     public void dispose(){
+        options.getOnChange().run(null);
         if(cValue instanceof EnvTextField envTextField){
             envTextField.dispose();
         }
+    }
+
+    @FunctionalInterface
+    public interface OnChange {
+        void run(KeyValueItemDto item);
     }
 }

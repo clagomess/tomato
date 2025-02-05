@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.ui.main.request.left.bodytype.multipartform;
+package com.github.clagomess.tomato.ui.main.request.keyvalue;
 
 import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.ui.component.IconButton;
@@ -15,33 +15,54 @@ import java.util.List;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
-public class MultiPartFormUI extends JPanel {
-    private final List<KeyValueItemDto> multiPartFormItems;
+public class KeyValueUI extends JPanel {
+    private final List<KeyValueItemDto> listItens;
     private final RequestStagingMonitor requestStagingMonitor;
     private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add new");
     private final JPanel rowsPanel;
+    private final Options options;
 
-    public MultiPartFormUI(
-            List<KeyValueItemDto> multiPartFormItems,
+    public KeyValueUI(
+            List<KeyValueItemDto> listItens,
             RequestStagingMonitor requestStagingMonitor
+    ) {
+        this(
+                listItens,
+                requestStagingMonitor,
+                Options.builder().build()
+        );
+    }
+
+    public KeyValueUI(
+            List<KeyValueItemDto> listItens,
+            RequestStagingMonitor requestStagingMonitor,
+            Options options
     ){
-        this.multiPartFormItems = multiPartFormItems;
+        this.listItens = listItens;
         this.requestStagingMonitor = requestStagingMonitor;
+        this.options = options;
 
         setLayout(new MigLayout(
                 "insets 0 0 0 0",
                 "[grow, fill]"
         ));
 
-        JPanel header = new JPanel(new MigLayout(
-                "insets 5 0 5 0",
-                "[][][][grow, fill][]"
-        ));
+        // ### HEADER
+        JPanel header = new JPanel(new MigLayout("insets 5 0 5 0"));
         header.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
         header.add(new JLabel(), "width 25!");
-        header.add(new JLabel("Type"), "width 70!");
+
+        if(options.isEnableTypeColumn()) {
+            header.add(new JLabel("Type"), "width 70!");
+        }
+
         header.add(new JLabel("Key"), "width 100!");
-        header.add(new JLabel("Value"), "width 100%");
+        header.add(new JLabel("Value"), "grow, width 100%");
+
+        if(options.getCharsetComboBox() != null){
+            header.add(options.getCharsetComboBox());
+        }
+
         header.add(btnAddNew);
 
         add(header, "width 100%, wrap");
@@ -60,12 +81,14 @@ public class MultiPartFormUI extends JPanel {
         add(scrollPane, "width ::100%, height 100%");
 
         btnAddNew.addActionListener(l -> {
-            addRow(new KeyValueItemDto());
+            var item = new KeyValueItemDto();
+            addRow(item);
+            options.getOnChange().run(item);
             requestStagingMonitor.update();
         });
 
         SwingUtilities.invokeLater(() -> {
-            this.multiPartFormItems.forEach(this::addRow);
+            this.listItens.forEach(this::addRow);
         });
     }
 
@@ -73,12 +96,41 @@ public class MultiPartFormUI extends JPanel {
         var row = new RowComponent(
                 rowsPanel,
                 this.requestStagingMonitor,
-                this.multiPartFormItems,
-                item
+                this.listItens,
+                item,
+                options
         );
 
         rowsPanel.add(row, "wrap 4");
         rowsPanel.revalidate();
+    }
+
+    public void refresh(){
+        List<RowComponent> rows = Arrays.stream(rowsPanel.getComponents())
+                .filter(row -> row instanceof RowComponent)
+                .map(row -> (RowComponent) row)
+                .toList();
+
+        rows.forEach(row -> {
+            var onChange = row.getOptions().getOnChange();
+            row.getOptions().setOnChange(value -> {});
+
+            if(!listItens.contains(row.getItem())){
+                row.remove();
+            }
+
+            row.getCbSelected().setSelected(row.getItem().isSelected());
+            row.getTxtKey().setText(row.getItem().getKey());
+            row.setValue(row.getItem().getValue());
+
+            row.getOptions().setOnChange(onChange);
+        });
+
+        // add
+        for(var item : listItens){
+            var ret = rows.stream().noneMatch(row -> item.equals(row.getItem()));
+            if(ret) addRow(item);
+        }
     }
 
     public void dispose(){

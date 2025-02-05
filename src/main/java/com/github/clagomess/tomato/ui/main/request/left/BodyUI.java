@@ -3,11 +3,11 @@ package com.github.clagomess.tomato.ui.main.request.left;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
+import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueUI;
+import com.github.clagomess.tomato.ui.main.request.keyvalue.Options;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.BinaryUI;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.NoBodyUI;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.RawBodyUI;
-import com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue.KeyValueUI;
-import com.github.clagomess.tomato.ui.main.request.left.bodytype.multipartform.MultiPartFormUI;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -75,9 +75,10 @@ public class BodyUI extends JPanel {
 
     private Component getBodyType(){
         return switch (body.getType()) {
-            case MULTIPART_FORM -> new MultiPartFormUI(
+            case MULTIPART_FORM -> new KeyValueUI(
                     body.getMultiPartForm(),
-                    requestStagingMonitor
+                    requestStagingMonitor,
+                    Options.builder().enableTypeColumn(true).build()
             );
             case URL_ENCODED_FORM -> new KeyValueUI(
                     body.getUrlEncodedForm(),
@@ -96,10 +97,6 @@ public class BodyUI extends JPanel {
     }
 
     public void dispose() {
-        if(currentBodyType instanceof MultiPartFormUI bodyType){
-            bodyType.dispose();
-        }
-
         if(currentBodyType instanceof KeyValueUI bodyType){
             bodyType.dispose();
         }

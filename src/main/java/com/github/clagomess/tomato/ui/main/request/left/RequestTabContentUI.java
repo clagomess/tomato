@@ -3,7 +3,8 @@ package com.github.clagomess.tomato.ui.main.request.left;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
-import com.github.clagomess.tomato.ui.main.request.left.bodytype.keyvalue.KeyValueUI;
+import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueUI;
+import com.github.clagomess.tomato.ui.main.request.keyvalue.Options;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
@@ -40,7 +41,12 @@ public class RequestTabContentUI extends JPanel {
         queryParamsUI = new KeyValueUI(
                 requestDto.getUrlParam().getQuery(),
                 requestStagingMonitor,
-                getCharsetComboBox(requestDto.getUrlParam(), requestStagingMonitor)
+                Options.builder()
+                        .charsetComboBox(getCharsetComboBox(
+                                requestDto.getUrlParam(),
+                                requestStagingMonitor
+                        ))
+                        .build()
         );
         tpRequest.addTab(queryParamsTabTitle.getTitle(), queryParamsUI);
 
@@ -53,7 +59,12 @@ public class RequestTabContentUI extends JPanel {
         pathVariablesUI = new KeyValueUI(
                 requestDto.getUrlParam().getPath(),
                 requestStagingMonitor,
-                getCharsetComboBox(requestDto.getUrlParam(), requestStagingMonitor)
+                Options.builder()
+                        .charsetComboBox(getCharsetComboBox(
+                                requestDto.getUrlParam(),
+                                requestStagingMonitor
+                        ))
+                        .build()
         );
         tpRequest.addTab(pathVariablesTabTitle.getTitle(), pathVariablesUI);
 
