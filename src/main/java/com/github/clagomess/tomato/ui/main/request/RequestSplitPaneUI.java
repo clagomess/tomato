@@ -43,7 +43,7 @@ public class RequestSplitPaneUI extends JPanel {
     private final HttpMethodComboBox cbHttpMethod = new HttpMethodComboBox();
     private final EnvTextField txtRequestUrl = new EnvTextField();
     private final JButton btnSendRequest = new JButton("Send", new BxSendIcon());
-    private final JButton btnCancelRequest = new JButton(new BxBlockIcon()){{
+    private final JButton btnCancelRequest = new JButton(new BxBlockIcon(Color.RED)){{
         setToolTipText("Cancel");
         setEnabled(false);
     }};

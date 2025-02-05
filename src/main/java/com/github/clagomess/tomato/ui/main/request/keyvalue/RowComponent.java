@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.FileChooser;
+import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
@@ -34,9 +35,7 @@ class RowComponent extends JPanel {
     private final ListenableTextField txtKey = new ListenableTextField();
     private JComponent cValue;
     private final JCheckBox cbSelected = new JCheckBox();
-    private final JButton btnRemove = new JButton(new BxTrashIcon()){{
-        setToolTipText("Remove");
-    }};
+    private final JButton btnRemove = new IconButton(new BxTrashIcon(), "Remove");
 
     public RowComponent(
             Container parent,

@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.ui.component.envtextfield;
 
+import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLinkExternalIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxListPlusIcon;
@@ -17,13 +18,11 @@ public class EnvTextField extends JPanel {
     private final JTextPane textPane;
 
     public EnvTextField() {
-        this.btnEnvView = new JButton(new BxListPlusIcon());
-        this.btnEnvView.setToolTipText("View Injected Environment");
+        this.btnEnvView = new IconButton(new BxListPlusIcon(), "View Injected Environment");
         this.btnEnvView.addActionListener(e -> btnEnvViewAction());
         this.btnEnvView.setEnabled(false);
 
-        this.btnExpand = new JButton(new BxLinkExternalIcon());
-        this.btnExpand.setToolTipText("Expand to value editor");
+        this.btnExpand = new IconButton(new BxLinkExternalIcon(), "Expand to value editor");
         this.btnExpand.addActionListener(e -> btnExpandAction());
 
         this.textPane = new JTextPane();
@@ -38,7 +37,7 @@ public class EnvTextField extends JPanel {
 
         setLayout(new MigLayout(
                 "insets 2",
-                "[][][grow, fill]"
+                "0[]0[]2[grow, fill]"
         ));
         add(btnEnvView);
         add(btnExpand);
