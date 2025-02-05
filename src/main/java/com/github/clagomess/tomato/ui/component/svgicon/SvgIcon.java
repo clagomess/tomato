@@ -11,41 +11,53 @@ import lombok.RequiredArgsConstructor;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
-@RequiredArgsConstructor
 public class SvgIcon implements Icon {
     private final String resourceName;
     private final int iconWidth;
     private final int iconHeight;
-    private final Color color;
+    private final String color;
 
-    public SvgIcon(String resourceName){
-        this(resourceName, 18, 18, UIManager.getColor("Objects.Grey"));
+    public SvgIcon(String resourceName, int iconWidth, int iconHeight, Color color) {
+        this.resourceName = resourceName;
+        this.iconWidth = iconWidth;
+        this.iconHeight = iconHeight;
+        this.color = "#" + String.format("%06X", 0xFFFFFF & color.getRGB());
     }
 
-    private SVGDocument document = null;
-    private SVGDocument getDocument() {
-        if(document != null) return document;
+    public SvgIcon(String resourceName){
+        this.resourceName = resourceName;
+        this.iconWidth = 18;
+        this.iconHeight = 18;
+        this.color = "#BBBBBB";
+    }
 
-        URL svgUrl = Objects.requireNonNull(
-                getClass().getResource(resourceName),
-                "Failed to load resource: " + resourceName
+    private final Map<Boolean, SVGDocument> documentMap = new HashMap<>(1);
+    private SVGDocument getDocument(Component component) {
+        if(documentMap.containsKey(component.isEnabled())){
+            return documentMap.get(component.isEnabled());
+        }
+
+        URL svgUrl = Objects.requireNonNull(getClass().getResource(resourceName));
+
+        if(color == null && component.isEnabled()) {
+            SVGDocument document = Objects.requireNonNull(
+                    new SVGLoader().load(svgUrl)
+            );
+            documentMap.put(component.isEnabled(), document);
+            return document;
+        }
+
+        SVGDocument document = Objects.requireNonNull(
+                new SVGLoader().load(svgUrl, new ColorParserProvider(
+                        component.isEnabled() ? color : "#616365"
+                ))
         );
 
-        SVGLoader loader = new SVGLoader();
-
-        if(color == null) {
-            document = Objects.requireNonNull(
-                    loader.load(svgUrl),
-                    "Failed to load svg: " + svgUrl
-            );
-        }else{
-            document = Objects.requireNonNull(
-                    loader.load(svgUrl, new ColorParserProvider(color)),
-                    "Failed to load svg: " + svgUrl
-            );
-        }
+        documentMap.put(component.isEnabled(), document);
 
         return document;
     }
@@ -57,7 +69,7 @@ public class SvgIcon implements Icon {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
 
-        getDocument().render(c, g2, new ViewBox(x, y, iconWidth, iconHeight));
+        getDocument(c).render(c, g2, new ViewBox(x, y, iconWidth, iconHeight));
     }
 
     @Override
@@ -72,7 +84,7 @@ public class SvgIcon implements Icon {
 
     @RequiredArgsConstructor
     private static class ColorParserProvider extends DefaultParserProvider {
-        private final Color color;
+        private final String color;
 
         @Override
         public DomProcessor createPreProcessor() {
@@ -80,12 +92,9 @@ public class SvgIcon implements Icon {
         }
     }
 
+    @RequiredArgsConstructor
     private static class CustomDomProcessor implements DomProcessor {
         private final String color;
-
-        public CustomDomProcessor(Color color) {
-            this.color = "#" + String.format("%06X", 0xFFFFFF & color.getRGB());
-        }
 
         @Override
         public void process(ParsedElement root) {
