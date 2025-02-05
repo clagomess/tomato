@@ -10,6 +10,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.util.Objects;
 
 public class ValueEditorUI extends JFrame {
     private final EnvTextField parent;
@@ -74,7 +75,10 @@ public class ValueEditorUI extends JFrame {
 
     @Override
     public void dispose() {
-        parent.setText(textArea.getText());
+        if(!Objects.equals(parent.getText(), textArea.getText())) {
+            parent.setText(textArea.getText());
+        }
+
         super.dispose();
     }
 }

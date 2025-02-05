@@ -105,34 +105,6 @@ public class KeyValueUI extends JPanel {
         rowsPanel.revalidate();
     }
 
-    public void refresh(){
-        List<RowComponent> rows = Arrays.stream(rowsPanel.getComponents())
-                .filter(row -> row instanceof RowComponent)
-                .map(row -> (RowComponent) row)
-                .toList();
-
-        rows.forEach(row -> {
-            var onChange = row.getOptions().getOnChange();
-            row.getOptions().setOnChange(value -> {});
-
-            if(!listItens.contains(row.getItem())){
-                row.remove();
-            }
-
-            row.getCbSelected().setSelected(row.getItem().isSelected());
-            row.getTxtKey().setText(row.getItem().getKey());
-            row.setValue(row.getItem().getValue());
-
-            row.getOptions().setOnChange(onChange);
-        });
-
-        // add
-        for(var item : listItens){
-            var ret = rows.stream().noneMatch(row -> item.equals(row.getItem()));
-            if(ret) addRow(item);
-        }
-    }
-
     public void dispose(){
         Arrays.stream(rowsPanel.getComponents())
                 .filter(row -> row instanceof RowComponent)

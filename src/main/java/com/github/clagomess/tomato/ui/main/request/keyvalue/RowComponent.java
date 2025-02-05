@@ -66,10 +66,15 @@ class RowComponent extends JPanel {
         cbSelected.addActionListener(l -> cbSelectedOnChange());
         cbType.addActionListener(l -> cbTypeOnChange());
         txtKey.addOnChange(this::txtKeyOnChange);
-        btnRemove.addActionListener(l -> remove());
+        btnRemove.addActionListener(l -> btnRemoveAction());
 
         // layout
-        setLayout(new MigLayout("insets 2"));
+        setLayout(new MigLayout(
+                "insets 2",
+                options.isEnableTypeColumn() ?
+                        "[][][][grow, fill][]" :
+                        "[][][grow, fill][]"
+        ));
         add(cbSelected);
 
         if(options.isEnableTypeColumn()) {
@@ -77,14 +82,17 @@ class RowComponent extends JPanel {
         }
 
         add(txtKey, "width 100!");
-        add(cValue, "grow, width 100:100:100%");
+        add(cValue, "width 100:100:100%");
         add(btnRemove);
     }
 
     // @TODO: implement option to fill Content-Type when 'type File'
 
     private void cbTypeOnChange(){
-        item.setType((KeyValueTypeEnum) cbType.getSelectedItem());
+        KeyValueTypeEnum selectedType = (KeyValueTypeEnum) cbType.getSelectedItem();
+        if(Objects.equals(selectedType, item.getType())) return;
+
+        item.setType(selectedType);
         requestStagingMonitor.update();
 
         int index = ComponentUtil.getComponentIndex(this, cValue);
@@ -92,7 +100,7 @@ class RowComponent extends JPanel {
 
         cValue = createCValue(item.getType(), item.getValue());
 
-        add(cValue, "grow, width 100:100:100%", index);
+        add(cValue, "width 100:100:100%", index);
         revalidate();
         repaint();
     }
@@ -123,7 +131,7 @@ class RowComponent extends JPanel {
         options.getOnChange().run(item);
     }
 
-    public void remove(){
+    private void btnRemoveAction(){
         listItens.remove(item);
         requestStagingMonitor.update();
         dispose();
@@ -133,7 +141,7 @@ class RowComponent extends JPanel {
         parent.repaint();
     }
 
-    public JComponent createCValue(KeyValueTypeEnum type, String value){
+    private JComponent createCValue(KeyValueTypeEnum type, String value){
         if(type == TEXT || !options.isEnableTypeColumn()) {
             var textField = new EnvTextField();
             textField.setText(value);
@@ -146,16 +154,6 @@ class RowComponent extends JPanel {
                 valueOnChange(file != null ? file.getAbsolutePath() : null);
             });
             return fileChooser;
-        }
-    }
-
-    public void setValue(String value){
-        if(cValue instanceof EnvTextField txt){
-            txt.setText(value);
-        }
-
-        if(cValue instanceof FileChooser fc){
-            fc.setValue(value);
         }
     }
 
