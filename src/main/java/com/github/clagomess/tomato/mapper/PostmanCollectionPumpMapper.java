@@ -1,11 +1,13 @@
 package com.github.clagomess.tomato.mapper;
 
 import com.github.clagomess.tomato.dto.data.CollectionDto;
-import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import com.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
-import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -56,10 +58,9 @@ public interface PostmanCollectionPumpMapper {
         }
     }
 
-    @Mapping(target = "type", ignore = true)
     @Mapping(target = "selected", ignore = true)
     @Mapping(target = "valueContentType", ignore = true)
-    KeyValueItemDto map(PostmanCollectionV210Dto.Item.Request.Url.Param source);
+    ContentTypeKeyValueItemDto map(PostmanCollectionV210Dto.Item.Request.Url.Param source);
 
     @AfterMapping
     default void mapAfter(
@@ -69,9 +70,7 @@ public interface PostmanCollectionPumpMapper {
         target.setSelected(source.getDisabled() == null || !source.getDisabled());
     }
 
-    @Mapping(target = "type", ignore = true)
     @Mapping(target = "selected", ignore = true)
-    @Mapping(target = "valueContentType", ignore = true)
     KeyValueItemDto map(PostmanCollectionV210Dto.Item.Request.Header source);
 
     @AfterMapping
@@ -116,11 +115,11 @@ public interface PostmanCollectionPumpMapper {
 
     @Mapping(target = "selected", ignore = true)
     @Mapping(target = "valueContentType", ignore = true)
-    KeyValueItemDto map(PostmanCollectionV210Dto.Item.Request.Body.UrlEncoded source);
+    ContentTypeKeyValueItemDto map(PostmanCollectionV210Dto.Item.Request.Body.UrlEncoded source);
 
     @AfterMapping
     default void mapAfter(
-            @MappingTarget KeyValueItemDto target,
+            @MappingTarget ContentTypeKeyValueItemDto target,
             PostmanCollectionV210Dto.Item.Request.Body.UrlEncoded source
     ){
         target.setSelected(source.getDisabled() == null || !source.getDisabled());
@@ -129,11 +128,11 @@ public interface PostmanCollectionPumpMapper {
     @Mapping(target = "value", ignore = true)
     @Mapping(target = "selected", ignore = true)
     @Mapping(target = "valueContentType", ignore = true)
-    KeyValueItemDto map(PostmanCollectionV210Dto.Item.Request.Body.FormData source);
+    FileValueItemDto map(PostmanCollectionV210Dto.Item.Request.Body.FormData source);
 
     @AfterMapping
     default void mapAfter(
-            @MappingTarget KeyValueItemDto target,
+            @MappingTarget FileValueItemDto target,
             PostmanCollectionV210Dto.Item.Request.Body.FormData source
     ){
         target.setSelected(source.getDisabled() == null || !source.getDisabled());

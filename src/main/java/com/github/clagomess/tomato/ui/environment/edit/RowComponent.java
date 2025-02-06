@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.environment.edit;
 
-import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.StagingMonitor;

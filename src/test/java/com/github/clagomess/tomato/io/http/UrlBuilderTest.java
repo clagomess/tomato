@@ -1,8 +1,9 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 import static com.github.clagomess.tomato.io.http.MediaType.TEXT_PLAIN_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,14 +27,6 @@ public class UrlBuilderTest {
             new KeyValueItemDto("foo", "bar"),
             new KeyValueItemDto("date", "17/01/2025"),
             new KeyValueItemDto("blank", " ")
-    );
-
-    private final List<KeyValueItemDto> paramList = List.of(
-            new KeyValueItemDto("foo", "bar"),
-            new KeyValueItemDto("date", "17/01/2025"),
-            new KeyValueItemDto("date_env", "{{date}}"),
-            new KeyValueItemDto("blank", " "),
-            new KeyValueItemDto(TEXT, "disabled", "disabled", TEXT_PLAIN_TYPE, false)
     );
 
     @BeforeEach
@@ -142,7 +134,13 @@ public class UrlBuilderTest {
             String expected
     ) throws IOException {
         var request =  new RequestDto();
-        request.getUrlParam().setPath(paramList);
+        request.getUrlParam().setPath(List.of(
+                new KeyValueItemDto("foo", "bar"),
+                new KeyValueItemDto("date", "17/01/2025"),
+                new KeyValueItemDto("date_env", "{{date}}"),
+                new KeyValueItemDto("blank", " "),
+                new KeyValueItemDto("disabled", "disabled", false)
+        ));
 
         var urlBuffer = new StringBuilder(input);
 
@@ -164,7 +162,13 @@ public class UrlBuilderTest {
             String expected
     ) throws IOException {
         var request =  new RequestDto();
-        request.getUrlParam().setQuery(paramList);
+        request.getUrlParam().setQuery(List.of(
+                new ContentTypeKeyValueItemDto("foo", "bar"),
+                new ContentTypeKeyValueItemDto("date", "17/01/2025"),
+                new ContentTypeKeyValueItemDto("date_env", "{{date}}"),
+                new ContentTypeKeyValueItemDto("blank", " "),
+                new ContentTypeKeyValueItemDto("disabled", "disabled", TEXT_PLAIN_TYPE, false)
+        ));
 
         var urlBuffer = new StringBuilder(input);
 

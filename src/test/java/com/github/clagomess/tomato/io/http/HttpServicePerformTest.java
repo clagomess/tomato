@@ -1,8 +1,10 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
-import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
@@ -15,7 +17,7 @@ import org.mockito.Mockito;
 import java.util.Collections;
 import java.util.Objects;
 
-import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
+import static com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.FILE;
 import static com.github.clagomess.tomato.io.http.MediaType.APPLICATION_OCTET_STREAM_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -165,7 +167,7 @@ public class HttpServicePerformTest {
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new RequestDto.Body());
         request.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
-        request.getBody().setUrlEncodedForm(Collections.singletonList(new KeyValueItemDto("foo", "bar")));
+        request.getBody().setUrlEncodedForm(Collections.singletonList(new ContentTypeKeyValueItemDto("foo", "bar")));
 
         try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
             ResponseDto response = new HttpService(request).perform();
@@ -205,7 +207,7 @@ public class HttpServicePerformTest {
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new RequestDto.Body());
         request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
-        request.getBody().getMultiPartForm().add(new KeyValueItemDto("foo", "bar"));
+        request.getBody().getMultiPartForm().add(new FileValueItemDto("foo", "bar"));
 
         try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
             ResponseDto response = new HttpService(request).perform();
@@ -225,7 +227,7 @@ public class HttpServicePerformTest {
                         .getResource("HttpServicePerformTest/dummy.txt"))
                 .getFile();
 
-        request.getBody().getMultiPartForm().add(new KeyValueItemDto(
+        request.getBody().getMultiPartForm().add(new FileValueItemDto(
                 FILE,
                 "key",
                 formFile,

@@ -1,6 +1,8 @@
 package com.github.clagomess.tomato.ui.main.request.left;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextfieldOptions;
@@ -16,11 +18,11 @@ import java.util.List;
 @Getter
 @Setter
 public class RequestTabContentUI extends JPanel {
-    private final KeyValueUI queryParamsUI;
-    private final KeyValueUI pathVariablesUI;
+    private final KeyValueUI<ContentTypeKeyValueItemDto> queryParamsUI;
+    private final KeyValueUI<KeyValueItemDto> pathVariablesUI;
     private final BodyUI bodyUI;
-    private final KeyValueUI headersUI;
-    private final KeyValueUI cookiesUI;
+    private final KeyValueUI<KeyValueItemDto> headersUI;
+    private final KeyValueUI<KeyValueItemDto> cookiesUI;
 
     public RequestTabContentUI(
             RequestDto requestDto,
@@ -39,13 +41,11 @@ public class RequestTabContentUI extends JPanel {
                 "Query Params",
                 !requestDto.getUrlParam().getQuery().isEmpty()
         );
-        queryParamsUI = new KeyValueUI(
+        queryParamsUI = new KeyValueUI<>(
                 requestDto.getUrlParam().getQuery(),
+                ContentTypeKeyValueItemDto.class,
                 requestStagingMonitor,
                 KeyValueOptions.builder()
-                        .envTextfieldOptions(EnvTextfieldOptions.builder()
-                                .valueEditorShowContentTypeEdit(true)
-                                .build())
                         .charsetComboBox(getCharsetComboBox(
                                 requestDto.getUrlParam(),
                                 requestStagingMonitor
@@ -60,8 +60,9 @@ public class RequestTabContentUI extends JPanel {
                 "Path Variables",
                 !requestDto.getUrlParam().getPath().isEmpty()
         );
-        pathVariablesUI = new KeyValueUI(
+        pathVariablesUI = new KeyValueUI<>(
                 requestDto.getUrlParam().getPath(),
+                KeyValueItemDto.class,
                 requestStagingMonitor,
                 KeyValueOptions.builder()
                         .charsetComboBox(getCharsetComboBox(
@@ -88,8 +89,9 @@ public class RequestTabContentUI extends JPanel {
                 "Headers",
                 !requestDto.getHeaders().isEmpty()
         );
-        headersUI = new KeyValueUI(
+        headersUI = new KeyValueUI<>(
                 requestDto.getHeaders(),
+                KeyValueItemDto.class,
                 requestStagingMonitor
         );
         tpRequest.addTab(headersTabTitle.getTitle(), headersUI);
@@ -99,8 +101,9 @@ public class RequestTabContentUI extends JPanel {
                 "Cookies",
                 !requestDto.getCookies().isEmpty()
         );
-        cookiesUI = new KeyValueUI(
+        cookiesUI = new KeyValueUI<>(
                 requestDto.getCookies(),
+                KeyValueItemDto.class,
                 requestStagingMonitor
         );
         tpRequest.addTab(cookiesTabTitle.getTitle(), cookiesUI);

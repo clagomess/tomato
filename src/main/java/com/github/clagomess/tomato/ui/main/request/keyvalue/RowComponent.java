@@ -1,13 +1,16 @@
 package com.github.clagomess.tomato.ui.main.request.keyvalue;
 
-import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
-import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
+import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
+import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextfieldOptions;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.Getter;
@@ -19,15 +22,15 @@ import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 
-import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
+import static com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.FILE;
 
 @Getter
 @Setter
-class RowComponent extends JPanel {
+class RowComponent<T extends KeyValueItemDto> extends JPanel {
     private final Container parent;
     private final RequestStagingMonitor requestStagingMonitor;
-    private final List<KeyValueItemDto> listItens;
-    private final KeyValueItemDto item;
+    private final List<T> listItens;
+    private final T item;
     private KeyValueOptions options;
 
     private final JComboBox<KeyValueTypeEnum> cbType = new JComboBox<>(
@@ -41,8 +44,8 @@ class RowComponent extends JPanel {
     public RowComponent(
             Container parent,
             RequestStagingMonitor requestStagingMonitor,
-            List<KeyValueItemDto> listItens,
-            KeyValueItemDto item,
+            List<T> listItens,
+            T item,
             KeyValueOptions options
     ){
         this.parent = parent;
@@ -55,50 +58,52 @@ class RowComponent extends JPanel {
             this.listItens.add(this.item);
         }
 
-        // set values
-        cbType.setSelectedItem(item.getType());
-        txtKey.setText(item.getKey());
-        cValue = createCValue(item.getType(), item.getValue());
-        cbSelected.setSelected(item.isSelected());
-        setEnabled(item.isSelected());
-
-        // listeners
-        cbSelected.addActionListener(l -> cbSelectedOnChange());
-        cbType.addActionListener(l -> cbTypeOnChange());
-        txtKey.addOnChange(this::txtKeyOnChange);
-        btnRemove.addActionListener(l -> btnRemoveAction());
-
-        // layout
         setLayout(new MigLayout(
                 "insets 2",
-                options.isEnableTypeColumn() ?
+                item instanceof FileValueItemDto ?
                         "[][][][grow, fill][]" :
                         "[][][grow, fill][]"
         ));
+
+        // set values & add layout
+        cbSelected.setSelected(item.isSelected());
+        cbSelected.addActionListener(l -> cbSelectedOnChange());
         add(cbSelected);
 
-        if(options.isEnableTypeColumn()) {
+        if(item instanceof FileValueItemDto fvItem){
+            cbType.setSelectedItem(fvItem.getType());
+            cbType.setEnabled(item.isSelected());
+            cbType.addActionListener(l -> cbTypeOnChange(fvItem));
             add(cbType, "width 70!");
         }
 
+        txtKey.setText(item.getKey());
+        txtKey.setEnabled(item.isSelected());
+        txtKey.addOnChange(this::txtKeyOnChange);
         add(txtKey, "width 100!");
+
+        cValue = createCValue();
+        cValue.setEnabled(item.isSelected());
         add(cValue, "width 100:100:100%");
+
+        btnRemove.setEnabled(item.isSelected());
+        btnRemove.addActionListener(l -> btnRemoveAction());
         add(btnRemove);
     }
 
     // @TODO: implement option to fill Content-Type when 'type File'
 
-    private void cbTypeOnChange(){
+    private void cbTypeOnChange(FileValueItemDto fvItem){
         KeyValueTypeEnum selectedType = (KeyValueTypeEnum) cbType.getSelectedItem();
-        if(Objects.equals(selectedType, item.getType())) return;
+        if(Objects.equals(selectedType, fvItem.getType())) return;
 
-        item.setType(selectedType);
+        fvItem.setType(selectedType);
         requestStagingMonitor.update();
 
         int index = ComponentUtil.getComponentIndex(this, cValue);
         remove(index);
 
-        cValue = createCValue(item.getType(), item.getValue());
+        cValue = createCValue();
 
         add(cValue, "width 100:100:100%", index);
         revalidate();
@@ -141,40 +146,43 @@ class RowComponent extends JPanel {
         parent.repaint();
     }
 
-    private JComponent createCValue(KeyValueTypeEnum type, String value){
-        if(type == TEXT || !options.isEnableTypeColumn()) {
-            if(options.getEnvTextfieldOptions().isValueEditorShowContentTypeEdit()) {
-                options.getEnvTextfieldOptions().setValueEditorSelectedRawBodyType(
-                        RawBodyTypeEnum.valueOfContentType(item.getValueContentType())
-                );
-                options.getEnvTextfieldOptions().setValueEditorOnDispose((rawBodyType, text) -> {
-                    if(Objects.equals(
-                            item.getValueContentType(),
-                            rawBodyType.getContentType().toString()
-                    )) return;
-
-                    options.getEnvTextfieldOptions().setValueEditorSelectedRawBodyType(rawBodyType);
-                    item.setValueContentType(rawBodyType.getContentType().toString());
-                    requestStagingMonitor.update();
-                    options.getOnChange().run(item);
-                });
-            }
-
-            var textField = new EnvTextField(options.getEnvTextfieldOptions());
-            textField.setText(value);
-            textField.addOnChange(this::valueOnChange);
-            return textField;
-        }else{
+    private JComponent createCValue(){
+        if(item instanceof FileValueItemDto fvItem && fvItem.getType() == FILE){
             var fileChooser = new FileChooser();
-            fileChooser.setValue(value);
+            fileChooser.setValue(fvItem.getValue());
             fileChooser.addOnChange(file -> {
                 valueOnChange(file != null ? file.getAbsolutePath() : null);
             });
             return fileChooser;
         }
+
+        var envTextfieldOptions = EnvTextfieldOptions.builder().build();
+
+        if(item instanceof ContentTypeKeyValueItemDto ctItem){
+            envTextfieldOptions.setValueEditorShowContentTypeEdit(true);
+            envTextfieldOptions.setValueEditorSelectedRawBodyType(
+                    RawBodyTypeEnum.valueOfContentType(ctItem.getValueContentType())
+            );
+            envTextfieldOptions.setValueEditorOnDispose((rawBodyType, text) -> {
+                if(Objects.equals(
+                        ctItem.getValueContentType(),
+                        rawBodyType.getContentType().toString()
+                )) return;
+
+                envTextfieldOptions.setValueEditorSelectedRawBodyType(rawBodyType);
+                ctItem.setValueContentType(rawBodyType.getContentType().toString());
+                requestStagingMonitor.update();
+                options.getOnChange().run(item);
+            });
+        }
+
+        var textField = new EnvTextField(envTextfieldOptions);
+        textField.setText(item.getValue());
+        textField.addOnChange(this::valueOnChange);
+        return textField;
     }
 
-    public void setEnabled(boolean enabled){
+    public void  setEnabled(boolean enabled){
         cbType.setEnabled(enabled);
         txtKey.setEnabled(enabled);
         cValue.setEnabled(enabled);

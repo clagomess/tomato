@@ -1,10 +1,12 @@
 package com.github.clagomess.tomato.mapper;
 
-import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import com.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
-import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -41,10 +43,9 @@ public class PostmanCollectionPumpMapperTest {
         param.setValue("87");
         param.setDisabled(true);
 
-        KeyValueItemDto result = pumpMapper.map(param);
+        ContentTypeKeyValueItemDto result = pumpMapper.map(param);
 
         assertEquals(param.getKey(), result.getKey());
-        assertEquals(KeyValueTypeEnum.TEXT, result.getType());
         assertEquals(param.getValue(), result.getValue());
         assertFalse(result.isSelected());
     }
@@ -72,7 +73,7 @@ public class PostmanCollectionPumpMapperTest {
         item.setType("file");
         item.setSrc("/home/claudio/Imagens/youtube-en-VTV.jpg");
 
-        KeyValueItemDto result = pumpMapper.map(item);
+        FileValueItemDto result = pumpMapper.map(item);
         assertEquals(item.getKey(), result.getKey());
         assertEquals(KeyValueTypeEnum.FILE, result.getType());
         assertEquals(item.getSrc(), result.getValue());
@@ -86,7 +87,7 @@ public class PostmanCollectionPumpMapperTest {
         item.setValue("password");
         item.setDisabled(true);
 
-        KeyValueItemDto result = pumpMapper.map(item);
+        FileValueItemDto result = pumpMapper.map(item);
         assertEquals(item.getKey(), result.getKey());
         assertEquals(KeyValueTypeEnum.TEXT, result.getType());
         assertEquals(item.getValue(), result.getValue());
@@ -101,9 +102,8 @@ public class PostmanCollectionPumpMapperTest {
         item.setValue("password");
         item.setDisabled(true);
 
-        KeyValueItemDto result = pumpMapper.map(item);
+        ContentTypeKeyValueItemDto result = pumpMapper.map(item);
         assertEquals(item.getKey(), result.getKey());
-        assertEquals(KeyValueTypeEnum.TEXT, result.getType());
         assertEquals(item.getValue(), result.getValue());
         assertFalse(result.isSelected());
     }
@@ -117,7 +117,6 @@ public class PostmanCollectionPumpMapperTest {
 
         KeyValueItemDto result = pumpMapper.map(item);
         assertEquals(item.getKey(), result.getKey());
-        assertEquals(KeyValueTypeEnum.TEXT, result.getType());
         assertEquals(item.getValue(), result.getValue());
         assertFalse(result.isSelected());
     }

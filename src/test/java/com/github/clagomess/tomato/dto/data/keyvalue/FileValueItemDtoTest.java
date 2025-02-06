@@ -1,33 +1,17 @@
-package com.github.clagomess.tomato.dto.data;
+package com.github.clagomess.tomato.dto.data.keyvalue;
 
-import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class KeyValueItemDtoTest {
+public class FileValueItemDtoTest {
     @Test
     public void equalsHashCode(){
-        Assertions.assertThat(new KeyValueItemDto())
-                .isEqualTo(new KeyValueItemDto());
-    }
-
-    @Test
-    public void sort(){
-        List<KeyValueItemDto> list = new ArrayList<>(2);
-        list.add(new KeyValueItemDto("bbb", "value"));
-        list.add(new KeyValueItemDto("aaa", "value"));
-
-        Collections.sort(list);
-
-        assertEquals("aaa", list.get(0).getKey());
+        Assertions.assertThat(new FileValueItemDto())
+                .isEqualTo(new FileValueItemDto());
     }
 
     @ParameterizedTest
@@ -40,7 +24,7 @@ public class KeyValueItemDtoTest {
             KeyValueTypeEnum inputType,
             KeyValueTypeEnum expectedType
     ){
-        var result = new KeyValueItemDto();
+        var result = new FileValueItemDto();
         result.setType(inputType);
 
         assertEquals(expectedType, result.getType());
@@ -59,7 +43,7 @@ public class KeyValueItemDtoTest {
             String inputValueContentType,
             String expectedValueContentType
     ){
-        var result = new KeyValueItemDto();
+        var result = new FileValueItemDto();
         result.setType(type);
         result.setValueContentType(inputValueContentType);
 

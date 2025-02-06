@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.mapper;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.external.PostmanEnvironmentDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,8 +17,6 @@ public interface PostmanEnvironmentPumpMapper {
     @Mapping(target = "envs", source = "values")
     EnvironmentDto toEnvironmentDto(PostmanEnvironmentDto source);
 
-    @Mapping(target = "valueContentType", ignore = true)
-    @Mapping(target = "type", ignore = true)
     @Mapping(target = "selected", ignore = true)
     KeyValueItemDto map(PostmanEnvironmentDto.Value source);
 }

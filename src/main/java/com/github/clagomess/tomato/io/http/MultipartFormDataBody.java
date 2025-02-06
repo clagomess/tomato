@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +11,8 @@ import java.io.*;
 import java.util.Collections;
 import java.util.List;
 
-import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
-import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
+import static com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.FILE;
+import static com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.TEXT;
 
 @RequiredArgsConstructor
 public class MultipartFormDataBody {

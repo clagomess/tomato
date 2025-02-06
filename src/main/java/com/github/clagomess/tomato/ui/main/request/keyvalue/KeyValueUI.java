@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.keyvalue;
 
-import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
@@ -15,26 +16,29 @@ import java.util.List;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
-public class KeyValueUI extends JPanel {
-    private final List<KeyValueItemDto> listItens;
+public class KeyValueUI<T extends KeyValueItemDto> extends JPanel {
+    private final List<T> listItens;
     private final RequestStagingMonitor requestStagingMonitor;
     private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add new");
     private final JPanel rowsPanel;
     private final KeyValueOptions options;
 
     public KeyValueUI(
-            List<KeyValueItemDto> listItens,
+            List<T> listItens,
+            Class<T> itemClass,
             RequestStagingMonitor requestStagingMonitor
     ) {
         this(
                 listItens,
+                itemClass,
                 requestStagingMonitor,
                 KeyValueOptions.builder().build()
         );
     }
 
     public KeyValueUI(
-            List<KeyValueItemDto> listItens,
+            List<T> listItens,
+            Class<T> itemClass,
             RequestStagingMonitor requestStagingMonitor,
             KeyValueOptions options
     ){
@@ -52,7 +56,7 @@ public class KeyValueUI extends JPanel {
         header.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
         header.add(new JLabel(), "width 25!");
 
-        if(options.isEnableTypeColumn()) {
+        if(itemClass == FileValueItemDto.class) {
             header.add(new JLabel("Type"), "width 70!");
         }
 
@@ -81,10 +85,14 @@ public class KeyValueUI extends JPanel {
         add(scrollPane, "width ::100%, height 100%");
 
         btnAddNew.addActionListener(l -> {
-            var item = new KeyValueItemDto();
-            addRow(item);
-            options.getOnChange().run(item);
-            requestStagingMonitor.update();
+            try {
+                var item = itemClass.getDeclaredConstructor().newInstance();
+                addRow(item);
+                options.getOnChange().run(item);
+                requestStagingMonitor.update();
+            }catch (Exception e){
+                throw new RuntimeException(e);
+            }
         });
 
         SwingUtilities.invokeLater(() -> {
@@ -92,8 +100,8 @@ public class KeyValueUI extends JPanel {
         });
     }
 
-    private void addRow(KeyValueItemDto item){
-        var row = new RowComponent(
+    private void addRow(T item){
+        var row = new RowComponent<>(
                 rowsPanel,
                 this.requestStagingMonitor,
                 this.listItens,
@@ -108,7 +116,7 @@ public class KeyValueUI extends JPanel {
     public void dispose(){
         Arrays.stream(rowsPanel.getComponents())
                 .filter(row -> row instanceof RowComponent)
-                .map(row -> (RowComponent) row)
+                .map(row -> (RowComponent<?>) row)
                 .forEach(RowComponent::dispose);
     }
 }

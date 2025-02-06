@@ -1,10 +1,10 @@
 package com.github.clagomess.tomato.ui.main.request.left;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
-import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextfieldOptions;
-import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueOptions;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.BinaryUI;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.NoBodyUI;
@@ -76,25 +76,15 @@ public class BodyUI extends JPanel {
 
     private Component getBodyType(){
         return switch (body.getType()) {
-            case MULTIPART_FORM -> new KeyValueUI(
+            case MULTIPART_FORM -> new KeyValueUI<>(
                     body.getMultiPartForm(),
-                    requestStagingMonitor,
-                    KeyValueOptions.builder()
-                            .enableTypeColumn(true)
-                            .envTextfieldOptions(EnvTextfieldOptions.builder()
-                                    .valueEditorShowContentTypeEdit(true)
-                                    .build())
-                            .build()
+                    FileValueItemDto.class,
+                    requestStagingMonitor
             );
-            case URL_ENCODED_FORM -> new KeyValueUI(
+            case URL_ENCODED_FORM -> new KeyValueUI<>(
                     body.getUrlEncodedForm(),
-                    requestStagingMonitor,
-                    KeyValueOptions.builder()
-                            .enableTypeColumn(true)
-                            .envTextfieldOptions(EnvTextfieldOptions.builder()
-                                    .valueEditorShowContentTypeEdit(true)
-                                    .build())
-                            .build()
+                    ContentTypeKeyValueItemDto.class,
+                    requestStagingMonitor
             );
             case RAW -> new RawBodyUI(
                     body.getRaw(),
@@ -109,7 +99,7 @@ public class BodyUI extends JPanel {
     }
 
     public void dispose() {
-        if(currentBodyType instanceof KeyValueUI bodyType){
+        if(currentBodyType instanceof KeyValueUI<?> bodyType){
             bodyType.dispose();
         }
     }

@@ -1,8 +1,9 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -20,9 +21,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.FILE;
+import static com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.TEXT;
 import static com.github.clagomess.tomato.enums.BodyTypeEnum.MULTIPART_FORM;
-import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.FILE;
-import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
@@ -37,10 +38,10 @@ public class MultipartFormDataBodyTest {
                 .getFile();
 
         var form = List.of(
-                new KeyValueItemDto(TEXT, "myparam", "myvalue", null, true),
-                new KeyValueItemDto(TEXT, null, null, null, true),
-                new KeyValueItemDto(TEXT,  " ", null, null, true),
-                new KeyValueItemDto(FILE, "myfile", formFile, null, true)
+                new FileValueItemDto(TEXT, "myparam", "myvalue", null, true),
+                new FileValueItemDto(TEXT, null, null, null, true),
+                new FileValueItemDto(TEXT,  " ", null, null, true),
+                new FileValueItemDto(FILE, "myfile", formFile, null, true)
         );
 
         var body = new RequestDto.Body();
@@ -74,7 +75,7 @@ public class MultipartFormDataBodyTest {
     @Test
     public void build_whenNullTextParam_sendEmpty() throws IOException {
         var form = List.of(
-                new KeyValueItemDto(TEXT, "myparam", null, null, true)
+                new FileValueItemDto(TEXT, "myparam", null, null, true)
         );
 
         var body = new RequestDto.Body();
@@ -96,7 +97,7 @@ public class MultipartFormDataBodyTest {
     @ValueSource(strings = {"foo/bar"})
     public void build_whenNullOrInvalidFileParam_throws(String fileParam) {
         var form = List.of(
-                new KeyValueItemDto(FILE, "myfile", fileParam, null, true)
+                new FileValueItemDto(FILE, "myfile", fileParam, null, true)
         );
 
         var body = new RequestDto.Body();
@@ -111,8 +112,8 @@ public class MultipartFormDataBodyTest {
     @Test
     public void build_whenNotSelectedParam_notSend() throws IOException {
         var form = List.of(
-                new KeyValueItemDto(TEXT, "myparam", "myvalue", null, true),
-                new KeyValueItemDto(TEXT, "mysecondparam", "myvalue", null, false)
+                new FileValueItemDto(TEXT, "myparam", "myvalue", null, true),
+                new FileValueItemDto(TEXT, "mysecondparam", "myvalue", null, false)
         );
 
         var body = new RequestDto.Body();
@@ -141,7 +142,7 @@ public class MultipartFormDataBodyTest {
                 .thenReturn(Optional.of(dto));
 
         var form = List.of(
-                new KeyValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
+                new FileValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
         );
 
         var body = new RequestDto.Body();

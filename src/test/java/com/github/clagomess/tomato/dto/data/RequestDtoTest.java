@@ -2,6 +2,9 @@ package com.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import com.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
@@ -37,7 +40,7 @@ public class RequestDtoTest {
         var dto = new RequestDto();
         dto.setUrl("http://localhost:8080/tomato");
         dto.getUrlParam().getPath().add(new KeyValueItemDto("key", "value"));
-        dto.getUrlParam().getQuery().add(new KeyValueItemDto("key", "value"));
+        dto.getUrlParam().getQuery().add(new ContentTypeKeyValueItemDto("key", "value"));
 
         var json = mapper.writeValueAsString(dto);
         log.info(json);
@@ -115,7 +118,7 @@ public class RequestDtoTest {
         dto.setUrl("http://localhost:8080/tomato");
         dto.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
         dto.getBody().getUrlEncodedForm().add(
-                new KeyValueItemDto("key", "value")
+                new ContentTypeKeyValueItemDto("key", "value")
         );
 
         var json = mapper.writeValueAsString(dto);
@@ -132,7 +135,7 @@ public class RequestDtoTest {
         dto.setUrl("http://localhost:8080/tomato");
         dto.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
         dto.getBody().getMultiPartForm().add(
-                new KeyValueItemDto("key", "value")
+                new FileValueItemDto("key", "value")
         );
 
         var json = mapper.writeValueAsString(dto);

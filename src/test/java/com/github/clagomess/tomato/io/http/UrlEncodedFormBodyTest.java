@@ -1,8 +1,9 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.github.clagomess.tomato.enums.BodyTypeEnum.URL_ENCODED_FORM;
-import static com.github.clagomess.tomato.enums.KeyValueTypeEnum.TEXT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UrlEncodedFormBodyTest {
@@ -24,12 +24,12 @@ public class UrlEncodedFormBodyTest {
     @Test
     public void build() throws IOException {
         var form = List.of(
-                new KeyValueItemDto(TEXT, "myparam", "myvalue", null, true),
-                new KeyValueItemDto(TEXT, "utf8param", "AçãoAçucar", null, true),
-                new KeyValueItemDto(TEXT, "nullparam", null, null, true),
-                new KeyValueItemDto(TEXT, "hidden", "hidden", null, false),
-                new KeyValueItemDto(TEXT, null, null, null, true),
-                new KeyValueItemDto(TEXT,  " ", null, null, true)
+                new ContentTypeKeyValueItemDto("myparam", "myvalue"),
+                new ContentTypeKeyValueItemDto("utf8param", "AçãoAçucar"),
+                new ContentTypeKeyValueItemDto("nullparam", null),
+                new ContentTypeKeyValueItemDto("hidden", "hidden", null, false),
+                new ContentTypeKeyValueItemDto(null, null),
+                new ContentTypeKeyValueItemDto( " ", null)
         );
 
         var body = new RequestDto.Body();
@@ -56,7 +56,7 @@ public class UrlEncodedFormBodyTest {
                 .thenReturn(Optional.of(dto));
 
         var form = List.of(
-                new KeyValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
+                new ContentTypeKeyValueItemDto("myparam", "{{foo}}")
         );
         var body = new RequestDto.Body();
         body.setType(URL_ENCODED_FORM);
