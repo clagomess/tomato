@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
-import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UrlEncodedFormBody {
     private final EnvironmentRepository environmentRepository;
-    private final RequestDto.Body body;
+    private final BodyDto body;
 
     @Getter
     private final String contentType = "application/x-www-form-urlencoded";
 
-    public UrlEncodedFormBody(RequestDto.Body body) {
+    public UrlEncodedFormBody(BodyDto body) {
         this(
                 new EnvironmentRepository(),
                 body

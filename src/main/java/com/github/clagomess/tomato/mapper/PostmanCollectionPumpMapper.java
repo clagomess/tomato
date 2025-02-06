@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
+import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
@@ -87,11 +88,11 @@ public interface PostmanCollectionPumpMapper {
     @Mapping(target = "binary", ignore = true)
     @Mapping(target = "urlEncodedForm", source = "urlencoded")
     @Mapping(target = "multiPartForm", source = "formdata")
-    RequestDto.Body map(PostmanCollectionV210Dto.Item.Request.Body source);
+    BodyDto map(PostmanCollectionV210Dto.Item.Request.Body source);
 
     @AfterMapping
     default void mapAfter(
-            @MappingTarget RequestDto.Body target,
+            @MappingTarget BodyDto target,
             PostmanCollectionV210Dto.Item.Request.Body source
     ){
         if(target.getRaw() != null &&

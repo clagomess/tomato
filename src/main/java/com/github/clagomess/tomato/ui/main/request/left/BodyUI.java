@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.ui.main.request.left;
 
-import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueUI;
@@ -17,14 +17,14 @@ import java.awt.*;
 import java.util.Arrays;
 
 public class BodyUI extends JPanel {
-    private final RequestDto.Body body;
+    private final BodyDto body;
     private final RequestStagingMonitor requestStagingMonitor;
     private final ButtonGroup bgBodyType = new ButtonGroup();
     private final CharsetComboBox charsetComboBox = new CharsetComboBox();
     private Component currentBodyType;
 
     public BodyUI(
-            RequestDto.Body body,
+            BodyDto body,
             RequestStagingMonitor requestStagingMonitor
     ) {
         this.body = body;

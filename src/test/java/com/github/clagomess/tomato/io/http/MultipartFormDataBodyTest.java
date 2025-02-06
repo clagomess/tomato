@@ -1,9 +1,9 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -44,7 +44,7 @@ public class MultipartFormDataBodyTest {
                 new FileValueItemDto(FILE, "myfile", formFile, null, true)
         );
 
-        var body = new RequestDto.Body();
+        var body = new BodyDto();
         body.setType(MULTIPART_FORM);
         body.setMultiPartForm(form);
 
@@ -78,7 +78,7 @@ public class MultipartFormDataBodyTest {
                 new FileValueItemDto(TEXT, "myparam", null, null, true)
         );
 
-        var body = new RequestDto.Body();
+        var body = new BodyDto();
         body.setType(MULTIPART_FORM);
         body.setMultiPartForm(form);
 
@@ -100,7 +100,7 @@ public class MultipartFormDataBodyTest {
                 new FileValueItemDto(FILE, "myfile", fileParam, null, true)
         );
 
-        var body = new RequestDto.Body();
+        var body = new BodyDto();
         body.setType(MULTIPART_FORM);
         body.setMultiPartForm(form);
 
@@ -116,7 +116,7 @@ public class MultipartFormDataBodyTest {
                 new FileValueItemDto(TEXT, "mysecondparam", "myvalue", null, false)
         );
 
-        var body = new RequestDto.Body();
+        var body = new BodyDto();
         body.setType(MULTIPART_FORM);
         body.setMultiPartForm(form);
 
@@ -145,7 +145,7 @@ public class MultipartFormDataBodyTest {
                 new FileValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
         );
 
-        var body = new RequestDto.Body();
+        var body = new BodyDto();
         body.setType(MULTIPART_FORM);
         body.setMultiPartForm(form);
 
@@ -175,7 +175,7 @@ public class MultipartFormDataBodyTest {
                 new KeyValueItemDto("foo", "bar")
         );
 
-        var body = new RequestDto.Body();
+        var body = new BodyDto();
         body.setType(MULTIPART_FORM);
         body.setMultiPartForm(List.of());
 
@@ -189,7 +189,7 @@ public class MultipartFormDataBodyTest {
     public void writeTextBoundary_whenEnvListIsNull_doNothing() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        var body = new RequestDto.Body();
+        var body = new BodyDto();
         body.setType(MULTIPART_FORM);
         body.setMultiPartForm(List.of());
 

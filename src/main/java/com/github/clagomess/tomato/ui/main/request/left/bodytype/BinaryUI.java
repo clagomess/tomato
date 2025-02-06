@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.main.request.left.bodytype;
 
-import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
@@ -13,7 +13,7 @@ public class BinaryUI extends JPanel {
     private final FileChooser fileChooser = new FileChooser();
 
     public BinaryUI(
-            RequestDto.BinaryBody binaryBody,
+            BinaryBodyDto binaryBody,
             RequestStagingMonitor requestStagingMonitor
     ){
         setLayout(new MigLayout(

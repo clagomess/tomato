@@ -1,9 +1,9 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ public class UrlEncodedFormBodyTest {
                 new ContentTypeKeyValueItemDto( " ", null)
         );
 
-        var body = new RequestDto.Body();
+        var body = new BodyDto();
         body.setType(URL_ENCODED_FORM);
         body.setUrlEncodedForm(form);
 
@@ -58,7 +58,7 @@ public class UrlEncodedFormBodyTest {
         var form = List.of(
                 new ContentTypeKeyValueItemDto("myparam", "{{foo}}")
         );
-        var body = new RequestDto.Body();
+        var body = new BodyDto();
         body.setType(URL_ENCODED_FORM);
         body.setUrlEncodedForm(form);
 
@@ -82,7 +82,7 @@ public class UrlEncodedFormBodyTest {
                 new KeyValueItemDto("foo", "bar")
         );
 
-        var body = new RequestDto.Body();
+        var body = new BodyDto();
         body.setType(URL_ENCODED_FORM);
         body.setUrlEncodedForm(List.of());
 

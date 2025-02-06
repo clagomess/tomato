@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
-import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -19,9 +19,9 @@ public class MultipartFormDataBody {
     private final EnvironmentRepository environmentRepository;
 
     private final String boundary;
-    private final RequestDto.Body body;
+    private final BodyDto body;
 
-    public MultipartFormDataBody(RequestDto.Body body) {
+    public MultipartFormDataBody(BodyDto body) {
         this(
                 new EnvironmentRepository(),
                 "tomato-" + System.currentTimeMillis(),

@@ -5,6 +5,9 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
+import com.github.clagomess.tomato.dto.data.request.BodyDto;
+import com.github.clagomess.tomato.dto.data.request.RawBodyDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
@@ -165,7 +168,7 @@ public class HttpServicePerformTest {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/urlencoded-form");
         request.setMethod(HttpMethodEnum.POST);
-        request.setBody(new RequestDto.Body());
+        request.setBody(new BodyDto());
         request.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
         request.getBody().setUrlEncodedForm(Collections.singletonList(new ContentTypeKeyValueItemDto("foo", "bar")));
 
@@ -205,7 +208,7 @@ public class HttpServicePerformTest {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/multipart-form");
         request.setMethod(HttpMethodEnum.POST);
-        request.setBody(new RequestDto.Body());
+        request.setBody(new BodyDto());
         request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
         request.getBody().getMultiPartForm().add(new FileValueItemDto("foo", "bar"));
 
@@ -220,7 +223,7 @@ public class HttpServicePerformTest {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/multipart-form-with-file");
         request.setMethod(HttpMethodEnum.POST);
-        request.setBody(new RequestDto.Body());
+        request.setBody(new BodyDto());
         request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
 
         String formFile = Objects.requireNonNull(getClass()
@@ -246,9 +249,9 @@ public class HttpServicePerformTest {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/raw");
         request.setMethod(HttpMethodEnum.POST);
-        request.setBody(new RequestDto.Body());
+        request.setBody(new BodyDto());
         request.getBody().setType(BodyTypeEnum.RAW);
-        request.getBody().setRaw(new RequestDto.RawBody(
+        request.getBody().setRaw(new RawBodyDto(
                 RawBodyTypeEnum.JSON,
                 "{\"foo\": \"bar\"}"
         ));
@@ -264,9 +267,9 @@ public class HttpServicePerformTest {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/binary");
         request.setMethod(HttpMethodEnum.POST);
-        request.setBody(new RequestDto.Body());
+        request.setBody(new BodyDto());
         request.getBody().setType(BodyTypeEnum.BINARY);
-        request.getBody().setBinary(new RequestDto.BinaryBody(
+        request.getBody().setBinary(new BinaryBodyDto(
                 APPLICATION_OCTET_STREAM_TYPE,
                 ".gitignore"
         ));
@@ -282,9 +285,9 @@ public class HttpServicePerformTest {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/raw");
         request.setMethod(HttpMethodEnum.PUT);
-        request.setBody(new RequestDto.Body());
+        request.setBody(new BodyDto());
         request.getBody().setType(BodyTypeEnum.RAW);
-        request.getBody().setRaw(new RequestDto.RawBody(
+        request.getBody().setRaw(new RawBodyDto(
                 RawBodyTypeEnum.JSON,
                 "{\"foo\": \"bar\"}"
         ));

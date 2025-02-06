@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
+import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
@@ -59,7 +60,7 @@ public class PostmanCollectionPumpMapperTest {
         body.getOptions().setRaw(new PostmanCollectionV210Dto.Item.Request.Body.Options.Raw());
         body.getOptions().getRaw().setLanguage("json");
 
-        RequestDto.Body result = pumpMapper.map(body);
+        BodyDto result = pumpMapper.map(body);
 
         assertEquals(BodyTypeEnum.RAW, result.getType());
         assertEquals(RawBodyTypeEnum.JSON, result.getRaw().getType());

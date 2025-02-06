@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.main.request.left.bodytype;
 
-import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.request.RawBodyDto;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
@@ -15,7 +15,7 @@ import java.awt.*;
 
 @Slf4j
 public class RawBodyUI extends JPanel {
-    private final RequestDto.RawBody rawBody;
+    private final RawBodyDto rawBody;
     private final RequestStagingMonitor requestStagingMonitor;
 
     private final JComboBox<RawBodyTypeEnum> cbContentType = new JComboBox<>(
@@ -27,7 +27,7 @@ public class RawBodyUI extends JPanel {
     private final TRSyntaxTextArea textArea = new TRSyntaxTextArea();
 
     public RawBodyUI(
-            RequestDto.RawBody rawBody,
+            RawBodyDto rawBody,
             RequestStagingMonitor requestStagingMonitor
     ){
         this.rawBody = rawBody;

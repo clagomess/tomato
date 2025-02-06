@@ -3,9 +3,9 @@ package com.github.clagomess.tomato.ui.main.request.left;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.request.UrlParamDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
-import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextfieldOptions;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueOptions;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueUI;
 import lombok.Getter;
@@ -134,7 +134,7 @@ public class RequestTabContentUI extends JPanel {
     }
 
     private CharsetComboBox getCharsetComboBox(
-            RequestDto.UrlParam urlParam,
+            UrlParamDto urlParam,
             RequestStagingMonitor requestStagingMonitor
     ){
         CharsetComboBox comboBox = new CharsetComboBox();

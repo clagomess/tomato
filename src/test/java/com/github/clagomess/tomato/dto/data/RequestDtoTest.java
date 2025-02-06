@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
+import com.github.clagomess.tomato.dto.data.request.RawBodyDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import com.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
@@ -84,7 +86,7 @@ public class RequestDtoTest {
         var dto = new RequestDto();
         dto.setUrl("http://localhost:8080/tomato");
         dto.getBody().setType(BodyTypeEnum.RAW);
-        dto.getBody().setRaw(new RequestDto.RawBody(RawBodyTypeEnum.TEXT, "aaa"));
+        dto.getBody().setRaw(new RawBodyDto(RawBodyTypeEnum.TEXT, "aaa"));
 
         var json = mapper.writeValueAsString(dto);
         log.info(json);
@@ -99,7 +101,7 @@ public class RequestDtoTest {
         var dto = new RequestDto();
         dto.setUrl("http://localhost:8080/tomato");
         dto.getBody().setType(BodyTypeEnum.BINARY);
-        dto.getBody().setBinary(new RequestDto.BinaryBody(
+        dto.getBody().setBinary(new BinaryBodyDto(
                 TEXT_PLAIN_TYPE,
                 "file"
         ));
@@ -156,29 +158,5 @@ public class RequestDtoTest {
 
         Assertions.assertThat(dtoA)
                 .isEqualTo(dtoB);
-    }
-
-    @Test
-    public void UrlParam_equalsHashCode(){
-        Assertions.assertThat(new RequestDto.UrlParam())
-                .isEqualTo(new RequestDto.UrlParam());
-    }
-
-    @Test
-    public void Body_equalsHashCode(){
-        Assertions.assertThat(new RequestDto.Body())
-                .isEqualTo(new RequestDto.Body());
-    }
-
-    @Test
-    public void RawBody_equalsHashCode(){
-        Assertions.assertThat(new RequestDto.RawBody())
-                .isEqualTo(new RequestDto.RawBody());
-    }
-
-    @Test
-    public void BinaryBody_equalsHashCode(){
-        Assertions.assertThat(new RequestDto.BinaryBody())
-                .isEqualTo(new RequestDto.BinaryBody());
     }
 }
