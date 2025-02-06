@@ -1,13 +1,19 @@
 {
   "id" : "G4A3BCPq",
   "createTime" : "2024-12-18T23:06:02",
-  "updateTime" : "2024-12-19T00:11:31",
+  "updateTime" : "2025-02-06T13:43:39",
   "name" : "/sample-root",
   "method" : "GET",
   "url" : "http://localhost:8080/sample-root",
+  "urlParam" : {
+    "charset" : "UTF-8",
+    "path" : [ ],
+    "query" : [ ]
+  },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

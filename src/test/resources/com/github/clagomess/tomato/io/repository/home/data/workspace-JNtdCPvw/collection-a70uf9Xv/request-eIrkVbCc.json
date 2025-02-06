@@ -1,37 +1,39 @@
 {
   "id" : "eIrkVbCc",
   "createTime" : "2025-01-17T16:59:24",
-  "updateTime" : "2025-01-17T17:01:03",
+  "updateTime" : "2025-02-06T13:39:56",
   "name" : "Query Params",
   "method" : "GET",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ {
-      "type" : "TEXT",
       "key" : "myparam1",
       "value" : "teste",
-      "selected" : true
+      "selected" : true,
+      "valueContentType" : "text/plain"
     }, {
-      "type" : "TEXT",
       "key" : "myparam2",
       "value" : "<code> encoded",
-      "selected" : true
+      "selected" : true,
+      "valueContentType" : "text/plain"
     }, {
-      "type" : "TEXT",
       "key" : "myparam3",
       "value" : "{{token}}",
-      "selected" : true
+      "selected" : true,
+      "valueContentType" : "text/plain"
     }, {
-      "type" : "TEXT",
       "key" : "disabled",
       "value" : "no Send!",
-      "selected" : false
+      "selected" : false,
+      "valueContentType" : "text/plain"
     } ]
   },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

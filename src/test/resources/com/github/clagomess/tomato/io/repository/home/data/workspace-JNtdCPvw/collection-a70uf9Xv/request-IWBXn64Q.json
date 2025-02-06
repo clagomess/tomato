@@ -1,17 +1,19 @@
 {
   "id" : "IWBXn64Q",
   "createTime" : "2024-12-18T23:39:42",
-  "updateTime" : "2025-01-14T17:03:16",
+  "updateTime" : "2025-02-06T13:39:34",
   "name" : "/echo.php",
   "method" : "OPTIONS",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

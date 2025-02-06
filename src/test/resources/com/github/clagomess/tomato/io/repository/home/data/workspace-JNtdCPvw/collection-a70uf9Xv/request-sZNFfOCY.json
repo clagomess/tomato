@@ -1,23 +1,21 @@
 {
   "id" : "sZNFfOCY",
   "createTime" : "2025-01-17T17:02:00",
-  "updateTime" : "2025-01-17T17:04:49",
+  "updateTime" : "2025-02-06T13:39:53",
   "name" : "Path Variables",
   "method" : "GET",
   "url" : "{{echoServer}}/echo.php?localtoken=:localtoken&disabled=:disabled",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ {
-      "type" : "TEXT",
       "key" : "php",
       "value" : "echo.php",
       "selected" : true
     }, {
-      "type" : "TEXT",
       "key" : "localtoken",
       "value" : "{{token}}",
       "selected" : true
     }, {
-      "type" : "TEXT",
       "key" : "disabled",
       "value" : "no Inject",
       "selected" : false
@@ -27,6 +25,7 @@
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

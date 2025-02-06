@@ -1,17 +1,19 @@
 {
   "id" : "bcjK27md",
   "createTime" : "2024-12-18T23:40:07",
-  "updateTime" : "2025-01-14T17:03:04",
+  "updateTime" : "2025-02-06T13:39:29",
   "name" : "/echo.php",
   "method" : "PATCH",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

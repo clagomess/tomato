@@ -1,11 +1,12 @@
 {
   "id" : "tmCsbrzA",
   "createTime" : "2024-12-18T23:26:19",
-  "updateTime" : "2025-01-17T16:48:55",
+  "updateTime" : "2025-02-06T13:40:10",
   "name" : "multipart-form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
@@ -13,36 +14,43 @@
   "cookies" : [ ],
   "body" : {
     "type" : "MULTIPART_FORM",
+    "charset" : "UTF-8",
     "multiPartForm" : [ {
-      "type" : "TEXT",
       "key" : "myparam",
       "value" : "123",
-      "selected" : true
+      "selected" : true,
+      "valueContentType" : "text/plain",
+      "type" : "TEXT"
     }, {
-      "type" : "FILE",
       "key" : "myfile",
       "value" : "C:\\Users\\claudio\\OneDrive\\Documentos\\BhuiyanManuscript.pdf",
-      "selected" : true
+      "selected" : true,
+      "valueContentType" : "text/plain",
+      "type" : "FILE"
     }, {
-      "type" : "TEXT",
       "key" : "token",
       "value" : "{{token}}",
-      "selected" : true
+      "selected" : true,
+      "valueContentType" : "text/plain",
+      "type" : "TEXT"
     }, {
-      "type" : "TEXT",
       "key" : "disabled1",
       "value" : "notSend!",
-      "selected" : false
+      "selected" : false,
+      "valueContentType" : "text/plain",
+      "type" : "TEXT"
     }, {
-      "type" : "FILE",
       "key" : "disabled2",
       "value" : "C:\\Users\\claudio\\OneDrive\\Documentos\\aaa.csv",
-      "selected" : false
+      "selected" : false,
+      "valueContentType" : "text/plain",
+      "type" : "FILE"
     }, {
-      "type" : "TEXT",
       "key" : "disabled3",
       "value" : "{{token}}",
-      "selected" : false
+      "selected" : false,
+      "valueContentType" : "text/plain",
+      "type" : "TEXT"
     } ]
   }
 }

@@ -1,17 +1,19 @@
 {
   "id" : "lYK0zytu",
   "createTime" : "2024-12-18T23:13:33",
-  "updateTime" : "2025-01-17T16:55:48",
+  "updateTime" : "2025-02-06T13:39:50",
   "name" : "/text-plain.txt",
   "method" : "GET",
   "url" : "{{echoServer}}/text-plain.txt",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

@@ -1,17 +1,19 @@
 {
   "id" : "UsxByseb",
   "createTime" : "2024-12-18T23:02:11",
-  "updateTime" : "2025-01-17T16:58:08",
+  "updateTime" : "2025-02-06T13:39:41",
   "name" : "/echo.php?param=value",
   "method" : "GET",
   "url" : "http://localhost:8000/echo.php?param=value",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

@@ -1,17 +1,19 @@
 {
   "id" : "4Ggthbte",
   "createTime" : "2024-12-18T23:20:09",
-  "updateTime" : "2025-01-17T16:38:34",
+  "updateTime" : "2025-02-06T13:39:48",
   "name" : "/sample.pdf",
   "method" : "GET",
   "url" : "{{echoServer}}/sample.pdf",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

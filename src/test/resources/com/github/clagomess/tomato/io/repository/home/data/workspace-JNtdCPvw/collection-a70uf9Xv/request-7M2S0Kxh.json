@@ -1,11 +1,12 @@
 {
   "id" : "7M2S0Kxh",
   "createTime" : "2024-12-18T23:28:53",
-  "updateTime" : "2025-01-17T16:41:30",
+  "updateTime" : "2025-02-06T13:40:15",
   "name" : "urlencoded-form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
@@ -13,31 +14,32 @@
   "cookies" : [ ],
   "body" : {
     "type" : "URL_ENCODED_FORM",
+    "charset" : "UTF-8",
     "urlEncodedForm" : [ {
-      "type" : "TEXT",
       "key" : "myparam1",
       "value" : "a",
-      "selected" : true
+      "selected" : true,
+      "valueContentType" : "text/plain"
     }, {
-      "type" : "TEXT",
       "key" : "myparam2",
       "value" : "b",
-      "selected" : true
+      "selected" : true,
+      "valueContentType" : "text/plain"
     }, {
-      "type" : "TEXT",
       "key" : "myparam3",
       "value" : "{{token}}",
-      "selected" : true
+      "selected" : true,
+      "valueContentType" : "text/plain"
     }, {
-      "type" : "TEXT",
       "key" : "disabledparam",
       "value" : "notSend!",
-      "selected" : false
+      "selected" : false,
+      "valueContentType" : "text/plain"
     }, {
-      "type" : "TEXT",
       "key" : "disabledparam2",
       "value" : "{{token}}",
-      "selected" : false
+      "selected" : false,
+      "valueContentType" : "text/plain"
     } ]
   }
 }

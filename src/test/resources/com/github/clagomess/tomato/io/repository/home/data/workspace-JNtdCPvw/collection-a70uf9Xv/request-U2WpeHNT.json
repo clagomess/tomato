@@ -1,17 +1,19 @@
 {
   "id" : "U2WpeHNT",
   "createTime" : "2024-12-18T23:19:03",
-  "updateTime" : "2025-01-17T16:57:54",
+  "updateTime" : "2025-02-06T13:39:58",
   "name" : "Self-signed certificate",
   "method" : "GET",
   "url" : "https://localhost:8443/echo.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

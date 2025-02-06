@@ -1,17 +1,19 @@
 {
   "id" : "LrkL7hPM",
   "createTime" : "2024-12-18T23:37:37",
-  "updateTime" : "2025-01-14T17:03:21",
+  "updateTime" : "2025-02-06T13:39:36",
   "name" : "/echo.php",
   "method" : "DELETE",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

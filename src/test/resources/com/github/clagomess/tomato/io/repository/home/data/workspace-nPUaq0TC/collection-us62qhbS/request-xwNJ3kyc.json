@@ -1,13 +1,19 @@
 {
   "id" : "xwNJ3kyc",
   "createTime" : "2024-12-18T23:06:02",
-  "updateTime" : "2024-12-19T00:12:06",
+  "updateTime" : "2025-02-06T13:43:42",
   "name" : "/sample-lvl1",
   "method" : "GET",
   "url" : "http://localhost:8080/sample-lvl1",
+  "urlParam" : {
+    "charset" : "UTF-8",
+    "path" : [ ],
+    "query" : [ ]
+  },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

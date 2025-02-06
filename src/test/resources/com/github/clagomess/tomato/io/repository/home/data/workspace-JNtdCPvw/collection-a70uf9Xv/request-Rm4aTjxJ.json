@@ -1,11 +1,12 @@
 {
   "id" : "Rm4aTjxJ",
   "createTime" : "2024-12-18T23:30:14",
-  "updateTime" : "2025-01-17T16:56:19",
+  "updateTime" : "2025-02-06T13:40:05",
   "name" : "body-json",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
@@ -13,6 +14,7 @@
   "cookies" : [ ],
   "body" : {
     "type" : "RAW",
+    "charset" : "UTF-8",
     "raw" : {
       "type" : "JSON",
       "raw" : "{\n\t\"hello\": \"world\"\n}\n"

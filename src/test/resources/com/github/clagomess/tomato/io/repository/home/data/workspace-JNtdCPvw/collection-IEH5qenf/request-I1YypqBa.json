@@ -1,7 +1,7 @@
 {
   "id" : "I1YypqBa",
   "createTime" : "2025-01-31T17:11:52",
-  "updateTime" : "2025-02-04T16:55:56",
+  "updateTime" : "2025-02-06T13:40:27",
   "name" : "multipart-form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo-iso-8859-1.php",
@@ -16,11 +16,11 @@
     "type" : "MULTIPART_FORM",
     "charset" : "ISO-8859-1",
     "multiPartForm" : [ {
-      "type" : "TEXT",
       "key" : "param1",
       "value" : "Ação Açucar",
+      "selected" : true,
       "valueContentType" : "text/plain",
-      "selected" : true
+      "type" : "TEXT"
     } ]
   }
 }

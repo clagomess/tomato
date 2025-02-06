@@ -1,11 +1,12 @@
 {
   "id" : "9LF0Losk",
   "createTime" : "2024-12-18T23:33:47",
-  "updateTime" : "2025-01-17T16:52:44",
+  "updateTime" : "2025-02-06T13:40:02",
   "name" : "body-binary",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php?selected-file",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
@@ -13,6 +14,7 @@
   "cookies" : [ ],
   "body" : {
     "type" : "BINARY",
+    "charset" : "UTF-8",
     "binary" : {
       "contentType" : "application/octet-stream",
       "file" : "C:\\Users\\claudio\\OneDrive\\Documentos\\BhuiyanManuscript.pdf"

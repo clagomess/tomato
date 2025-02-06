@@ -1,11 +1,12 @@
 {
   "id" : "8bV40muQ",
   "createTime" : "2024-12-18T23:36:03",
-  "updateTime" : "2025-01-14T17:02:56",
+  "updateTime" : "2025-02-06T13:39:27",
   "name" : "/echo.php",
   "method" : "PUT",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
@@ -13,6 +14,7 @@
   "cookies" : [ ],
   "body" : {
     "type" : "RAW",
+    "charset" : "UTF-8",
     "raw" : {
       "type" : "JSON",
       "raw" : "{\n\t\"foo\": \"bar\"\n}"

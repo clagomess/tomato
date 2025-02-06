@@ -1,27 +1,27 @@
 {
   "id" : "x4woN3gk",
   "createTime" : "2024-12-18T23:04:19",
-  "updateTime" : "2025-01-17T16:58:39",
+  "updateTime" : "2025-02-06T13:40:07",
   "name" : "custom-header",
   "method" : "GET",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
   "headers" : [ {
-    "type" : "TEXT",
     "key" : "X-Burger",
     "value" : "ichi",
     "selected" : true
   }, {
-    "type" : "TEXT",
     "key" : "Authorization",
     "value" : "Bearer {{token}}",
     "selected" : true
   } ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }

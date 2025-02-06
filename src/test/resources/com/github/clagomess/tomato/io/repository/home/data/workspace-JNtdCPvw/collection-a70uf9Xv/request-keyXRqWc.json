@@ -1,17 +1,19 @@
 {
   "id" : "keyXRqWc",
   "createTime" : "2024-12-18T23:15:15",
-  "updateTime" : "2025-01-17T16:55:29",
+  "updateTime" : "2025-02-06T13:39:22",
   "name" : "/delay.php",
   "method" : "GET",
   "url" : "{{echoServer}}/delay.php",
   "urlParam" : {
+    "charset" : "UTF-8",
     "path" : [ ],
     "query" : [ ]
   },
   "headers" : [ ],
   "cookies" : [ ],
   "body" : {
-    "type" : "NO_BODY"
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
   }
 }
