@@ -1,7 +1,7 @@
 {
   "id" : "tmCsbrzA",
   "createTime" : "2024-12-18T23:26:19",
-  "updateTime" : "2025-02-06T13:40:10",
+  "updateTime" : "2025-02-06T19:43:49",
   "name" : "multipart-form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php",
@@ -25,7 +25,7 @@
       "key" : "myfile",
       "value" : "C:\\Users\\claudio\\OneDrive\\Documentos\\BhuiyanManuscript.pdf",
       "selected" : true,
-      "valueContentType" : "text/plain",
+      "valueContentType" : "application/pdf",
       "type" : "FILE"
     }, {
       "key" : "token",

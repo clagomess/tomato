@@ -15,15 +15,19 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 
 import static com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.FILE;
 
+@Slf4j
 @Getter
 @Setter
 class RowComponent<T extends KeyValueItemDto> extends JPanel {
@@ -91,8 +95,6 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
         add(btnRemove);
     }
 
-    // @TODO: implement option to fill Content-Type when 'type File'
-
     private void cbTypeOnChange(FileKeyValueItemDto fvItem){
         KeyValueTypeEnum selectedType = (KeyValueTypeEnum) cbType.getSelectedItem();
         if(Objects.equals(selectedType, fvItem.getType())) return;
@@ -151,6 +153,15 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
             var fileChooser = new FileChooser();
             fileChooser.setValue(fvItem.getValue());
             fileChooser.addOnChange(file -> {
+                try {
+                    fvItem.setValueContentType(file != null ?
+                            Files.probeContentType(file.toPath()) :
+                            null
+                    );
+                }catch(IOException e){
+                    log.warn(e.getMessage());
+                }
+
                 valueOnChange(file != null ? file.getAbsolutePath() : null);
             });
             return fileChooser;

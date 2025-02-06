@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
@@ -57,7 +58,7 @@ public class MultipartFormDataBody {
                 }
 
                 if(item.getType() == FILE){
-                    writeFileBoundary(bos, item.getKey(), item.getValue());
+                    writeFileBoundary(bos, item);
                 }
 
                 bos.write("\r\n".getBytes());
@@ -98,16 +99,18 @@ public class MultipartFormDataBody {
 
     protected void writeFileBoundary(
             OutputStream os,
-            String key,
-            String value
+            FileKeyValueItemDto item
     ) throws IOException {
-        if(value == null) throw new FileNotFoundException(key);
+        if(StringUtils.isBlank(item.getValue())) throw new FileNotFoundException(item.getKey());
 
-        var itemFile = new File(value);
-        os.write("Content-Type: application/octet-stream\r\n".getBytes());
+        var itemFile = new File(item.getValue());
+        os.write(String.format(
+                "Content-Type: %s\r\n",
+                item.getValueContentType()
+        ).getBytes());
         os.write(String.format(
                 "Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"\r\n",
-                key,
+                item.getKey(),
                 itemFile.getName()
         ).getBytes());
         os.write("\r\n".getBytes());
