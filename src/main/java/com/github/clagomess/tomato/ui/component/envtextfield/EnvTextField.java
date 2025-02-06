@@ -17,13 +17,13 @@ public class EnvTextField extends JPanel {
     private final JButton btnExpand;
     private final JTextPane textPane;
 
-    public EnvTextField() {
+    public EnvTextField(EnvTextfieldOptions options) {
         this.btnEnvView = new IconButton(new BxListPlusIcon(), "View Injected Environment");
         this.btnEnvView.addActionListener(e -> btnEnvViewAction());
         this.btnEnvView.setEnabled(false);
 
         this.btnExpand = new IconButton(new BxLinkExternalIcon(), "Expand to value editor");
-        this.btnExpand.addActionListener(e -> btnExpandAction());
+        this.btnExpand.addActionListener(e -> btnExpandAction(options));
 
         this.textPane = new JTextPane();
 
@@ -71,10 +71,10 @@ public class EnvTextField extends JPanel {
         ));
     }
 
-    private void btnExpandAction(){
+    private void btnExpandAction(EnvTextfieldOptions options){
         new WaitExecution(
                 this,
-                () -> new ValueEditorUI(this)
+                () -> new ValueEditorUI(this, options)
         ).execute();
     }
 

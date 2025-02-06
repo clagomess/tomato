@@ -11,6 +11,7 @@ import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
+import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextfieldOptions;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxBlockIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxGlobeIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSaveIcon;
@@ -41,7 +42,7 @@ public class RequestSplitPaneUI extends JPanel {
     }};
 
     private final HttpMethodComboBox cbHttpMethod = new HttpMethodComboBox();
-    private final EnvTextField txtRequestUrl = new EnvTextField();
+    private final EnvTextField txtRequestUrl = new EnvTextField(EnvTextfieldOptions.builder().build());
     private final JButton btnSendRequest = new JButton("Send", new BxSendIcon());
     private final JButton btnCancelRequest = new JButton(new BxBlockIcon(Color.RED)){{
         setToolTipText("Cancel");

@@ -12,8 +12,9 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.Objects;
 
-public class ValueEditorUI extends JFrame {
+class ValueEditorUI extends JFrame {
     private final EnvTextField parent;
+    private final EnvTextfieldOptions options;
 
     private final JComboBox<RawBodyTypeEnum> cbContentType = new JComboBox<>(
             RawBodyTypeEnum.values()
@@ -25,8 +26,12 @@ public class ValueEditorUI extends JFrame {
 
     private final TRSyntaxTextArea textArea = new TRSyntaxTextArea();
 
-    public ValueEditorUI(EnvTextField parent){
+    public ValueEditorUI(
+            EnvTextField parent,
+            EnvTextfieldOptions options
+    ){
         this.parent = parent;
+        this.options = options;
 
         setTitle("Value Editor");
         setIconImages(FaviconImage.getFrameIconImage());
@@ -38,15 +43,20 @@ public class ValueEditorUI extends JFrame {
                 "[grow, fill][]"
         ));
 
-        add(cbContentType);
-        add(btnBeautify, "wrap");
+        if(options.isValueEditorShowContentTypeEdit()) {
+            add(cbContentType);
+            add(btnBeautify, "wrap");
+        }
+
         var sp = TRSyntaxTextArea.createScroll(textArea);
         sp.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode("#616365")));
         add(sp, "height 100%, span 2");
 
         // set data
+        cbContentType.setSelectedItem(options.getValueEditorSelectedRawBodyType());
         cbContentType.addActionListener(l -> cbContentTypeAction());
         btnBeautify.addActionListener(l -> btnBeautifyAction());
+        cbContentTypeAction();
         textArea.setText(parent.getText());
 
         pack();
@@ -75,10 +85,22 @@ public class ValueEditorUI extends JFrame {
 
     @Override
     public void dispose() {
-        if(!Objects.equals(parent.getText(), textArea.getText())) {
-            parent.setText(textArea.getText());
+        String text = textArea.getText();
+
+        if(!Objects.equals(parent.getText(), text)) {
+            parent.setText(text);
         }
 
+        options.getValueEditorOnDispose().run(
+                (RawBodyTypeEnum) cbContentType.getSelectedItem(),
+                text
+        );
+
         super.dispose();
+    }
+
+    @FunctionalInterface
+    public interface OnDisposeFI {
+        void run(RawBodyTypeEnum rawBodyType, String text);
     }
 }

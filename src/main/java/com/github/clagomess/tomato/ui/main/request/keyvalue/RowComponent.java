@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.main.request.keyvalue;
 
 import com.github.clagomess.tomato.dto.data.KeyValueItemDto;
 import com.github.clagomess.tomato.enums.KeyValueTypeEnum;
+import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.IconButton;
@@ -27,7 +28,7 @@ class RowComponent extends JPanel {
     private final RequestStagingMonitor requestStagingMonitor;
     private final List<KeyValueItemDto> listItens;
     private final KeyValueItemDto item;
-    private Options options;
+    private KeyValueOptions options;
 
     private final JComboBox<KeyValueTypeEnum> cbType = new JComboBox<>(
             KeyValueTypeEnum.values()
@@ -42,7 +43,7 @@ class RowComponent extends JPanel {
             RequestStagingMonitor requestStagingMonitor,
             List<KeyValueItemDto> listItens,
             KeyValueItemDto item,
-            Options options
+            KeyValueOptions options
     ){
         this.parent = parent;
         this.requestStagingMonitor = requestStagingMonitor;
@@ -142,7 +143,24 @@ class RowComponent extends JPanel {
 
     private JComponent createCValue(KeyValueTypeEnum type, String value){
         if(type == TEXT || !options.isEnableTypeColumn()) {
-            var textField = new EnvTextField();
+            if(options.getEnvTextfieldOptions().isValueEditorShowContentTypeEdit()) {
+                options.getEnvTextfieldOptions().setValueEditorSelectedRawBodyType(
+                        RawBodyTypeEnum.valueOfContentType(item.getValueContentType())
+                );
+                options.getEnvTextfieldOptions().setValueEditorOnDispose((rawBodyType, text) -> {
+                    if(Objects.equals(
+                            item.getValueContentType(),
+                            rawBodyType.getContentType().toString()
+                    )) return;
+
+                    options.getEnvTextfieldOptions().setValueEditorSelectedRawBodyType(rawBodyType);
+                    item.setValueContentType(rawBodyType.getContentType().toString());
+                    requestStagingMonitor.update();
+                    options.getOnChange().run(item);
+                });
+            }
+
+            var textField = new EnvTextField(options.getEnvTextfieldOptions());
             textField.setText(value);
             textField.addOnChange(this::valueOnChange);
             return textField;

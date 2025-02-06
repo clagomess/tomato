@@ -20,7 +20,7 @@ public class KeyValueUI extends JPanel {
     private final RequestStagingMonitor requestStagingMonitor;
     private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add new");
     private final JPanel rowsPanel;
-    private final Options options;
+    private final KeyValueOptions options;
 
     public KeyValueUI(
             List<KeyValueItemDto> listItens,
@@ -29,14 +29,14 @@ public class KeyValueUI extends JPanel {
         this(
                 listItens,
                 requestStagingMonitor,
-                Options.builder().build()
+                KeyValueOptions.builder().build()
         );
     }
 
     public KeyValueUI(
             List<KeyValueItemDto> listItens,
             RequestStagingMonitor requestStagingMonitor,
-            Options options
+            KeyValueOptions options
     ){
         this.listItens = listItens;
         this.requestStagingMonitor = requestStagingMonitor;

@@ -3,8 +3,9 @@ package com.github.clagomess.tomato.ui.main.request.left;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
+import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextfieldOptions;
+import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueOptions;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueUI;
-import com.github.clagomess.tomato.ui.main.request.keyvalue.Options;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.BinaryUI;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.NoBodyUI;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.RawBodyUI;
@@ -78,11 +79,22 @@ public class BodyUI extends JPanel {
             case MULTIPART_FORM -> new KeyValueUI(
                     body.getMultiPartForm(),
                     requestStagingMonitor,
-                    Options.builder().enableTypeColumn(true).build()
+                    KeyValueOptions.builder()
+                            .enableTypeColumn(true)
+                            .envTextfieldOptions(EnvTextfieldOptions.builder()
+                                    .valueEditorShowContentTypeEdit(true)
+                                    .build())
+                            .build()
             );
             case URL_ENCODED_FORM -> new KeyValueUI(
                     body.getUrlEncodedForm(),
-                    requestStagingMonitor
+                    requestStagingMonitor,
+                    KeyValueOptions.builder()
+                            .enableTypeColumn(true)
+                            .envTextfieldOptions(EnvTextfieldOptions.builder()
+                                    .valueEditorShowContentTypeEdit(true)
+                                    .build())
+                            .build()
             );
             case RAW -> new RawBodyUI(
                     body.getRaw(),
