@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.main.request.right;
 import com.github.clagomess.tomato.io.beautifier.Beautifier;
 import com.github.clagomess.tomato.io.beautifier.JsonBeautifier;
 import com.github.clagomess.tomato.io.beautifier.XmlBeautifier;
+import com.github.clagomess.tomato.io.http.HttpService;
 import com.github.clagomess.tomato.io.http.MediaType;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import net.miginfocom.swing.MigLayout;
@@ -88,8 +89,7 @@ public class BeautifierUI extends JDialog {
 
         new Thread(() -> {
             try {
-                var newResponseFile = File.createTempFile("tomato-response-", ".bin");
-                newResponseFile.deleteOnExit();
+                var newResponseFile = HttpService.createTempFile();
 
                 try (
                         var reader = new BufferedReader(new FileReader(

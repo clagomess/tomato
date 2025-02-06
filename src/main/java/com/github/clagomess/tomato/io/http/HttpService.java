@@ -32,6 +32,12 @@ public class HttpService {
         this.debug = new HttpDebug();
     }
 
+    public static File createTempFile() throws IOException {
+        var file = File.createTempFile("tomato-http-", ".bin");
+        file.deleteOnExit();
+        return file;
+    }
+
     private HttpClient getClient() throws NoSuchAlgorithmException, KeyManagementException {
         return HttpClient.newBuilder()
                 .sslContext(new SSLContextBuilder(debug).build())
@@ -52,8 +58,7 @@ public class HttpService {
             HttpRequest request = buildBody(requestBuilder);
             debug.setRequest(request);
 
-            var responseFile = File.createTempFile("tomato-response-", ".bin");
-            responseFile.deleteOnExit();
+            var responseFile = createTempFile();
             debug.setResponseBodyFile(responseFile);
 
             long requestTime = System.currentTimeMillis();

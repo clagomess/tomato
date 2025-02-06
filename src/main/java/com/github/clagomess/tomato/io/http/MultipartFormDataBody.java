@@ -34,8 +34,7 @@ public class MultipartFormDataBody {
     }
 
     public File build() throws IOException {
-        var file = File.createTempFile("tomato-request-", ".bin");
-        file.deleteOnExit();
+        var file = HttpService.createTempFile();
 
         List<KeyValueItemDto> envs = environmentRepository.getWorkspaceSessionEnvironment()
                 .map(EnvironmentDto::getEnvs)

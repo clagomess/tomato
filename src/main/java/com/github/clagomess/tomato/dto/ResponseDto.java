@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.dto;
 
 import com.github.clagomess.tomato.enums.HttpStatusEnum;
+import com.github.clagomess.tomato.io.http.HttpService;
 import com.github.clagomess.tomato.io.http.MediaType;
 import lombok.Getter;
 import lombok.Setter;
@@ -73,8 +74,7 @@ public class ResponseDto {
                 return response;
             }
 
-            var newResponseFile = File.createTempFile("tomato-response-", ".bin"); // @TODO: make a function
-            newResponseFile.deleteOnExit();
+            var newResponseFile = HttpService.createTempFile();
 
             try(
                     var fis = new FileInputStream(response);

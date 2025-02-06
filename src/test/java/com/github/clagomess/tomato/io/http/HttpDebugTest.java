@@ -43,13 +43,12 @@ public class HttpDebugTest {
 
         debug.setRequest(request);
 
-        File resposeFile = File.createTempFile("tomato-test-", ".bin");
-        resposeFile.deleteOnExit();
-        debug.setResponseBodyFile(resposeFile);
+        File responseFile = HttpService.createTempFile();
+        debug.setResponseBodyFile(responseFile);
 
         HttpResponse<Path> response = HttpClient.newHttpClient().send(
                 request,
-                HttpResponse.BodyHandlers.ofFile(resposeFile.toPath())
+                HttpResponse.BodyHandlers.ofFile(responseFile.toPath())
         );
         debug.setResponse(response);
 

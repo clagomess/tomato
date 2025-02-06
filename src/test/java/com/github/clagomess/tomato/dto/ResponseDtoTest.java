@@ -1,10 +1,10 @@
 package com.github.clagomess.tomato.dto;
 
+import com.github.clagomess.tomato.io.http.HttpService;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,12 +33,9 @@ public class ResponseDtoTest {
                 .GET()
                 .build();
 
-        File resposeFile = File.createTempFile("tomato-test-", ".bin");
-        resposeFile.deleteOnExit();
-
         HttpResponse<Path> httpResponse = HttpClient.newHttpClient().send(
                 request,
-                HttpResponse.BodyHandlers.ofFile(resposeFile.toPath())
+                HttpResponse.BodyHandlers.ofFile(HttpService.createTempFile().toPath())
         );
 
         // teste
