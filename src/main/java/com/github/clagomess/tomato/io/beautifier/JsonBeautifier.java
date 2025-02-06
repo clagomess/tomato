@@ -205,7 +205,12 @@ public class JsonBeautifier extends Beautifier {
             char c = currentChar();
             if(c == '"' && prevChar != '\\') break;
             buffString[buffStringPos] = c;
-            prevChar = c;
+
+            if(prevChar == '\\' && c == '\\'){
+                prevChar = 0;
+            }else {
+                prevChar = c;
+            }
         }
 
         buffString[buffStringPos] = '"';

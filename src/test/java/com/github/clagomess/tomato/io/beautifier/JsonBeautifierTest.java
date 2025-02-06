@@ -115,6 +115,21 @@ public class JsonBeautifierTest {
                   69,
                   69
                 ]
+                """),
+                Arguments.of("""
+                [{"key": "foo","value": "Temp\\\\"},
+                {"key": "foo","value": "bar"}]
+                """, """
+                [
+                  {
+                    "key": "foo",
+                    "value": "Temp\\\\"
+                  },
+                  {
+                    "key": "foo",
+                    "value": "bar"
+                  }
+                ]
                 """)
         );
     }
