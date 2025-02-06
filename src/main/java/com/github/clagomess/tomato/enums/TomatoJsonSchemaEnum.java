@@ -11,7 +11,8 @@ public enum TomatoJsonSchemaEnum {
     DATA_SESSION("data-session.schema.json"),
     ENVIRONMENT("environment.schema.json"),
     REQUEST("request.schema.json"),
-    WORKSPACE("workspace.schema.json");
+    WORKSPACE("workspace.schema.json"),
+    WORKSPACE_SESSION("workspace-session.schema.json");
 
     private final String resourceFile;
 }

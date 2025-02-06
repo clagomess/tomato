@@ -31,11 +31,30 @@
     "url": {
       "type": "string"
     },
+    "urlParam": {
+      "type": "object",
+      "properties": {
+        "charset": {
+          "type": "string"
+        },
+        "path": {
+          "$ref": "#/definitions/keyValueItem"
+        },
+        "query": {
+          "$ref": "#/definitions/contentTypeKeyValueItem"
+        }
+      },
+      "required": [
+        "charset",
+        "path",
+        "query"
+      ]
+    },
     "headers": {
-      "$ref": "#/definitions/keyvalue"
+      "$ref": "#/definitions/keyValueItem"
     },
     "cookies": {
-      "$ref": "#/definitions/keyvalue"
+      "$ref": "#/definitions/keyValueItem"
     },
     "body": {
       "oneOf": [
@@ -47,10 +66,14 @@
               "enum": [
                 "NO_BODY"
               ]
+            },
+            "charset": {
+              "type": "string"
             }
           },
           "required": [
-            "type"
+            "type",
+            "charset"
           ]
         },
         {
@@ -61,6 +84,9 @@
               "enum": [
                 "RAW"
               ]
+            },
+            "charset": {
+              "type": "string"
             },
             "raw": {
               "type": "object",
@@ -86,6 +112,7 @@
           },
           "required": [
             "type",
+            "charset",
             "raw"
           ]
         },
@@ -128,12 +155,16 @@
                 "URL_ENCODED_FORM"
               ]
             },
+            "charset": {
+              "type": "string"
+            },
             "urlEncodedForm": {
-              "$ref": "#/definitions/keyvalue"
+              "$ref": "#/definitions/contentTypeKeyValueItem"
             }
           },
           "required": [
             "type",
+            "charset",
             "urlEncodedForm"
           ]
         },
@@ -146,12 +177,16 @@
                 "MULTIPART_FORM"
               ]
             },
+            "charset": {
+              "type": "string"
+            },
             "multiPartForm": {
-              "$ref": "#/definitions/keyvalue"
+              "$ref": "#/definitions/fileKeyValueItem"
             }
           },
           "required": [
             "type",
+            "charset",
             "multiPartForm"
           ]
         }
@@ -168,7 +203,34 @@
     "body"
   ],
   "definitions": {
-    "keyvalue": {
+    "contentTypeKeyValueItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "valueContentType": {
+            "type": "string"
+          },
+          "selected": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "key",
+          "value",
+          "valueContentType",
+          "selected"
+        ]
+      }
+    },
+    "fileKeyValueItem": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "array",
       "items": {
@@ -187,12 +249,39 @@
           "value": {
             "type": "string"
           },
+          "valueContentType": {
+            "type": "string"
+          },
           "selected": {
             "type": "boolean"
           }
         },
         "required": [
           "type",
+          "key",
+          "value",
+          "valueContentType",
+          "selected"
+        ]
+      }
+    },
+    "keyValueItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "selected": {
+            "type": "boolean"
+          }
+        },
+        "required": [
           "key",
           "value",
           "selected"
