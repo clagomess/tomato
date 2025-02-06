@@ -1,10 +1,10 @@
 {
   "id" : "Cio4Ribc",
   "createTime" : "2024-12-18T23:17:18",
-  "updateTime" : "2025-02-06T13:40:12",
+  "updateTime" : "2025-02-06T17:24:19",
   "name" : "send-cookie",
   "method" : "GET",
-  "url" : "{{echoServer}}/echo.php?cookie",
+  "url" : "{{echoServer}}/cookie.php",
   "urlParam" : {
     "charset" : "UTF-8",
     "path" : [ ],
@@ -12,8 +12,8 @@
   },
   "headers" : [ ],
   "cookies" : [ {
-    "key" : "JSESSIONID",
-    "value" : "50AE9F57B058D16C887177D9C79EF364",
+    "key" : "PHPSESSID",
+    "value" : "87cc08dd891bde98217c632cc073c897",
     "selected" : true
   } ],
   "body" : {
