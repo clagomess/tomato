@@ -67,6 +67,23 @@ public class HttpServicePerformTest {
     }
 
     @Test
+    public void get_response_gzip() {
+        RequestDto request = new RequestDto();
+        request.setUrl("http://localhost:8500/response-gzip");
+        request.setMethod(HttpMethodEnum.GET);
+
+        try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
+            ResponseDto response = new HttpService(request).perform();
+
+            assertTrue(response.isRequestStatus());
+            assertNull(response.getRequestMessage());
+            Assertions.assertThat(response.getHttpResponse().getBody())
+                    .content()
+                    .isEqualTo("{\"foo\":\"bar\"}");
+        }
+    }
+
+    @Test
     public void set_headers() {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/set-headers");

@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/response-gzip"
+  },
+  "response": {
+    "status": 200,
+    "base64Body": "H4sIAAAAAAAAA0vOzytJzSvRyyrOz+MCAB8+tx8NAAAA",
+    "headers": {
+      "Vary": "Accept-Encoding",
+      "Content-Type": "application/json",
+      "Content-Encoding": "gzip"
+    }
+  }
+}
