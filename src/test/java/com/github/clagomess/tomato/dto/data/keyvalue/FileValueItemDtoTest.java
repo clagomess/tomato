@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FileValueItemDtoTest {
     @Test
     public void equalsHashCode(){
-        Assertions.assertThat(new FileValueItemDto())
-                .isEqualTo(new FileValueItemDto());
+        Assertions.assertThat(new FileKeyValueItemDto())
+                .isEqualTo(new FileKeyValueItemDto());
     }
 
     @ParameterizedTest
@@ -24,7 +24,7 @@ public class FileValueItemDtoTest {
             KeyValueTypeEnum inputType,
             KeyValueTypeEnum expectedType
     ){
-        var result = new FileValueItemDto();
+        var result = new FileKeyValueItemDto();
         result.setType(inputType);
 
         assertEquals(expectedType, result.getType());
@@ -43,7 +43,7 @@ public class FileValueItemDtoTest {
             String inputValueContentType,
             String expectedValueContentType
     ){
-        var result = new FileValueItemDto();
+        var result = new FileKeyValueItemDto();
         result.setType(type);
         result.setValueContentType(inputValueContentType);
 

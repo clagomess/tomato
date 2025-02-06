@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.mapper;
 import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import com.github.clagomess.tomato.dto.data.request.BodyDto;
@@ -129,11 +129,11 @@ public interface PostmanCollectionPumpMapper {
     @Mapping(target = "value", ignore = true)
     @Mapping(target = "selected", ignore = true)
     @Mapping(target = "valueContentType", ignore = true)
-    FileValueItemDto map(PostmanCollectionV210Dto.Item.Request.Body.FormData source);
+    FileKeyValueItemDto map(PostmanCollectionV210Dto.Item.Request.Body.FormData source);
 
     @AfterMapping
     default void mapAfter(
-            @MappingTarget FileValueItemDto target,
+            @MappingTarget FileKeyValueItemDto target,
             PostmanCollectionV210Dto.Item.Request.Body.FormData source
     ){
         target.setSelected(source.getDisabled() == null || !source.getDisabled());

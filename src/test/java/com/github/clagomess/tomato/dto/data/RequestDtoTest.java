@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.dto.data;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
 import com.github.clagomess.tomato.dto.data.request.RawBodyDto;
@@ -137,7 +137,7 @@ public class RequestDtoTest {
         dto.setUrl("http://localhost:8080/tomato");
         dto.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
         dto.getBody().getMultiPartForm().add(
-                new FileValueItemDto("key", "value")
+                new FileKeyValueItemDto("key", "value")
         );
 
         var json = mapper.writeValueAsString(dto);

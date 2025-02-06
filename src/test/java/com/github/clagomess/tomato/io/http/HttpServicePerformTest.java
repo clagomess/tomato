@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.io.http;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
 import com.github.clagomess.tomato.dto.data.request.BodyDto;
@@ -210,7 +210,7 @@ public class HttpServicePerformTest {
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new BodyDto());
         request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
-        request.getBody().getMultiPartForm().add(new FileValueItemDto("foo", "bar"));
+        request.getBody().getMultiPartForm().add(new FileKeyValueItemDto("foo", "bar"));
 
         try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
             ResponseDto response = new HttpService(request).perform();
@@ -230,7 +230,7 @@ public class HttpServicePerformTest {
                         .getResource("HttpServicePerformTest/dummy.txt"))
                 .getFile();
 
-        request.getBody().getMultiPartForm().add(new FileValueItemDto(
+        request.getBody().getMultiPartForm().add(new FileKeyValueItemDto(
                 FILE,
                 "key",
                 formFile,

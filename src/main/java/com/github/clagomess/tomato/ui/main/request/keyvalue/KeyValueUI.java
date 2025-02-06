@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.main.request.keyvalue;
 
-import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
@@ -56,7 +56,7 @@ public class KeyValueUI<T extends KeyValueItemDto> extends JPanel {
         header.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
         header.add(new JLabel(), "width 25!");
 
-        if(itemClass == FileValueItemDto.class) {
+        if(itemClass == FileKeyValueItemDto.class) {
             header.add(new JLabel("Type"), "width 70!");
         }
 

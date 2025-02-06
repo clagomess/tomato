@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.dto.data.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class BodyDto {
     private RawBodyDto raw;
     private BinaryBodyDto binary;
     private List<ContentTypeKeyValueItemDto> urlEncodedForm  = new ArrayList<>();
-    private List<FileValueItemDto> multiPartForm = new ArrayList<>();
+    private List<FileKeyValueItemDto> multiPartForm = new ArrayList<>();
 
     public Charset getCharset() {
         if(charset == null) charset = UTF_8;
@@ -59,7 +59,7 @@ public class BodyDto {
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public List<FileValueItemDto> getMultiPartForm() {
+    public List<FileKeyValueItemDto> getMultiPartForm() {
         if(type != BodyTypeEnum.MULTIPART_FORM) return null;
         if(multiPartForm == null) multiPartForm = new ArrayList<>();
         return multiPartForm;

@@ -17,14 +17,14 @@ import static com.github.clagomess.tomato.io.http.MediaType.TEXT_PLAIN_TYPE;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FileValueItemDto extends ContentTypeKeyValueItemDto {
+public class FileKeyValueItemDto extends ContentTypeKeyValueItemDto {
     private KeyValueTypeEnum type = TEXT;
 
-    public FileValueItemDto(String key, String value) {
+    public FileKeyValueItemDto(String key, String value) {
         super(key, value);
     }
 
-    public FileValueItemDto(
+    public FileKeyValueItemDto(
             KeyValueTypeEnum type,
             String key,
             String value,

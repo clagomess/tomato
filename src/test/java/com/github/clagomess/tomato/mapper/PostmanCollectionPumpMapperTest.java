@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.mapper;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import com.github.clagomess.tomato.dto.data.request.BodyDto;
@@ -74,7 +74,7 @@ public class PostmanCollectionPumpMapperTest {
         item.setType("file");
         item.setSrc("/home/claudio/Imagens/youtube-en-VTV.jpg");
 
-        FileValueItemDto result = pumpMapper.map(item);
+        FileKeyValueItemDto result = pumpMapper.map(item);
         assertEquals(item.getKey(), result.getKey());
         assertEquals(KeyValueTypeEnum.FILE, result.getType());
         assertEquals(item.getSrc(), result.getValue());
@@ -88,7 +88,7 @@ public class PostmanCollectionPumpMapperTest {
         item.setValue("password");
         item.setDisabled(true);
 
-        FileValueItemDto result = pumpMapper.map(item);
+        FileKeyValueItemDto result = pumpMapper.map(item);
         assertEquals(item.getKey(), result.getKey());
         assertEquals(KeyValueTypeEnum.TEXT, result.getType());
         assertEquals(item.getValue(), result.getValue());

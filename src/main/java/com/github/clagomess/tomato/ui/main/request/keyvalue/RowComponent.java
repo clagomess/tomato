@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.keyvalue;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
@@ -60,7 +60,7 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
 
         setLayout(new MigLayout(
                 "insets 2",
-                item instanceof FileValueItemDto ?
+                item instanceof FileKeyValueItemDto ?
                         "[][][][grow, fill][]" :
                         "[][][grow, fill][]"
         ));
@@ -70,7 +70,7 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
         cbSelected.addActionListener(l -> cbSelectedOnChange());
         add(cbSelected);
 
-        if(item instanceof FileValueItemDto fvItem){
+        if(item instanceof FileKeyValueItemDto fvItem){
             cbType.setSelectedItem(fvItem.getType());
             cbType.setEnabled(item.isSelected());
             cbType.addActionListener(l -> cbTypeOnChange(fvItem));
@@ -93,7 +93,7 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
 
     // @TODO: implement option to fill Content-Type when 'type File'
 
-    private void cbTypeOnChange(FileValueItemDto fvItem){
+    private void cbTypeOnChange(FileKeyValueItemDto fvItem){
         KeyValueTypeEnum selectedType = (KeyValueTypeEnum) cbType.getSelectedItem();
         if(Objects.equals(selectedType, fvItem.getType())) return;
 
@@ -147,7 +147,7 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
     }
 
     private JComponent createCValue(){
-        if(item instanceof FileValueItemDto fvItem && fvItem.getType() == FILE){
+        if(item instanceof FileKeyValueItemDto fvItem && fvItem.getType() == FILE){
             var fileChooser = new FileChooser();
             fileChooser.setValue(fvItem.getValue());
             fileChooser.addOnChange(file -> {

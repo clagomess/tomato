@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.left;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.FileValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
@@ -78,7 +78,7 @@ public class BodyUI extends JPanel {
         return switch (body.getType()) {
             case MULTIPART_FORM -> new KeyValueUI<>(
                     body.getMultiPartForm(),
-                    FileValueItemDto.class,
+                    FileKeyValueItemDto.class,
                     requestStagingMonitor
             );
             case URL_ENCODED_FORM -> new KeyValueUI<>(
