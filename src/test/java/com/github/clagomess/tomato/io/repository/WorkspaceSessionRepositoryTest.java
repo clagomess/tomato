@@ -30,7 +30,7 @@ public class WorkspaceSessionRepositoryTest extends RepositoryStubs {
     @Test
     public void getWorkspaceSessionFile() throws IOException {
         WorkspaceDto workspaceDto = new WorkspaceDto();
-        workspaceDto.setPath(new File("target"));
+        workspaceDto.setPath(mockDataDir);
 
         Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);

@@ -1,15 +1,21 @@
 package com.github.clagomess.tomato.io.repository;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-abstract class RepositoryStubs {
-    protected final File testData = new File(Objects.requireNonNull(getClass().getResource(
+public abstract class RepositoryStubs {
+    protected final File testData = new File(Objects.requireNonNull(RepositoryStubs.class.getResource(
             "home/data"
     )).getFile());
 
@@ -38,5 +44,14 @@ abstract class RepositoryStubs {
         WorkspaceRepository.cacheList.evictAll();
         WorkspaceRepository.cacheLoad.evictAll();
         WorkspaceSessionRepository.cache.evictAll();
+    }
+
+    @AfterEach
+    public void deleteDirs() throws IOException {
+        try(Stream<Path> paths = Files.walk(mockHomeDir.toPath())){
+            paths.sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(item -> assertTrue(item.delete()));
+        }
     }
 }

@@ -15,18 +15,18 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
-public class RepositoryTest {
+public class RepositoryTest extends RepositoryStubs {
     private final AbstractRepository abstractRepository = Mockito.spy(new AbstractRepository(){});
 
     @Test
     public void read_e_write_File_json() throws IOException {
         var dto = new ConfigurationDto();
-        dto.setDataDirectory(new File("target"));
+        dto.setDataDirectory(mockDataDir);
         dto.setCreateTime(LocalDateTime.now().minusDays(1));
         dto.setUpdateTime(LocalDateTime.now().minusDays(1));
 
         var file = new File(
-                "target",
+                mockDataDir,
                 String.format(
                         "read_e_write_File_json_%s.json",
                         RandomStringUtils.secure().nextAlphanumeric(8)

@@ -96,7 +96,7 @@ public class CollectionRepositoryTest extends RepositoryStubs {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setId("nPUaq0TC");
         workspaceDto.setName("ROOT");
-        workspaceDto.setPath(new File("target"));
+        workspaceDto.setPath(mockDataDir);
 
         WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
         Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
