@@ -7,10 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -18,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.zip.GZIPInputStream;
 
 @Getter
 @Setter
@@ -55,7 +54,7 @@ public class ResponseDto {
         public Response(
                 HttpResponse<Path> response,
                 long initRequestTime
-        ) {
+        ) throws IOException {
             this.requestTime = System.currentTimeMillis() - initRequestTime;
             this.status = response.statusCode();
             this.statusReason = HttpStatusEnum.getReasonPhrase(this.status);
@@ -63,7 +62,31 @@ public class ResponseDto {
             this.cookies = parseSetCookies(this.headers);
             this.contentType = new MediaType(response.headers());
 
-            setBody(response.body().toFile());
+            setBody(convertIfGziped(
+                    response.headers(),
+                    response.body().toFile()
+            ));
+        }
+
+        public File convertIfGziped(HttpHeaders headers, File response) throws IOException {
+            if(!"gzip".equals(headers.firstValue("content-encoding").orElse(null))){
+                return response;
+            }
+
+            var newResponseFile = File.createTempFile("tomato-response-", ".bin"); // @TODO: make a function
+            newResponseFile.deleteOnExit();
+
+            try(
+                    var fis = new FileInputStream(response);
+                    var gis = new GZIPInputStream(fis);
+                    var bis = new BufferedInputStream(gis);
+                    var fos = new FileOutputStream(newResponseFile);
+                    var bos = new BufferedOutputStream(fos)
+            ){
+                bis.transferTo(bos);
+            }
+
+            return newResponseFile;
         }
 
         public void setBody(File body) {

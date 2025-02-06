@@ -79,7 +79,7 @@ public class HttpServicePerformTest {
             assertNull(response.getRequestMessage());
             Assertions.assertThat(response.getHttpResponse().getBody())
                     .content()
-                    .isEqualTo("{\"foo\":\"bar\"}");
+                    .isEqualToIgnoringNewLines("{\"foo\":\"bar\"}");
         }
     }
 

@@ -5,7 +5,7 @@
   },
   "response": {
     "status": 200,
-    "base64Body": "H4sIAAAAAAAAA0vOzytJzSvRyyrOz+MCAB8+tx8NAAAA",
+    "base64Body": "H4sIAAAAAAAAA6tWSsvPV7JSSkosUqrlAgCP0pwCDgAAAA==",
     "headers": {
       "Vary": "Accept-Encoding",
       "Content-Type": "application/json",
