@@ -13,21 +13,28 @@ import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.util.List;
+
+import static javax.swing.SwingUtilities.invokeLater;
 
 @Getter
 @Setter
 public class RequestTabContentUI extends JPanel {
-    private final KeyValueUI<ContentTypeKeyValueItemDto> queryParamsUI;
-    private final KeyValueUI<KeyValueItemDto> pathVariablesUI;
-    private final BodyUI bodyUI;
-    private final KeyValueUI<KeyValueItemDto> headersUI;
-    private final KeyValueUI<KeyValueItemDto> cookiesUI;
+    private final RequestDto requestDto;
+    private final RequestStagingMonitor requestStagingMonitor;
+
+    private KeyValueUI<ContentTypeKeyValueItemDto> queryParamsUI;
+    private KeyValueUI<KeyValueItemDto> pathVariablesUI;
+    private BodyUI bodyUI;
+    private KeyValueUI<KeyValueItemDto> headersUI;
+    private KeyValueUI<KeyValueItemDto> cookiesUI;
 
     public RequestTabContentUI(
             RequestDto requestDto,
             RequestStagingMonitor requestStagingMonitor
     ){
+        this.requestDto = requestDto;
+        this.requestStagingMonitor = requestStagingMonitor;
+
         // layout definitions
         setLayout(new MigLayout(
                 "insets 5 0 0 5",
@@ -35,12 +42,47 @@ public class RequestTabContentUI extends JPanel {
         ));
 
         JTabbedPane tpRequest = new JTabbedPane();
+        createTabTitleQueryParams(tpRequest);
+        createTabTitlePathVariables(tpRequest);
+        createTabTitleBody(tpRequest);
+        createTabTitleHeaders(tpRequest);
+        createTabTitleCookies(tpRequest);
+        tpRequest.setSelectedIndex(-1);
 
-        // Query Params
+        tpRequest.addChangeListener(e -> {
+            int selectedIndex = tpRequest.getSelectedIndex();
+
+            if(!(tpRequest.getComponentAt(selectedIndex) instanceof JLabel)) return;
+
+            invokeLater(() -> {
+                switch (selectedIndex){
+                    case 0: createTabQueryParams(tpRequest); break;
+                    case 1: createTabPathVariables(tpRequest); break;
+                    case 2: createTabBody(tpRequest); break;
+                    case 3: createTabHeaders(tpRequest); break;
+                    case 4: createTabCookies(tpRequest); break;
+                }
+            });
+        });
+
+        setSelectedTabWithContent(tpRequest);
+
+        add(tpRequest, "height 100%");
+
+        // @TODO: update tab title when modify content
+    }
+
+    private void createTabTitleQueryParams(JTabbedPane tabbedPane){
         var queryParamsTabTitle = new TabTitleUI(
                 "Query Params",
                 !requestDto.getUrlParam().getQuery().isEmpty()
         );
+
+        tabbedPane.addTab(queryParamsTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.setTabComponentAt(0, queryParamsTabTitle);
+    }
+
+    private void createTabQueryParams(JTabbedPane tabbedPane){
         queryParamsUI = new KeyValueUI<>(
                 requestDto.getUrlParam().getQuery(),
                 ContentTypeKeyValueItemDto.class,
@@ -52,14 +94,21 @@ public class RequestTabContentUI extends JPanel {
                         ))
                         .build()
         );
-        tpRequest.addTab(queryParamsTabTitle.getTitle(), queryParamsUI);
 
+        tabbedPane.setComponentAt(0, queryParamsUI);
+    }
 
-        // Path Variables
+    private void createTabTitlePathVariables(JTabbedPane tabbedPane){
         var pathVariablesTabTitle = new TabTitleUI(
                 "Path Variables",
                 !requestDto.getUrlParam().getPath().isEmpty()
         );
+
+        tabbedPane.addTab(pathVariablesTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.setTabComponentAt(1, pathVariablesTabTitle);
+    }
+
+    private void createTabPathVariables(JTabbedPane tabbedPane){
         pathVariablesUI = new KeyValueUI<>(
                 requestDto.getUrlParam().getPath(),
                 KeyValueItemDto.class,
@@ -71,66 +120,79 @@ public class RequestTabContentUI extends JPanel {
                         ))
                         .build()
         );
-        tpRequest.addTab(pathVariablesTabTitle.getTitle(), pathVariablesUI);
 
-        // Body
+        tabbedPane.setComponentAt(1, pathVariablesUI);
+    }
+
+    private void createTabTitleBody(JTabbedPane tabbedPane){
         var bodyTabTabTitle = new TabTitleUI(
                 "Body",
                 requestDto.getBody().getType() != BodyTypeEnum.NO_BODY
         );
+
+        tabbedPane.addTab(bodyTabTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.setTabComponentAt(2, bodyTabTabTitle);
+    }
+
+    private void createTabBody(JTabbedPane tabbedPane){
         bodyUI = new BodyUI(
                 requestDto.getBody(),
                 requestStagingMonitor
         );
-        tpRequest.addTab(bodyTabTabTitle.getTitle(), bodyUI);
 
-        // Headers
+        tabbedPane.setComponentAt(2, bodyUI);
+    }
+
+    private void createTabTitleHeaders(JTabbedPane tabbedPane){
         var headersTabTitle = new TabTitleUI(
                 "Headers",
                 !requestDto.getHeaders().isEmpty()
         );
+
+        tabbedPane.addTab(headersTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.setTabComponentAt(3, headersTabTitle);
+    }
+
+    private void createTabHeaders(JTabbedPane tabbedPane){
         headersUI = new KeyValueUI<>(
                 requestDto.getHeaders(),
                 KeyValueItemDto.class,
                 requestStagingMonitor
         );
-        tpRequest.addTab(headersTabTitle.getTitle(), headersUI);
 
-        // Cookies
+        tabbedPane.setComponentAt(3, headersUI);
+    }
+
+    private void createTabTitleCookies(JTabbedPane tabbedPane){
         var cookiesTabTitle = new TabTitleUI(
                 "Cookies",
                 !requestDto.getCookies().isEmpty()
         );
+
+        tabbedPane.addTab(cookiesTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.setTabComponentAt(4, cookiesTabTitle);
+    }
+
+    private void createTabCookies(JTabbedPane tabbedPane){
         cookiesUI = new KeyValueUI<>(
                 requestDto.getCookies(),
                 KeyValueItemDto.class,
                 requestStagingMonitor
         );
-        tpRequest.addTab(cookiesTabTitle.getTitle(), cookiesUI);
 
-        add(tpRequest, "span, height 100%");
+        tabbedPane.setComponentAt(4, cookiesUI);
+    }
 
-        // init tab-title
-        tpRequest.setTabComponentAt(0, queryParamsTabTitle);
-        tpRequest.setTabComponentAt(1, pathVariablesTabTitle);
-        tpRequest.setTabComponentAt(2, bodyTabTabTitle);
-        tpRequest.setTabComponentAt(3, headersTabTitle);
-        tpRequest.setTabComponentAt(4, cookiesTabTitle);
-
-        // select tab with content
-        List<TabTitleUI> tabs = List.of(
-                queryParamsTabTitle, pathVariablesTabTitle, bodyTabTabTitle,
-                headersTabTitle, cookiesTabTitle
-        );
-
-        for (var i = 0; i < tabs.size(); i++) {
-            if(tabs.get(i).isHasContent()){
-                tpRequest.setSelectedIndex(i);
-                break;
+    private void setSelectedTabWithContent(JTabbedPane tabbedPane){
+        for (var i = 0; i < tabbedPane.getTabCount(); i++) {
+            if(tabbedPane.getTabComponentAt(i) instanceof TabTitleUI tabTitleUI){
+                if(!tabTitleUI.isHasContent()) continue;
+                tabbedPane.setSelectedIndex(i);
+                return;
             }
         }
 
-        // @TODO: update tab title when modify content
+        tabbedPane.setSelectedIndex(0);
     }
 
     private CharsetComboBox getCharsetComboBox(
@@ -148,10 +210,10 @@ public class RequestTabContentUI extends JPanel {
     }
 
     public void dispose(){
-        queryParamsUI.dispose();
-        pathVariablesUI.dispose();
-        bodyUI.dispose();
-        headersUI.dispose();
-        cookiesUI.dispose();
+        if(queryParamsUI != null) queryParamsUI.dispose();
+        if(pathVariablesUI != null) pathVariablesUI.dispose();
+        if(bodyUI != null) bodyUI.dispose();
+        if(headersUI != null) headersUI.dispose();
+        if(cookiesUI != null) cookiesUI.dispose();
     }
 }

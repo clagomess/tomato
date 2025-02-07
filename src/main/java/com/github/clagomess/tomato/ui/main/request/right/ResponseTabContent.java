@@ -19,15 +19,13 @@ import java.awt.*;
 import java.io.File;
 import java.nio.file.Files;
 
+import static javax.swing.SwingUtilities.invokeLater;
+
 @Slf4j
 @Getter
 public class ResponseTabContent extends JPanel {
-    private final RawTextArea txtHTTPDebug = new RawTextArea();
-    private final TRSyntaxTextArea txtResponse = new TRSyntaxTextArea();
     private final StatusResponseUI statusResponseUI = new StatusResponseUI();
-    private final TableManagerUI<KeyValueTMDto> tblResponseHeader = new TableManagerUI<>(
-            KeyValueTMDto.class
-    );
+
     private final JButton btnBeautify = new JButton(new BxsMagicWandIcon()){{
         setToolTipText("Beautify response");
         setEnabled(false);
@@ -36,6 +34,10 @@ public class ResponseTabContent extends JPanel {
         setToolTipText("Download");
         setEnabled(false);
     }};
+
+    private TRSyntaxTextArea txtResponse;
+    private TableManagerUI<KeyValueTMDto> tblResponseHeader;
+    private RawTextArea txtHTTPDebug;
 
     private ResponseDto responseDto = null;
 
@@ -49,19 +51,37 @@ public class ResponseTabContent extends JPanel {
         add(btnBeautify);
         add(btnDownload, "wrap");
 
-        var hsp = new JScrollPane(tblResponseHeader.getTable());
-        hsp.setBorder(new MatteBorder(0, 1, 1, 1, Color.decode("#616365")));
-        // @TODO: add cookie viewer
-
         JTabbedPane tpResponse = new JTabbedPane();
-        tpResponse.addTab("Response", TRSyntaxTextArea.createScroll(txtResponse));
-        tpResponse.addTab("Header", hsp);
-        tpResponse.addTab("Debug", RawTextArea.createScroll(txtHTTPDebug));
         add(tpResponse, "span, height 100%");
+
+        invokeLater(() -> createTabReponse(tpResponse));
+        invokeLater(() -> createTabHeader(tpResponse));
+        // @TODO: add cookie viewer
+        invokeLater(() -> createTabDebug(tpResponse));
 
         // configure
         btnBeautify.addActionListener(l -> btnBeautifyAction());
         btnDownload.addActionListener(l -> btnDownloadAction());
+    }
+
+    private void createTabReponse(JTabbedPane tabbedPane){
+        txtResponse = new TRSyntaxTextArea();
+        var component = TRSyntaxTextArea.createScroll(txtResponse);
+        tabbedPane.addTab("Response", component);
+    }
+
+    private void createTabHeader(JTabbedPane tabbedPane){
+        tblResponseHeader = new TableManagerUI<>(KeyValueTMDto.class);
+
+        var component = new JScrollPane(tblResponseHeader.getTable());
+        component.setBorder(new MatteBorder(0, 1, 1, 1, Color.decode("#616365")));
+        tabbedPane.addTab("Header", component);
+    }
+
+    private void createTabDebug(JTabbedPane tabbedPane){
+        txtHTTPDebug = new RawTextArea();
+        var component =  RawTextArea.createScroll(txtHTTPDebug);
+        tabbedPane.addTab("Debug", component);
     }
 
     public void reset(){

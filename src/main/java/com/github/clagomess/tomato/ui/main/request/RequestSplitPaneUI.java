@@ -116,7 +116,7 @@ public class RequestSplitPaneUI extends JPanel {
         // # REQUEST / RESPONSE
         var splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setBorder(new MatteBorder(1, 0, 0, 0, Color.decode("#616365")));
-        splitPane.setDividerLocation(0.5);
+        splitPane.setDividerLocation(580);
         splitPane.setResizeWeight(0.3);
         splitPane.setContinuousLayout(true);
 
