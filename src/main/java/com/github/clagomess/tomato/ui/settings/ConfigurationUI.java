@@ -12,7 +12,6 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static javax.swing.JFileChooser.DIRECTORIES_ONLY;
 import static javax.swing.SwingUtilities.invokeLater;
@@ -23,7 +22,7 @@ public class ConfigurationUI extends JFrame {
     protected final JButton btnSave = new JButton("Save");
     protected final FileChooser fcDataDir = new FileChooser(DIRECTORIES_ONLY);
 
-    public ConfigurationUI() {
+    public ConfigurationUI(MainUI mainUI) {
         setTitle("Configuration");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
@@ -55,12 +54,7 @@ public class ConfigurationUI extends JFrame {
         }, "ConfigurationUI").start();
 
         pack();
-        setLocationRelativeTo(
-                Arrays.stream(Window.getWindows())
-                        .filter(item -> item instanceof MainUI)
-                        .findFirst()
-                        .orElse(null)
-        );
+        setLocationRelativeTo(mainUI);
         setVisible(true);
     }
 

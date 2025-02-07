@@ -25,7 +25,9 @@ public class SvgIcon implements Icon {
         this.resourceName = resourceName;
         this.iconWidth = iconWidth;
         this.iconHeight = iconHeight;
-        this.color = "#" + String.format("%06X", 0xFFFFFF & color.getRGB());
+        this.color = color != null ?
+                "#" + String.format("%06X", 0xFFFFFF & color.getRGB()) :
+                null;
     }
 
     public SvgIcon(String resourceName){

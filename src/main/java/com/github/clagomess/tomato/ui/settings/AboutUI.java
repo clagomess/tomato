@@ -8,10 +8,9 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 public class AboutUI extends JFrame {
-    public AboutUI() {
+    public AboutUI(MainUI mainUI) {
         setTitle("About");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
@@ -45,12 +44,7 @@ public class AboutUI extends JFrame {
         add(release);
 
         pack();
-        setLocationRelativeTo(
-                Arrays.stream(Window.getWindows())
-                        .filter(item -> item instanceof MainUI)
-                        .findFirst()
-                        .orElse(null)
-        );
+        setLocationRelativeTo(mainUI);
         setVisible(true);
     }
 }

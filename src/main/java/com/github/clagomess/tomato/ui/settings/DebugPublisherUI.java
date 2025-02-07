@@ -9,13 +9,12 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 public class DebugPublisherUI extends JFrame {
     private final RawTextArea console = new RawTextArea();
     private final JButton btnRefresh = new JButton("Refresh");
 
-    public DebugPublisherUI() {
+    public DebugPublisherUI(MainUI mainUI) {
         setTitle("Debug -> Publisher");
         setIconImages(FaviconImage.getFrameIconImage());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -32,12 +31,7 @@ public class DebugPublisherUI extends JFrame {
         btnRefresh.addActionListener(e -> refresh());
 
         pack();
-        setLocationRelativeTo(
-                Arrays.stream(Window.getWindows())
-                        .filter(item -> item instanceof MainUI)
-                        .findFirst()
-                        .orElse(null)
-        );
+        setLocationRelativeTo(mainUI);
         setVisible(true);
 
         refresh();

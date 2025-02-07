@@ -7,15 +7,10 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 
+@Getter
 public class TabTitleUI extends JPanel {
-    @Getter
     private final String title;
-
-    @Getter
-    private boolean hasContent;
-
-    private final BxsCircleIcon iconHasContent = new BxsCircleIcon(Color.ORANGE);
-    private final JLabel contentIcon = new JLabel();
+    private final boolean hasContent;
 
     public TabTitleUI(
             String title,
@@ -26,10 +21,7 @@ public class TabTitleUI extends JPanel {
 
         setLayout(new MigLayout("insets 0 0 0 0"));
         setOpaque(false);
-        add(contentIcon);
+        if(hasContent) add(new JLabel(new BxsCircleIcon(Color.ORANGE)));
         add(new JLabel(title));
-
-        // setData
-        contentIcon.setIcon(hasContent ? iconHasContent : null);
     }
 }

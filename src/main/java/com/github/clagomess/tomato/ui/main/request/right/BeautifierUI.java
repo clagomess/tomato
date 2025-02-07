@@ -131,7 +131,7 @@ public class BeautifierUI extends JDialog {
 
                 try (
                         var reader = new BufferedReader(new StringReader(inputString));
-                        var writer = new BufferedWriter(strWriter);
+                        var writer = new BufferedWriter(strWriter)
                 ) {
                     beautifier.setReader(reader);
                     beautifier.setWriter(writer);

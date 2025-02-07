@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.right.statusbadge;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
-import com.github.clagomess.tomato.ui.ColorConstant;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import lombok.Getter;
 
 import javax.swing.*;

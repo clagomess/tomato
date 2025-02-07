@@ -4,7 +4,7 @@ import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
-import com.github.clagomess.tomato.ui.ColorConstant;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.util.ExecutorUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
