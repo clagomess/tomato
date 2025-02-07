@@ -3,61 +3,95 @@ package com.github.clagomess.tomato.io.beautifier;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.nio.CharBuffer;
 
 @Slf4j
 public class JsonBeautifier extends Beautifier {
     private final char[] buffer = new char[8192];
     private int bufferReadSize = 0;
-    private int pos = 0;
     private int jsonCurrentSize = 0;
 
-    protected char currentChar() throws IOException {
-        if(jsonCurrentSize - pos <= 0) {
+    private char currChar = 0;
+    private int jsonPosition = -1;
+
+    protected char nextChar() throws IOException {
+        jsonPosition++;
+
+        if(jsonCurrentSize - jsonPosition <= 0) {
             bufferReadSize = reader.read(buffer);
             jsonCurrentSize += bufferReadSize;
             progress.setValue(jsonCurrentSize);
         }
 
-        if(pos < bufferReadSize){
-            return buffer[pos];
+        if(jsonPosition < bufferReadSize){
+            currChar = buffer[jsonPosition];
         }else{
-            return buffer[bufferReadSize - (jsonCurrentSize - pos)];
+            currChar = buffer[bufferReadSize - (jsonCurrentSize - jsonPosition)];
         }
+
+        return currChar;
+    }
+
+    private final CharBuffer buffString = CharBuffer.allocate(8192);
+    private void write(char c) throws IOException {
+        if(!buffString.hasRemaining()){
+            writer.write(buffString.array(), 0, buffString.position());
+            buffString.clear();
+        }
+
+        buffString.put(c);
+    }
+
+    private void write(String str) throws IOException {
+        if(buffString.remaining() < str.length()){
+            writer.write(buffString.array(), 0, buffString.position());
+            buffString.clear();
+        }
+
+        buffString.put(str);
     }
 
     private int identLevel = 1;
     private final char[] identBuff = " ".repeat(512).toCharArray();
     protected void writeIdent() throws IOException {
-        writer.write(identBuff, 0, identLevel * 2);
+        int identLen = identLevel * 2;
+
+        if(buffString.remaining() < identLen){
+            writer.write(buffString.array(), 0, buffString.position());
+            buffString.clear();
+        }
+
+        buffString.put(identBuff, 0, identLen);
     }
 
     @Override
     public void parse() throws IOException {
-        char c;
-        while (allowedWhitespace(c = currentChar())) pos++;
+        do nextChar(); while(allowedWhitespace(currChar));
 
         try {
-            switch (c) {
+            switch (currChar) {
                 case '{': {
-                    writer.write("{\n");
+                    write("{\n");
                     parseObject();
-                    writer.write("\n}");
+                    write("\n}");
                     break;
                 }
                 case '[': {
-                    writer.write("[\n");
+                    write("[\n");
                     parseArray();
-                    writer.write("\n]");
+                    write("\n]");
                     break;
                 }
                 default:
-                    throw new BeautifierException(c, pos);
+                    throw new BeautifierException(currChar, jsonPosition);
             }
         } catch (BeautifierException e) {
             log.warn(e.getMessage());
-            writer.newLine();
-            writer.write(e.getMessage());
+            write('\n');
+            write(e.getMessage());
         }
+
+        writer.write(buffString.array(), 0, buffString.position());
     }
 
     protected boolean allowedWhitespace(char c) {
@@ -76,58 +110,49 @@ public class JsonBeautifier extends Beautifier {
     }
 
     protected void parseObject() throws IOException, BeautifierException {
-        char c;
-
         while (bufferReadSize != -1){
-            do pos++; while (
-                    (c = currentChar()) == '{' ||
-                    allowedWhitespace(c)
-            );
+            do nextChar(); while(currChar == '{' || allowedWhitespace(currChar));
 
-            if(c == ','){
-                writer.write(",\n");
+            if(currChar == ','){
+                write(",\n");
                 continue;
             }
 
-            if(c == '}') break;
+            if(currChar == '}') break;
 
-            if (c == '"') {
+            if (currChar == '"') {
                 writeIdent();
                 parseString();
-                do pos++; while (allowedWhitespace(c = currentChar()));
+                do nextChar(); while (allowedWhitespace(currChar));
             } else {
-                throw new BeautifierException(c, pos);
+                throw new BeautifierException(currChar, jsonPosition);
             }
 
-            if(c == ':'){
-                writer.write(": ");
-                do pos++; while (allowedWhitespace(currentChar()));
+            if(currChar == ':'){
+                write(": ");
+                do nextChar(); while (allowedWhitespace(currChar));
                 parseValue();
             }else{
-                throw new BeautifierException(c, pos);
+                throw new BeautifierException(currChar, jsonPosition);
             }
 
-            c = currentChar();
-
-            if(c == '}') break;
-            if(c == ','){
-                writer.write(",\n");
+            if(currChar == '}') break;
+            if(currChar == ','){
+                write(",\n");
             }
         }
     }
 
     protected void parseArray() throws IOException, BeautifierException {
-        char c;
         while (bufferReadSize != -1){
-            c = currentChar();
-            if(c == ']') break;
-            if(c == ',') {
-                writer.write(",\n");
+            if(currChar == ']') break;
+            if(currChar == ',') {
+                write(",\n");
             }
 
-            do pos++; while (allowedWhitespace(c = currentChar()));
-            if(c == ',') continue;
-            if(c == ']') break;
+            do nextChar(); while (allowedWhitespace(currChar));
+            if(currChar == ',') continue;
+            if(currChar == ']') break;
 
             writeIdent();
             parseValue();
@@ -135,98 +160,78 @@ public class JsonBeautifier extends Beautifier {
     }
 
     protected void parseValue() throws IOException, BeautifierException {
-        char c = currentChar();
-        switch (c) {
+        switch (currChar) {
             case '"': {
                 parseString();
                 break;
             }
             case 'n', 't': {
-                writer.write(c);
+                write(currChar);
                 for(int i = 0; i < 3; i++){
-                    pos++;
-                    writer.write(currentChar());
+                    write(nextChar());
                 }
                 break;
             }
             case 'f': {
-                writer.write(c);
+                write(currChar);
                 for(int i = 0; i < 4; i++){
-                    pos++;
-                    writer.write(currentChar());
+                    write(nextChar());
                 }
                 break;
             }
             case '{': {
-                writer.write("{\n");
+                write("{\n");
                 identLevel++;
                 parseObject();
                 identLevel--;
-                writer.newLine();
+                write('\n');
                 writeIdent();
-                writer.write('}');
-                pos++;
+                write('}');
+                nextChar();
                 break;
             }
             case '[': {
-                writer.write("[\n");
+                write("[\n");
                 identLevel++;
                 parseArray();
                 identLevel--;
-                writer.newLine();
+                write('\n');
                 writeIdent();
-                writer.write(']');
+                write(']');
                 break;
             }
             case '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9': {
                 parseNumber();
                 break;
             }
-            default: throw new BeautifierException(c, pos);
+            default: throw new BeautifierException(currChar, jsonPosition);
         }
     }
 
-    private final char[] buffString = new char[512];
     protected void parseString() throws IOException {
-        int buffStringPos = 0;
-        buffString[0] = '"';
-
         char prevChar = 0;
+        write('"');
 
         while(bufferReadSize != -1){
-            pos++;
-            buffStringPos++;
+            if(nextChar() == '"' && prevChar != '\\') break;
+            write(currChar);
 
-            if(buffStringPos == buffString.length){
-                writer.write(buffString);
-                buffStringPos = 0;
-            }
-
-            char c = currentChar();
-            if(c == '"' && prevChar != '\\') break;
-            buffString[buffStringPos] = c;
-
-            if(prevChar == '\\' && c == '\\'){
+            if(prevChar == '\\' && currChar == '\\'){
                 prevChar = 0;
             }else {
-                prevChar = c;
+                prevChar = currChar;
             }
         }
 
-        buffString[buffStringPos] = '"';
-        writer.write(buffString, 0, buffStringPos + 1);
+        write('"');
     }
 
     protected void parseNumber() throws IOException {
-        char c = currentChar();
-        writer.write(c);
+        write(currChar);
 
         while(bufferReadSize != -1){
-            pos++;
-
-            c = currentChar();
-            if(!allowedNumbers(c)) break;
-            writer.write(c);
+            if(!allowedNumbers(nextChar())) break;
+            write(currChar);
         }
     }
 }
