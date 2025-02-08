@@ -6,9 +6,9 @@ import lombok.Getter;
 
 public class ObjectMapperUtil extends ObjectMapper {
     @Getter
-    private static final ObjectMapperUtil instance = new ObjectMapperUtil(){{
-        registerModule(new JavaTimeModule());
-    }};
+    private static final ObjectMapperUtil instance = new ObjectMapperUtil();
 
-    private ObjectMapperUtil() {}
+    private ObjectMapperUtil() {
+        registerModule(new JavaTimeModule());
+    }
 }

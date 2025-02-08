@@ -1,7 +1,6 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
-import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxHomeIcon;
@@ -16,24 +15,43 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
+import static javax.swing.SwingUtilities.invokeLater;
+
 @Getter
 @Setter
 public class CollectionTreeUI extends JPanel {
-    private final DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
-    private final JTree tree = new JTree(treeModel);
-
-    private final EnvironmentComboBox cbEnvironment = new EnvironmentComboBox();
+    private DefaultTreeModel treeModel;
+    private JTree tree;
     private final JLabel lblCurrentWorkspace = new JLabel(new BxHomeIcon());
-
-    private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
-    private final CollectionRepository collectionRepository = new CollectionRepository();
-    private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public CollectionTreeUI() {
         setLayout(new MigLayout(
                 "insets 5",
                 "[grow, fill]"
         ));
+
+        add(lblCurrentWorkspace, "width 100:200:100% - 14px");
+
+        invokeLater(() -> {
+            add(new EnvironmentComboBox(), "cell 0 1, width 100:200:100% - 14px");
+            revalidate();
+            repaint();
+        });
+
+        invokeLater(() -> {
+            add(createCollectionTree(), "cell 0 2, height 100%");
+            revalidate();
+            repaint();
+        });
+
+        WorkspacePublisher.getInstance()
+                .getOnSwitch()
+                .addListener(event -> loadCurrentWorkspace());
+    }
+
+    private JScrollPane createCollectionTree() {
+        treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
+        tree = new JTree(treeModel);
         tree.setRootVisible(false);
         tree.setShowsRootHandles(true);
         tree.setCellRenderer(new CollectionTreeCellRender());
@@ -44,33 +62,26 @@ public class CollectionTreeUI extends JPanel {
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        add(lblCurrentWorkspace, "width 100:200:100% - 14px, wrap");
-        add(cbEnvironment, "width 100:200:100% - 14px, wrap");
-        add(scrollPane, "height 100%");
+        invokeLater(this::loadCurrentWorkspace);
 
-        // data
-        new Thread(
-                this::loadCurrentWorkspace,
-                getClass().getSimpleName()
-        ).start();
-
-        workspacePublisher.getOnSwitch().addListener(event -> {
-            loadCurrentWorkspace();
-        });
+        return scrollPane;
     }
 
     private void loadCurrentWorkspace(){
         try {
-            var rootCollection = collectionRepository.getWorkspaceCollectionTree();
-            lblCurrentWorkspace.setText(rootCollection.getName());
+            var rootCollection = new CollectionRepository().getWorkspaceCollectionTree();
 
-            if(treeModel.getRoot() instanceof CollectionTreeNode rootNode){
-                rootNode.setParent(null);
-            }
+            invokeLater(() -> lblCurrentWorkspace.setText(rootCollection.getName()));
 
-            var rootNode = new CollectionTreeNode(treeModel, rootCollection);
-            treeModel.setRoot(rootNode);
-            rootNode.loadChildren();
+            invokeLater(() -> {
+                if(treeModel.getRoot() instanceof CollectionTreeNode rootNode){
+                    rootNode.setParent(null);
+                }
+
+                var rootNode = new CollectionTreeNode(treeModel, rootCollection);
+                treeModel.setRoot(rootNode);
+                rootNode.loadChildren();
+            });
         }catch (Exception e){
             new ExceptionDialog(null, e);
         }

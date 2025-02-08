@@ -31,10 +31,14 @@ public class MainUI extends JFrame {
         invokeLater(() -> {
             splitPane.setLeftComponent(new CollectionTreeUI());
             splitPane.setDividerLocation(250);
+            splitPane.revalidate();
+            splitPane.repaint();
         });
         invokeLater(() -> {
             splitPane.setRightComponent(new RequestTabPaneUI());
             splitPane.setDividerLocation(250);
+            splitPane.revalidate();
+            splitPane.repaint();
         });
 
         pack();
