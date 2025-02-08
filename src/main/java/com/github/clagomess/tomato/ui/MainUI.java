@@ -12,6 +12,8 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 
+import static javax.swing.SwingUtilities.invokeLater;
+
 public class MainUI extends JFrame {
     public MainUI(){
         setTitle("Tomato");
@@ -23,14 +25,18 @@ public class MainUI extends JFrame {
 
         setLayout(new MigLayout("insets 5", "[grow, fill]"));
 
-        JSplitPane splitPane = new JSplitPane(
-                JSplitPane.HORIZONTAL_SPLIT,
-                new CollectionTreeUI(),
-                new RequestTabPaneUI()
-        );
-        splitPane.setDividerLocation(250);
-
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         add(splitPane, "height 100%");
+
+        invokeLater(() -> {
+            splitPane.setLeftComponent(new CollectionTreeUI());
+            splitPane.setDividerLocation(250);
+        });
+        invokeLater(() -> {
+            splitPane.setRightComponent(new RequestTabPaneUI());
+            splitPane.setDividerLocation(250);
+        });
+
         pack();
         setVisible(true);
     }
