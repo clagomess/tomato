@@ -94,12 +94,7 @@ public class RequestRepository extends AbstractRepository {
     }
 
     public void delete(RequestHeadDto head) throws IOException {
-        log.debug("DELETE: {}", head.getPath());
-
-        if(!head.getPath().delete()){
-            throw new IOException(head.getPath() + " cannot be deleted");
-        }
-
+        deleteFile(head.getPath());
         cacheEvict(head.getPath());
     }
 

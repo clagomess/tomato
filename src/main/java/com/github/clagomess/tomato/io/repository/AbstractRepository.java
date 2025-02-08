@@ -62,6 +62,15 @@ abstract class AbstractRepository {
         }
     }
 
+    protected void deleteFile(File filepath) throws IOException {
+        log.info("DELETE: {}", filepath);
+        assert filepath.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
+
+        if(!filepath.delete()){
+            throw new IOException(filepath + " cannot be deleted");
+        }
+    }
+
     protected static final CacheManager<String, File> cacheHomeDir = new CacheManager<>("homeDir");
     protected File getHomeDir(){
         return cacheHomeDir.get(() -> {

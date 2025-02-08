@@ -54,6 +54,12 @@ public class EnvironmentRepository extends AbstractRepository {
         return filePath;
     }
 
+    public void delete(EnvironmentDto environment) throws IOException {
+        File filePath = getEnvironmentFile(environment.getId());
+        deleteFile(filePath);
+        cache.evict(environment.getId());
+    }
+
     public Stream<EnvironmentDto> list() throws IOException {
         WorkspaceDto workspace = workspaceRepository.getDataSessionWorkspace();
 
