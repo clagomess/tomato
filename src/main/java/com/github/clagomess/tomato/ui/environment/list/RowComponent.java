@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
+import com.github.clagomess.tomato.ui.environment.EnvironmentDeleteUI;
 import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditUI;
 import net.miginfocom.swing.MigLayout;
 
@@ -34,8 +35,15 @@ public class RowComponent extends JPanel {
         // delete
         var btnDelete = new IconButton(new BxTrashIcon(), "Delete environment");
         btnDelete.addActionListener(l -> {
-            System.out.println("action deleted");
-        }); // @TODO: impl. environment delete
+            invokeLater(() -> {
+                boolean ret = new EnvironmentDeleteUI(parent, environment).showConfirmDialog();
+                if(ret){
+                    removeAll();
+                    parent.revalidate();
+                    parent.repaint();
+                }
+            });
+        });
         btnDelete.setEnabled(true);
 
         add(new JLabel(environment.getName()));
