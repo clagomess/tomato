@@ -18,7 +18,6 @@ import javax.swing.*;
 import java.util.Arrays;
 import java.util.Objects;
 
-import static javax.swing.SwingUtilities.invokeAndWait;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class EnvironmentComboBox extends JPanel {
@@ -26,8 +25,6 @@ public class EnvironmentComboBox extends JPanel {
     private final JButton btnEdit = new IconButton(new BxEditIcon(), "Edit Environment");
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
-    private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
-    private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
     private final WorkspaceSessionRepository workspaceSessionRepository = new WorkspaceSessionRepository();
     private final WorkspaceSessionPublisher workspaceSessionPublisher = WorkspaceSessionPublisher.getInstance();
 
@@ -39,10 +36,14 @@ public class EnvironmentComboBox extends JPanel {
         add(comboBox, "width ::100% - 32px");
         add(btnEdit);
 
-        new Thread(this::addItens, getClass().getSimpleName()).start();
+        invokeLater(this::addItens);
 
-        environmentPublisher.getOnInsert().addListener(event -> addItens());
-        workspacePublisher.getOnSwitch().addListener(event -> addItens());
+        EnvironmentPublisher.getInstance()
+                .getOnInsert()
+                .addListener(event -> addItens());
+        WorkspacePublisher.getInstance()
+                .getOnSwitch()
+                .addListener(event -> addItens());
 
         btnEdit.addActionListener(event -> {
             setBtnEditEnabledOrDisabled();
@@ -53,32 +54,35 @@ public class EnvironmentComboBox extends JPanel {
     }
 
     private void addItens() {
-        try {
-            Arrays.stream(comboBox.getActionListeners()).forEach(comboBox::removeActionListener);
-            invokeAndWait(comboBox::removeAllItems);
+        Arrays.stream(comboBox.getActionListeners()).forEach(comboBox::removeActionListener);
+        comboBox.removeAllItems();
 
-            var session = workspaceSessionRepository.load();
-            var list = environmentRepository.list();
+        invokeLater(() -> {
+            try {
+                var session = workspaceSessionRepository.load();
+                var list = environmentRepository.list();
 
-            invokeAndWait(() -> {
-                comboBox.addItem(null);
-                comboBox.setSelectedItem(null);
+                invokeLater(() -> {
+                    comboBox.addItem(null);
+                    comboBox.setSelectedItem(null);
 
-                list.forEach(item -> {
-                    comboBox.addItem(item);
+                    list.forEach(item -> {
+                        comboBox.addItem(item);
 
-                    if(item.getId().equals(session.getEnvironmentId())){
-                        comboBox.setSelectedItem(item);
-                    }
+                        if(item.getId().equals(session.getEnvironmentId())){
+                            comboBox.setSelectedItem(item);
+                        }
+                    });
+
+                    invokeLater(() -> {
+                        setBtnEditEnabledOrDisabled();
+                        comboBox.addActionListener(event -> setWorkspaceSessionSelected());
+                    });
                 });
-            });
-
-            setBtnEditEnabledOrDisabled();
-        } catch (Throwable e){
-            new ExceptionDialog(this, e);
-        } finally {
-            comboBox.addActionListener(event -> setWorkspaceSessionSelected());
-        }
+            } catch (Throwable e){
+                new ExceptionDialog(this, e);
+            }
+        });
     }
 
     private void setBtnEditEnabledOrDisabled(){
