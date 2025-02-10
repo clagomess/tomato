@@ -17,7 +17,7 @@ public class EnvironmentListUI extends JFrame {
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
 
-    public EnvironmentListUI(Component parent) throws HeadlessException {
+    public EnvironmentListUI(Component parent) {
         setTitle("Edit Environments");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 400));
@@ -51,7 +51,7 @@ public class EnvironmentListUI extends JFrame {
     }
 
     private void addRow(EnvironmentDto item){
-        var row = new RowComponent(this, item);
+        var row = new RowComponent(rowsPanel, item);
 
         rowsPanel.add(row, "wrap");
         rowsPanel.revalidate();

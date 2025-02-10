@@ -16,11 +16,11 @@ import static javax.swing.SwingUtilities.invokeLater;
 
 public class RowComponent extends JPanel {
     public RowComponent(
-            EnvironmentListUI parent,
+            Container parent,
             EnvironmentDto environment
     ) {
         setLayout(new MigLayout(
-                "insets 0",
+                "insets 2",
                 "[grow,fill]0[]0[]0"
         ));
 
@@ -38,7 +38,7 @@ public class RowComponent extends JPanel {
             invokeLater(() -> {
                 boolean ret = new EnvironmentDeleteUI(parent, environment).showConfirmDialog();
                 if(ret){
-                    removeAll();
+                    parent.remove(this);
                     parent.revalidate();
                     parent.repaint();
                 }
