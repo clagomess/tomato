@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.workspace.list;
 
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
@@ -8,7 +9,6 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import java.awt.*;
 
 public class RowComponent extends JPanel {
     public RowComponent(
@@ -20,7 +20,7 @@ public class RowComponent extends JPanel {
                 "[grow,fill]0[]0[]0"
         ));
 
-        setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
+        setBorder(new MatteBorder(0, 0, 1, 0, ColorConstant.GRAY));
 
         // edit
         var btnEdit = new IconButton(new BxEditIcon(), "Edit workspace");

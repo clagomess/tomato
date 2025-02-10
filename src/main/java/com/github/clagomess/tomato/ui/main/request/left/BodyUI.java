@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueUI;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.BinaryUI;
 import com.github.clagomess.tomato.ui.main.request.left.bodytype.NoBodyUI;
@@ -40,7 +41,7 @@ public class BodyUI extends JPanel {
                 "insets 5 2 5 2",
                 "[]"
         ));
-        pRadioBodyType.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
+        pRadioBodyType.setBorder(new MatteBorder(0, 0, 1, 0, ColorConstant.GRAY));
         pRadioBodyType.add(charsetComboBox);
 
         Arrays.stream(BodyTypeEnum.values()).forEach(item -> {

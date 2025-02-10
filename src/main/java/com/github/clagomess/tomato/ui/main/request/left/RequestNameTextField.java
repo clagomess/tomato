@@ -4,18 +4,18 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class RequestNameTextField extends JPanel {
     private final JLabel parent = new JLabel(){{
-        setForeground(Color.decode("#616365"));
+        setForeground(ColorConstant.GRAY);
     }};
     private final JLabel lblRequestName = new JLabel();
     private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
@@ -28,7 +28,7 @@ public class RequestNameTextField extends JPanel {
 
         add(parent, "width ::250");
         add(new JLabel(" / "){{
-            setForeground(Color.decode("#616365"));
+            setForeground(ColorConstant.GRAY);
         }});
         add(lblRequestName, "width ::100% - 271px");
     }

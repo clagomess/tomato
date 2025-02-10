@@ -9,7 +9,6 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.*;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -96,7 +95,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
     }
 
     public static RTextScrollPane createScroll(RSyntaxTextArea textArea){
-        var color = Color.decode("#616365");
+        var color = ColorConstant.GRAY;
 
         var sp = new RTextScrollPane(textArea);
         sp.setBorder(new MatteBorder(0, 1, 1, 1, color));

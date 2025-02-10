@@ -8,6 +8,7 @@ import com.github.clagomess.tomato.io.http.HttpService;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
@@ -115,7 +116,7 @@ public class RequestSplitPaneUI extends JPanel {
 
         // # REQUEST / RESPONSE
         var splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setBorder(new MatteBorder(1, 0, 0, 0, Color.decode("#616365")));
+        splitPane.setBorder(new MatteBorder(1, 0, 0, 0, ColorConstant.GRAY));
         splitPane.setDividerLocation(580);
         splitPane.setResizeWeight(0.3);
         splitPane.setContinuousLayout(true);

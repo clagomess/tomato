@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.main.request.right;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.table.KeyValueTMDto;
 import com.github.clagomess.tomato.io.http.MediaType;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.RawTextArea;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
@@ -15,7 +16,6 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import java.awt.*;
 import java.io.File;
 import java.nio.file.Files;
 
@@ -74,7 +74,7 @@ public class ResponseTabContent extends JPanel {
         tblResponseHeader = new TableManagerUI<>(KeyValueTMDto.class);
 
         var component = new JScrollPane(tblResponseHeader.getTable());
-        component.setBorder(new MatteBorder(0, 1, 1, 1, Color.decode("#616365")));
+        component.setBorder(new MatteBorder(0, 1, 1, 1, ColorConstant.GRAY));
         tabbedPane.addTab("Header", component);
     }
 

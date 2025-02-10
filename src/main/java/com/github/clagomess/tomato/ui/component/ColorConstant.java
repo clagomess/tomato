@@ -14,7 +14,7 @@ public final class ColorConstant {
     public static final Color PURPLE = new Color(189, 147, 249);
     public static final Color RED = new Color(255, 85, 85);
     public static final Color YELLOW = new Color(241, 250, 140);
-    public static final Color GRAY = new Color(68, 71, 90);
+    public static final Color GRAY = new Color(97, 99, 101); // #616365
 
     public record Match(Color background, Color foreground){}
     public static final Match ORANGE_MATCH = new Match(ORANGE, GRAY);

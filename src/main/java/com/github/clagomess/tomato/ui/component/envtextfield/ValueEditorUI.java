@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.component.envtextfield;
 
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
@@ -49,7 +50,7 @@ class ValueEditorUI extends JFrame {
         }
 
         var sp = TRSyntaxTextArea.createScroll(textArea);
-        sp.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode("#616365")));
+        sp.setBorder(new MatteBorder(1, 1, 1, 1, ColorConstant.GRAY));
         add(sp, "height 100%, span 2");
 
         // set data

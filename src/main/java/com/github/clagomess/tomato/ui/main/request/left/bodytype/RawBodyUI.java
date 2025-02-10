@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.main.request.left.bodytype;
 
 import com.github.clagomess.tomato.dto.data.request.RawBodyDto;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
@@ -11,7 +12,6 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import java.awt.*;
 
 @Slf4j
 public class RawBodyUI extends JPanel {
@@ -46,7 +46,7 @@ public class RawBodyUI extends JPanel {
         add(cbContentType);
         add(btnBeautify, "wrap");
         var sp = TRSyntaxTextArea.createScroll(textArea);
-        sp.setBorder(new MatteBorder(1, 1, 1, 1, Color.decode("#616365")));
+        sp.setBorder(new MatteBorder(1, 1, 1, 1, ColorConstant.GRAY));
         add(sp, "height 100%, span 2");
 
         textArea.setSyntaxEditingStyle(rawBody.getType().getSyntaxStyle());

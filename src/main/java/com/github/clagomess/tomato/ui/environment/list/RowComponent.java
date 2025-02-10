@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.environment.list;
 
 import com.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
@@ -23,7 +24,7 @@ public class RowComponent extends JPanel {
                 "[grow,fill]0[]0[]0"
         ));
 
-        setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
+        setBorder(new MatteBorder(0, 0, 1, 0, ColorConstant.GRAY));
 
         // edit
         var btnEdit = new IconButton(new BxEditIcon(), "Edit environment");

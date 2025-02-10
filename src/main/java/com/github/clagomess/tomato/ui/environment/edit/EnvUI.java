@@ -1,13 +1,13 @@
 package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class EnvUI extends JPanel {
                 "insets 5 0 5 0",
                 "[][][grow, fill][]"
         ));
-        header.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
+        header.setBorder(new MatteBorder(0, 0, 1, 0, ColorConstant.GRAY));
         header.add(new JLabel(), "width 8!");
         header.add(new JLabel("Key"), "width 150!");
         header.add(new JLabel("Value"), "width 100%");

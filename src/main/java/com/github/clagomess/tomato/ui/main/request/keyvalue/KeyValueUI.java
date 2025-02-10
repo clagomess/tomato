@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.main.request.keyvalue;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
@@ -9,7 +10,6 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class KeyValueUI<T extends KeyValueItemDto> extends JPanel {
 
         // ### HEADER
         JPanel header = new JPanel(new MigLayout("insets 5 0 5 0"));
-        header.setBorder(new MatteBorder(0, 0, 1, 0, Color.decode("#616365")));
+        header.setBorder(new MatteBorder(0, 0, 1, 0, ColorConstant.GRAY));
         header.add(new JLabel(), "width 25!");
 
         if(itemClass == FileKeyValueItemDto.class) {
