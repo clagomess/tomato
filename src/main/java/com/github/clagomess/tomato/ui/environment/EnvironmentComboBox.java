@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.environment;
 
-import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
@@ -49,7 +49,10 @@ public class EnvironmentComboBox extends JPanel {
             setBtnEditEnabledOrDisabled();
             if(comboBox.getSelectedItem() == null) return;
 
-            invokeLater(() -> new EnvironmentEditUI(this, comboBox.getSelectedItem()));
+            new WaitExecution(this, btnEdit, () -> new EnvironmentEditUI(
+                    this,
+                    comboBox.getSelectedItem().getId()
+            )).execute();
         });
     }
 
@@ -60,7 +63,7 @@ public class EnvironmentComboBox extends JPanel {
         invokeLater(() -> {
             try {
                 var session = workspaceSessionRepository.load();
-                var list = environmentRepository.list();
+                var list = environmentRepository.listHead();
 
                 invokeLater(() -> {
                     comboBox.addItem(null);
@@ -110,15 +113,15 @@ public class EnvironmentComboBox extends JPanel {
         }).execute();
     }
 
-    public static class ComboBox extends JComboBox<EnvironmentDto> {
+    public static class ComboBox extends JComboBox<EnvironmentHeadDto> {
 
         public ComboBox() {
-            setRenderer(new DtoListCellRenderer<>(EnvironmentDto::getName));
+            setRenderer(new DtoListCellRenderer<>(EnvironmentHeadDto::getName));
         }
 
         @Override
-        public EnvironmentDto getSelectedItem() {
-            return (EnvironmentDto) super.getSelectedItem();
+        public EnvironmentHeadDto getSelectedItem() {
+            return (EnvironmentHeadDto) super.getSelectedItem();
         }
     }
 }

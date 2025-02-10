@@ -84,14 +84,14 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void list() throws IOException {
+    public void listHead() throws IOException {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(new File(testData, "workspace-nPUaq0TC"));
 
         Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
-        var result = environmentRepositoryMock.list();
+        var result = environmentRepositoryMock.listHead();
         Assertions.assertThat(result).isNotEmpty();
     }
 }

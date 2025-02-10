@@ -39,6 +39,7 @@ public abstract class RepositoryStubs {
         ConfigurationRepository.cache.evictAll();
         DataSessionRepository.cache.evictAll();
         EnvironmentRepository.cache.evictAll();
+        EnvironmentRepository.cacheListHead.evictAll();
         RequestRepository.cacheHead.evictAll();
         RequestRepository.cacheListFiles.evictAll();
         WorkspaceRepository.cacheList.evictAll();
