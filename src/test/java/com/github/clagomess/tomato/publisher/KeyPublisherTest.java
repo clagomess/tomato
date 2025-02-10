@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.publisher;
 
-import com.github.clagomess.tomato.exception.DirectoryCreateException;
+import com.github.clagomess.tomato.io.repository.DirectoryCreateException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

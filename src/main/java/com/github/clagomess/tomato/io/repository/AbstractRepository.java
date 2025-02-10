@@ -2,7 +2,6 @@ package com.github.clagomess.tomato.io.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.MetadataDto;
-import com.github.clagomess.tomato.exception.DirectoryCreateException;
 import com.github.clagomess.tomato.util.CacheManager;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;

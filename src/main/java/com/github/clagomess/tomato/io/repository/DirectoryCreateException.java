@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.exception;
+package com.github.clagomess.tomato.io.repository;
 
 import java.io.File;
 
