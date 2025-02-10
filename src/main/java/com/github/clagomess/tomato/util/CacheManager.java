@@ -1,17 +1,23 @@
 package com.github.clagomess.tomato.util;
 
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-@NoArgsConstructor
 public class CacheManager<K, V> {
+    private static final List<CacheManager<?, ?>> toDebug = new LinkedList<>();
     private K defaultKey = null;
     private final ConcurrentHashMap<K, V> cache = new ConcurrentHashMap<>();
 
+    public CacheManager() {
+        toDebug.add(this);
+    }
+
     public CacheManager(K defaultKey) {
+        this();
         this.defaultKey = defaultKey;
     }
 
@@ -57,6 +63,35 @@ public class CacheManager<K, V> {
 
     public void evictAll() {
         cache.clear();
+    }
+
+    public static String debug(){
+        StringBuilder sb = new StringBuilder();
+        String basePackage = "com.github.clagomess.tomato.";
+
+        toDebug.stream()
+                .filter(item -> !item.cache.isEmpty())
+                .forEach(manager -> {
+                    sb.append("# ");
+                    sb.append(manager.toString().replace(basePackage, ""));
+                    sb.append("\n");
+
+                    manager.cache.forEach((key, value) -> {
+                        sb.append("  - ");
+                        sb.append(key);
+                        sb.append(" - ");
+                        sb.append(value);
+                        sb.append("\n");
+                    });
+
+                    sb.append("\n");
+                });
+
+        return sb.toString();
+    }
+
+    public static void reset(){
+        toDebug.forEach(item -> item.cache.clear());
     }
 
     @FunctionalInterface
