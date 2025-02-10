@@ -4,13 +4,18 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class CacheManager<K, V> {
     private static final List<CacheManager<?, ?>> toDebug = new LinkedList<>();
+    private final Map<K, AtomicInteger> hitCount = new ConcurrentHashMap<>();
+    private final Map<K, AtomicInteger> missCount = new ConcurrentHashMap<>();
+
     private K defaultKey = null;
-    private final ConcurrentHashMap<K, V> cache = new ConcurrentHashMap<>();
+    private final Map<K, V> cache = new ConcurrentHashMap<>();
 
     public CacheManager() {
         toDebug.add(this);
@@ -27,6 +32,7 @@ public class CacheManager<K, V> {
     ) throws E {
         if(cache.containsKey(key)) {
             log.debug("Cache HIT: {}", key);
+            hitCount.computeIfAbsent(key, k -> new AtomicInteger()).incrementAndGet();
             return cache.get(key);
         }
 
@@ -34,6 +40,8 @@ public class CacheManager<K, V> {
 
         V result = doTaskIfAbsent.run();
         cache.put(key, result);
+
+        missCount.computeIfAbsent(key, k -> new AtomicInteger()).incrementAndGet();
 
         return result;
     }
@@ -54,6 +62,8 @@ public class CacheManager<K, V> {
         if(!cache.containsKey(key)) return;
 
         log.debug("Cache Evict: {}", key);
+        hitCount.remove(key);
+        missCount.remove(key);
         cache.remove(key);
     }
 
@@ -63,35 +73,39 @@ public class CacheManager<K, V> {
 
     public void evictAll() {
         cache.clear();
+        hitCount.clear();
+        missCount.clear();
     }
 
     public static String debug(){
         StringBuilder sb = new StringBuilder();
         String basePackage = "com.github.clagomess.tomato.";
 
-        toDebug.stream()
-                .filter(item -> !item.cache.isEmpty())
-                .forEach(manager -> {
-                    sb.append("# ");
-                    sb.append(manager.toString().replace(basePackage, ""));
-                    sb.append("\n");
+        toDebug.forEach(manager -> {
+            sb.append("# ");
+            sb.append(manager.toString().replace(basePackage, ""));
+            sb.append("\n");
 
-                    manager.cache.forEach((key, value) -> {
-                        sb.append("  - ");
-                        sb.append(key);
-                        sb.append(" - ");
-                        sb.append(value);
-                        sb.append("\n");
-                    });
+            manager.cache.forEach((key, value) -> {
+                sb.append("  - HIT/MISS: ");
+                sb.append(manager.hitCount.getOrDefault(key, new AtomicInteger()).get());
+                sb.append("/");
+                sb.append(manager.missCount.getOrDefault(key, new AtomicInteger()).get());
+                sb.append(" - ");
+                sb.append(key);
+                sb.append(" - ");
+                sb.append(value);
+                sb.append("\n");
+            });
 
-                    sb.append("\n");
-                });
+            sb.append("\n");
+        });
 
         return sb.toString();
     }
 
     public static void reset(){
-        toDebug.forEach(item -> item.cache.clear());
+        toDebug.forEach(CacheManager::evictAll);
     }
 
     @FunctionalInterface
