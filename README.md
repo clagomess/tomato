@@ -9,7 +9,6 @@ Features:
 - You can import collections from other tools and export for them.
 - No account is required.
 - No sneaky subscriptions plans.
-- No Electron. Desktop applications must use desktop tecnologies.
 
 Actually the project are in BETA stage, more functionalities will come soon, be patient.
 
