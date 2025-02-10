@@ -172,17 +172,18 @@ public class CollectionRepository extends AbstractRepository {
     }
 
     public void delete(CollectionTreeDto tree) throws IOException {
-        log.debug("TO-DELETE: {}", tree.getPath());
+        log.info("TO-DELETE: {}", tree.getPath());
 
         try(Stream<Path> paths = Files.walk(tree.getPath().toPath())){
             paths.sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
                     .forEach(item -> {
-                        log.debug("DELETE: {}", item);
-                        if(!item.delete()){
-                            throw new RuntimeException(item + " cannot be deleted");
+                        try {
+                            deleteFile(item);
+                            requestRepository.cacheEvict(item);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
-                        requestRepository.cacheEvict(item);
                     });
         }
 

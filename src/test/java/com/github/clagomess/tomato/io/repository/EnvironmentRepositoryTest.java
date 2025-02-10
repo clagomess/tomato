@@ -67,6 +67,23 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
     }
 
     @Test
+    public void delete() throws IOException {
+        var environment = new EnvironmentDto();
+        environment.getEnvs().add(new KeyValueItemDto("AAA", "BBB"));
+        var envFile = new File(mockDataDir, "environment-"+environment.getId()+".json");
+
+        Mockito.doReturn(envFile)
+                .when(environmentRepositoryMock)
+                .getEnvironmentFile(Mockito.anyString());
+
+        var result = environmentRepositoryMock.save(environment);
+        Assertions.assertThat(result).isFile();
+
+        environmentRepositoryMock.delete(environment);
+        Assertions.assertThat(result).doesNotExist();
+    }
+
+    @Test
     public void list() throws IOException {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(new File(testData, "workspace-nPUaq0TC"));

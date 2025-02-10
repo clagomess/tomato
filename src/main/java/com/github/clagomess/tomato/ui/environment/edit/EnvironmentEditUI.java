@@ -87,9 +87,8 @@ public class EnvironmentEditUI extends JFrame {
 
             resetStagingMonitor();
 
-            environmentPublisher.getOnSave().publish(
-                    environment.getId(),
-                    environment
+            environmentPublisher.getOnChange().publish(
+                    environment.getId()
             );
         }).execute();
     }
