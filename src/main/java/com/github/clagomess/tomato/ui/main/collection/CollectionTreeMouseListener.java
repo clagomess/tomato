@@ -3,13 +3,9 @@ package com.github.clagomess.tomato.ui.main.collection;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.ui.collection.*;
-import com.github.clagomess.tomato.ui.component.WaitExecution;
-import com.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
-import com.github.clagomess.tomato.ui.request.RequestDeleteUI;
-import com.github.clagomess.tomato.ui.request.RequestMoveUI;
-import com.github.clagomess.tomato.ui.request.RequestRenameUI;
-import com.github.clagomess.tomato.ui.request.RequestUI;
+import com.github.clagomess.tomato.ui.main.collection.popupmenu.CollectionPopUpMenu;
+import com.github.clagomess.tomato.ui.main.collection.popupmenu.DefaultPopupMenu;
+import com.github.clagomess.tomato.ui.main.collection.popupmenu.RequestPopUpMenu;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
@@ -17,6 +13,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
+import static java.awt.event.MouseEvent.BUTTON1;
+import static java.awt.event.MouseEvent.BUTTON3;
 
 @RequiredArgsConstructor
 public class CollectionTreeMouseListener extends MouseAdapter {
@@ -27,8 +26,9 @@ public class CollectionTreeMouseListener extends MouseAdapter {
     public void mouseReleased(MouseEvent e) {
         int selRow = tree.getRowForLocation(e.getX(), e.getY());
 
-        if(e.getButton() == 3 && selRow == -1) {
-            showDefaultPopupMenu(e);
+        if(e.getButton() == BUTTON3 && selRow == -1) {
+            new DefaultPopupMenu(e.getComponent())
+                    .show(e.getComponent(), e.getX(), e.getY());
             return;
         }
 
@@ -37,86 +37,23 @@ public class CollectionTreeMouseListener extends MouseAdapter {
 
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) selPath.getLastPathComponent();
 
-        if (e.getButton() == 1 && e.getClickCount() == 2 &&
+        if (e.getButton() == BUTTON1 && e.getClickCount() == 2 &&
                 selectedNode.getUserObject() instanceof RequestHeadDto dto) {
             requestPublisher.getOnLoad().publish(dto);
             return;
         }
 
-        if(e.getButton() == 3 &&
+        if(e.getButton() == BUTTON3 &&
                 selectedNode.getUserObject() instanceof RequestHeadDto dto){
-            showRequestPopUpMenu(e, dto);
+            new RequestPopUpMenu(tree, dto)
+                    .show(e.getComponent(), e.getX(), e.getY());
             return;
         }
 
-        if(e.getButton() == 3 &&
+        if(e.getButton() == BUTTON3 &&
                 selectedNode.getUserObject() instanceof CollectionTreeDto dto){
-            showCollectionPopUpMenu(e, dto);
-            return;
+            new CollectionPopUpMenu(tree, dto)
+                    .show(e.getComponent(), e.getX(), e.getY());
         }
-    }
-
-    private void showDefaultPopupMenu(MouseEvent e) {
-        JPopupMenu popup = new JPopupMenu();
-        popup.add(new JMenuItem("New Request"){{
-            addActionListener(e -> requestPublisher.getOnOpenNew().publish(true));
-        }});
-        popup.add(new JMenuItem("New Collection"){{
-            addActionListener(ae -> new CollectionNewUI(e.getComponent(), null));
-        }});
-        popup.show(e.getComponent(), e.getX(), e.getY());
-    }
-
-    private void showRequestPopUpMenu(
-            MouseEvent e,
-            RequestHeadDto dto
-    ){
-        JPopupMenu popup = new JPopupMenu();
-        popup.add(new JMenuItem("Open"){{
-            addActionListener(e -> requestPublisher.getOnLoad().publish(dto));
-        }});
-        popup.add(new JMenuItem("Open Detached", new BxLinkExternalIcon()){{
-            addActionListener(e -> {
-                new WaitExecution(() -> new RequestUI(dto)).execute();
-            });
-        }});
-        popup.addSeparator();
-        popup.add(new JMenuItem("Move", new BxSortAlt2Icon()){{
-            addActionListener(e -> new RequestMoveUI(tree, dto));
-        }});
-        popup.add(new JMenuItem("Rename"){{
-            addActionListener(e -> new RequestRenameUI(tree, dto));
-        }});
-        popup.addSeparator();
-        popup.add(new JMenuItem("Delete", new BxTrashIcon()){{
-            addActionListener(e -> new RequestDeleteUI(tree, dto).showConfirmDialog());
-        }});
-        popup.show(e.getComponent(), e.getX(), e.getY());
-    }
-
-    private void showCollectionPopUpMenu(
-            MouseEvent e,
-            CollectionTreeDto dto
-    ){
-        JPopupMenu popup = new JPopupMenu();
-        popup.add(new JMenuItem("Move", new BxSortAlt2Icon()){{
-            addActionListener(e -> new CollectionMoveUI(tree, dto));
-        }});
-        popup.add(new JMenuItem("Rename"){{
-            addActionListener(e -> new CollectionRenameUI(tree, dto));
-        }});
-        popup.addSeparator();
-        popup.add(new JMenuItem("New Collection"){{
-            addActionListener(ae -> new CollectionNewUI(e.getComponent(), dto));
-        }});
-        popup.add(new JMenuItem("Import", new BxImportIcon()){{
-            addActionListener(ae -> new CollectionImportUI(e.getComponent(), dto));
-        }});
-        popup.add(new JMenuItem("Export", new BxExportIcon())); //@TODO: implement - Export Collection
-        popup.addSeparator();
-        popup.add(new JMenuItem("Delete", new BxTrashIcon()){{
-            addActionListener(ae -> new CollectionDeleteUI(tree, dto).showConfirmDialog());
-        }});
-        popup.show(e.getComponent(), e.getX(), e.getY());
     }
 }
