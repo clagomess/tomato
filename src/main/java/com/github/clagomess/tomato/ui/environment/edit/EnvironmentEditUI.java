@@ -11,6 +11,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
@@ -27,9 +28,9 @@ public class EnvironmentEditUI extends JFrame {
 
     public EnvironmentEditUI(
             Component parent,
-            EnvironmentDto environment //@TODO: pass ID instead, causing UI problem on combobox
-    ){
-        this.environment = environment;
+            String environmentId
+    ) throws IOException {
+        this.environment = environmentRepository.load(environmentId).orElseThrow();
         this.stagingMonitor = new StagingMonitor<>(environment);
         this.title = "Environment - " + environment.getName();
 

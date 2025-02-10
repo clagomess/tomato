@@ -4,18 +4,25 @@ import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
-import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
-@RequiredArgsConstructor
 public class EnvironmentDeleteUI {
     private final Component parent;
     private final EnvironmentDto environment;
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
+
+    public EnvironmentDeleteUI(
+            Component parent,
+            String environmentId
+    ) throws IOException {
+        this.parent = parent;
+        this.environment = environmentRepository.load(environmentId).orElseThrow();
+    }
 
     public void showConfirmDialog(){
         int ret = JOptionPane.showConfirmDialog(

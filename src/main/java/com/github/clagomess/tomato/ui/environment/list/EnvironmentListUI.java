@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.environment.list;
 
-import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
@@ -54,7 +54,7 @@ public class EnvironmentListUI extends JFrame {
         setVisible(true);
     }
 
-    private void addRow(EnvironmentDto item){
+    private void addRow(EnvironmentHeadDto item){
         var row = new RowComponent(rowsPanel, item);
 
         rowsPanel.add(row, "wrap");
@@ -65,7 +65,7 @@ public class EnvironmentListUI extends JFrame {
     private void refresh(){
         new WaitExecution(this, () -> {
             rowsPanel.removeAll();
-            environmentRepository.list().forEach(this::addRow);
+            environmentRepository.listHead().forEach(this::addRow);
         }).execute();
     }
 

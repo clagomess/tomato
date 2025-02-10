@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
+import com.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
+import com.github.clagomess.tomato.mapper.EnvironmentMapper;
 import com.github.clagomess.tomato.util.CacheManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,7 +44,14 @@ public class EnvironmentRepository extends AbstractRepository {
         return cache.get(id, () -> readFile(
                 getEnvironmentFile(id),
                 new TypeReference<>(){}
-        ));
+        )).map(EnvironmentMapper.INSTANCE::clone);
+    }
+
+    protected Optional<EnvironmentHeadDto> loadHead(String id) throws IOException {
+        return readFile(
+                getEnvironmentFile(id),
+                new TypeReference<>(){}
+        );
     }
 
     public File save(EnvironmentDto environmentDto) throws IOException {
@@ -50,6 +59,7 @@ public class EnvironmentRepository extends AbstractRepository {
 
         writeFile(filePath, environmentDto);
         cache.evict(environmentDto.getId());
+        cacheListHead.evict();
 
         return filePath;
     }
@@ -58,12 +68,14 @@ public class EnvironmentRepository extends AbstractRepository {
         File filePath = getEnvironmentFile(environment.getId());
         deleteFile(filePath);
         cache.evict(environment.getId());
+        cacheListHead.evict();
     }
 
-    public Stream<EnvironmentDto> list() throws IOException {
+    protected static final CacheManager<String, List<EnvironmentHeadDto>> cacheListHead = new CacheManager<>("listHead");
+    public List<EnvironmentHeadDto> listHead() throws IOException {
         WorkspaceDto workspace = workspaceRepository.getDataSessionWorkspace();
 
-        return Arrays.stream(listFiles(workspace.getPath()))
+        return cacheListHead.get(() -> Arrays.stream(listFiles(workspace.getPath()))
                 .filter(File::isFile)
                 .filter(item -> item.getName().startsWith("environment"))
                 .map(item -> {
@@ -71,13 +83,16 @@ public class EnvironmentRepository extends AbstractRepository {
                             .replace("environment-", "")
                             .replace(".json", "");
                     try {
-                        Optional<EnvironmentDto> optResult = load(id);
+                        Optional<EnvironmentHeadDto> optResult = loadHead(id);
                         return optResult.orElse(null);
                     } catch (IOException e) {
                         log.error(e.getMessage(), e);
                         return null;
                     }
-                }).filter(Objects::nonNull);
+                })
+                .filter(Objects::nonNull)
+                .toList()
+        );
     }
 
     public Optional<EnvironmentDto> getWorkspaceSessionEnvironment() throws IOException {

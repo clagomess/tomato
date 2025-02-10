@@ -1,7 +1,8 @@
 package com.github.clagomess.tomato.ui.environment.list;
 
-import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
 import com.github.clagomess.tomato.ui.component.IconButton;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import com.github.clagomess.tomato.ui.environment.EnvironmentDeleteUI;
@@ -12,12 +13,10 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
-import static javax.swing.SwingUtilities.invokeLater;
-
 public class RowComponent extends JPanel {
     public RowComponent(
             Container parent,
-            EnvironmentDto environment
+            EnvironmentHeadDto environment
     ) {
         setLayout(new MigLayout(
                 "insets 2",
@@ -29,15 +28,21 @@ public class RowComponent extends JPanel {
         // edit
         var btnEdit = new IconButton(new BxEditIcon(), "Edit environment");
         btnEdit.addActionListener(l -> {
-            invokeLater(() -> new EnvironmentEditUI(parent, environment));
+            new WaitExecution(parent, btnEdit, () -> new EnvironmentEditUI(
+                    parent,
+                    environment.getId()
+            )).execute();
         });
 
         // delete
         var btnDelete = new IconButton(new BxTrashIcon(), "Delete environment");
         btnDelete.addActionListener(l -> {
-            invokeLater(() -> {
-                new EnvironmentDeleteUI(parent, environment).showConfirmDialog();
-            });
+            new WaitExecution(parent, btnEdit, () -> {
+                new EnvironmentDeleteUI(
+                        parent,
+                        environment.getId()
+                ).showConfirmDialog();
+            }).execute();
         });
         btnDelete.setEnabled(true);
 
