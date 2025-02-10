@@ -31,4 +31,9 @@ public interface RequestMapper {
             CollectionTreeDto parent,
             File path
     );
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createTime", ignore = true)
+    @Mapping(target = "updateTime", ignore = true)
+    RequestDto duplicate(RequestDto source);
 }
