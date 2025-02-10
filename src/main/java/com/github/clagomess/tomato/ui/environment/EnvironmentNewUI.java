@@ -48,7 +48,7 @@ public class EnvironmentNewUI extends JFrame {
             environment.setName(txtName.getText());
 
             environmentRepository.save(environment);
-            environmentPublisher.getOnInsert().publish(environment.getId());
+            environmentPublisher.getOnChange().publish(environment.getId());
 
             setVisible(false);
             dispose();

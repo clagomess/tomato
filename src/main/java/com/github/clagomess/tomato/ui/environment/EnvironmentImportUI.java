@@ -53,7 +53,7 @@ public class EnvironmentImportUI extends JFrame {
         new WaitExecution(this, btnImport, () -> {
             var id = postmanConverter.pumpEnvironment(fileChooser.getValue());
 
-            environmentPublisher.getOnInsert().publish(id);
+            environmentPublisher.getOnChange().publish(id);
 
             setVisible(false);
             dispose();

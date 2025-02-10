@@ -39,7 +39,7 @@ public class EnvironmentComboBox extends JPanel {
         invokeLater(this::addItens);
 
         EnvironmentPublisher.getInstance()
-                .getOnInsert()
+                .getOnChange()
                 .addListener(event -> addItens());
         WorkspacePublisher.getInstance()
                 .getOnSwitch()

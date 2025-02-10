@@ -59,7 +59,7 @@ class EnvDocumentListener implements DocumentListener {
     public void dispose() {
         listenerUuid.forEach(uuid -> {
             workspaceSessionPublisher.getOnSave().removeListener(uuid);
-            environmentPublisher.getOnSave().removeListener(uuid);
+            environmentPublisher.getOnChange().removeListener(uuid);
         });
     }
 
@@ -127,7 +127,7 @@ class EnvDocumentListener implements DocumentListener {
         try {
             envMap.reset();
             listenerUuid.forEach(uuid -> {
-                environmentPublisher.getOnSave().removeListener(uuid);
+                environmentPublisher.getOnChange().removeListener(uuid);
             });
 
             Optional<EnvironmentDto> current = environmentRepository.getWorkspaceSessionEnvironment();
@@ -135,7 +135,7 @@ class EnvDocumentListener implements DocumentListener {
 
             envMap.put(current.get());
 
-            listenerUuid.add(environmentPublisher.getOnSave().addListener(current.get().getId(), e -> {
+            listenerUuid.add(environmentPublisher.getOnChange().addListener(e -> {
                 updateEnvMap();
                 updateEnvStyle();
             }));

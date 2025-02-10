@@ -17,7 +17,7 @@ public class EnvironmentDeleteUI {
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
 
-    public boolean showConfirmDialog(){
+    public void showConfirmDialog(){
         int ret = JOptionPane.showConfirmDialog(
                 parent,
                 String.format(
@@ -31,16 +31,13 @@ public class EnvironmentDeleteUI {
 
         if(ret == JOptionPane.OK_OPTION){
             delete();
-            return true;
         }
-
-        return false;
     }
 
     private void delete(){
         new WaitExecution(parent, () -> {
             environmentRepository.delete(environment);
-            environmentPublisher.getOnInsert().publish(environment.getId());
+            environmentPublisher.getOnChange().publish(environment.getId());
         }).execute();
     }
 }

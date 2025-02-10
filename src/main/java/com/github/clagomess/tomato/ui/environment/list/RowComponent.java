@@ -36,12 +36,7 @@ public class RowComponent extends JPanel {
         var btnDelete = new IconButton(new BxTrashIcon(), "Delete environment");
         btnDelete.addActionListener(l -> {
             invokeLater(() -> {
-                boolean ret = new EnvironmentDeleteUI(parent, environment).showConfirmDialog();
-                if(ret){
-                    parent.remove(this);
-                    parent.revalidate();
-                    parent.repaint();
-                }
+                new EnvironmentDeleteUI(parent, environment).showConfirmDialog();
             });
         });
         btnDelete.setEnabled(true);
