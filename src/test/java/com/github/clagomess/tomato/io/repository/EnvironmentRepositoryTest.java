@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 public class EnvironmentRepositoryTest extends RepositoryStubs {
     private final WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
     private final EnvironmentRepository environmentRepositoryMock = Mockito.spy(new EnvironmentRepository(
@@ -49,6 +51,36 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
                 .getEnvironmentFile(Mockito.anyString());
 
         var result = environmentRepositoryMock.load("7rZO7Z1T");
+        Assertions.assertThat(result).isNotEmpty();
+    }
+
+    @Test
+    public void load_whenMutipleLoad_waysReturnClone() throws IOException {
+        var envFile = new File(testData, "workspace-nPUaq0TC/environment-7rZO7Z1T.json");
+
+        Mockito.doReturn(envFile)
+                .when(environmentRepositoryMock)
+                .getEnvironmentFile(Mockito.anyString());
+
+        var resultA = environmentRepositoryMock.load("7rZO7Z1T");
+        resultA.ifPresent(item -> item.setName("FOO_BAR_ENV"));
+        var resultB = environmentRepositoryMock.load("7rZO7Z1T");
+
+        assertNotEquals(
+                resultA.get().getName(),
+                resultB.get().getName()
+        );
+    }
+
+    @Test
+    public void loadHead() throws IOException {
+        var envFile = new File(testData, "workspace-nPUaq0TC/environment-7rZO7Z1T.json");
+
+        Mockito.doReturn(envFile)
+                .when(environmentRepositoryMock)
+                .getEnvironmentFile(Mockito.anyString());
+
+        var result = environmentRepositoryMock.loadHead("7rZO7Z1T");
         Assertions.assertThat(result).isNotEmpty();
     }
 

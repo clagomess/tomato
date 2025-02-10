@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
 import com.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
+import com.github.clagomess.tomato.mapper.EnvironmentMapper;
 import com.github.clagomess.tomato.util.CacheManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,7 @@ public class EnvironmentRepository extends AbstractRepository {
         return cache.get(id, () -> readFile(
                 getEnvironmentFile(id),
                 new TypeReference<>(){}
-        ));
+        )).map(EnvironmentMapper.INSTANCE::clone);
     }
 
     protected Optional<EnvironmentHeadDto> loadHead(String id) throws IOException {
