@@ -2,10 +2,7 @@ package com.github.clagomess.tomato.ui.menu;
 
 import com.github.clagomess.tomato.ui.MainUI;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSliderAltIcon;
-import com.github.clagomess.tomato.ui.settings.AboutUI;
-import com.github.clagomess.tomato.ui.settings.ConfigurationUI;
-import com.github.clagomess.tomato.ui.settings.DebugCacheUI;
-import com.github.clagomess.tomato.ui.settings.DebugPublisherUI;
+import com.github.clagomess.tomato.ui.settings.*;
 
 import javax.swing.*;
 
@@ -28,5 +25,9 @@ public class SettingsMenu extends JMenu {
         var debugCache = new JMenuItem("Debug -> Cache");
         debugCache.addActionListener(l -> new DebugCacheUI(mainUI));
         add(debugCache);
+
+        var debugThreads = new JMenuItem("Debug -> Threads");
+        debugThreads.addActionListener(l -> new DebugThreadsUI(mainUI));
+        add(debugThreads);
     }
 }
