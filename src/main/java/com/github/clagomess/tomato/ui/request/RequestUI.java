@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.request;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
+import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.MainUI;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import com.github.clagomess.tomato.ui.main.request.RequestSplitPaneUI;
@@ -14,19 +15,18 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static javax.swing.SwingUtilities.invokeLater;
+
 @Slf4j
 public class RequestUI extends JFrame {
-    private final RequestRepository requestRepository = new RequestRepository();
     private final RequestSplitPaneUI requestSplitPaneUI;
 
     public RequestUI(
             RequestHeadDto requestHead
     ) throws IOException {
-        // @TODO: add title listener when change name
-        // @TODO: add '*' when change request
         setTitle(requestHead.getName());
         setIconImages(FaviconImage.getFrameIconImage());
-        setMinimumSize(new Dimension(600, 600));
+        setMinimumSize(new Dimension(1000, 600));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
@@ -34,9 +34,26 @@ public class RequestUI extends JFrame {
                 "[grow,fill]"
         ));
 
-        RequestDto requestDto = requestRepository.load(requestHead).orElseThrow();
+        RequestDto requestDto = new RequestRepository().load(requestHead).orElseThrow();
         requestSplitPaneUI = new RequestSplitPaneUI(requestHead, requestDto);
         add(requestSplitPaneUI, "height 100%");
+
+        RequestPublisher.getInstance()
+                .getOnStaging()
+                .addListener(requestSplitPaneUI.getKey(), changed -> {
+                    if(changed){
+                        invokeLater(() -> setTitle("[*] " + requestHead.getName()));
+                    }else{
+                        invokeLater(() -> setTitle(requestHead.getName()));
+                    }
+                });
+
+        RequestPublisher.getInstance()
+                .getOnSave()
+                .addListener(
+                        requestDto.getId(),
+                        event -> setTitle(event.getName())
+                );
 
         pack();
         setLocationRelativeTo(
@@ -51,6 +68,15 @@ public class RequestUI extends JFrame {
     @Override
     public void dispose() {
         requestSplitPaneUI.dispose();
+
+        RequestPublisher.getInstance()
+                .getOnStaging()
+                .removeListener(requestSplitPaneUI.getKey());
+
+        RequestPublisher.getInstance()
+                .getOnSave()
+                .removeListener(requestSplitPaneUI.getKey().getRequestId());
+
         super.dispose();
     }
 }
