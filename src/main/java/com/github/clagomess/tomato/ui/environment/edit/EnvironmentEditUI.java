@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.environment.edit;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.StagingMonitor;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class EnvironmentEditUI extends JFrame {
@@ -88,9 +90,8 @@ public class EnvironmentEditUI extends JFrame {
 
             resetStagingMonitor();
 
-            environmentPublisher.getOnChange().publish(
-                    environment.getId()
-            );
+            environmentPublisher.getOnChange()
+                    .publish(new PublisherEvent<>(UPDATED, environment.getId()));
         }).execute();
     }
 }

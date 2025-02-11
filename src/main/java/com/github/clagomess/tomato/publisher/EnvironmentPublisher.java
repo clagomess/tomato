@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.publisher;
 
 import com.github.clagomess.tomato.publisher.base.NoKeyPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import lombok.Getter;
 
 @Getter
@@ -9,6 +10,5 @@ public class EnvironmentPublisher {
     private static final EnvironmentPublisher instance = new EnvironmentPublisher();
     private EnvironmentPublisher() {}
 
-    // for tab
-    private final NoKeyPublisher<String> onChange = new NoKeyPublisher<>();
+    private final NoKeyPublisher<PublisherEvent<String>> onChange = new NoKeyPublisher<>();
 }
