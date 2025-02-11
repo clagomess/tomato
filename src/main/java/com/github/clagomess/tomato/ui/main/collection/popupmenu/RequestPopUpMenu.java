@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLinkExternalIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSortAlt2Icon;
@@ -18,6 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.LOAD;
 
 public class RequestPopUpMenu extends JPopupMenu {
@@ -29,7 +31,7 @@ public class RequestPopUpMenu extends JPopupMenu {
         var mOpen = new JMenuItem("Open");
         mOpen.addActionListener(e -> RequestPublisher.getInstance()
                 .getOnLoad()
-                .publish(new PublisherEvent(LOAD, requestHead)));
+                .publish(new PublisherEvent<>(LOAD, requestHead)));
         add(mOpen);
 
         var mOpenDetached = new JMenuItem("Open Detached", new BxLinkExternalIcon());
@@ -57,8 +59,9 @@ public class RequestPopUpMenu extends JPopupMenu {
         add(mDelete);
     }
 
-    private void duplicate(RequestHeadDto requestHead) throws IOException {
+    protected void duplicate(RequestHeadDto requestHead) throws IOException {
         var requestRepository = new RequestRepository();
+
         var request = requestRepository.load(requestHead)
                 .map(RequestMapper.INSTANCE::duplicate)
                 .orElseThrow();
@@ -75,14 +78,11 @@ public class RequestPopUpMenu extends JPopupMenu {
                 filePath
         );
 
-        var key = new RequestPublisher.ParentCollectionId(newRequestHead.getParent().getId());
-
         RequestPublisher.getInstance()
-                .getOnInsert()
-                .publish(key, newRequestHead);
-
-        RequestPublisher.getInstance()
-                .getOnSave()
-                .publish(requestHead.getId(), newRequestHead);
+                .getOnChange()
+                .publish(
+                        new RequestKey(newRequestHead),
+                        new PublisherEvent<>(INSERTED, newRequestHead)
+                );
     }
 }
