@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.publisher;
 
+import com.github.clagomess.tomato.publisher.base.NoKeyPublisher;
 import lombok.Getter;
 
 @Getter

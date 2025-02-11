@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.publisher;
+package com.github.clagomess.tomato.publisher.base;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
