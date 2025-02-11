@@ -22,6 +22,11 @@ public class KeyPublisher<K, T> extends BasePublisher<K, T> {
         listeners.removeIf(listener -> listener.getKey().equals(key));
     }
 
+    public boolean containsListener(K key) {
+        return listeners.stream()
+                .anyMatch(listener -> listener.getKey().equals(key));
+    }
+
     public void publish(K key, T event){
         log.debug("Publishing: {} - {}", key, event);
 
