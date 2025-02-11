@@ -4,6 +4,8 @@ import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
+import com.github.clagomess.tomato.publisher.base.EventTypeEnum;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.ui.component.NameUI;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 
@@ -36,9 +38,9 @@ public class CollectionRenameUI extends NameUI {
             );
 
             var key = new CollectionPublisher.ParentCollectionId(collectionTree.getParent().getId());
-            collectionPublisher.getOnSave().publish(
+            collectionPublisher.getOnChange().publish(
                     key,
-                    collectionTree
+                    new PublisherEvent<>(EventTypeEnum.UPDATED, collectionTree.getId())
             );
 
             setVisible(false);

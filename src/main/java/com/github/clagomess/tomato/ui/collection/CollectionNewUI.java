@@ -4,12 +4,15 @@ import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
 public class CollectionNewUI extends JFrame {
     private final JButton btnSave = new JButton("Save");
@@ -62,13 +65,8 @@ public class CollectionNewUI extends JFrame {
                     dto
             );
 
-            var collectionTree = collectionRepository.getCollectionRootTree(
-                    parent,
-                    dto.getId()
-            );
-
             var key = new CollectionPublisher.ParentCollectionId(parent.getId());
-            collectionPublisher.getOnSave().publish(key, collectionTree);
+            collectionPublisher.getOnChange().publish(key, new PublisherEvent<>(INSERTED, dto.getId()));
 
             setVisible(false);
             dispose();

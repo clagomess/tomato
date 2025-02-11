@@ -44,7 +44,7 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
             removeAllChildren();
 
             listenerUuid.forEach(uuid -> {
-                collectionPublisher.getOnSave().removeListener(uuid);
+                collectionPublisher.getOnChange().removeListener(uuid);
                 requestPublisher.getOnInsert().removeListener(uuid);
             });
         }
@@ -77,7 +77,7 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
 
     private void addOnSaveListener(){
         var key = new CollectionPublisher.ParentCollectionId(tree.getId());
-        var uuid = collectionPublisher.getOnSave().addListener(key, event -> loadChildren());
+        var uuid = collectionPublisher.getOnChange().addListener(key, event -> loadChildren());
         listenerUuid.add(uuid);
     }
 

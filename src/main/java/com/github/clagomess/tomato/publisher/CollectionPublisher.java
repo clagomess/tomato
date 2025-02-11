@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.publisher;
 
-import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.publisher.base.KeyPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import lombok.Getter;
 
 @Getter
@@ -10,7 +10,7 @@ public class CollectionPublisher {
     private static final CollectionPublisher instance = new CollectionPublisher();
     private CollectionPublisher() {}
 
-    private final KeyPublisher<ParentCollectionId, CollectionTreeDto> onSave = new KeyPublisher<>();
+    private final KeyPublisher<ParentCollectionId, PublisherEvent<String>> onChange = new KeyPublisher<>();
 
     public record ParentCollectionId(String parentCollectionId){}
 }
