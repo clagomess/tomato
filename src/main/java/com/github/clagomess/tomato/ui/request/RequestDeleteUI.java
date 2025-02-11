@@ -3,19 +3,21 @@ package com.github.clagomess.tomato.ui.request;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.DELETED;
 
 @RequiredArgsConstructor
 public class RequestDeleteUI {
     private final Component parent;
     private final RequestHeadDto requestHead;
-
-    private final RequestRepository requestRepository = new RequestRepository();
-    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public void showConfirmDialog(){
         int ret = JOptionPane.showConfirmDialog(
@@ -30,24 +32,16 @@ public class RequestDeleteUI {
         );
 
         if(ret == JOptionPane.OK_OPTION){
-            delete();
+            new WaitExecution(parent, this::delete).execute();
         }
     }
 
-    private void delete(){
-        new WaitExecution(parent, () -> {
-            requestRepository.delete(requestHead);
+    protected void delete() throws IOException {
+        new RequestRepository().delete(requestHead);
 
-            // update source collection
-            var key = new RequestPublisher.RequestKey(
-                    requestHead.getParent().getId(),
-                    requestHead.getId()
-            );
-
-            requestPublisher.getOnDelete().publish(
-                    key,
-                    new RequestPublisher.RequestId(requestHead.getId())
-            );
-        }).execute();
+        RequestPublisher.getInstance().getOnChange().publish(
+                new RequestKey(requestHead),
+                new PublisherEvent<>(DELETED, requestHead)
+        );
     }
 }
