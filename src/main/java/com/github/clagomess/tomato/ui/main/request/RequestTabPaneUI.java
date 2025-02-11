@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
+import com.github.clagomess.tomato.publisher.base.EventTypeEnum;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import lombok.Getter;
@@ -35,16 +36,17 @@ public class RequestTabPaneUI extends JTabbedPane {
             new ArrayList<>(tabs).forEach(this::removeTab);
         });
 
-        requestPublisher.getOnOpenNew().addListener(event -> {
+        requestPublisher.getOnLoad().addListener(e -> {
             new WaitExecution(() -> {
-                addNewTab(null, new RequestDto());
-            }).execute();
-        });
+                RequestDto request;
 
-        requestPublisher.getOnLoad().addListener(event -> {
-            new WaitExecution(() -> {
-                requestRepository.load(event)
-                        .ifPresent(item -> addNewTab(event, item));
+                if(e.getType().equals(EventTypeEnum.NEW)){
+                    request = new RequestDto();
+                }else{
+                    request = requestRepository.load(e.getEvent()).orElseThrow();
+                }
+
+                addNewTab(e.getEvent(), request);
             }).execute();
         });
     }

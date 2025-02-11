@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.base.KeyPublisher;
 import com.github.clagomess.tomato.publisher.base.NoKeyPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import lombok.Getter;
 
 @Getter
@@ -13,8 +14,8 @@ public class RequestPublisher {
     private RequestPublisher() {}
 
     // for tab
-    private final NoKeyPublisher<Boolean> onOpenNew = new NoKeyPublisher<>();
-    private final NoKeyPublisher<RequestHeadDto> onLoad = new NoKeyPublisher<>();
+    private final NoKeyPublisher<PublisherEvent<RequestHeadDto>> onLoad = new NoKeyPublisher<>();
+
     private final KeyPublisher<String, RequestHeadDto> onSave = new KeyPublisher<>();
     private final KeyPublisher<TabKey, Boolean> onStaging = new KeyPublisher<>();
 
