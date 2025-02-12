@@ -1,9 +1,11 @@
 package com.github.clagomess.tomato.ui.request;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.MainUI;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import com.github.clagomess.tomato.ui.main.request.RequestSplitPaneUI;
@@ -13,13 +15,17 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
 @Slf4j
 public class RequestUI extends JFrame {
-    private final RequestSplitPaneUI requestSplitPaneUI;
+    private final List<Runnable> dispose = new ArrayList<>(3);
+
+    protected RequestUI(){}
 
     public RequestUI(
             RequestHeadDto requestHead
@@ -35,25 +41,13 @@ public class RequestUI extends JFrame {
         ));
 
         RequestDto requestDto = new RequestRepository().load(requestHead).orElseThrow();
-        requestSplitPaneUI = new RequestSplitPaneUI(requestHead, requestDto);
+        var requestSplitPaneUI = new RequestSplitPaneUI(requestHead, requestDto);
+        dispose.add(requestSplitPaneUI::dispose);
+
         add(requestSplitPaneUI, "height 100%");
 
-        RequestPublisher.getInstance()
-                .getOnStaging()
-                .addListener(requestSplitPaneUI.getKey(), changed -> {
-                    if(changed){
-                        invokeLater(() -> setTitle("[*] " + requestHead.getName()));
-                    }else{
-                        invokeLater(() -> setTitle(requestHead.getName()));
-                    }
-                });
-
-        RequestPublisher.getInstance()
-                .getOnSave()
-                .addListener(
-                        requestDto.getId(),
-                        event -> setTitle(event.getName())
-                );
+        addOnChangeListener(requestHead);
+        addOnStagingListener(requestSplitPaneUI.getKey(), requestHead);
 
         pack();
         setLocationRelativeTo(
@@ -65,18 +59,41 @@ public class RequestUI extends JFrame {
         setVisible(true);
     }
 
-    @Override
-    public void dispose() {
-        requestSplitPaneUI.dispose();
-
+    protected void addOnStagingListener(
+            TabKey tabKey,
+            RequestHeadDto requestHead
+    ){
         RequestPublisher.getInstance()
                 .getOnStaging()
-                .removeListener(requestSplitPaneUI.getKey());
+                .addListener(tabKey, changed -> {
+                    if(changed){
+                        invokeLater(() -> setTitle("[*] " + requestHead.getName()));
+                    }else{
+                        invokeLater(() -> setTitle(requestHead.getName()));
+                    }
+                });
 
-        RequestPublisher.getInstance()
-                .getOnSave()
-                .removeListener(requestSplitPaneUI.getKey().getRequestId());
+        dispose.add(() -> RequestPublisher.getInstance()
+                .getOnStaging()
+                .removeListener(tabKey));
+    }
 
+    protected void addOnChangeListener(RequestHeadDto requestHead){
+        var key = new RequestKey(requestHead);
+
+        RequestPublisher.getInstance().getOnChange().addListener(
+                key,
+                event -> setTitle(event.getEvent().getName())
+        );
+
+        dispose.add(() -> RequestPublisher.getInstance()
+                .getOnChange()
+                .removeListener(key));
+    }
+
+    @Override
+    public void dispose() {
+        dispose.forEach(Runnable::run);
         super.dispose();
     }
 }
