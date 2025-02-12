@@ -1,22 +1,17 @@
-package com.github.clagomess.tomato.publisher;
+package com.github.clagomess.tomato.publisher.base;
 
-import com.github.clagomess.tomato.io.repository.DirectoryCreateException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.swing.*;
-import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
-public class KeyPublisherTest {
+public class NoKeyPublisherTest {
     @Test
     public void addListenerAndPublish(){
-        KeyPublisher<Integer, String> doException = new KeyPublisher<>();
-        doException.addListener(1, event -> {
-            throw new DirectoryCreateException(new File(""));
-        });
-        doException.addListener(2, event -> {
+        NoKeyPublisher<String> doException = new NoKeyPublisher<>();
+        doException.addListener(event -> {
             throw new RuntimeException("OK");
         });
 
@@ -29,16 +24,16 @@ public class KeyPublisherTest {
 
             assertThrowsExactly(
                     RuntimeException.class,
-                    () -> doException.publish(2, "opa")
+                    () -> doException.publish("opa")
             );
         }
     }
 
     @Test
     public void removeListener(){
-        KeyPublisher<Integer, String> doException = new KeyPublisher<>();
+        NoKeyPublisher<String> doException = new NoKeyPublisher<>();
 
-        doException.addListener(1, event -> {
+        var uuid = doException.addListener(event -> {
             throw new RuntimeException("OK");
         });
 
@@ -51,11 +46,11 @@ public class KeyPublisherTest {
 
             assertThrowsExactly(
                     RuntimeException.class,
-                    () -> doException.publish(1, "opa")
+                    () -> doException.publish("opa")
             );
 
-            doException.removeListener(1);
-            doException.publish(1, "opa");
+            doException.removeListener(uuid);
+            doException.publish("opa");
         }
     }
 }

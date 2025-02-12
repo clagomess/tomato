@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.publisher;
+package com.github.clagomess.tomato.publisher.base;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +20,11 @@ public class KeyPublisher<K, T> extends BasePublisher<K, T> {
     public void removeListener(K key) {
         log.debug("RemoveListener: {}", key);
         listeners.removeIf(listener -> listener.getKey().equals(key));
+    }
+
+    public boolean containsListener(K key) {
+        return listeners.stream()
+                .anyMatch(listener -> listener.getKey().equals(key));
     }
 
     public void publish(K key, T event){

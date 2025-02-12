@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.environment;
 
 import com.github.clagomess.tomato.io.converter.PostmanConverter;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -9,6 +10,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
 public class EnvironmentImportUI extends JFrame {
     private final JButton btnImport = new JButton("Import");
@@ -53,7 +56,8 @@ public class EnvironmentImportUI extends JFrame {
         new WaitExecution(this, btnImport, () -> {
             var id = postmanConverter.pumpEnvironment(fileChooser.getValue());
 
-            environmentPublisher.getOnChange().publish(id);
+            environmentPublisher.getOnChange()
+                    .publish(new PublisherEvent<>(INSERTED, id));
 
             setVisible(false);
             dispose();

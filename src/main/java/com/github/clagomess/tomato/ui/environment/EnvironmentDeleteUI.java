@@ -3,11 +3,14 @@ package com.github.clagomess.tomato.ui.environment;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.DELETED;
 
 public class EnvironmentDeleteUI {
     private final Component parent;
@@ -44,7 +47,8 @@ public class EnvironmentDeleteUI {
     private void delete(){
         new WaitExecution(parent, () -> {
             environmentRepository.delete(environment);
-            environmentPublisher.getOnChange().publish(environment.getId());
+            environmentPublisher.getOnChange()
+                    .publish(new PublisherEvent<>(DELETED, environment.getId()));
         }).execute();
     }
 }

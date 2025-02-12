@@ -8,6 +8,8 @@ import com.github.clagomess.tomato.io.http.HttpService;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
@@ -27,6 +29,8 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.Arrays;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 
 @Getter
 public class RequestSplitPaneUI extends JPanel {
@@ -189,13 +193,11 @@ public class RequestSplitPaneUI extends JPanel {
                     requestDto
             );
 
-            var key = new RequestPublisher.RequestKey(
-                    requestHeadDto.getParent().getId(),
-                    requestHeadDto.getId()
+            requestPublisher.getOnChange().publish(
+                    new RequestKey(requestHeadDto),
+                    new PublisherEvent<>(UPDATED, requestHeadDto)
             );
 
-            requestPublisher.getOnUpdate().publish(key, requestHeadDto);
-            requestPublisher.getOnSave().publish(requestHeadDto.getId(), requestHeadDto);
             requestStagingMonitor.reset();
         }).execute();
     }
