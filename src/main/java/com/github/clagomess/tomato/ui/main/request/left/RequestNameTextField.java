@@ -4,13 +4,13 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class RequestNameTextField extends JPanel {
@@ -20,7 +20,7 @@ public class RequestNameTextField extends JPanel {
     private final JLabel lblRequestName = new JLabel();
     private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
 
-    private final List<UUID> listenerUuid = new ArrayList<>(0);
+    private UUID listenerUuid;
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestNameTextField(){
@@ -34,11 +34,16 @@ public class RequestNameTextField extends JPanel {
     }
 
     public void setText(
-            RequestHeadDto requestHeadDto,
+            @Nullable RequestHeadDto requestHeadDto,
             RequestDto requestDto
     ){
         if(requestHeadDto != null && requestHeadDto.getParent() != null){
             parent.setText(requestHeadDto.getParent().getFlattenedParentString());
+
+            listenerUuid = requestPublisher.getOnChange().addListener(new RequestKey(requestHeadDto), event -> {
+                parent.setText(event.getEvent().getParent().getFlattenedParentString());
+                lblRequestName.setText(event.getEvent().getName());
+            });
         }else{
             try {
                 parent.setText(workspaceRepository.getDataSessionWorkspace().getName());
@@ -48,16 +53,9 @@ public class RequestNameTextField extends JPanel {
         }
 
         lblRequestName.setText(requestDto.getName());
-
-        listenerUuid.add(requestPublisher.getOnSave().addListener(requestDto.getId(), event -> {
-            parent.setText(event.getParent().getFlattenedParentString());
-            lblRequestName.setText(event.getName());
-        }));
     }
 
     public void dispose(){
-        listenerUuid.forEach(uuid -> {
-            requestPublisher.getOnSave().removeListener(uuid);
-        });
+        requestPublisher.getOnChange().removeListener(listenerUuid);
     }
 }

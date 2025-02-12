@@ -3,8 +3,9 @@ package com.github.clagomess.tomato.ui.collection;
 import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.converter.PostmanConverter;
-import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -12,6 +13,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
 public class CollectionImportUI extends JFrame {
     private final JButton btnImport = new JButton("Import");
@@ -22,7 +25,6 @@ public class CollectionImportUI extends JFrame {
     private final CollectionComboBox cbCollectionParent;
 
     private final PostmanConverter postmanConverter = new PostmanConverter();
-    private final CollectionRepository collectionRepository = new CollectionRepository();
     private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionImportUI(
@@ -69,13 +71,9 @@ public class CollectionImportUI extends JFrame {
                     fileChooser.getValue()
             );
 
-            var collectionTree = collectionRepository.getCollectionRootTree(
-                    parent,
-                    dto.getId()
-            );
-
-            var key = new CollectionPublisher.ParentCollectionId(parent.getId());
-            collectionPublisher.getOnSave().publish(key, collectionTree);
+            var key = new ParentCollectionKey(parent.getId());
+            collectionPublisher.getOnChange()
+                    .publish(key, new PublisherEvent<>(INSERTED, dto.getId()));
 
             setVisible(false);
             dispose();

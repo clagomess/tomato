@@ -6,12 +6,16 @@ import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
+import com.github.clagomess.tomato.publisher.base.EventTypeEnum;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +24,6 @@ public class RequestTabPaneUI extends JTabbedPane {
     private final List<Tab> tabs = new ArrayList<>();
 
     private final RequestRepository requestRepository = new RequestRepository();
-    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
-    private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public RequestTabPaneUI(){
         addNewPlusTab();
@@ -31,22 +33,21 @@ public class RequestTabPaneUI extends JTabbedPane {
             if(getSelectedIndex() == getTabCount() - 1) setSelectedIndex(getTabCount() - 2);
         });
 
-        workspacePublisher.getOnSwitch().addListener(event -> {
-            new ArrayList<>(tabs).forEach(this::removeTab);
-        });
+        WorkspacePublisher.getInstance()
+                .getOnSwitch()
+                .addListener(event -> {
+                    new ArrayList<>(tabs).forEach(this::removeTab);
+                });
 
-        requestPublisher.getOnOpenNew().addListener(event -> {
-            new WaitExecution(() -> {
-                addNewTab(null, new RequestDto());
-            }).execute();
-        });
-
-        requestPublisher.getOnLoad().addListener(event -> {
-            new WaitExecution(() -> {
-                requestRepository.load(event)
-                        .ifPresent(item -> addNewTab(event, item));
-            }).execute();
-        });
+        RequestPublisher.getInstance()
+                .getOnLoad()
+                .addListener(e -> new WaitExecution(() -> {
+                    if(e.getType().equals(EventTypeEnum.NEW)){
+                        addNewTabForNewRequest();
+                    }else{
+                        addNewTabForRequest(e.getEvent());
+                    }
+                }).execute());
     }
 
     private void addNewPlusTab(){
@@ -59,18 +60,28 @@ public class RequestTabPaneUI extends JTabbedPane {
         btnPlus.setContentAreaFilled(false);
         btnPlus.setFocusable(false);
         btnPlus.setMargin(new Insets(0,0,0,0));
-        btnPlus.addActionListener(l -> {
-            new WaitExecution(() -> {
-                addNewTab(null, new RequestDto());
-            }).execute();
-        });
+        btnPlus.addActionListener(l ->
+                new WaitExecution(this::addNewTabForNewRequest)
+                        .execute()
+        );
 
         setTabComponentAt(indexOfTab("+"), btnPlus);
     }
 
-    public void addNewTab(
-            RequestHeadDto requestHeadDto,
-            RequestDto requestDto
+    protected void addNewTabForNewRequest(){
+        addNewTab(null, new RequestDto());
+    }
+
+    protected void addNewTabForRequest(
+            @NotNull RequestHeadDto requestHead
+    ) throws IOException {
+        var request = requestRepository.load(requestHead).orElseThrow();
+        addNewTab(requestHead, request);
+    }
+
+    protected void addNewTab(
+            @Nullable RequestHeadDto requestHeadDto,
+            @NotNull RequestDto requestDto
     ){
         // add content
         var requestSplitPaneUI = new RequestSplitPaneUI(requestHeadDto, requestDto);
@@ -88,6 +99,7 @@ public class RequestTabPaneUI extends JTabbedPane {
         var tabTitle = new TabTitleUI(
                 this,
                 requestSplitPaneUI.getKey(),
+                requestHeadDto,
                 requestDto
         );
         tabTitle.onClose(l -> removeTab(requestSplitPaneUI.getKey()));

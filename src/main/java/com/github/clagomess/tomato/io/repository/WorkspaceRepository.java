@@ -45,14 +45,13 @@ public class WorkspaceRepository extends AbstractRepository {
                 )
         ), dto);
 
-        cacheLoad.evict(dto.getId());
         cacheList.evict();
     }
 
     private List<File> listDirectories() throws IOException {
         File dataDir = configurationRepository.getDataDir();
 
-        List<File> result = Arrays.stream(listFiles(dataDir))
+        List<File> result = Arrays.stream(listFiles(dataDir)).parallel()
                 .filter(File::isDirectory)
                 .filter(item -> item.getName().startsWith("workspace"))
                 .toList();
@@ -68,17 +67,16 @@ public class WorkspaceRepository extends AbstractRepository {
         return result;
     }
 
-    protected static final CacheManager<String, Optional<WorkspaceDto>> cacheLoad = new CacheManager<>();
     protected Optional<WorkspaceDto> load(File workspaceDir) throws IOException {
         String id = workspaceDir.getName().replace("workspace-", "");
 
-        return cacheLoad.get(id, () -> readFile(
+        return readFile(
                 new File(
                         workspaceDir,
                         String.format("workspace-%s.json", id)
                 ),
                 new TypeReference<>() {}
-        ));
+        );
     }
 
     protected static final CacheManager<String, List<WorkspaceDto>> cacheList = new CacheManager<>("workspaces");

@@ -3,12 +3,15 @@ package com.github.clagomess.tomato.ui.environment;
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
 public class EnvironmentNewUI extends JFrame {
     private final JButton btnSave = new JButton("Save");
@@ -48,7 +51,8 @@ public class EnvironmentNewUI extends JFrame {
             environment.setName(txtName.getText());
 
             environmentRepository.save(environment);
-            environmentPublisher.getOnChange().publish(environment.getId());
+            environmentPublisher.getOnChange()
+                    .publish(new PublisherEvent<>(INSERTED, environment.getId()));
 
             setVisible(false);
             dispose();

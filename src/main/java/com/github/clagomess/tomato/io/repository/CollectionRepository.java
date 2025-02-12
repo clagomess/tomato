@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import com.github.clagomess.tomato.util.CacheManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,7 +11,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -35,22 +37,20 @@ public class CollectionRepository extends AbstractRepository {
         ));
     }
 
-    protected static final CacheManager<String, Optional<CollectionDto>> cacheCollection = new CacheManager<>();
     public Optional<CollectionDto> load(CollectionTreeDto collection) throws IOException {
-        return cacheCollection.get(collection.getId(), () -> readFile(getCollectionFilePath(
+        return readFile(getCollectionFilePath(
                 collection.getPath(),
                 collection.getId()
-        ), new TypeReference<>(){}));
+        ), new TypeReference<>(){});
     }
 
-    protected static final CacheManager<String, Optional<CollectionTreeDto>> cacheCollectionTree = new CacheManager<>();
     protected Optional<CollectionTreeDto> load(File collectionDir) throws IOException {
         String id = collectionDir.getName().replace("collection-", "");
 
-        return cacheCollectionTree.get(id, () -> readFile(
+        return readFile(
                 getCollectionFilePath(collectionDir, id),
                 new TypeReference<>() {}
-        ));
+        );
     }
 
     /**
@@ -73,25 +73,20 @@ public class CollectionRepository extends AbstractRepository {
         );
 
         writeFile(collectionFile, collection);
-        cacheEvict(collection.getId(), collectionDir);
 
         return collectionDir;
     }
 
-    protected static final CacheManager<File, List<File>> cacheListFiles = new CacheManager<>();
-    protected List<File> listCollectionFiles(File rootPath) {
-        return cacheListFiles.get(rootPath, () ->
-                Arrays.stream(listFiles(rootPath))
-                        .filter(File::isDirectory)
-                        .filter(item -> item.getName().startsWith("collection"))
-                        .toList()
-        );
+    protected Stream<File> listCollectionFiles(File rootPath) {
+        return Arrays.stream(listFiles(rootPath)).parallel()
+                .filter(File::isDirectory)
+                .filter(item -> item.getName().startsWith("collection"));
     }
 
     public Stream<CollectionTreeDto> getCollectionChildrenTree(
             CollectionTreeDto collectionStart
     ){
-        return listCollectionFiles(collectionStart.getPath()).stream()
+        return listCollectionFiles(collectionStart.getPath())
                 .map(item -> {
                     try {
                         Optional<CollectionTreeDto> optResult = load(item);
@@ -138,26 +133,11 @@ public class CollectionRepository extends AbstractRepository {
         return root;
     }
 
-    private void cacheEvict(String id, File collectionDir) {
-        cacheCollection.evict(id);
-        cacheCollectionTree.evict(id);
-        cacheListFiles.evict(collectionDir.getParentFile());
-        cacheListFiles.evict(collectionDir);
-    }
-
     public void move(
             CollectionTreeDto source,
             CollectionTreeDto target
     ) throws IOException {
         log.debug("MOVE: {} -> {}", source.getPath(), target.getPath());
-
-        try(Stream<Path> paths = Files.walk(source.getPath().toPath())){
-            paths.map(Path::toFile).forEach(requestRepository::cacheEvict);
-        }
-
-        try(Stream<Path> paths = Files.walk(target.getPath().toPath())){
-            paths.map(Path::toFile).forEach(requestRepository::cacheEvict);
-        }
 
         if(!source.getPath().renameTo(new File(target.getPath(), source.getPath().getName()))){
             throw new IOException(String.format(
@@ -166,9 +146,6 @@ public class CollectionRepository extends AbstractRepository {
                     target.getPath()
             ));
         }
-
-        cacheEvict(source.getId(), source.getPath());
-        cacheEvict(target.getId(), target.getPath());
     }
 
     public void delete(CollectionTreeDto tree) throws IOException {
@@ -180,13 +157,10 @@ public class CollectionRepository extends AbstractRepository {
                     .forEach(item -> {
                         try {
                             deleteFile(item);
-                            requestRepository.cacheEvict(item);
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
                     });
         }
-
-        cacheEvict(tree.getId(), tree.getPath());
     }
 }

@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.settings;
 
-import com.github.clagomess.tomato.publisher.KeyPublisher;
+import com.github.clagomess.tomato.publisher.base.KeyPublisher;
 import com.github.clagomess.tomato.ui.MainUI;
 import com.github.clagomess.tomato.ui.component.RawTextArea;
 import com.github.clagomess.tomato.ui.component.WaitExecution;

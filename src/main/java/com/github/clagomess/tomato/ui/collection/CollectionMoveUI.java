@@ -3,12 +3,17 @@ package com.github.clagomess.tomato.ui.collection;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.DELETED;
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
 public class CollectionMoveUI extends JFrame {
     private final JButton btnMove = new JButton("Move");
@@ -62,24 +67,19 @@ public class CollectionMoveUI extends JFrame {
             collectionRepository.move(collectionTree, destination);
 
             // update source collection
-            collectionPublisher.getOnSave().publish(
-                    new CollectionPublisher.ParentCollectionId(
+            collectionPublisher.getOnChange().publish(
+                    new ParentCollectionKey(
                             collectionTree.getParent().getId()
                     ),
-                    collectionTree
+                    new PublisherEvent<>(DELETED, collectionTree.getId())
             );
 
             // update dest collection
-            CollectionTreeDto movedCollection = collectionRepository.getCollectionRootTree(
-                    destination,
-                    collectionTree.getId()
-            );
-
-            collectionPublisher.getOnSave().publish(
-                    new CollectionPublisher.ParentCollectionId(
-                            movedCollection.getParent().getId()
+            collectionPublisher.getOnChange().publish(
+                    new ParentCollectionKey(
+                            destination.getId()
                     ),
-                    movedCollection
+                    new PublisherEvent<>(INSERTED, collectionTree.getId())
             );
 
             setVisible(false);

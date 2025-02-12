@@ -2,35 +2,38 @@ package com.github.clagomess.tomato.ui.main.request;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
+import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxXIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class TabTitleUI extends JPanel {
-    private final BxsCircleIcon iconHasChanged = new BxsCircleIcon(Color.ORANGE);
-    private final BxsCircleIcon iconHasNotChanged = new BxsCircleIcon(Color.GRAY);
+    protected final BxsCircleIcon iconHasChanged = new BxsCircleIcon(Color.ORANGE);
+    protected final BxsCircleIcon iconHasNotChanged = new BxsCircleIcon(Color.GRAY);
 
-    private final JLabel changeIcon = new JLabel();
-    private final JLabel httpMethod = new JLabel();
-    private final JLabel title = new JLabel();
+    protected final JLabel changeIcon = new JLabel();
+    protected final JLabel httpMethod = new JLabel();
+    protected final JLabel title = new JLabel();
     private final IconButton btnClose = new IconButton(new BxXIcon(), "Close");
 
-    private final List<UUID> listenerUuid = new ArrayList<>(2);
-    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
+    private final List<Runnable> dispose = new ArrayList<>(2);
 
     public TabTitleUI(
-            RequestTabPaneUI parent,
-            TabKey tabKey,
-            RequestDto requestDto
+            @Nullable RequestTabPaneUI parent,
+            @NotNull TabKey tabKey,
+            @Nullable RequestHeadDto requestHead,
+            @NotNull RequestDto request
     ){
         setLayout(new MigLayout("insets 0 0 0 0"));
         setOpaque(false);
@@ -39,21 +42,47 @@ public class TabTitleUI extends JPanel {
         add(title, "width ::200");
         add(btnClose);
         addMouseListener(new TabTitleMouseListener(tabKey, parent));
-        setToolTipText(requestDto.getName());
+        setToolTipText(request.getName());
 
         // set data
-        httpMethod.setIcon(requestDto.getMethod().getIcon());
-        title.setText(requestDto.getName());
+        httpMethod.setIcon(request.getMethod().getIcon());
+        title.setText(request.getName());
 
-        listenerUuid.add(requestPublisher.getOnSave().addListener(requestDto.getId(), event -> {
-            httpMethod.setIcon(event.getMethod().getIcon());
-            title.setText(event.getName());
-        }));
+        addOnChangeListener(requestHead);
+        addOnStagingListener(tabKey);
+    }
 
-        listenerUuid.add(requestPublisher.getOnStaging().addListener(
-                tabKey,
-                event -> changeIcon.setIcon(event ? iconHasChanged : iconHasNotChanged)
-        ));
+    protected void addOnChangeListener(
+            @Nullable RequestHeadDto requestHead
+    ){
+        if(requestHead == null) return;
+
+        var key = new RequestKey(requestHead);
+
+        RequestPublisher.getInstance()
+                .getOnChange()
+                .addListener(key, event -> {
+                    httpMethod.setIcon(event.getEvent().getMethod().getIcon());
+                    title.setText(event.getEvent().getName());
+                });
+
+        dispose.add(() -> RequestPublisher.getInstance()
+                .getOnChange()
+                .removeListener(key));
+    }
+
+    protected void addOnStagingListener(
+            @NotNull TabKey tabKey
+    ){
+        RequestPublisher.getInstance()
+                .getOnStaging()
+                .addListener(tabKey, event ->
+                        changeIcon.setIcon(event ? iconHasChanged : iconHasNotChanged)
+        );
+
+        dispose.add(() -> RequestPublisher.getInstance()
+                .getOnStaging()
+                .removeListener(tabKey));
     }
 
     public void onClose(ActionListener listener) {
@@ -62,9 +91,6 @@ public class TabTitleUI extends JPanel {
     }
 
     public void dispose(){
-        listenerUuid.forEach(uuid -> {
-            requestPublisher.getOnSave().removeListener(uuid);
-            requestPublisher.getOnStaging().removeListener(uuid);
-        });
+        dispose.forEach(Runnable::run);
     }
 }

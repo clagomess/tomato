@@ -3,11 +3,15 @@ package com.github.clagomess.tomato.ui.collection;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.DELETED;
 
 @RequiredArgsConstructor
 public class CollectionDeleteUI {
@@ -39,11 +43,11 @@ public class CollectionDeleteUI {
             collectionRepository.delete(collectionTree);
 
             // update source collection
-            collectionPublisher.getOnSave().publish(
-                    new CollectionPublisher.ParentCollectionId(
+            collectionPublisher.getOnChange().publish(
+                    new ParentCollectionKey(
                             collectionTree.getParent().getId()
                     ),
-                    collectionTree
+                    new PublisherEvent<>(DELETED, collectionTree.getId())
             );
         }).execute();
     }

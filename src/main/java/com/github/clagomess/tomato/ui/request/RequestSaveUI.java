@@ -6,6 +6,8 @@ import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.collection.CollectionComboBox;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -13,6 +15,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
 public class RequestSaveUI extends JFrame {
     private final RequestDto requestDto;
@@ -77,9 +81,10 @@ public class RequestSaveUI extends JFrame {
                     filePath
             );
 
-            var key = new RequestPublisher.ParentCollectionId(parent.getId());
-            requestPublisher.getOnInsert().publish(key, requestHead);
-            requestPublisher.getOnSave().publish(requestHead.getId(), requestHead);
+            requestPublisher.getOnChange().publish(
+                    new RequestKey(requestHead),
+                    new PublisherEvent<>(INSERTED, requestHead)
+            );
             onSaveListener.response(requestHead);
 
             setVisible(false);

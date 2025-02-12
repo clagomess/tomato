@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.main.collection;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.ui.main.collection.popupmenu.CollectionPopUpMenu;
 import com.github.clagomess.tomato.ui.main.collection.popupmenu.DefaultPopupMenu;
 import com.github.clagomess.tomato.ui.main.collection.popupmenu.RequestPopUpMenu;
@@ -14,6 +15,7 @@ import javax.swing.tree.TreePath;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.LOAD;
 import static java.awt.event.MouseEvent.BUTTON1;
 import static java.awt.event.MouseEvent.BUTTON3;
 
@@ -39,7 +41,7 @@ public class CollectionTreeMouseListener extends MouseAdapter {
 
         if (e.getButton() == BUTTON1 && e.getClickCount() == 2 &&
                 selectedNode.getUserObject() instanceof RequestHeadDto dto) {
-            requestPublisher.getOnLoad().publish(dto);
+            requestPublisher.getOnLoad().publish(new PublisherEvent<>(LOAD, dto));
             return;
         }
 

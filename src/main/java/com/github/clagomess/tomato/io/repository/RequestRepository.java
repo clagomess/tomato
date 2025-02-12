@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.util.CacheManager;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -27,12 +25,8 @@ public class RequestRepository extends AbstractRepository {
         );
     }
 
-    protected static final CacheManager<File, Optional<RequestHeadDto>> cacheHead = new CacheManager<>();
     protected Optional<RequestHeadDto> loadHead(File file) throws IOException {
-        return cacheHead.get(file, () -> readFile(
-                file,
-                new TypeReference<>() {}
-        ));
+        return readFile(file, new TypeReference<>() {});
     }
 
     public File save(File basepath, RequestDto request) throws IOException {
@@ -48,25 +42,20 @@ public class RequestRepository extends AbstractRepository {
         }
 
         writeFile(requestFile, request);
-        cacheEvict(requestFile);
 
         return requestFile;
     }
 
-    protected static final CacheManager<File, List<File>> cacheListFiles = new CacheManager<>();
-    private List<File> listRequestFiles(File rootPath) {
-        return cacheListFiles.get(rootPath, () ->
-                Arrays.stream(listFiles(rootPath))
-                        .filter(File::isFile)
-                        .filter(item -> item.getName().startsWith("request-"))
-                        .toList()
-        );
+    private Stream<File> listRequestFiles(File rootPath) {
+        return Arrays.stream(listFiles(rootPath)).parallel()
+                .filter(File::isFile)
+                .filter(item -> item.getName().startsWith("request-"));
     }
 
     public Stream<RequestHeadDto> getRequestList(
             CollectionTreeDto collectionParent
     ){
-        return listRequestFiles(collectionParent.getPath()).stream()
+        return listRequestFiles(collectionParent.getPath())
                 .map(item -> {
                     try {
                         Optional<RequestHeadDto> result = loadHead(item);
@@ -88,14 +77,8 @@ public class RequestRepository extends AbstractRepository {
                 ;
     }
 
-    public void cacheEvict(File requestFile) {
-        cacheHead.evict(requestFile);
-        cacheListFiles.evict(requestFile.getParentFile());
-    }
-
     public void delete(RequestHeadDto head) throws IOException {
         deleteFile(head.getPath());
-        cacheEvict(head.getPath());
     }
 
     public void move(
@@ -111,8 +94,5 @@ public class RequestRepository extends AbstractRepository {
                     target
             ));
         }
-
-        cacheEvict(source.getPath());
-        cacheEvict(target.getPath());
     }
 }

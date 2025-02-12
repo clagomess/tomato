@@ -4,6 +4,8 @@ import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.collection.CollectionComboBox;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -12,6 +14,9 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.DELETED;
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
 public class RequestMoveUI extends JFrame {
     private final JButton btnMove = new JButton("Move");
@@ -65,26 +70,22 @@ public class RequestMoveUI extends JFrame {
             requestRepository.move(requestHead, destination);
 
             // update source collection
-            var key = new RequestPublisher.RequestKey(
-                    requestHead.getParent().getId(),
-                    requestHead.getId()
-            );
-
-            requestPublisher.getOnDelete().publish(
-                    key,
-                    new RequestPublisher.RequestId(requestHead.getId())
+            requestPublisher.getOnChange().publish(
+                    new RequestKey(requestHead),
+                    new PublisherEvent<>(DELETED, requestHead)
             );
 
             // update target collection
+            // @TODO: impl. clone Class
             this.requestHead.setParent(destination);
             this.requestHead.setPath(new File(
                     destination.getPath(),
                     this.requestHead.getPath().getName()
             ));
 
-            requestPublisher.getOnInsert().publish(
-                    new RequestPublisher.ParentCollectionId(destination.getId()),
-                    requestHead
+            requestPublisher.getOnChange().publish(
+                    new RequestKey(requestHead),
+                    new PublisherEvent<>(INSERTED, requestHead)
             );
 
             setVisible(false);

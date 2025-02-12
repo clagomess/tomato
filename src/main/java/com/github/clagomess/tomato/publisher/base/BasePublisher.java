@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.publisher;
+package com.github.clagomess.tomato.publisher.base;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.*;
 
 @Slf4j
+@Getter
 abstract class BasePublisher<K, T> {
     private static final List<BasePublisher<?, ?>> toDebug = new LinkedList<>();
     protected final List<Listener<K, T>> listeners = new LinkedList<>();
