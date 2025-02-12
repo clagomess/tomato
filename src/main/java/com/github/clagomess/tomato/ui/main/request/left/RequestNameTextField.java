@@ -24,7 +24,10 @@ public class RequestNameTextField extends JPanel {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     public RequestNameTextField(){
-        setLayout(new MigLayout("insets 0 0 0 0"));
+        setLayout(new MigLayout(
+                "insets 0 0 0 0",
+                "[]0[]0[]"
+        ));
 
         add(parent, "width ::250");
         add(new JLabel(" / "){{

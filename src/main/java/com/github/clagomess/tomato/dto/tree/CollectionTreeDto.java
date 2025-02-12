@@ -35,8 +35,27 @@ public class CollectionTreeDto implements Comparable<CollectionTreeDto> {
     }
 
     public String getFlattenedParentString() {
-        if(parent == null) return name;
-        return parent.getFlattenedParentString() + " / " + name;
+        return getFlattenedParentStringBuilder().toString();
+    }
+
+    protected StringBuilder getFlattenedParentStringBuilder() {
+        StringBuilder sb = new StringBuilder();
+
+        if(parent == null){
+            sb.append("ROOT - ");
+            sb.append(name);
+            sb.append(" /");
+            return sb;
+        }
+
+        if(parent.parent != null){
+            sb.append(parent.getFlattenedParentStringBuilder());
+            sb.append(" / ");
+        }
+
+        sb.append(name);
+
+        return sb;
     }
 
     @Override
