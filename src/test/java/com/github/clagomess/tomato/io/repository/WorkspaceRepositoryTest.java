@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -67,6 +68,25 @@ public class WorkspaceRepositoryTest extends RepositoryStubs {
                 .isNotEmpty()
                 .allMatch(item -> item.getPath().isDirectory())
         ;
+    }
+
+    @Test
+    public void list_assertSorted() throws IOException {
+        Mockito.doReturn(List.of(
+                new File("BBB"),
+                new File("AAA")
+        )).when(workspaceRepository)
+                .listDirectories();
+
+        Mockito.doAnswer(answer -> {
+            var dto = new WorkspaceDto();
+            dto.setName(answer.getArgument(0).toString());
+            return Optional.of(dto);
+        }).when(workspaceRepository)
+                .load(Mockito.any());
+
+        var result = workspaceRepository.list();
+        Assertions.assertThat(result).isSorted();
     }
 
     @Test

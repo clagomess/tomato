@@ -48,7 +48,7 @@ public class WorkspaceRepository extends AbstractRepository {
         cacheList.evict();
     }
 
-    private List<File> listDirectories() throws IOException {
+    protected List<File> listDirectories() throws IOException {
         File dataDir = configurationRepository.getDataDir();
 
         List<File> result = Arrays.stream(listFiles(dataDir)).parallel()
@@ -98,6 +98,7 @@ public class WorkspaceRepository extends AbstractRepository {
                     }
                 })
                 .filter(Objects::nonNull)
+                .sorted()
                 .toList()
         );
     }

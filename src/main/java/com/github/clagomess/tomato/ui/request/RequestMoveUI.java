@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.request;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
+import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.publisher.key.RequestKey;
@@ -76,16 +77,16 @@ public class RequestMoveUI extends JFrame {
             );
 
             // update target collection
-            // @TODO: impl. clone Class
-            this.requestHead.setParent(destination);
-            this.requestHead.setPath(new File(
+            var newRequestHead = RequestMapper.INSTANCE.clone(this.requestHead);
+            newRequestHead.setParent(destination);
+            newRequestHead.setPath(new File(
                     destination.getPath(),
                     this.requestHead.getPath().getName()
             ));
 
             requestPublisher.getOnChange().publish(
-                    new RequestKey(requestHead),
-                    new PublisherEvent<>(INSERTED, requestHead)
+                    new RequestKey(newRequestHead),
+                    new PublisherEvent<>(INSERTED, newRequestHead)
             );
 
             setVisible(false);

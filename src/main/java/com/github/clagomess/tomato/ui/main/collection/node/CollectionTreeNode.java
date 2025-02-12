@@ -65,11 +65,11 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
     public void loadChildren() {
         this.removeAllChildren();
 
-        tree.getChildren().forEach(collection -> {
+        tree.getChildren().forEachOrdered(collection -> {
             this.add(new CollectionTreeNode(treeModel, collection));
         });
 
-        tree.getRequests().forEach(request -> {
+        tree.getRequests().forEachOrdered(request -> {
             this.add(new RequestTreeNode(treeModel, this, request));
         });
 
