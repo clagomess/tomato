@@ -10,6 +10,8 @@ public abstract class NameUI extends JFrame {
     protected final JButton btnSave = new JButton("Save");
     protected final JTextField txtName = new JTextField();
 
+    protected NameUI(){}
+
     public NameUI(Component parent){
         setTitle("Rename");
         setIconImages(FaviconImage.getFrameIconImage());

@@ -69,6 +69,7 @@ public class RequestUITest {
 
     @Test
     public void trigger_requestPublisher_OnStaging(){
+        requestUI.addOnStagingListener(tabKey, requestHead);
         requestPublisher.getOnStaging().publish(tabKey, true);
 
         Assertions.assertThat(requestUI.getTitle())

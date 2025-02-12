@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.main.collection.node;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,8 @@ import javax.swing.tree.MutableTreeNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
 @Setter
 @Getter
@@ -33,7 +36,7 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
         this.treeModel = treeModel;
         this.tree = tree;
 
-        addOnSaveListener();
+        addOnChangeListener();
     }
 
     @Override
@@ -45,7 +48,7 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
 
             listenerUuid.forEach(uuid -> {
                 collectionPublisher.getOnChange().removeListener(uuid);
-                requestPublisher.getOnInsert().removeListener(uuid);
+                requestPublisher.getOnParentCollectionChange().removeListener(uuid);
             });
         }
     }
@@ -55,7 +58,7 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
         super.removeAllChildren();
 
         listenerUuid.forEach(uuid -> {
-            requestPublisher.getOnInsert().removeListener(uuid);
+            requestPublisher.getOnParentCollectionChange().removeListener(uuid);
         });
     }
 
@@ -70,26 +73,28 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
             this.add(new RequestTreeNode(treeModel, this, request));
         });
 
-        addOnResquestInsertListener();
+        addRequestOnParentCollectionChangeListener();
 
         treeModel.reload(this);
     }
 
-    private void addOnSaveListener(){
-        var key = new CollectionPublisher.ParentCollectionId(tree.getId());
-        var uuid = collectionPublisher.getOnChange().addListener(key, event -> loadChildren());
+    private void addOnChangeListener(){
+        var key = new ParentCollectionKey(tree.getId());
+        var uuid = collectionPublisher.getOnChange()
+                .addListener(key, event -> loadChildren());
         listenerUuid.add(uuid);
     }
 
-    private void addOnResquestInsertListener(){
-        var key = new RequestPublisher.ParentCollectionId(
-                tree.getId()
-        );
+    private void addRequestOnParentCollectionChangeListener(){
+        var key = new ParentCollectionKey(tree.getId());
 
-        var uuid = requestPublisher.getOnInsert().addListener(key, event -> {
-            this.add(new RequestTreeNode(treeModel, this, event));
-            treeModel.reload(this);
-        });
+        var uuid = requestPublisher.getOnParentCollectionChange()
+                .addListener(key, event -> {
+                    if(event.getType() != INSERTED) return;
+
+                    this.add(new RequestTreeNode(treeModel, this, event.getEvent()));
+                    treeModel.reload(this);
+                });
 
         listenerUuid.add(uuid);
     }

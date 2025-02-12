@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +44,7 @@ public class CollectionDeleteUI {
 
             // update source collection
             collectionPublisher.getOnChange().publish(
-                    new CollectionPublisher.ParentCollectionId(
+                    new ParentCollectionKey(
                             collectionTree.getParent().getId()
                     ),
                     new PublisherEvent<>(DELETED, collectionTree.getId())

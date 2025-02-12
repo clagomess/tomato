@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -67,7 +68,7 @@ public class CollectionMoveUI extends JFrame {
 
             // update source collection
             collectionPublisher.getOnChange().publish(
-                    new CollectionPublisher.ParentCollectionId(
+                    new ParentCollectionKey(
                             collectionTree.getParent().getId()
                     ),
                     new PublisherEvent<>(DELETED, collectionTree.getId())
@@ -75,7 +76,7 @@ public class CollectionMoveUI extends JFrame {
 
             // update dest collection
             collectionPublisher.getOnChange().publish(
-                    new CollectionPublisher.ParentCollectionId(
+                    new ParentCollectionKey(
                             destination.getId()
                     ),
                     new PublisherEvent<>(INSERTED, collectionTree.getId())

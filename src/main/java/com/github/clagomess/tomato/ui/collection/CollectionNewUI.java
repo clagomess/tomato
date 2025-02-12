@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.repository.CollectionRepository;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -65,7 +66,7 @@ public class CollectionNewUI extends JFrame {
                     dto
             );
 
-            var key = new CollectionPublisher.ParentCollectionId(parent.getId());
+            var key = new ParentCollectionKey(parent.getId());
             collectionPublisher.getOnChange().publish(key, new PublisherEvent<>(INSERTED, dto.getId()));
 
             setVisible(false);

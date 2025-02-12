@@ -67,9 +67,9 @@ public class RequestUI extends JFrame {
                 .getOnStaging()
                 .addListener(tabKey, changed -> {
                     if(changed){
-                        invokeLater(() -> setTitle("[*] " + requestHead.getName()));
+                        setTitle("[*] " + requestHead.getName());
                     }else{
-                        invokeLater(() -> setTitle(requestHead.getName()));
+                        setTitle(requestHead.getName());
                     }
                 });
 
