@@ -4,49 +4,61 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.component.NameUI;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 
 import java.awt.*;
+import java.io.IOException;
+
+import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 
 public class RequestRenameUI extends NameUI {
-    private final RequestRepository requestRepository = new RequestRepository();
-    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
+    private final RequestRepository requestRepository;
+
+    protected RequestRenameUI(RequestRepository requestRepository){
+        this.requestRepository = requestRepository;
+    }
 
     public RequestRenameUI(
             Component parent,
             RequestHeadDto requestHead
     ) {
         super(parent);
+        this.requestRepository = new RequestRepository();
+
         setTitle("Rename Request");
         txtName.setText(requestHead.getName());
         btnSave.addActionListener(l -> btnSaveAction(requestHead));
     }
 
     private void btnSaveAction(RequestHeadDto requestHead){
-        new WaitExecution(this, btnSave, () -> {
-            RequestDto requestDto = requestRepository.load(requestHead)
-                    .orElseThrow();
+        new WaitExecution(
+                this,
+                btnSave,
+                () -> save(requestHead)
+        ).execute();
+    }
 
-            requestDto.setName(this.txtName.getText());
-            requestHead.setName(this.txtName.getText());
+    protected void save(RequestHeadDto requestHead) throws IOException {
+        RequestDto requestDto = requestRepository.load(requestHead)
+                .orElseThrow();
 
-            requestRepository.save(
-                    requestHead.getPath(),
-                    requestDto
-            );
+        requestDto.setName(this.txtName.getText());
+        requestHead.setName(this.txtName.getText());
 
-            var key = new RequestPublisher.RequestKey(
-                    requestHead.getParent().getId(),
-                    requestHead.getId()
-            );
+        requestRepository.save(
+                requestHead.getPath(),
+                requestDto
+        );
 
-            // @TODO: merge
-            requestPublisher.getOnUpdate().publish(key, requestHead);
-            requestPublisher.getOnSave().publish(requestHead.getId(), requestHead);
+        RequestPublisher.getInstance().getOnChange().publish(
+                new RequestKey(requestHead),
+                new PublisherEvent<>(UPDATED, requestHead)
+        );
 
-            setVisible(false);
-            dispose();
-        }).execute();
+        setVisible(false);
+        dispose();
     }
 }
