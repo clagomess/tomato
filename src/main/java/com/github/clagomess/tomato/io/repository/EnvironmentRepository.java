@@ -59,7 +59,6 @@ public class EnvironmentRepository extends AbstractRepository {
 
         writeFile(filePath, environmentDto);
         cache.evict(environmentDto.getId());
-        cacheListHead.evict();
 
         return filePath;
     }
@@ -68,14 +67,12 @@ public class EnvironmentRepository extends AbstractRepository {
         File filePath = getEnvironmentFile(environment.getId());
         deleteFile(filePath);
         cache.evict(environment.getId());
-        cacheListHead.evict();
     }
 
-    protected static final CacheManager<String, List<EnvironmentHeadDto>> cacheListHead = new CacheManager<>("listHead");
     public List<EnvironmentHeadDto> listHead() throws IOException {
         WorkspaceDto workspace = workspaceRepository.getDataSessionWorkspace();
 
-        return cacheListHead.get(() -> Arrays.stream(listFiles(workspace.getPath()))
+        return Arrays.stream(listFiles(workspace.getPath())).parallel()
                 .filter(File::isFile)
                 .filter(item -> item.getName().startsWith("environment"))
                 .map(item -> {
@@ -91,8 +88,7 @@ public class EnvironmentRepository extends AbstractRepository {
                     }
                 })
                 .filter(Objects::nonNull)
-                .toList()
-        );
+                .toList();
     }
 
     public Optional<EnvironmentDto> getWorkspaceSessionEnvironment() throws IOException {

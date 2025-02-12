@@ -33,17 +33,10 @@ public abstract class RepositoryStubs {
 
     @BeforeEach
     public void cleanCache() {
-        CollectionRepository.cacheCollection.evictAll();
-        CollectionRepository.cacheCollectionTree.evictAll();
-        CollectionRepository.cacheListFiles.evictAll();
         ConfigurationRepository.cache.evictAll();
         DataSessionRepository.cache.evictAll();
         EnvironmentRepository.cache.evictAll();
-        EnvironmentRepository.cacheListHead.evictAll();
-        RequestRepository.cacheHead.evictAll();
-        RequestRepository.cacheListFiles.evictAll();
         WorkspaceRepository.cacheList.evictAll();
-        WorkspaceRepository.cacheLoad.evictAll();
         WorkspaceSessionRepository.cache.evictAll();
     }
 
