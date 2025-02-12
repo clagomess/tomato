@@ -90,7 +90,7 @@ public class RequestTabPaneUI extends JTabbedPane {
         var tabTitle = new TabTitleUI(
                 this,
                 requestSplitPaneUI.getKey(),
-                requestDto
+                requestHeadDto
         );
         tabTitle.onClose(l -> removeTab(requestSplitPaneUI.getKey()));
 
