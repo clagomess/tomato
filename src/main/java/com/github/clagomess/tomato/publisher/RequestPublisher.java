@@ -9,8 +9,6 @@ import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import com.github.clagomess.tomato.publisher.key.RequestKey;
 import lombok.Getter;
 
-import java.util.UUID;
-
 @Getter
 public class RequestPublisher {
     @Getter
@@ -22,26 +20,6 @@ public class RequestPublisher {
 
     private final KeyPublisher<ParentCollectionKey, PublisherEvent<RequestHeadDto>> onParentCollectionChange = new KeyPublisher<>();
     private final KeyPublisher<RequestKey, PublisherEvent<RequestHeadDto>> onChange = new KeyPublisher<>(){
-        @Override
-        public UUID addListener(RequestKey key, OnChangeFI<PublisherEvent<RequestHeadDto>> runnable) {
-            var parentKey = new ParentCollectionKey(key.getParentCollectionId());
-
-            if(!onParentCollectionChange.containsListener(parentKey)) {
-                onParentCollectionChange.addListener(
-                        new ParentCollectionKey(key.getParentCollectionId()),
-                        runnable
-                );
-            }
-
-            return super.addListener(key, runnable);
-        }
-
-        @Override
-        public void removeListener(RequestKey key) {
-            onParentCollectionChange.removeListener(new ParentCollectionKey(key.getParentCollectionId()));
-            super.removeListener(key);
-        }
-
         @Override
         public void publish(RequestKey key, PublisherEvent<RequestHeadDto> event) {
             super.publish(key, event);

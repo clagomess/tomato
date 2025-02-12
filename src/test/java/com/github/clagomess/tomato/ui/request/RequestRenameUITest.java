@@ -41,6 +41,6 @@ public class RequestRenameUITest {
 
         requestRenameUI.save(requestHead);
 
-        assertEquals(2, count.get());
+        assertEquals(1, count.get());
     }
 }

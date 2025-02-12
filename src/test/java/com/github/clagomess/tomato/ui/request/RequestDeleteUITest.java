@@ -24,8 +24,8 @@ public class RequestDeleteUITest extends RepositoryStubs {
         var request = new RequestDto();
         var result = requestRepository.save(mockDataDir, request);
         CollectionTreeDto collectionTree = new CollectionTreeDto();
-        collectionTree.setId("c_a");
         collectionTree.setPath(result.getParentFile());
+
         var head = requestRepository.getRequestList(collectionTree)
                 .filter(item -> item.getId().equals(request.getId()))
                 .findFirst()
@@ -34,7 +34,7 @@ public class RequestDeleteUITest extends RepositoryStubs {
         var hasPublished = new AtomicBoolean(false);
 
         RequestPublisher.getInstance().getOnChange()
-                .addListener(new RequestKey("c_a", request.getId()), event -> {
+                .addListener(new RequestKey(collectionTree.getId(), request.getId()), event -> {
                     hasPublished.set(true);
 
                     assertEquals(DELETED, event.getType());

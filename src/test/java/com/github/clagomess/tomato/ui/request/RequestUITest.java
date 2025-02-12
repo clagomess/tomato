@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.publisher.key.RequestKey;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,16 +28,14 @@ public class RequestUITest {
 
     @BeforeEach
     public void setup() {
-        var tree = new CollectionTreeDto();
-        tree.setId("c_a");
-
         requestHead = new RequestHeadDto();
-        requestHead.setId("r_a");
+        requestHead.setId(RandomStringUtils.secure().nextAlphanumeric(8));
         requestHead.setName("aaa");
         requestHead.setMethod(GET);
-        requestHead.setParent(tree);
+        requestHead.setParent(new CollectionTreeDto());
+        requestHead.getParent().setId(RandomStringUtils.secure().nextAlphanumeric(8));
 
-        tabKey = new TabKey("r_a");
+        tabKey = new TabKey(requestHead.getId());
     }
 
     @AfterEach
@@ -55,7 +54,7 @@ public class RequestUITest {
         requestUI.addOnChangeListener(requestHead);
 
         var requestHeadUpdate = new RequestHeadDto();
-        requestHeadUpdate.setId("r_a");
+        requestHeadUpdate.setId(requestHead.getId());
         requestHeadUpdate.setName("bbb");
         requestHeadUpdate.setMethod(POST);
 

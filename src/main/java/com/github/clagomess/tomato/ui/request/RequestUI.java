@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static javax.swing.SwingUtilities.invokeLater;
-
 @Slf4j
 public class RequestUI extends JFrame {
     private final List<Runnable> dispose = new ArrayList<>(3);

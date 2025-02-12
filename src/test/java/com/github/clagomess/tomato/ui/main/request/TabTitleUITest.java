@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.ui.main.request;
 
+import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
@@ -25,18 +26,17 @@ public class TabTitleUITest {
 
     @BeforeEach
     public void setup() {
-        var tree = new CollectionTreeDto();
-        tree.setId("c_a");
+        var request = new RequestDto();
 
         requestHead = new RequestHeadDto();
-        requestHead.setId("r_a");
-        requestHead.setName("aaa");
+        requestHead.setId(request.getId());
+        requestHead.setName(request.getName());
         requestHead.setMethod(GET);
-        requestHead.setParent(tree);
+        requestHead.setParent(new CollectionTreeDto());
 
-        tabKey = new TabKey("r_a");
+        tabKey = new TabKey(request.getId());
 
-        tabTitleUI = new TabTitleUI(null, tabKey, requestHead);
+        tabTitleUI = new TabTitleUI(null, tabKey, requestHead, request);
     }
 
     @AfterEach
