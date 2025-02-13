@@ -10,7 +10,15 @@ import java.util.UUID;
 public class KeyPublisher<K, T> extends BasePublisher<K, T> {
     public UUID addListener(K key, OnChangeFI<T> runnable) {
         Listener<K, T> listener = new Listener<>(key, runnable);
-        log.debug("AddListener: {} - {}", listener.getUuid(), key);
+
+        if(log.isDebugEnabled()){
+            log.debug(
+                    "AddListener: {} - {}\n-> {}",
+                    listener.getAbbrevUuid(),
+                    key,
+                    runnable
+            );
+        }
 
         listeners.add(listener);
 
@@ -18,7 +26,7 @@ public class KeyPublisher<K, T> extends BasePublisher<K, T> {
     }
 
     public void removeListener(K key) {
-        log.debug("RemoveListener: {}", key);
+        if(log.isDebugEnabled()) log.debug("RemoveListener: {}", key);
         listeners.removeIf(listener -> listener.getKey().equals(key));
     }
 
@@ -28,20 +36,23 @@ public class KeyPublisher<K, T> extends BasePublisher<K, T> {
     }
 
     public void publish(K key, T event){
-        log.debug("Publishing: {} - {}", key, event);
+        if(log.isDebugEnabled()) log.debug("Publishing: {} - {}", key, event);
 
         var noConcurrentList = new ArrayList<>(listeners);
 
         noConcurrentList.stream().parallel()
                 .filter(item -> Objects.equals(item.getKey(), key))
                 .forEach(listener -> {
+                    if(log.isDebugEnabled()) {
                         log.debug(
-                                "-> trigger: {} - {}",
-                                listener.getUuid(),
-                                listener.getKey()
+                                "-> trigger: {} - {}\n-> {}",
+                                listener.getAbbrevUuid(),
+                                listener.getKey(),
+                                listener.getRunnable()
                         );
+                    }
 
-                        listener.getRunnable().change(event);
+                    listener.getRunnable().change(event);
                 });
 
         noConcurrentList.clear();

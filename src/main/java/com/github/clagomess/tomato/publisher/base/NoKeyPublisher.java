@@ -9,7 +9,14 @@ import java.util.UUID;
 public class NoKeyPublisher<T> extends BasePublisher<Void, T> {
     public UUID addListener(OnChangeFI<T> runnable) {
         Listener<Void, T> listener = new Listener<>(null, runnable);
-        log.debug("AddListener: {}", listener.getUuid());
+
+        if(log.isDebugEnabled()){
+            log.debug(
+                    "AddListener: {}\n-> {}",
+                    listener.getAbbrevUuid(),
+                    runnable
+            );
+        }
 
         listeners.add(listener);
 
@@ -17,12 +24,19 @@ public class NoKeyPublisher<T> extends BasePublisher<Void, T> {
     }
 
     public void publish(T event){
-        log.debug("Publishing: {}",event);
+        if(log.isDebugEnabled()) log.debug("Publishing: {}", event);
 
         var noConcurrentList = new ArrayList<>(listeners);
 
         noConcurrentList.parallelStream().forEach(listener -> {
-            log.debug("-> trigger: {}", listener.getUuid());
+            if(log.isDebugEnabled()) {
+                log.debug(
+                        "-> trigger: {}\n-> {}",
+                        listener.getAbbrevUuid(),
+                        listener.getRunnable()
+                );
+            }
+
             listener.getRunnable().change(event);
         });
 

@@ -137,7 +137,7 @@ public class CollectionRepository extends AbstractRepository {
             CollectionTreeDto source,
             CollectionTreeDto target
     ) throws IOException {
-        log.debug("MOVE: {} -> {}", source.getPath(), target.getPath());
+        if(log.isDebugEnabled()) log.debug("MOVE: {} -> {}", source.getPath(), target.getPath());
 
         if(!source.getPath().renameTo(new File(target.getPath(), source.getPath().getName()))){
             throw new IOException(String.format(

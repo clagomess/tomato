@@ -109,7 +109,7 @@ class EnvDocumentListener implements DocumentListener {
             Matcher matcher = patternEnv.matcher(text);
             while (matcher.find()) {
                 String token = matcher.group();
-                log.debug("Token found: {}", token);
+                if(log.isDebugEnabled()) log.debug("Token found: {}", token);
 
                 document.setCharacterAttributes(
                         matcher.start(),

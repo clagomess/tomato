@@ -23,7 +23,7 @@ abstract class BasePublisher<K, T> {
                 .findFirst();
 
         if(opt.isPresent()) {
-            log.debug("RemoveListener: {}", uuid);
+            if(log.isDebugEnabled()) log.debug("RemoveListener: {}", uuid);
             listeners.remove(opt.get());
         }
     }
@@ -43,6 +43,10 @@ abstract class BasePublisher<K, T> {
             this.key = key;
             this.runnable = runnable;
         }
+
+        public String getAbbrevUuid(){
+            return uuid.toString().substring(0, 8);
+        }
     }
 
     public static String debug(){
@@ -58,7 +62,7 @@ abstract class BasePublisher<K, T> {
 
                     publisher.listeners.forEach(listener -> {
                        sb.append("  - ");
-                       sb.append(listener.getUuid());
+                       sb.append(listener.getAbbrevUuid());
                        sb.append(" - ");
                        sb.append(listener.getKey());
                        sb.append(" - ");

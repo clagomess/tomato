@@ -80,7 +80,7 @@ public class PostmanConverter {
             List<PostmanCollectionV210Dto.Item> itens
     ) throws IOException {
         for(var item : itens) {
-            log.debug("processing item: {}", item.getName());
+            if(log.isDebugEnabled()) log.debug("processing item: {}", item.getName());
 
             if(item.getRequest() == null){
                 CollectionDto collection = colectionPumpMapper.toCollectionDto(item);

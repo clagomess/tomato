@@ -19,7 +19,7 @@ abstract class AbstractRepository {
         assert path.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
 
         if(path.isDirectory()){
-            log.debug("DIR: {}", path);
+            if(log.isDebugEnabled()) log.debug("DIR: {}", path);
             return path;
         }
 
@@ -27,12 +27,12 @@ abstract class AbstractRepository {
             throw new DirectoryCreateException(path);
         }
 
-        log.debug("MKDIR: {}", path);
+        if(log.isDebugEnabled()) log.debug("MKDIR: {}", path);
         return path;
     }
 
     protected <T> Optional<T> readFile(File filepath, TypeReference<T> type) throws IOException {
-        log.debug("READ: {}", filepath);
+        if(log.isDebugEnabled()) log.debug("READ: {}", filepath);
         assert filepath.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
 
         if(!filepath.isFile()) return Optional.empty();
@@ -85,7 +85,7 @@ abstract class AbstractRepository {
     }
 
     protected File[] listFiles(File basepath){
-        log.debug("LIST-DIR: {}", basepath);
+        if(log.isDebugEnabled()) log.debug("LIST-DIR: {}", basepath);
 
         if(basepath == null || !basepath.isDirectory()) return new File[0];
 

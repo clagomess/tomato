@@ -31,12 +31,12 @@ public class CacheManager<K, V> {
             TaskFI<V, E> doTaskIfAbsent
     ) throws E {
         if(cache.containsKey(key)) {
-            log.debug("Cache HIT: {}", key);
+            if(log.isDebugEnabled()) log.debug("Cache HIT: {}", key);
             hitCount.computeIfAbsent(key, k -> new AtomicInteger()).incrementAndGet();
             return cache.get(key);
         }
 
-        log.debug("Cache Miss: {}", key);
+        if(log.isDebugEnabled()) log.debug("Cache Miss: {}", key);
 
         V result = doTaskIfAbsent.run();
         cache.put(key, result);
@@ -61,7 +61,7 @@ public class CacheManager<K, V> {
     public void evict(K key) {
         if(!cache.containsKey(key)) return;
 
-        log.debug("Cache Evict: {}", key);
+        if(log.isDebugEnabled()) log.debug("Cache Evict: {}", key);
         hitCount.remove(key);
         missCount.remove(key);
         cache.remove(key);
