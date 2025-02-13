@@ -1,21 +1,22 @@
 package com.github.clagomess.tomato.ui.workspace.list;
 
+import com.github.clagomess.tomato.controller.workspace.list.WorkspaceListFrameController;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
-import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
+import static javax.swing.SwingUtilities.invokeLater;
 
 public class WorkspaceListFrame extends JFrame {
     private final JPanel rowsPanel;
-
-    private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
+    private final WorkspaceListFrameController controller = new WorkspaceListFrameController();
 
     public WorkspaceListFrame(Component parent){
         setTitle("Edit Workspaces");
@@ -42,12 +43,21 @@ public class WorkspaceListFrame extends JFrame {
         add(scrollPane, "width ::100%, height 100%");
 
         new WaitExecution(this, () -> {
-            workspaceRepository.list().forEach(this::addRow);
+            controller.refresh(this::refresh);
         }).execute();
+
+        controller.addOnChangeListener(this::refresh);
 
         pack();
         setLocationRelativeTo(parent);
         setVisible(true);
+    }
+
+    private void refresh(List<WorkspaceDto> rows){
+        invokeLater(() -> {
+            rowsPanel.removeAll();
+            rows.forEach(this::addRow);
+        });
     }
 
     private void addRow(WorkspaceDto item){
@@ -56,5 +66,11 @@ public class WorkspaceListFrame extends JFrame {
         rowsPanel.add(row, "wrap");
         rowsPanel.revalidate();
         rowsPanel.repaint();
+    }
+
+    @Override
+    public void dispose(){
+        controller.dispose();
+        super.dispose();
     }
 }

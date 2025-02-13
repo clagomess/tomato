@@ -13,5 +13,13 @@ public class WorkspacePublisher {
     private WorkspacePublisher() {}
 
     private final NoKeyPublisher<WorkspaceDto> onSwitch = new NoKeyPublisher<>();
-    private final KeyPublisher<String, PublisherEvent<WorkspaceDto>> onChange = new KeyPublisher<>();
+
+    private final NoKeyPublisher<PublisherEvent<WorkspaceDto>> onChangeList = new NoKeyPublisher<>();
+    private final KeyPublisher<String, PublisherEvent<WorkspaceDto>> onChange = new KeyPublisher<>(){
+        @Override
+        public void publish(String key, PublisherEvent<WorkspaceDto> event) {
+            super.publish(key, event);
+            onChangeList.publish(event);
+        }
+    };
 }

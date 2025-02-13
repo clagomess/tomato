@@ -47,6 +47,8 @@ public class CollectionTreeUI extends JPanel {
         WorkspacePublisher.getInstance()
                 .getOnSwitch()
                 .addListener(event -> loadCurrentWorkspace());
+
+        // @TODO: change lblCurrentWorkspace when rename workspace
     }
 
     private JScrollPane createCollectionTree() {
