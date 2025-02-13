@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.ui.main.request;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLinkExternalIcon;
-import com.github.clagomess.tomato.ui.request.RequestUI;
+import com.github.clagomess.tomato.ui.request.RequestFrame;
 import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
@@ -93,7 +93,10 @@ public class TabTitleMouseListener extends MouseAdapter {
         var tab = result.get();
 
         new WaitExecution(() -> {
-            new RequestUI(tab.tabContent().getRequestHeadDto());
+            new RequestFrame(
+                    tab.tabContent().getRequestHeadDto(),
+                    tab.tabContent().getRequestDto()
+            );
             parent.removeTab(tab);
         }).execute();
     }

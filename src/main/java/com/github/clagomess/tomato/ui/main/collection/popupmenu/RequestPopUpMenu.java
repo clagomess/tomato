@@ -11,9 +11,9 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLinkExternalI
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSortAlt2Icon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import com.github.clagomess.tomato.ui.request.RequestDeleteUI;
+import com.github.clagomess.tomato.ui.request.RequestFrame;
 import com.github.clagomess.tomato.ui.request.RequestMoveUI;
 import com.github.clagomess.tomato.ui.request.RequestRenameUI;
-import com.github.clagomess.tomato.ui.request.RequestUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +35,9 @@ public class RequestPopUpMenu extends JPopupMenu {
         add(mOpen);
 
         var mOpenDetached = new JMenuItem("Open Detached", new BxLinkExternalIcon());
-        mOpenDetached.addActionListener(e -> new WaitExecution(() -> new RequestUI(requestHead)).execute());
+        mOpenDetached.addActionListener(e -> new WaitExecution(() ->
+                new RequestFrame(requestHead, null)
+        ).execute());
         add(mOpenDetached);
 
         addSeparator();
