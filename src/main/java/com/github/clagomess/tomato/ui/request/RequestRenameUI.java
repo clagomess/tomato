@@ -15,11 +15,7 @@ import java.io.IOException;
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 
 public class RequestRenameUI extends NameUI {
-    private final RequestRepository requestRepository;
-
-    protected RequestRenameUI(RequestRepository requestRepository){
-        this.requestRepository = requestRepository;
-    }
+    protected RequestRepository requestRepository;
 
     public RequestRenameUI(
             Component parent,
@@ -45,8 +41,8 @@ public class RequestRenameUI extends NameUI {
         RequestDto requestDto = requestRepository.load(requestHead)
                 .orElseThrow();
 
-        requestDto.setName(this.txtName.getText());
-        requestHead.setName(this.txtName.getText());
+        requestDto.setName(getTxtName().getText());
+        requestHead.setName(getTxtName().getText());
 
         requestRepository.save(
                 requestHead.getPath(),

@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.GET;
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.POST;
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
@@ -24,10 +26,10 @@ public class RequestUITest {
 
     private TabKey tabKey;
     private RequestHeadDto requestHead;
-    private final RequestUI requestUI = Mockito.spy(new RequestUI());
+    private final RequestUI requestUI = Mockito.mock(RequestUI.class);
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws Exception {
         requestHead = new RequestHeadDto();
         requestHead.setId(RandomStringUtils.secure().nextAlphanumeric(8));
         requestHead.setName("aaa");
@@ -36,6 +38,20 @@ public class RequestUITest {
         requestHead.getParent().setId(RandomStringUtils.secure().nextAlphanumeric(8));
 
         tabKey = new TabKey(requestHead.getId());
+
+        // mocks
+        Mockito.reset(requestUI);
+        requestUI.dispose = new ArrayList<>();
+
+        Mockito.doCallRealMethod()
+                .when(requestUI)
+                .setTitle(Mockito.any());
+        Mockito.doCallRealMethod()
+                .when(requestUI)
+                .getTitle();
+        Mockito.doCallRealMethod()
+                .when(requestUI)
+                .dispose();
     }
 
     @AfterEach
@@ -51,6 +67,9 @@ public class RequestUITest {
 
     @Test
     public void trigger_requestPublisher_OnChange(){
+        Mockito.doCallRealMethod().when(requestUI)
+                .addOnChangeListener(Mockito.any());
+
         requestUI.addOnChangeListener(requestHead);
 
         var requestHeadUpdate = new RequestHeadDto();
@@ -68,6 +87,9 @@ public class RequestUITest {
 
     @Test
     public void trigger_requestPublisher_OnStaging(){
+        Mockito.doCallRealMethod().when(requestUI)
+                .addOnStagingListener(Mockito.any(), Mockito.any());
+
         requestUI.addOnStagingListener(tabKey, requestHead);
         requestPublisher.getOnStaging().publish(tabKey, true);
 

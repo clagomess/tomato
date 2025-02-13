@@ -21,9 +21,7 @@ import java.util.List;
 
 @Slf4j
 public class RequestUI extends JFrame {
-    private final List<Runnable> dispose = new ArrayList<>(3);
-
-    protected RequestUI(){}
+    protected List<Runnable> dispose = new ArrayList<>(3);
 
     public RequestUI(
             RequestHeadDto requestHead
@@ -92,6 +90,7 @@ public class RequestUI extends JFrame {
     @Override
     public void dispose() {
         dispose.forEach(Runnable::run);
+        if(GraphicsEnvironment.isHeadless()) return;
         super.dispose();
     }
 }

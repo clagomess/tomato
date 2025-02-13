@@ -1,16 +1,16 @@
 package com.github.clagomess.tomato.ui.component;
 
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 
+@Getter
 public abstract class NameUI extends JFrame {
     protected final JButton btnSave = new JButton("Save");
     protected final JTextField txtName = new JTextField();
-
-    protected NameUI(){}
 
     public NameUI(Component parent){
         setTitle("Rename");
