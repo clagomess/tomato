@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.main.collection;
 
-import com.github.clagomess.tomato.io.repository.CollectionRepository;
-import com.github.clagomess.tomato.publisher.WorkspacePublisher;
+import com.github.clagomess.tomato.controller.main.collection.CollectionTreeController;
+import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxHomeIcon;
 import com.github.clagomess.tomato.ui.environment.EnvironmentComboBox;
@@ -24,6 +24,8 @@ public class CollectionTree extends JPanel {
     private JTree tree;
     private final JLabel lblCurrentWorkspace = new JLabel(new BxHomeIcon());
 
+    private final CollectionTreeController controller = new CollectionTreeController();
+
     public CollectionTree() {
         setLayout(new MigLayout(
                 "insets 5",
@@ -44,11 +46,7 @@ public class CollectionTree extends JPanel {
             repaint();
         });
 
-        WorkspacePublisher.getInstance()
-                .getOnSwitch()
-                .addListener(event -> loadCurrentWorkspace());
-
-        // @TODO: change lblCurrentWorkspace when rename workspace
+        controller.addOnSwitchListener(this::loadCurrentWorkspace);
     }
 
     private JScrollPane createCollectionTree() {
@@ -71,7 +69,9 @@ public class CollectionTree extends JPanel {
 
     private void loadCurrentWorkspace(){
         try {
-            var rootCollection = new CollectionRepository().getWorkspaceCollectionTree();
+            CollectionTreeDto rootCollection = controller.loadCurrentWorkspace(workspace -> {
+                invokeLater(() -> lblCurrentWorkspace.setText(workspace.getName()));
+            });
 
             invokeLater(() -> lblCurrentWorkspace.setText(rootCollection.getName()));
 
