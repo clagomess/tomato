@@ -48,6 +48,10 @@ public class RequestFrame extends JFrame {
 
         controller.addOnChangeListener(requestHead, this::setTitle);
 
+        if(requestSplitPaneUI.getRequestStagingMonitor().isDiferent()) {
+            setTitle("[*] " + loadedRequest.getName());
+        }
+
         pack();
         setLocationRelativeTo(
                 Arrays.stream(Window.getWindows())

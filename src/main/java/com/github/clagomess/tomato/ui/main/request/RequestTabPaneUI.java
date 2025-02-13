@@ -96,13 +96,13 @@ public class RequestTabPaneUI extends JTabbedPane {
         );
 
         // setup tab title
-        var tabTitle = new TabTitleUI(
+        var tabTitle = new TabTitle(
                 this,
-                requestSplitPaneUI.getKey(),
+                requestSplitPaneUI,
                 requestHeadDto,
-                requestDto
+                requestDto,
+                l -> removeTab(requestSplitPaneUI.getKey())
         );
-        tabTitle.onClose(l -> removeTab(requestSplitPaneUI.getKey()));
 
         setTabComponentAt(indexOfTab(tabId), tabTitle);
         tabs.add(new Tab(
@@ -133,7 +133,7 @@ public class RequestTabPaneUI extends JTabbedPane {
 
     protected record Tab(
             TabKey tabKey,
-            TabTitleUI tabTitleUI,
+            TabTitle tabTitleUI,
             RequestSplitPaneUI tabContent
     ) { }
 }

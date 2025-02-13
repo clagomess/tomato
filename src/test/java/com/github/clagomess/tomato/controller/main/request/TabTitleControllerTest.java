@@ -1,28 +1,32 @@
-package com.github.clagomess.tomato.ui.main.request;
+package com.github.clagomess.tomato.controller.main.request;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.publisher.key.RequestKey;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.GET;
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.POST;
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TabTitleUITest {
+public class TabTitleControllerTest {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     private TabKey tabKey;
     private RequestHeadDto requestHead;
-    private TabTitleUI tabTitleUI;
+    private final TabTitleController controller = Mockito.spy(TabTitleController.class);
 
     @BeforeEach
     public void setup() {
@@ -36,12 +40,13 @@ public class TabTitleUITest {
 
         tabKey = new TabKey(request.getId());
 
-        tabTitleUI = new TabTitleUI(null, tabKey, requestHead, request);
+        // mocks
+        Mockito.reset(controller);
     }
 
     @AfterEach
     public void dispose(){
-        tabTitleUI.dispose();
+        controller.dispose();
 
         assertFalse(requestPublisher.getOnChange()
                 .containsListener(new RequestKey(requestHead)));
@@ -51,9 +56,17 @@ public class TabTitleUITest {
     }
 
     @Test
-    public void trigger_requestPublisher_OnChange(){
+    public void addOnChangeListener_trigger(){
+        AtomicReference<HttpMethodEnum> methodResult = new AtomicReference<>();
+        AtomicReference<String> nameResult = new AtomicReference<>();
+
+        controller.addOnChangeListener(requestHead, (method, name) -> {
+            methodResult.set(method);
+            nameResult.set(name);
+        });
+
         var requestHeadUpdate = new RequestHeadDto();
-        requestHeadUpdate.setId("r_a");
+        requestHeadUpdate.setId(requestHead.getId());
         requestHeadUpdate.setName("bbb");
         requestHeadUpdate.setMethod(POST);
 
@@ -63,19 +76,22 @@ public class TabTitleUITest {
         );
 
         assertEquals(
-                requestHeadUpdate.getMethod().getIcon().getClass(),
-                tabTitleUI.httpMethod.getIcon().getClass()
+                requestHeadUpdate.getMethod(),
+                methodResult.get()
         );
-        assertEquals(requestHeadUpdate.getName(), tabTitleUI.title.getText());
+        assertEquals(
+                requestHeadUpdate.getName(),
+                nameResult.get()
+        );
     }
 
     @Test
-    public void trigger_requestPublisher_OnStaging(){
+    public void addOnStagingListener_trigger(){
+        AtomicBoolean result = new AtomicBoolean();
+        controller.addOnStagingListener(tabKey, result::set);
+
         requestPublisher.getOnStaging().publish(tabKey, true);
 
-        assertEquals(
-                tabTitleUI.iconHasChanged.getClass(),
-                tabTitleUI.changeIcon.getIcon().getClass()
-        );
+        assertTrue(result.get());
     }
 }
