@@ -12,11 +12,11 @@ import javax.swing.border.MatteBorder;
 
 public class RowComponent extends JPanel {
     public RowComponent(
-            WorkspaceListUI parent,
+            WorkspaceListFrame parent,
             WorkspaceDto workspace
     ) {
         setLayout(new MigLayout(
-                "insets 0",
+                "insets 2",
                 "[grow,fill]0[]0[]0"
         ));
 

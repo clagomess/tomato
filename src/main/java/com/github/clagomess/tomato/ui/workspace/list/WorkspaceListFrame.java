@@ -12,12 +12,12 @@ import java.awt.*;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
-public class WorkspaceListUI extends JFrame {
+public class WorkspaceListFrame extends JFrame {
     private final JPanel rowsPanel;
 
     private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
 
-    public WorkspaceListUI(Component parent){
+    public WorkspaceListFrame(Component parent){
         setTitle("Edit Workspaces");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 400));
@@ -55,5 +55,6 @@ public class WorkspaceListUI extends JFrame {
 
         rowsPanel.add(row, "wrap");
         rowsPanel.revalidate();
+        rowsPanel.repaint();
     }
 }
