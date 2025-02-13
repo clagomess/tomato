@@ -19,12 +19,12 @@ import static javax.swing.SwingUtilities.invokeLater;
 
 @Getter
 @Setter
-public class CollectionTreeUI extends JPanel {
+public class CollectionTree extends JPanel {
     private DefaultTreeModel treeModel;
     private JTree tree;
     private final JLabel lblCurrentWorkspace = new JLabel(new BxHomeIcon());
 
-    public CollectionTreeUI() {
+    public CollectionTree() {
         setLayout(new MigLayout(
                 "insets 5",
                 "[grow, fill]"
