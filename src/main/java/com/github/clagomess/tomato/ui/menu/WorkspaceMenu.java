@@ -4,7 +4,7 @@ import com.github.clagomess.tomato.ui.MainUI;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTransferAltIcon;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceNewUI;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceSwitchUI;
-import com.github.clagomess.tomato.ui.workspace.list.WorkspaceListUI;
+import com.github.clagomess.tomato.ui.workspace.list.WorkspaceListFrame;
 
 import javax.swing.*;
 
@@ -21,7 +21,7 @@ public class WorkspaceMenu extends JMenu {
         add(mNew);
 
         var mEdit = new JMenuItem("Edit Workspace");
-        mEdit.addActionListener(l -> new WorkspaceListUI(mainUI));
+        mEdit.addActionListener(l -> new WorkspaceListFrame(mainUI));
         add(mEdit);
     }
 }

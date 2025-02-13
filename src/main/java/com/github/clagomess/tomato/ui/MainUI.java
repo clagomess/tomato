@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui;
 
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
-import com.github.clagomess.tomato.ui.main.collection.CollectionTreeUI;
+import com.github.clagomess.tomato.ui.main.collection.CollectionTree;
 import com.github.clagomess.tomato.ui.main.request.RequestTabPaneUI;
 import com.github.clagomess.tomato.ui.menu.CollectionMenu;
 import com.github.clagomess.tomato.ui.menu.EnvironmentMenu;
@@ -29,7 +29,7 @@ public class MainUI extends JFrame {
         add(splitPane, "height 100%");
 
         invokeLater(() -> {
-            splitPane.setLeftComponent(new CollectionTreeUI());
+            splitPane.setLeftComponent(new CollectionTree());
             splitPane.setDividerLocation(250);
             splitPane.revalidate();
             splitPane.repaint();

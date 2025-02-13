@@ -3,8 +3,10 @@ package com.github.clagomess.tomato.ui.workspace.list;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.IconButton;
+import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
+import com.github.clagomess.tomato.ui.workspace.WorkspaceRenameFrame;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -12,11 +14,11 @@ import javax.swing.border.MatteBorder;
 
 public class RowComponent extends JPanel {
     public RowComponent(
-            WorkspaceListUI parent,
+            WorkspaceListFrame parent,
             WorkspaceDto workspace
     ) {
         setLayout(new MigLayout(
-                "insets 0",
+                "insets 2",
                 "[grow,fill]0[]0[]0"
         ));
 
@@ -25,8 +27,11 @@ public class RowComponent extends JPanel {
         // edit
         var btnEdit = new IconButton(new BxEditIcon(), "Edit workspace");
         btnEdit.addActionListener(l -> {
-            System.out.println("action edit");
-        }); // @TODO: impl. workspace edit
+            new WaitExecution(parent, btnEdit, () -> new WorkspaceRenameFrame(
+                    parent,
+                    workspace
+            )).execute();
+        });
 
         // delete
         var btnDelete = new IconButton(new BxTrashIcon(), "Delete workspace");
