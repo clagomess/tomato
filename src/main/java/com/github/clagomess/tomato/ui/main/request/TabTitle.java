@@ -27,7 +27,7 @@ class TabTitle extends JPanel {
 
     public TabTitle(
             @Nullable RequestTabbedPane parent,
-            @NotNull RequestSplitPaneUI requestSplitPaneUI,
+            @NotNull RequestSplitPane requestSplitPane,
             @Nullable RequestHeadDto requestHead,
             @NotNull RequestDto request,
             @NotNull ActionListener onClose
@@ -38,7 +38,7 @@ class TabTitle extends JPanel {
         add(httpMethod);
         add(title, "width ::200");
         add(btnClose);
-        addMouseListener(new TabTitleMouseListener(requestSplitPaneUI.getKey(), parent));
+        addMouseListener(new TabTitleMouseListener(requestSplitPane.getKey(), parent));
         setToolTipText(request.getName());
 
         // set data
@@ -47,7 +47,7 @@ class TabTitle extends JPanel {
         btnClose.addActionListener(onClose);
         btnClose.addActionListener(l -> dispose());
 
-        if(requestSplitPaneUI.getRequestStagingMonitor().isDiferent()){
+        if(requestSplitPane.getRequestStagingMonitor().isDiferent()){
             changeIcon.setIcon(iconHasChanged);
         }
 
@@ -56,7 +56,7 @@ class TabTitle extends JPanel {
             title.setText(name);
         });
 
-        controller.addOnStagingListener(requestSplitPaneUI.getKey(), hasChanged -> {
+        controller.addOnStagingListener(requestSplitPane.getKey(), hasChanged -> {
             changeIcon.setIcon(hasChanged ? iconHasChanged : iconHasNotChanged);
         });
     }

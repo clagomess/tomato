@@ -61,13 +61,13 @@ public class RequestTabbedPane extends JTabbedPane {
             @NotNull RequestDto requestDto
     ){
         // add content
-        var requestSplitPaneUI = new RequestSplitPaneUI(requestHeadDto, requestDto);
-        var tabId = requestSplitPaneUI.getKey().getUuid().toString();
+        var requestSplitPane = new RequestSplitPane(requestHeadDto, requestDto);
+        var tabId = requestSplitPane.getKey().getUuid().toString();
 
         insertTab(
                 tabId,
                 null,
-                requestSplitPaneUI,
+                requestSplitPane,
                 null,
                 getTabCount() - 1
         );
@@ -75,17 +75,17 @@ public class RequestTabbedPane extends JTabbedPane {
         // setup tab title
         var tabTitle = new TabTitle(
                 this,
-                requestSplitPaneUI,
+                requestSplitPane,
                 requestHeadDto,
                 requestDto,
-                l -> removeTab(requestSplitPaneUI.getKey())
+                l -> removeTab(requestSplitPane.getKey())
         );
 
         setTabComponentAt(indexOfTab(tabId), tabTitle);
         tabs.add(new Tab(
-                requestSplitPaneUI.getKey(),
+                requestSplitPane.getKey(),
                 tabTitle,
-                requestSplitPaneUI
+                requestSplitPane
         ));
 
         // select
@@ -111,7 +111,7 @@ public class RequestTabbedPane extends JTabbedPane {
 
         var tabId = tab.tabKey().getUuid().toString();
         removeTabAt(indexOfTab(tabId));
-        tab.tabTitleUI().dispose();
+        tab.tabTitle().dispose();
         tab.tabContent().dispose();
         tabs.remove(tab);
     }
@@ -125,7 +125,7 @@ public class RequestTabbedPane extends JTabbedPane {
 
     protected record Tab(
             TabKey tabKey,
-            TabTitle tabTitleUI,
-            RequestSplitPaneUI tabContent
+            TabTitle tabTitle,
+            RequestSplitPane tabContent
     ) { }
 }

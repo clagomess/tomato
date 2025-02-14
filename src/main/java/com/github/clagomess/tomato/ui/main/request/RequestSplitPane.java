@@ -34,7 +34,7 @@ import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static javax.swing.SwingUtilities.invokeLater;
 
 @Getter
-public class RequestSplitPaneUI extends JPanel {
+public class RequestSplitPane extends JPanel {
     private final TabKey key;
     private RequestHeadDto requestHeadDto;
     private final RequestDto requestDto;
@@ -63,7 +63,7 @@ public class RequestSplitPaneUI extends JPanel {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
 
-    public RequestSplitPaneUI(
+    public RequestSplitPane(
             RequestHeadDto requestHeadDto,
             RequestDto requestDto
     ) {

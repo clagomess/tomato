@@ -22,11 +22,11 @@ public class RequestTabContent extends JPanel {
     private final RequestDto requestDto;
     private final RequestStagingMonitor requestStagingMonitor;
 
-    private KeyValue<ContentTypeKeyValueItemDto> queryParamsUI;
-    private KeyValue<KeyValueItemDto> pathVariablesUI;
+    private KeyValue<ContentTypeKeyValueItemDto> queryParams;
+    private KeyValue<KeyValueItemDto> pathVariables;
     private Body body;
-    private KeyValue<KeyValueItemDto> headersUI;
-    private KeyValue<KeyValueItemDto> cookiesUI;
+    private KeyValue<KeyValueItemDto> headers;
+    private KeyValue<KeyValueItemDto> cookies;
 
     public RequestTabContent(
             RequestDto requestDto,
@@ -83,7 +83,7 @@ public class RequestTabContent extends JPanel {
     }
 
     private void createTabQueryParams(JTabbedPane tabbedPane){
-        queryParamsUI = new KeyValue<>(
+        queryParams = new KeyValue<>(
                 requestDto.getUrlParam().getQuery(),
                 ContentTypeKeyValueItemDto.class,
                 requestStagingMonitor,
@@ -95,7 +95,7 @@ public class RequestTabContent extends JPanel {
                         .build()
         );
 
-        tabbedPane.setComponentAt(0, queryParamsUI);
+        tabbedPane.setComponentAt(0, queryParams);
     }
 
     private void createTabTitlePathVariables(JTabbedPane tabbedPane){
@@ -109,7 +109,7 @@ public class RequestTabContent extends JPanel {
     }
 
     private void createTabPathVariables(JTabbedPane tabbedPane){
-        pathVariablesUI = new KeyValue<>(
+        pathVariables = new KeyValue<>(
                 requestDto.getUrlParam().getPath(),
                 KeyValueItemDto.class,
                 requestStagingMonitor,
@@ -121,7 +121,7 @@ public class RequestTabContent extends JPanel {
                         .build()
         );
 
-        tabbedPane.setComponentAt(1, pathVariablesUI);
+        tabbedPane.setComponentAt(1, pathVariables);
     }
 
     private void createTabTitleBody(JTabbedPane tabbedPane){
@@ -154,13 +154,13 @@ public class RequestTabContent extends JPanel {
     }
 
     private void createTabHeaders(JTabbedPane tabbedPane){
-        headersUI = new KeyValue<>(
+        headers = new KeyValue<>(
                 requestDto.getHeaders(),
                 KeyValueItemDto.class,
                 requestStagingMonitor
         );
 
-        tabbedPane.setComponentAt(3, headersUI);
+        tabbedPane.setComponentAt(3, headers);
     }
 
     private void createTabTitleCookies(JTabbedPane tabbedPane){
@@ -174,13 +174,13 @@ public class RequestTabContent extends JPanel {
     }
 
     private void createTabCookies(JTabbedPane tabbedPane){
-        cookiesUI = new KeyValue<>(
+        cookies = new KeyValue<>(
                 requestDto.getCookies(),
                 KeyValueItemDto.class,
                 requestStagingMonitor
         );
 
-        tabbedPane.setComponentAt(4, cookiesUI);
+        tabbedPane.setComponentAt(4, cookies);
     }
 
     private void setSelectedTabWithContent(JTabbedPane tabbedPane){
@@ -210,10 +210,10 @@ public class RequestTabContent extends JPanel {
     }
 
     public void dispose(){
-        if(queryParamsUI != null) queryParamsUI.dispose();
-        if(pathVariablesUI != null) pathVariablesUI.dispose();
+        if(queryParams != null) queryParams.dispose();
+        if(pathVariables != null) pathVariables.dispose();
         if(body != null) body.dispose();
-        if(headersUI != null) headersUI.dispose();
-        if(cookiesUI != null) cookiesUI.dispose();
+        if(headers != null) headers.dispose();
+        if(cookies != null) cookies.dispose();
     }
 }
