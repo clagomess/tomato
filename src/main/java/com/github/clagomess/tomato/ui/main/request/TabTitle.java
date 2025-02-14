@@ -26,7 +26,7 @@ class TabTitle extends JPanel {
     private final TabTitleController controller = new TabTitleController();
 
     public TabTitle(
-            @Nullable RequestTabPaneUI parent,
+            @Nullable RequestTabbedPane parent,
             @NotNull RequestSplitPaneUI requestSplitPaneUI,
             @Nullable RequestHeadDto requestHead,
             @NotNull RequestDto request,
