@@ -35,14 +35,24 @@ public class DebugThreadsFrame extends JFrame {
             console.reset();
 
             Thread.getAllStackTraces().keySet().stream()
-                    .sorted(Comparator.comparing(item -> item.getThreadGroup().getName() + item.getName()))
+                    .sorted(Comparator.comparing(item -> {
+                        if (item.getThreadGroup() != null) {
+                            return item.getThreadGroup().getName() + item.getName();
+                        } else {
+                            return item.getName();
+                        }
+                    }))
                     .forEach(thread -> {
                         try {
+                            String groupName = thread.getThreadGroup() != null ?
+                                    thread.getThreadGroup().getName() :
+                                    "";
+
                             console.getDocument().insertString(
                                     console.getDocument().getLength(),
                                     String.format(
                                             "[%s] prior: %s => %s - %s\n",
-                                            thread.getThreadGroup().getName(),
+                                            groupName,
                                             thread.getPriority(),
                                             thread.getState(),
                                             thread.getName()
