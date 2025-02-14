@@ -122,5 +122,6 @@ public class WorkspaceRepository extends AbstractRepository {
     public void delete(WorkspaceDto dto) throws IOException {
         File workspaceDir = getWorkspaceDirectory(dto.getId());
         deleteDirectory(workspaceDir);
+        cacheList.evict();
     }
 }

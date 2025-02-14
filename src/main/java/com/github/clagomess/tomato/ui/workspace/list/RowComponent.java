@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
+import com.github.clagomess.tomato.ui.workspace.WorkspaceDeleteDialog;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceRenameFrame;
 import net.miginfocom.swing.MigLayout;
 
@@ -36,9 +37,11 @@ public class RowComponent extends JPanel {
         // delete
         var btnDelete = new IconButton(new BxTrashIcon(), "Delete workspace");
         btnDelete.addActionListener(l -> {
-            System.out.println("action deleted");
-        }); // @TODO: impl. workspace delete
-        btnDelete.setEnabled(true);
+            new WaitExecution(parent, btnDelete, () -> new WorkspaceDeleteDialog(
+                    parent,
+                    workspace
+            ).showConfirmDialog()).execute();
+        });
 
         add(new JLabel(workspace.getName()));
         add(btnEdit);
