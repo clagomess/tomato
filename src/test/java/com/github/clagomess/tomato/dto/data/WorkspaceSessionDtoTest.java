@@ -7,9 +7,13 @@ import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import com.networknt.schema.JsonSchema;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static com.github.clagomess.tomato.enums.TomatoJsonSchemaEnum.WORKSPACE_SESSION;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WorkspaceSessionDtoTest {
     private final JsonSchema jsonSchema = JsonSchemaBuilder.getTomatoJsonSchema(WORKSPACE_SESSION);
@@ -37,5 +41,27 @@ public class WorkspaceSessionDtoTest {
 
         Assertions.assertThat(dtoA)
                 .isEqualTo(dtoB);
+    }
+
+    @Nested
+    class Request {
+        @Test
+        public void equalsHashCode(){
+            var file = new File("target");
+            var dtoA = new WorkspaceSessionDto.Request();
+            dtoA.setFilepath(file);
+
+            var dtoB = new WorkspaceSessionDto.Request();
+            dtoB.setFilepath(file);
+
+            Assertions.assertThat(dtoA)
+                    .isEqualTo(dtoB);
+        }
+
+        @Test
+        public void getFilepath_whenNull_expected_throws(){
+            var dtoA = new WorkspaceSessionDto.Request();
+            assertThrows(IllegalStateException.class, dtoA::getFilepath);
+        }
     }
 }
