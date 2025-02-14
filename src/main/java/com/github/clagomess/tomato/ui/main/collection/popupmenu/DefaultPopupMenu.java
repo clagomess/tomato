@@ -14,7 +14,7 @@ public class DefaultPopupMenu extends JPopupMenu {
         var mNewRequest = new JMenuItem("New Request");
         mNewRequest.addActionListener(e -> RequestPublisher.getInstance()
                 .getOnLoad()
-                .publish(new PublisherEvent(NEW, null)));
+                .publish(new PublisherEvent<>(NEW, null)));
         add(mNewRequest);
 
         var mNewCollection = new JMenuItem("New Collection");
