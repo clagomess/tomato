@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.io.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.ConfigurationDto;
+import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 public class AbstractRepositoryTest extends RepositoryStubs {
@@ -46,6 +48,60 @@ public class AbstractRepositoryTest extends RepositoryStubs {
     }
 
     @Test
+    public void move_whenInvalidTarget() throws IOException {
+        var source = new File(mockDataDir, "move_whenInvalidTarget.json");
+        abstractRepository.writeFile(source, new WorkspaceDto());
+
+        assertThrows(IOException.class, () -> abstractRepository.move(
+                source,
+                new File(mockDataDir, "invalid-target")
+        ));
+    }
+
+    @Test
+    public void move_whenInvalidSource() {
+        var source = new File(mockDataDir, "move_whenInvalidSource.json");
+        var target = new File(mockDataDir, "valid-target");
+        assertTrue(target.mkdirs());
+
+        assertThrows(IOException.class, () -> abstractRepository.move(
+                source,
+                target
+        ));
+    }
+
+    @Test
+    public void move_allValid() throws IOException {
+        var source = new File(mockDataDir, "move_allValid.json");
+        abstractRepository.writeFile(source, new WorkspaceDto());
+        var target = new File(mockDataDir, "valid-target");
+        assertTrue(target.mkdirs());
+
+        abstractRepository.move(source, target);
+
+        Assertions.assertThat(new File(target, source.getName()))
+                .isFile();
+    }
+
+    @Test
+    public void deleteDirectory() throws IOException {
+        assertTrue(new File(mockDataDir, "bbb").mkdirs());
+        abstractRepository.writeFile(
+                new File(mockDataDir, "bbb/xxx.json"),
+                new WorkspaceDto()
+        );
+        assertTrue(new File(mockDataDir, "aaa").mkdirs());
+        abstractRepository.writeFile(
+                new File(mockDataDir, "aaa.json"),
+                new WorkspaceDto()
+        );
+
+        abstractRepository.deleteDirectory(mockDataDir);
+        Assertions.assertThat(mockDataDir)
+                .doesNotExist();
+    }
+
+    @Test
     public void getHomeDir(){
         assertThrows(AssertionError.class, abstractRepository::getHomeDir);
     }
@@ -57,7 +113,7 @@ public class AbstractRepositoryTest extends RepositoryStubs {
         ).isEmpty();
 
         Assertions.assertThat(
-                abstractRepository.listFiles(new File("xyz"))
+                abstractRepository.listFiles(new File(mockDataDir, "xyz"))
         ).isEmpty();
     }
 }

@@ -114,4 +114,15 @@ public class WorkspaceRepositoryTest extends RepositoryStubs {
         var result = workspaceRepository.getDataSessionWorkspace();
         assertEquals(result.getId(), workspace.getId());
     }
+
+    @Test
+    public void delete() throws IOException {
+        var workspace = new WorkspaceDto();
+        workspaceRepository.save(workspace);
+
+        workspaceRepository.delete(workspace);
+        var workspaceDir = new File(mockDataDir, "workspace-" + workspace.getId());
+        Assertions.assertThat(workspaceDir)
+                .doesNotExist();
+    }
 }

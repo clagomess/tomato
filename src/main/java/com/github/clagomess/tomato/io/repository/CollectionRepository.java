@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -108,18 +105,6 @@ public class CollectionRepository extends AbstractRepository {
                 .sorted();
     }
 
-    public CollectionTreeDto getCollectionRootTree(
-            CollectionTreeDto parent,
-            String id
-    ){
-        return getCollectionChildrenTree(
-                parent
-        )
-                .filter(item -> item.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
-    }
-
     public CollectionTreeDto getWorkspaceCollectionTree() throws IOException {
         WorkspaceDto workspace = workspaceRepository.getDataSessionWorkspace();
 
@@ -137,30 +122,10 @@ public class CollectionRepository extends AbstractRepository {
             CollectionTreeDto source,
             CollectionTreeDto target
     ) throws IOException {
-        if(log.isDebugEnabled()) log.debug("MOVE: {} -> {}", source.getPath(), target.getPath());
-
-        if(!source.getPath().renameTo(new File(target.getPath(), source.getPath().getName()))){
-            throw new IOException(String.format(
-                    "Fail to move %s to %s",
-                    source.getPath(),
-                    target.getPath()
-            ));
-        }
+        move(source.getPath(), target.getPath());
     }
 
     public void delete(CollectionTreeDto tree) throws IOException {
-        log.info("TO-DELETE: {}", tree.getPath());
-
-        try(Stream<Path> paths = Files.walk(tree.getPath().toPath())){
-            paths.sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(item -> {
-                        try {
-                            deleteFile(item);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-        }
+        deleteDirectory(tree.getPath());
     }
 }

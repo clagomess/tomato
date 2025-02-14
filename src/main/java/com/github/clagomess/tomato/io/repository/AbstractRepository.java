@@ -5,18 +5,27 @@ import com.github.clagomess.tomato.dto.data.MetadataDto;
 import com.github.clagomess.tomato.util.CacheManager;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Slf4j
 abstract class AbstractRepository {
-    private final String msgNotAllowedOnTest = "No allowed outside dir in test mode";
+    private void verifyOperationAllowedInTestMode(@Nullable File path) {
+        if(path == null) return;
+        assert path.getAbsolutePath().contains("target") :
+                "No allowed outside dir in test mode";
+    }
 
     protected File createDirectoryIfNotExists(File path){
-        assert path.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
+        verifyOperationAllowedInTestMode(path);
 
         if(path.isDirectory()){
             if(log.isDebugEnabled()) log.debug("DIR: {}", path);
@@ -33,7 +42,7 @@ abstract class AbstractRepository {
 
     protected <T> Optional<T> readFile(File filepath, TypeReference<T> type) throws IOException {
         if(log.isDebugEnabled()) log.debug("READ: {}", filepath);
-        assert filepath.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
+        verifyOperationAllowedInTestMode(filepath);
 
         if(!filepath.isFile()) return Optional.empty();
 
@@ -50,7 +59,7 @@ abstract class AbstractRepository {
             T content
     ) throws IOException {
         log.info("WRITE: {}", filepath);
-        assert filepath.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
+        verifyOperationAllowedInTestMode(filepath);
 
         content.setUpdateTime(LocalDateTime.now());
 
@@ -61,12 +70,47 @@ abstract class AbstractRepository {
         }
     }
 
+    protected void move(File sourcePath, File targetPath) throws IOException {
+        log.info("MOVE: {} -> {}", sourcePath, targetPath);
+        verifyOperationAllowedInTestMode(sourcePath);
+        verifyOperationAllowedInTestMode(targetPath);
+
+        if(!targetPath.isDirectory()){
+            throw new IOException("Target path is not a directory");
+        }
+
+        if(!sourcePath.renameTo(new File(targetPath, sourcePath.getName()))){
+            throw new IOException(String.format(
+                    "Fail to move %s to %s",
+                    sourcePath,
+                    targetPath
+            ));
+        }
+    }
+
     protected void deleteFile(File filepath) throws IOException {
         log.info("DELETE: {}", filepath);
-        assert filepath.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
+        verifyOperationAllowedInTestMode(filepath);
 
         if(!filepath.delete()){
             throw new IOException(filepath + " cannot be deleted");
+        }
+    }
+
+    protected void deleteDirectory(File filepath) throws IOException {
+        log.info("TO-DELETE: {}", filepath);
+        verifyOperationAllowedInTestMode(filepath);
+
+        try(Stream<Path> paths = Files.walk(filepath.toPath())){
+            paths.sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(item -> {
+                        try {
+                            deleteFile(item);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
         }
     }
 
@@ -86,10 +130,9 @@ abstract class AbstractRepository {
 
     protected File[] listFiles(File basepath){
         if(log.isDebugEnabled()) log.debug("LIST-DIR: {}", basepath);
+        verifyOperationAllowedInTestMode(basepath);
 
         if(basepath == null || !basepath.isDirectory()) return new File[0];
-
-        assert basepath.getAbsolutePath().contains("target") : msgNotAllowedOnTest;
 
         return Objects.requireNonNullElseGet(
                 basepath.listFiles(),

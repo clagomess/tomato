@@ -21,10 +21,8 @@ public class WorkspaceRepository extends AbstractRepository {
     private final DataSessionRepository dataSessionRepository;
 
     public WorkspaceRepository() {
-        this(
-                new ConfigurationRepository(),
-                new DataSessionRepository()
-        );
+        this.configurationRepository = new ConfigurationRepository();
+        this.dataSessionRepository = new DataSessionRepository();
     }
 
     protected File getWorkspaceDirectory(String id) throws IOException {
@@ -119,5 +117,10 @@ public class WorkspaceRepository extends AbstractRepository {
                 .filter(item -> item.getId().equals(dataSession.getWorkspaceId()))
                 .findFirst()
                 .orElseThrow();
+    }
+
+    public void delete(WorkspaceDto dto) throws IOException {
+        File workspaceDir = getWorkspaceDirectory(dto.getId());
+        deleteDirectory(workspaceDir);
     }
 }

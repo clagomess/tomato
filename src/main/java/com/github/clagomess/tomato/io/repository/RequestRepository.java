@@ -85,14 +85,6 @@ public class RequestRepository extends AbstractRepository {
             RequestHeadDto source,
             CollectionTreeDto target
     ) throws IOException {
-        if(log.isDebugEnabled()) log.debug("MOVE: {} -> {}", source.getPath(), target.getPath());
-
-        if(!source.getPath().renameTo(new File(target.getPath(), source.getPath().getName()))){
-            throw new IOException(String.format(
-                    "Fail to move %s to %s",
-                    source,
-                    target
-            ));
-        }
+        move(source.getPath(), target.getPath());
     }
 }
