@@ -1,12 +1,9 @@
 package com.github.clagomess.tomato.ui.main.request;
 
+import com.github.clagomess.tomato.controller.main.request.RequestTabbedPaneController;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.io.repository.RequestRepository;
-import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.publisher.WorkspacePublisher;
-import com.github.clagomess.tomato.publisher.base.EventTypeEnum;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import lombok.Getter;
@@ -15,15 +12,14 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class RequestTabbedPane extends JTabbedPane {
     @Getter
-    private final List<Tab> tabs = new ArrayList<>();
-
-    private final RequestRepository requestRepository = new RequestRepository();
+    private final List<Tab> tabs = new LinkedList<>();
+    private final RequestTabbedPaneController controller = new RequestTabbedPaneController();
 
     public RequestTabbedPane(){
         addNewPlusTab();
@@ -33,21 +29,13 @@ public class RequestTabbedPane extends JTabbedPane {
             if(getSelectedIndex() == getTabCount() - 1) setSelectedIndex(getTabCount() - 2);
         });
 
-        WorkspacePublisher.getInstance()
-                .getOnSwitch()
-                .addListener(event -> {
-                    new ArrayList<>(tabs).forEach(this::removeTab);
-                });
+        controller.addWorkspaceOnSwitchListener(() -> {
+            new ArrayList<>(tabs).forEach(this::removeTab);
+        });
 
-        RequestPublisher.getInstance()
-                .getOnLoad()
-                .addListener(e -> new WaitExecution(() -> {
-                    if(e.getType().equals(EventTypeEnum.NEW)){
-                        addNewTabForNewRequest();
-                    }else{
-                        addNewTabForRequest(e.getEvent());
-                    }
-                }).execute());
+        controller.addRequestOnLoadListener((requestHead, request) -> new WaitExecution(() -> {
+            addNewTab(requestHead, request);
+        }).execute());
     }
 
     private void addNewPlusTab(){
@@ -61,22 +49,11 @@ public class RequestTabbedPane extends JTabbedPane {
         btnPlus.setFocusable(false);
         btnPlus.setMargin(new Insets(0,0,0,0));
         btnPlus.addActionListener(l ->
-                new WaitExecution(this::addNewTabForNewRequest)
+                new WaitExecution(() -> addNewTab(null, new RequestDto()))
                         .execute()
         );
 
         setTabComponentAt(indexOfTab("+"), btnPlus);
-    }
-
-    protected void addNewTabForNewRequest(){
-        addNewTab(null, new RequestDto());
-    }
-
-    protected void addNewTabForRequest(
-            @NotNull RequestHeadDto requestHead
-    ) throws IOException {
-        var request = requestRepository.load(requestHead).orElseThrow();
-        addNewTab(requestHead, request);
     }
 
     protected void addNewTab(
