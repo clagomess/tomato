@@ -14,6 +14,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
+import java.util.concurrent.ForkJoinPool;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
@@ -62,20 +63,20 @@ public class CollectionTree extends JPanel {
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        invokeLater(this::loadCurrentWorkspace);
+        ForkJoinPool.commonPool().submit(this::loadCurrentWorkspace);
 
         return scrollPane;
     }
 
     private void loadCurrentWorkspace(){
         try {
-            CollectionTreeDto rootCollection = controller.loadCurrentWorkspace(workspace -> {
-                invokeLater(() -> lblCurrentWorkspace.setText(workspace.getName()));
-            });
-
-            invokeLater(() -> lblCurrentWorkspace.setText(rootCollection.getName()));
+            CollectionTreeDto rootCollection = controller.loadCurrentWorkspace(workspace ->
+                invokeLater(() -> lblCurrentWorkspace.setText(workspace.getName()))
+            );
 
             invokeLater(() -> {
+                lblCurrentWorkspace.setText(rootCollection.getName());
+
                 if(treeModel.getRoot() instanceof CollectionTreeNode rootNode){
                     rootNode.setParent(null);
                 }
