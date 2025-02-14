@@ -21,7 +21,7 @@ public class WorkspaceListFrameController {
     }
 
     public void addOnChangeListener(RefreshRowsFI refreshRows) {
-        listenerUuid = workspacePublisher.getOnChangeList().addListener(event -> {
+        listenerUuid = workspacePublisher.getOnChangeAny().addListener(event -> {
             try {
                 refresh(refreshRows);
             } catch (IOException e) {
@@ -38,7 +38,7 @@ public class WorkspaceListFrameController {
     public void dispose() {
         if(listenerUuid == null) return;
 
-        workspacePublisher.getOnChangeList()
+        workspacePublisher.getOnChangeAny()
                 .removeListener(listenerUuid);
     }
 

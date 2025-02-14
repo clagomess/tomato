@@ -49,7 +49,7 @@ class EnvDocumentListener implements DocumentListener {
 
         new Thread(this::updateEnvMap, getClass().getSimpleName()).start();
 
-        listenerUuid.add(workspaceSessionPublisher.getOnSave().addListener(event -> {
+        listenerUuid.add(workspaceSessionPublisher.getOnChange().addListener(event -> {
             updateEnvMap();
             updateEnvStyle();
             triggerOnChange();
@@ -58,7 +58,7 @@ class EnvDocumentListener implements DocumentListener {
 
     public void dispose() {
         listenerUuid.forEach(uuid -> {
-            workspaceSessionPublisher.getOnSave().removeListener(uuid);
+            workspaceSessionPublisher.getOnChange().removeListener(uuid);
             environmentPublisher.getOnChange().removeListener(uuid);
         });
     }

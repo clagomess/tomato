@@ -10,5 +10,5 @@ public class WorkspaceSessionPublisher {
     private static final WorkspaceSessionPublisher instance = new WorkspaceSessionPublisher();
     private WorkspaceSessionPublisher() {}
 
-    private final NoKeyPublisher<WorkspaceSessionDto> onSave = new NoKeyPublisher<>();
+    private final NoKeyPublisher<WorkspaceSessionDto> onChange = new NoKeyPublisher<>();
 }

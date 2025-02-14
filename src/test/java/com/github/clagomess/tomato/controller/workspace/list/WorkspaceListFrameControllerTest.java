@@ -35,7 +35,7 @@ public class WorkspaceListFrameControllerTest {
     public void dispose(){
         controller.dispose();
 
-        Assertions.assertThat(workspacePublisher.getOnChangeList().getListeners())
+        Assertions.assertThat(workspacePublisher.getOnChangeAny().getListeners())
                 .isEmpty();
     }
 
@@ -45,7 +45,7 @@ public class WorkspaceListFrameControllerTest {
 
         controller.addOnChangeListener(e -> result.incrementAndGet());
 
-        workspacePublisher.getOnChangeList()
+        workspacePublisher.getOnChangeAny()
                 .publish(new PublisherEvent<>(UPDATED, new WorkspaceDto()));
 
         assertEquals(1, result.get());

@@ -22,7 +22,7 @@ public class WorkspacePublisherTest {
                 event -> count.getAndIncrement()
         );
 
-        workspacePublisher.getOnChangeList().addListener(
+        workspacePublisher.getOnChangeAny().addListener(
                 event -> count.getAndIncrement()
         );
 
