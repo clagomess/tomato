@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.concurrent.ForkJoinPool;
 
 @RequiredArgsConstructor
 public class WaitExecution {
@@ -39,7 +40,7 @@ public class WaitExecution {
     }
 
     public void execute(){
-        new Thread(() -> {
+        ForkJoinPool.commonPool().submit(() -> {
             try {
                 setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 setButtonEnabled(false);
@@ -50,7 +51,7 @@ public class WaitExecution {
                 setButtonEnabled(true);
                 setCursor(Cursor.getDefaultCursor());
             }
-        }, getClass().getSimpleName()).start();
+        });
     }
 
     @FunctionalInterface

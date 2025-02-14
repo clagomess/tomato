@@ -11,6 +11,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.util.concurrent.ForkJoinPool;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
@@ -87,7 +88,7 @@ public class BeautifierDialog extends JDialog {
 
         progress.setMaximum((int) inputFile.length());
 
-        new Thread(() -> {
+        ForkJoinPool.commonPool().submit(() -> {
             try {
                 var newResponseFile = HttpService.createTempFile();
 
@@ -112,7 +113,7 @@ public class BeautifierDialog extends JDialog {
             }
 
             invokeLater(this::dispose);
-        }, "BeautifierUI").start();
+        });
 
         invokeLater(() -> setVisible(true));
     }
@@ -125,7 +126,7 @@ public class BeautifierDialog extends JDialog {
 
         progress.setMaximum(inputString.length());
 
-        new Thread(() -> {
+        ForkJoinPool.commonPool().submit(() -> {
             try {
                 var strWriter = new StringWriter();
 
@@ -144,7 +145,7 @@ public class BeautifierDialog extends JDialog {
             }
 
             invokeLater(this::dispose);
-        }, "BeautifierUI").start();
+        });
 
         invokeLater(() -> setVisible(true));
     }

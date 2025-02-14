@@ -6,13 +6,14 @@ import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 
 import javax.swing.*;
+import java.util.concurrent.ForkJoinPool;
 
 public class WorkspaceComboBox extends JComboBox<WorkspaceDto> {
     private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
 
     public WorkspaceComboBox() {
         setRenderer(new DtoListCellRenderer<>(WorkspaceDto::getName));
-        new Thread(this::addItens, getClass().getSimpleName()).start();
+        ForkJoinPool.commonPool().submit(this::addItens);
     }
 
     private void addItens() {

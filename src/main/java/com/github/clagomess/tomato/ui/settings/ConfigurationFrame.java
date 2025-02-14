@@ -12,6 +12,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.concurrent.ForkJoinPool;
 
 import static javax.swing.JFileChooser.DIRECTORIES_ONLY;
 import static javax.swing.SwingUtilities.invokeLater;
@@ -41,7 +42,7 @@ public class ConfigurationFrame extends JFrame {
 
         btnSave.addActionListener(e -> btnSaveAction());
 
-        new Thread(() -> {
+        ForkJoinPool.commonPool().submit(() -> {
             try {
                 ConfigurationDto configuration = configurationRepository.load();
                 invokeLater(() -> {
@@ -51,7 +52,7 @@ public class ConfigurationFrame extends JFrame {
                 new ExceptionDialog(this, e);
                 dispose();
             }
-        }, "ConfigurationUI").start();
+        });
 
         pack();
         setLocationRelativeTo(mainFrame);

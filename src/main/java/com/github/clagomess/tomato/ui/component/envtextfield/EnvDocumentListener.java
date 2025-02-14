@@ -18,6 +18,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,7 +48,7 @@ class EnvDocumentListener implements DocumentListener {
         StyleConstants.setForeground(envFilledStyle, ColorConstant.GREEN);
         StyleConstants.setForeground(envNotFilledStyle, ColorConstant.RED);
 
-        new Thread(this::updateEnvMap, getClass().getSimpleName()).start();
+        ForkJoinPool.commonPool().submit(this::updateEnvMap);
 
         listenerUuid.add(workspaceSessionPublisher.getOnChange().addListener(event -> {
             updateEnvMap();

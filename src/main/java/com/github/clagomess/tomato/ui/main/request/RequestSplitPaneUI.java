@@ -31,6 +31,7 @@ import java.awt.*;
 import java.util.Arrays;
 
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
+import static javax.swing.SwingUtilities.invokeLater;
 
 @Getter
 public class RequestSplitPaneUI extends JPanel {
@@ -150,10 +151,12 @@ public class RequestSplitPaneUI extends JPanel {
                 ResponseDto responseDto = new HttpService(requestDto).perform();
                 responseContent.update(responseDto);
             } catch (Throwable e) {
-                new ExceptionDialog(this, e);
+                invokeLater(() -> new ExceptionDialog(this, e));
             } finally {
-                btnSendRequest.setEnabled(true);
-                btnCancelRequest.setEnabled(false);
+                invokeLater(() -> {
+                    btnSendRequest.setEnabled(true);
+                    btnCancelRequest.setEnabled(false);
+                });
             }
         }, "request-perform");
 
