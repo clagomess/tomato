@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
-public class RepositoryTest extends RepositoryStubs {
+public class AbstractRepositoryTest extends RepositoryStubs {
     private final AbstractRepository abstractRepository = Mockito.spy(new AbstractRepository(){});
 
     @Test
