@@ -19,13 +19,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestTabPaneUI extends JTabbedPane {
+public class RequestTabbedPane extends JTabbedPane {
     @Getter
     private final List<Tab> tabs = new ArrayList<>();
 
     private final RequestRepository requestRepository = new RequestRepository();
 
-    public RequestTabPaneUI(){
+    public RequestTabbedPane(){
         addNewPlusTab();
 
         addChangeListener(e -> {

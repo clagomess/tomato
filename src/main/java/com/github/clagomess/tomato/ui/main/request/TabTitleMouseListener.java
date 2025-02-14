@@ -16,7 +16,7 @@ import static java.awt.event.MouseEvent.BUTTON3;
 @RequiredArgsConstructor
 public class TabTitleMouseListener extends MouseAdapter {
     private final TabKey tabKey;
-    private final RequestTabPaneUI parent;
+    private final RequestTabbedPane parent;
 
     public void mouseClicked(MouseEvent e) {
         redispatch(e);
