@@ -1,11 +1,7 @@
 package com.github.clagomess.tomato.ui.environment;
 
+import com.github.clagomess.tomato.controller.environment.EnvironmentComboBoxController;
 import com.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
-import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
-import com.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
-import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
-import com.github.clagomess.tomato.publisher.WorkspacePublisher;
-import com.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
 import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.IconButton;
@@ -16,7 +12,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.concurrent.ForkJoinPool;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
@@ -24,9 +20,7 @@ public class EnvironmentComboBox extends JPanel {
     private final ComboBox comboBox = new ComboBox();
     private final JButton btnEdit = new IconButton(new BxEditIcon(), "Edit Environment");
 
-    private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
-    private final WorkspaceSessionRepository workspaceSessionRepository = new WorkspaceSessionRepository();
-    private final WorkspaceSessionPublisher workspaceSessionPublisher = WorkspaceSessionPublisher.getInstance();
+    private final EnvironmentComboBoxController controller = new EnvironmentComboBoxController();
 
     public EnvironmentComboBox(){
         setLayout(new MigLayout(
@@ -36,14 +30,10 @@ public class EnvironmentComboBox extends JPanel {
         add(comboBox, "width ::100% - 32px");
         add(btnEdit);
 
-        invokeLater(this::addItens);
+        invokeLater(this::refreshItems);
 
-        EnvironmentPublisher.getInstance()
-                .getOnChange()
-                .addListener(event -> addItens());
-        WorkspacePublisher.getInstance()
-                .getOnSwitch()
-                .addListener(event -> addItens());
+        controller.addEnvironmentOnChangeListener(() -> invokeLater(this::refreshItems));
+        controller.addWorkspaceOnSwitchListener(() -> invokeLater(this::refreshItems));
 
         btnEdit.addActionListener(event -> {
             setBtnEditEnabledOrDisabled();
@@ -56,65 +46,49 @@ public class EnvironmentComboBox extends JPanel {
         });
     }
 
-    private void addItens() {
-        Arrays.stream(comboBox.getActionListeners()).forEach(comboBox::removeActionListener);
+    private void refreshItems() {
+        Arrays.stream(comboBox.getActionListeners())
+                .forEach(comboBox::removeActionListener);
         comboBox.removeAllItems();
 
-        invokeLater(() -> {
+        // add empty option
+        comboBox.addItem(null);
+        comboBox.setSelectedItem(null);
+
+        ForkJoinPool.commonPool().submit(() -> {
             try {
-                var session = workspaceSessionRepository.load();
-                var list = environmentRepository.listHead();
-
-                invokeLater(() -> {
-                    comboBox.addItem(null);
-                    comboBox.setSelectedItem(null);
-
-                    list.forEach(item -> {
-                        comboBox.addItem(item);
-
-                        if(item.getId().equals(session.getEnvironmentId())){
-                            comboBox.setSelectedItem(item);
-                        }
-                    });
-
-                    invokeLater(() -> {
-                        setBtnEditEnabledOrDisabled();
-                        comboBox.addActionListener(event -> setWorkspaceSessionSelected());
-                    });
-                });
+                controller.loadItems(
+                        (selected, item) -> invokeLater(() -> {
+                            comboBox.addItem(item);
+                            if(selected) comboBox.setSelectedItem(item);
+                        }),
+                        () -> invokeLater(() -> {
+                            setBtnEditEnabledOrDisabled();
+                            comboBox.addActionListener(event ->
+                                    setWorkspaceSessionSelected());
+                        })
+                );
             } catch (Throwable e){
-                new ExceptionDialog(this, e);
+                invokeLater(() -> new ExceptionDialog(this, e));
             }
         });
     }
 
     private void setBtnEditEnabledOrDisabled(){
-        invokeLater(() -> btnEdit.setEnabled(
+        btnEdit.setEnabled(
                 comboBox.getItemCount() > 0 &&
                 comboBox.getSelectedItem() != null
-        ));
+        );
     }
 
     private void setWorkspaceSessionSelected() {
         new WaitExecution(this, () -> {
-            var selected = comboBox.getSelectedItem();
-            var environmentId = selected == null ? null : selected.getId();
-
-            var session = workspaceSessionRepository.load();
-
-            if(Objects.equals(session.getEnvironmentId(), environmentId)) return;
-
-            session.setEnvironmentId(environmentId);
-
-            workspaceSessionRepository.save(session);
-            workspaceSessionPublisher.getOnChange().publish(session);
-
+            controller.setWorkspaceSessionSelected(comboBox.getSelectedItem());
             setBtnEditEnabledOrDisabled();
         }).execute();
     }
 
-    public static class ComboBox extends JComboBox<EnvironmentHeadDto> {
-
+    private static class ComboBox extends JComboBox<EnvironmentHeadDto> {
         public ComboBox() {
             setRenderer(new DtoListCellRenderer<>(EnvironmentHeadDto::getName));
         }
