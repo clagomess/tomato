@@ -16,5 +16,5 @@ public class EnvTextfieldOptions {
     private RawBodyTypeEnum valueEditorSelectedRawBodyType = RawBodyTypeEnum.TEXT;
 
     @Builder.Default
-    private ValueEditorUI.OnDisposeFI valueEditorOnDispose = (rawBodyType, text) -> {};
+    private ValueEditorFrame.OnDisposeFI valueEditorOnDispose = (rawBodyType, text) -> {};
 }

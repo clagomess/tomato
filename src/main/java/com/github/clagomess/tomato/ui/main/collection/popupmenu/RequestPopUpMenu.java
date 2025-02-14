@@ -10,10 +10,10 @@ import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLinkExternalIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSortAlt2Icon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
-import com.github.clagomess.tomato.ui.request.RequestDeleteUI;
+import com.github.clagomess.tomato.ui.request.RequestDeleteFrame;
 import com.github.clagomess.tomato.ui.request.RequestFrame;
-import com.github.clagomess.tomato.ui.request.RequestMoveUI;
-import com.github.clagomess.tomato.ui.request.RequestRenameUI;
+import com.github.clagomess.tomato.ui.request.RequestMoveFrame;
+import com.github.clagomess.tomato.ui.request.RequestRenameFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,17 +47,17 @@ public class RequestPopUpMenu extends JPopupMenu {
         add(mDuplicate);
 
         var mMove = new JMenuItem("Move", new BxSortAlt2Icon());
-        mMove.addActionListener(e -> new RequestMoveUI(parent, requestHead));
+        mMove.addActionListener(e -> new RequestMoveFrame(parent, requestHead));
         add(mMove);
 
         var mRename = new JMenuItem("Rename");
-        mRename.addActionListener(e -> new RequestRenameUI(parent, requestHead));
+        mRename.addActionListener(e -> new RequestRenameFrame(parent, requestHead));
         add(mRename);
 
         addSeparator();
 
         var mDelete = new JMenuItem("Delete", new BxTrashIcon());
-        mDelete.addActionListener(e -> new RequestDeleteUI(parent, requestHead).showConfirmDialog());
+        mDelete.addActionListener(e -> new RequestDeleteFrame(parent, requestHead).showConfirmDialog());
         add(mDelete);
     }
 

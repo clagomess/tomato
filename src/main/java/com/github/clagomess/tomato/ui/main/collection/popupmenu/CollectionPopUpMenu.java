@@ -16,21 +16,21 @@ public class CollectionPopUpMenu extends JPopupMenu {
             CollectionTreeDto collectionTree
     ) {
         var mMove = new JMenuItem("Move", new BxSortAlt2Icon());
-        mMove.addActionListener(e -> new CollectionMoveUI(parent, collectionTree));
+        mMove.addActionListener(e -> new CollectionMoveFrame(parent, collectionTree));
         add(mMove);
 
         var mRename = new JMenuItem("Rename");
-        mRename.addActionListener(e -> new CollectionRenameUI(parent, collectionTree));
+        mRename.addActionListener(e -> new CollectionRenameFrame(parent, collectionTree));
         add(mRename);
 
         addSeparator();
 
         var mNewCollection = new JMenuItem("New Collection");
-        mNewCollection.addActionListener(ae -> new CollectionNewUI(parent, collectionTree));
+        mNewCollection.addActionListener(ae -> new CollectionNewFrame(parent, collectionTree));
         add(mNewCollection);
 
         var mImport = new JMenuItem("Import", new BxImportIcon());
-        mImport.addActionListener(ae -> new CollectionImportUI(parent, collectionTree));
+        mImport.addActionListener(ae -> new CollectionImportFrame(parent, collectionTree));
         add(mImport);
 
         var mExport = new JMenuItem("Export", new BxExportIcon()); //@TODO: implement - Export Collection
@@ -39,7 +39,7 @@ public class CollectionPopUpMenu extends JPopupMenu {
         addSeparator();
 
         var mDelete = new JMenuItem("Delete", new BxTrashIcon());
-        mDelete.addActionListener(ae -> new CollectionDeleteUI(parent, collectionTree).showConfirmDialog());
+        mDelete.addActionListener(ae -> new CollectionDeleteDialog(parent, collectionTree).showConfirmDialog());
         add(mDelete);
     }
 }

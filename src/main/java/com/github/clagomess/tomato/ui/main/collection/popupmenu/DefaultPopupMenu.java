@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.ui.main.collection.popupmenu;
 
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
-import com.github.clagomess.tomato.ui.collection.CollectionNewUI;
+import com.github.clagomess.tomato.ui.collection.CollectionNewFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +18,7 @@ public class DefaultPopupMenu extends JPopupMenu {
         add(mNewRequest);
 
         var mNewCollection = new JMenuItem("New Collection");
-        mNewCollection.addActionListener(e -> new CollectionNewUI(
+        mNewCollection.addActionListener(e -> new CollectionNewFrame(
                 parent,
                 null
         ));

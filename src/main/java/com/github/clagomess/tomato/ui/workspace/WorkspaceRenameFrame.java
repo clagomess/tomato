@@ -2,12 +2,12 @@ package com.github.clagomess.tomato.ui.workspace;
 
 import com.github.clagomess.tomato.controller.workspace.WorkspaceRenameFrameController;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
-import com.github.clagomess.tomato.ui.component.NameUI;
+import com.github.clagomess.tomato.ui.component.NameFrame;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 
 import java.awt.*;
 
-public class WorkspaceRenameFrame extends NameUI {
+public class WorkspaceRenameFrame extends NameFrame {
     private final WorkspaceRenameFrameController controller = new WorkspaceRenameFrameController();
 
     public WorkspaceRenameFrame(

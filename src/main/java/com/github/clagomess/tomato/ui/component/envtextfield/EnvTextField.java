@@ -65,7 +65,7 @@ public class EnvTextField extends JPanel {
     }
 
     private void btnEnvViewAction(){
-        SwingUtilities.invokeLater(() -> new ViewInjectedEnvironmentUI(
+        SwingUtilities.invokeLater(() -> new ViewInjectedEnvironmentFrame(
                 this,
                 envDocumentListener.getEnvMap()
         ));
@@ -74,7 +74,7 @@ public class EnvTextField extends JPanel {
     private void btnExpandAction(EnvTextfieldOptions options){
         new WaitExecution(
                 this,
-                () -> new ValueEditorUI(this, options)
+                () -> new ValueEditorFrame(this, options)
         ).execute();
     }
 

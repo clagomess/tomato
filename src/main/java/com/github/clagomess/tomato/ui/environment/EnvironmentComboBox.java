@@ -11,7 +11,7 @@ import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
-import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditUI;
+import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditFrame;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -49,7 +49,7 @@ public class EnvironmentComboBox extends JPanel {
             setBtnEditEnabledOrDisabled();
             if(comboBox.getSelectedItem() == null) return;
 
-            new WaitExecution(this, btnEdit, () -> new EnvironmentEditUI(
+            new WaitExecution(this, btnEdit, () -> new EnvironmentEditFrame(
                     this,
                     comboBox.getSelectedItem().getId()
             )).execute();

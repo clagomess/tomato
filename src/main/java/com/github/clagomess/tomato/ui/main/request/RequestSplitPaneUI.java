@@ -21,7 +21,7 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSaveIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSendIcon;
 import com.github.clagomess.tomato.ui.main.request.left.*;
 import com.github.clagomess.tomato.ui.main.request.right.ResponseTabContent;
-import com.github.clagomess.tomato.ui.request.RequestSaveUI;
+import com.github.clagomess.tomato.ui.request.RequestSaveFrame;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
@@ -54,7 +54,7 @@ public class RequestSplitPaneUI extends JPanel {
         setEnabled(false);
     }};
 
-    private final RequestTabContentUI requestContent;
+    private final RequestTabContent requestContent;
     private final ResponseTabContent responseContent;
 
     private final RequestStagingMonitor requestStagingMonitor;
@@ -125,7 +125,7 @@ public class RequestSplitPaneUI extends JPanel {
         splitPane.setResizeWeight(0.3);
         splitPane.setContinuousLayout(true);
 
-        this.requestContent = new RequestTabContentUI(
+        this.requestContent = new RequestTabContent(
                 requestDto,
                 requestStagingMonitor
         );
@@ -168,13 +168,13 @@ public class RequestSplitPaneUI extends JPanel {
     public void btnViewRenderedUrlAction(){
         new WaitExecution(
                 btnViewRenderedUrl,
-                () -> new ViewRenderedUrlUI(this, requestDto)
+                () -> new ViewRenderedUrlFrame(this, requestDto)
         ).execute();
     }
 
     public void btnSaveRequestAction(){
         if(requestHeadDto == null){
-            new RequestSaveUI(
+            new RequestSaveFrame(
                     this,
                     requestDto,
                     requestHead -> {

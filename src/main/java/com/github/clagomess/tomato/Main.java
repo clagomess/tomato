@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
-import com.github.clagomess.tomato.ui.MainUI;
+import com.github.clagomess.tomato.ui.MainFrame;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ public class Main {
         FlatDarculaLaf.setup();
 
         SwingUtilities.invokeLater(() -> {
-            new MainUI();
+            new MainFrame();
             log.info("Started!");
         });
     }

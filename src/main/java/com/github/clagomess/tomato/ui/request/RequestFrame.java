@@ -3,7 +3,7 @@ package com.github.clagomess.tomato.ui.request;
 import com.github.clagomess.tomato.controller.request.RequestFrameController;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.ui.MainUI;
+import com.github.clagomess.tomato.ui.MainFrame;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import com.github.clagomess.tomato.ui.main.request.RequestSplitPaneUI;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +55,7 @@ public class RequestFrame extends JFrame {
         pack();
         setLocationRelativeTo(
                 Arrays.stream(Window.getWindows())
-                        .filter(item -> item instanceof MainUI)
+                        .filter(item -> item instanceof MainFrame)
                         .findFirst()
                         .orElse(null)
         );

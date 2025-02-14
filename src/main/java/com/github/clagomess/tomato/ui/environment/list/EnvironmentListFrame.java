@@ -1,25 +1,28 @@
-package com.github.clagomess.tomato.ui.workspace.list;
+package com.github.clagomess.tomato.ui.environment.list;
 
-import com.github.clagomess.tomato.controller.workspace.list.WorkspaceListFrameController;
-import com.github.clagomess.tomato.dto.data.WorkspaceDto;
+import com.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
+import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
+import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+import java.util.UUID;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
-import static javax.swing.SwingUtilities.invokeLater;
 
-public class WorkspaceListFrame extends JFrame {
+public class EnvironmentListFrame extends JFrame {
     private final JPanel rowsPanel;
-    private final WorkspaceListFrameController controller = new WorkspaceListFrameController();
 
-    public WorkspaceListFrame(Component parent){
-        setTitle("Edit Workspaces");
+    private final UUID listenerUuid;
+    private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
+    private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
+
+    public EnvironmentListFrame(Component parent) {
+        setTitle("Edit Environments");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 400));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -42,35 +45,33 @@ public class WorkspaceListFrame extends JFrame {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, "width ::100%, height 100%");
 
-        new WaitExecution(this, () -> {
-            controller.refresh(this::refresh);
-        }).execute();
-
-        controller.addOnChangeListener(this::refresh);
+        refresh();
+        listenerUuid = environmentPublisher.getOnChange()
+                .addListener(e -> refresh());
 
         pack();
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
-    private void refresh(List<WorkspaceDto> rows){
-        invokeLater(() -> {
-            rowsPanel.removeAll();
-            rows.forEach(this::addRow);
-        });
-    }
-
-    private void addRow(WorkspaceDto item){
-        var row = new Row(this, item);
+    private void addRow(EnvironmentHeadDto item){
+        var row = new Row(rowsPanel, item);
 
         rowsPanel.add(row, "wrap");
         rowsPanel.revalidate();
         rowsPanel.repaint();
     }
 
+    private void refresh(){
+        new WaitExecution(this, () -> {
+            rowsPanel.removeAll();
+            environmentRepository.listHead().forEach(this::addRow);
+        }).execute();
+    }
+
     @Override
     public void dispose(){
-        controller.dispose();
+        environmentPublisher.getOnChange().removeListener(listenerUuid);
         super.dispose();
     }
 }

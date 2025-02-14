@@ -9,7 +9,7 @@ import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxDownloadIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
-import com.github.clagomess.tomato.ui.component.tablemanager.TableManagerUI;
+import com.github.clagomess.tomato.ui.component.tablemanager.TableManager;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
@@ -24,7 +24,7 @@ import static javax.swing.SwingUtilities.invokeLater;
 @Slf4j
 @Getter
 public class ResponseTabContent extends JPanel {
-    private final StatusResponseUI statusResponseUI = new StatusResponseUI();
+    private final StatusResponse statusResponse = new StatusResponse();
 
     private final JButton btnBeautify = new JButton(new BxsMagicWandIcon()){{
         setToolTipText("Beautify response");
@@ -36,7 +36,7 @@ public class ResponseTabContent extends JPanel {
     }};
 
     private TRSyntaxTextArea txtResponse;
-    private TableManagerUI<KeyValueTMDto> tblResponseHeader;
+    private TableManager<KeyValueTMDto> tblResponseHeader;
     private RawTextArea txtHTTPDebug;
 
     private ResponseDto responseDto = null;
@@ -47,7 +47,7 @@ public class ResponseTabContent extends JPanel {
                 "[grow,fill][][]"
         ));
 
-        add(statusResponseUI, "width 100%");
+        add(statusResponse, "width 100%");
         add(btnBeautify);
         add(btnDownload, "wrap");
 
@@ -71,7 +71,7 @@ public class ResponseTabContent extends JPanel {
     }
 
     private void createTabHeader(JTabbedPane tabbedPane){
-        tblResponseHeader = new TableManagerUI<>(KeyValueTMDto.class);
+        tblResponseHeader = new TableManager<>(KeyValueTMDto.class);
 
         var component = new JScrollPane(tblResponseHeader.getTable());
         component.setBorder(new MatteBorder(0, 1, 1, 1, ColorConstant.GRAY));
@@ -89,7 +89,7 @@ public class ResponseTabContent extends JPanel {
         btnDownload.setEnabled(false);
         txtHTTPDebug.reset();
         txtResponse.reset();
-        statusResponseUI.reset();
+        statusResponse.reset();
     }
 
     public void update(ResponseDto responseDto){
@@ -119,18 +119,18 @@ public class ResponseTabContent extends JPanel {
             });
         }
 
-        statusResponseUI.update(responseDto);
+        statusResponse.update(responseDto);
     }
 
     private void btnBeautifyAction(){
-        new BeautifierUI(this, responseDto.getHttpResponse().getContentType())
+        new BeautifierDialog(this, responseDto.getHttpResponse().getContentType())
                 .beautify(responseDto.getHttpResponse().getBody(), result -> {
                     responseDto.getHttpResponse().setBody(result);
 
                     SwingUtilities.invokeLater(() -> {
                         txtResponse.setText(responseDto.getHttpResponse().getBodyAsString());
                         txtResponse.setCaretPosition(0);
-                        statusResponseUI.update(responseDto);
+                        statusResponse.update(responseDto);
                     });
                 });
     }
