@@ -1,15 +1,9 @@
 package com.github.clagomess.tomato.ui.main.request;
 
-import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.controller.main.request.RequestSplitPaneController;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.io.http.HttpService;
-import com.github.clagomess.tomato.io.repository.RequestRepository;
-import com.github.clagomess.tomato.mapper.RequestMapper;
-import com.github.clagomess.tomato.publisher.RequestPublisher;
-import com.github.clagomess.tomato.publisher.base.PublisherEvent;
-import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
@@ -30,7 +24,6 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.Arrays;
 
-import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static javax.swing.SwingUtilities.invokeLater;
 
 @Getter
@@ -59,8 +52,7 @@ public class RequestSplitPane extends JPanel {
     private final ResponseTabContent responseContent;
 
     private final RequestStagingMonitor requestStagingMonitor;
-    private final RequestRepository requestRepository = new RequestRepository();
-    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
+    private final RequestSplitPaneController controller = new RequestSplitPaneController();
 
 
     public RequestSplitPane(
@@ -146,21 +138,17 @@ public class RequestSplitPane extends JPanel {
         Arrays.stream(btnCancelRequest.getActionListeners())
                 .forEach(btnCancelRequest::removeActionListener);
 
-        Thread requestThread = new Thread(() -> {
-            try {
-                ResponseDto responseDto = new HttpService(requestDto).perform();
-                responseContent.update(responseDto);
-            } catch (Throwable e) {
-                invokeLater(() -> new ExceptionDialog(this, e));
-            } finally {
-                invokeLater(() -> {
+        Thread requestThread = controller.sendRequest(
+                requestDto,
+                response -> invokeLater(() -> {
+                    if(response != null) responseContent.update(response);
                     btnSendRequest.setEnabled(true);
                     btnCancelRequest.setEnabled(false);
-                });
-            }
-        }, "request-perform");
-
-        requestThread.start();
+                }),
+                throwable -> invokeLater(() ->
+                    new ExceptionDialog(this, throwable)
+                )
+        );
 
         btnCancelRequest.addActionListener(l -> {
             btnCancelRequest.setEnabled(false);
@@ -189,18 +177,7 @@ public class RequestSplitPane extends JPanel {
         }
 
         new WaitExecution(this, btnSaveRequest, () -> {
-            requestRepository.save(requestHeadDto.getPath(), requestDto);
-
-            RequestMapper.INSTANCE.toRequestHead(
-                    requestHeadDto,
-                    requestDto
-            );
-
-            requestPublisher.getOnChange().publish(
-                    new RequestKey(requestHeadDto),
-                    new PublisherEvent<>(UPDATED, requestHeadDto)
-            );
-
+            controller.save(requestHeadDto, requestDto);
             requestStagingMonitor.reset();
         }).execute();
     }
