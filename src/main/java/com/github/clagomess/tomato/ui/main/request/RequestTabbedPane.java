@@ -92,8 +92,23 @@ public class RequestTabbedPane extends JTabbedPane {
         setSelectedIndex(getTabCount() -2);
     }
 
+    protected boolean isSafeToRemoveTab(Tab tab){
+        if(!tab.tabContent().getRequestStagingMonitor().isDiferent()) return true;
+
+        int ret = JOptionPane.showConfirmDialog(
+                this,
+                "Unsaved changes detected. Do you want to close without save?",
+                "Closing Tab",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        return ret == JOptionPane.OK_OPTION;
+    }
+
     protected void removeTab(Tab tab){
-        // @TODO: check if unsaved before remove
+        if(!isSafeToRemoveTab(tab)) return;
+
         var tabId = tab.tabKey().getUuid().toString();
         removeTabAt(indexOfTab(tabId));
         tab.tabTitleUI().dispose();
