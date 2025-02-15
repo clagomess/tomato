@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request;
 
 import com.github.clagomess.tomato.controller.main.request.RequestTabbedPaneController;
+import com.github.clagomess.tomato.dto.RequestTabSnapshotDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
@@ -36,6 +37,14 @@ public class RequestTabbedPane extends JTabbedPane {
         controller.addRequestOnLoadListener((requestHead, request) -> new WaitExecution(() -> {
             addNewTab(requestHead, request);
         }).execute());
+
+        controller.addSystemOnClosingListener(() ->
+            tabs.stream().map(item -> new RequestTabSnapshotDto(
+                    item.tabContent().getRequestStagingMonitor().isDiferent(),
+                    item.tabContent().getRequestHeadDto(),
+                    item.tabContent().getRequestDto()
+            )).toList()
+        );
     }
 
     private void addNewPlusTab(){

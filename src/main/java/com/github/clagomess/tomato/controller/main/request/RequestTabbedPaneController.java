@@ -1,20 +1,29 @@
 package com.github.clagomess.tomato.controller.main.request;
 
+import com.github.clagomess.tomato.dto.RequestTabSnapshotDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
+import com.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.SystemPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.publisher.base.EventTypeEnum;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
+@Slf4j
 @RequiredArgsConstructor
 public class RequestTabbedPaneController {
     private final RequestRepository requestRepository;
+    private final WorkspaceSessionRepository workspaceSessionRepository;
 
     public RequestTabbedPaneController() {
         this.requestRepository = new RequestRepository();
+        this.workspaceSessionRepository = new WorkspaceSessionRepository();
     }
 
     public void addWorkspaceOnSwitchListener(Runnable runnable) {
@@ -30,6 +39,32 @@ public class RequestTabbedPaneController {
                 .getOnLoad()
                 .addListener(e -> loadRequest(e, runnable));
     }
+
+    // @TODO: impl test
+    public void addSystemOnClosingListener(RequestTabSnapshotFI snapshot) {
+        SystemPublisher.getInstance()
+                .getOnClosing()
+                .addListener(e -> saveRequestsSnapshot(snapshot.get()));
+    }
+
+    // @TODO: impl test; impl. scenario when switch workspace
+    public void saveRequestsSnapshot(List<RequestTabSnapshotDto> itens) {
+        try {
+            if(itens.isEmpty()) return;
+
+            var requestSessionState = itens.stream()
+                    .map(RequestTabSnapshotDto::toSessionState)
+                    .toList();
+
+            var session = workspaceSessionRepository.load();
+            session.setRequests(requestSessionState);
+            workspaceSessionRepository.save(session);
+        } catch (Throwable e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    // @TODO: impl. load session
 
     protected void loadRequest(
             PublisherEvent<RequestHeadDto> event,
@@ -47,10 +82,16 @@ public class RequestTabbedPaneController {
         }
     }
 
+    @FunctionalInterface
     public interface OnLoadFI {
         void load(
                 RequestHeadDto requestHead,
                 RequestDto request
         );
+    }
+
+    @FunctionalInterface
+    public interface RequestTabSnapshotFI {
+        List<RequestTabSnapshotDto> get();
     }
 }
