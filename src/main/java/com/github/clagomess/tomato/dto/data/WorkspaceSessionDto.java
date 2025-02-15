@@ -1,10 +1,6 @@
 package com.github.clagomess.tomato.dto.data;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import lombok.*;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -24,12 +20,11 @@ public class WorkspaceSessionDto extends MetadataDto {
 
     @Getter
     @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     @EqualsAndHashCode
     public static class Request {
-        @NotNull
         private File filepath;
-
-        @Nullable
         private RequestDto staging;
     }
 }
