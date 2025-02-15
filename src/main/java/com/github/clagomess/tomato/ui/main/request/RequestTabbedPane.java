@@ -31,7 +31,7 @@ public class RequestTabbedPane extends JTabbedPane {
         });
 
         controller.addWorkspaceOnSwitchListener(() -> {
-            new ArrayList<>(tabs).forEach(this::removeTab);
+            new ArrayList<>(tabs).forEach(tab -> removeTab(tab, true));
         });
 
         controller.addRequestOnLoadListener((requestHead, request) -> new WaitExecution(() -> {
@@ -115,8 +115,8 @@ public class RequestTabbedPane extends JTabbedPane {
         return ret == JOptionPane.OK_OPTION;
     }
 
-    protected void removeTab(Tab tab){
-        if(!isSafeToRemoveTab(tab)) return;
+    protected void removeTab(Tab tab, boolean forceRemove){
+        if(!forceRemove && !isSafeToRemoveTab(tab)) return;
 
         var tabId = tab.tabKey().getUuid().toString();
         removeTabAt(indexOfTab(tabId));
@@ -129,7 +129,7 @@ public class RequestTabbedPane extends JTabbedPane {
         tabs.stream()
                 .filter(tab -> tab.tabKey().equals(tabKey))
                 .findFirst()
-                .ifPresent(this::removeTab);
+                .ifPresent(tab -> removeTab(tab, false));
     }
 
     protected record Tab(
