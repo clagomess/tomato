@@ -40,7 +40,6 @@ public class RequestTabbedPaneController {
                 .addListener(e -> loadRequest(e, runnable));
     }
 
-    // @TODO: impl test
     public void addSaveRequestsSnapshotListener(RequestTabSnapshotFI snapshot) {
         WorkspacePublisher.getInstance()
                 .getOnBeforeSwitch()
@@ -51,11 +50,8 @@ public class RequestTabbedPaneController {
                 .addListener(e -> saveRequestsSnapshot(snapshot.get()));
     }
 
-    // @TODO: impl test; impl. scenario when switch workspace
     protected void saveRequestsSnapshot(List<RequestTabSnapshotDto> itens) {
         try {
-            if(itens.isEmpty()) return;
-
             var requestSessionState = itens.stream()
                     .map(RequestTabSnapshotDto::toSessionState)
                     .toList();

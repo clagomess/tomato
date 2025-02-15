@@ -1,21 +1,27 @@
 package com.github.clagomess.tomato.controller.main.request;
 
+import com.github.clagomess.tomato.dto.RequestTabSnapshotDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
+import com.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
+import com.github.clagomess.tomato.publisher.SystemPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.publisher.base.EventTypeEnum;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,6 +71,62 @@ public class RequestTabbedPaneControllerTest {
         ));
 
         assertTrue(triggered.get());
+    }
+
+    @Test
+    public void addSaveRequestsSnapshotListener_trigger(){
+        var triggerCount = new AtomicInteger();
+
+        Mockito.doAnswer(answer -> {
+            triggerCount.incrementAndGet();
+            return null;
+        })
+                .when(controller)
+                .saveRequestsSnapshot(Mockito.any());
+
+        controller.addSaveRequestsSnapshotListener(() -> null);
+
+        workspacePublisher.getOnBeforeSwitch()
+                .publish("foo");
+
+        SystemPublisher.getInstance()
+                .getOnClosing()
+                .publish("foo");
+
+        assertEquals(2, triggerCount.get());
+    }
+
+    @Test
+    public void saveRequestsSnapshot() throws IOException {
+        var session = new WorkspaceSessionDto();
+
+        Mockito.doReturn(session)
+                .when(workspaceSessionRepository)
+                .load();
+
+        controller.saveRequestsSnapshot(List.of(
+                new RequestTabSnapshotDto(true, null, new RequestDto())
+        ));
+
+        Assertions.assertThat(session.getRequests())
+                .isNotEmpty();
+    }
+
+    @Test
+    public void saveRequestsSnapshot_whenEmpty() throws IOException {
+        var session = new WorkspaceSessionDto();
+        session.setRequests(List.of(
+                new WorkspaceSessionDto.Request()
+        ));
+
+        Mockito.doReturn(session)
+                .when(workspaceSessionRepository)
+                .load();
+
+        controller.saveRequestsSnapshot(List.of());
+
+        Assertions.assertThat(session.getRequests())
+                .isEmpty();
     }
 
     @Test
