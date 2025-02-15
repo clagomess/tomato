@@ -41,14 +41,18 @@ public class RequestTabbedPaneController {
     }
 
     // @TODO: impl test
-    public void addSystemOnClosingListener(RequestTabSnapshotFI snapshot) {
+    public void addSaveRequestsSnapshotListener(RequestTabSnapshotFI snapshot) {
+        WorkspacePublisher.getInstance()
+                .getOnBeforeSwitch()
+                .addListener(e -> saveRequestsSnapshot(snapshot.get()));
+
         SystemPublisher.getInstance()
                 .getOnClosing()
                 .addListener(e -> saveRequestsSnapshot(snapshot.get()));
     }
 
     // @TODO: impl test; impl. scenario when switch workspace
-    public void saveRequestsSnapshot(List<RequestTabSnapshotDto> itens) {
+    protected void saveRequestsSnapshot(List<RequestTabSnapshotDto> itens) {
         try {
             if(itens.isEmpty()) return;
 

@@ -38,7 +38,7 @@ public class RequestTabbedPane extends JTabbedPane {
             addNewTab(requestHead, request);
         }).execute());
 
-        controller.addSystemOnClosingListener(() ->
+        controller.addSaveRequestsSnapshotListener(() ->
             tabs.stream().map(item -> new RequestTabSnapshotDto(
                     item.tabContent().getRequestStagingMonitor().isDiferent(),
                     item.tabContent().getRequestHeadDto(),

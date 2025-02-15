@@ -1,8 +1,7 @@
 package com.github.clagomess.tomato.ui.workspace;
 
+import com.github.clagomess.tomato.controller.workspace.WorkspaceSwitchFrameController;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
-import com.github.clagomess.tomato.io.repository.DataSessionRepository;
-import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -13,9 +12,6 @@ import java.awt.*;
 public class WorkspaceSwitchFrame extends JFrame {
     private final WorkspaceComboBox cbWorkspace = new WorkspaceComboBox();
     private final JButton btnSwitch = new JButton("Switch");
-
-    private final DataSessionRepository dataSessionRepository = new DataSessionRepository();
-    private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public WorkspaceSwitchFrame(Component parent) {
         setTitle("Switch Workspace");
@@ -47,11 +43,8 @@ public class WorkspaceSwitchFrame extends JFrame {
             WorkspaceDto selected = cbWorkspace.getSelectedItem();
             if(selected == null) return;
 
-            var session = dataSessionRepository.load();
-            session.setWorkspaceId(selected.getId());
-            dataSessionRepository.save(session);
-
-            workspacePublisher.getOnSwitch().publish(selected);
+            new WorkspaceSwitchFrameController()
+                    .switchWorkspace(selected);
 
             setVisible(false);
             dispose();

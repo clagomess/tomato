@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
+import com.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.publisher.base.EventTypeEnum;
@@ -22,8 +23,10 @@ public class RequestTabbedPaneControllerTest {
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
     private final RequestRepository requestRepositoryMock = Mockito.mock(RequestRepository.class);
+    private final WorkspaceSessionRepository workspaceSessionRepository = Mockito.mock(WorkspaceSessionRepository.class);
     private final RequestTabbedPaneController controller = Mockito.spy(new RequestTabbedPaneController(
-            requestRepositoryMock
+            requestRepositoryMock,
+            workspaceSessionRepository
     ));
 
     @BeforeEach
