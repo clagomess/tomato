@@ -12,14 +12,20 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CollectionRepositoryTest extends RepositoryStubs {
-    private final CollectionRepository collectionRepositoryMock = Mockito.spy(new CollectionRepository());
+    private final RequestRepository requestRepository = Mockito.mock(RequestRepository.class);
+    private final WorkspaceRepository workspaceRepository = Mockito.mock(WorkspaceRepository.class);
+    private final CollectionRepository collectionRepositoryMock = Mockito.spy(new CollectionRepository(
+            requestRepository,
+            workspaceRepository
+    ));
 
     @BeforeEach
     public void setup() {
-        // mock ConfigurationRepository
+        Mockito.reset(requestRepository);
+        Mockito.reset(workspaceRepository);
         Mockito.reset(collectionRepositoryMock);
     }
 
@@ -59,6 +65,52 @@ public class CollectionRepositoryTest extends RepositoryStubs {
     public void listCollectionFiles(){
         var result = collectionRepositoryMock.listCollectionFiles(new File(testData, "workspace-JNtdCPvw"));
         Assertions.assertThat(result).isNotEmpty();
+    }
+
+    @Test
+    public void getCollectionParentTree() throws IOException {
+        var workspace = new WorkspaceDto();
+        workspace.setId("nPUaq0TC");
+        var file = new File(
+                testData,
+                "workspace-nPUaq0TC/collection-us62qhbS/collection-s8tPaxvJ"
+        );
+
+        Mockito.doReturn(workspace)
+                .when(workspaceRepository)
+                .getDataSessionWorkspace();
+
+        var result = collectionRepositoryMock.getCollectionParentTree(file);
+        assertNotNull(result.getPath());
+        assertNotNull(result.getChildren());
+        assertNotNull(result.getRequests());
+        assertEquals("s8tPaxvJ", result.getId());
+        assertEquals("us62qhbS", result.getParent().getId());
+        assertEquals("nPUaq0TC", result.getParent().getParent().getId());
+    }
+
+    @Test
+    public void getCollectionParentTree_whenRoot_returnWorkspace() throws IOException {
+        var workspace = new WorkspaceDto();
+        workspace.setId("nPUaq0TC");
+        var file = new File(testData, "workspace-nPUaq0TC");
+
+        Mockito.doReturn(workspace)
+                .when(workspaceRepository)
+                .getDataSessionWorkspace();
+
+        var result = collectionRepositoryMock.getCollectionParentTree(file);
+        assertEquals("nPUaq0TC", result.getId());
+    }
+
+    @Test
+    public void getCollectionParentTree_whenNotDir_throws() {
+        var file = new File(testData, "workspace-nPUaq0TC/environment-7rZO7Z1T.json");
+
+        assertThrows(
+                IOException.class,
+                () -> collectionRepositoryMock.getCollectionParentTree(file)
+        );
     }
 
     @Test

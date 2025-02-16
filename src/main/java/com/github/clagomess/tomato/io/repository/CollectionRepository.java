@@ -21,10 +21,8 @@ public class CollectionRepository extends AbstractRepository {
     private final WorkspaceRepository workspaceRepository;
 
     public CollectionRepository() {
-        this(
-                new RequestRepository(),
-                new WorkspaceRepository()
-        );
+        this.requestRepository = new RequestRepository();
+        this.workspaceRepository = new WorkspaceRepository();
     }
 
     protected File getCollectionFilePath(File collectionDir, String id){
@@ -78,6 +76,22 @@ public class CollectionRepository extends AbstractRepository {
         return Arrays.stream(listFiles(rootPath)).parallel()
                 .filter(File::isDirectory)
                 .filter(item -> item.getName().startsWith("collection"));
+    }
+
+    public CollectionTreeDto getCollectionParentTree(File dir) throws IOException {
+        if(!dir.isDirectory()) throw new IOException("not a dir");
+
+        if(dir.getName().contains("collection-")){
+            var result = load(dir).orElseThrow();
+            result.setParent(getCollectionParentTree(dir.getParentFile()));
+            result.setPath(dir);
+            result.setChildren(this::getCollectionChildrenTree);
+            result.setRequests(requestRepository::getRequestList);
+
+            return result;
+        }else{
+            return getWorkspaceCollectionTree();
+        }
     }
 
     public Stream<CollectionTreeDto> getCollectionChildrenTree(
