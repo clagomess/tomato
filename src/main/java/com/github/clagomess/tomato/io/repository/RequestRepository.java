@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -14,7 +15,13 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
+@RequiredArgsConstructor
 public class RequestRepository extends AbstractRepository {
+    private final CollectionRepository collectionRepository;
+
+    public RequestRepository() {
+        collectionRepository = new CollectionRepository();
+    }
 
     public Optional<RequestDto> load(
             RequestHeadDto request
@@ -27,6 +34,16 @@ public class RequestRepository extends AbstractRepository {
 
     protected Optional<RequestHeadDto> loadHead(File file) throws IOException {
         return readFile(file, new TypeReference<>() {});
+    }
+
+    public Optional<RequestHeadDto> loadHeadFull(File file) throws IOException {
+        var result = loadHead(file);
+        if(result.isEmpty()) return Optional.empty();
+
+        result.get().setPath(file);
+        result.get().setParent(collectionRepository.getCollectionParentTree(file.getParentFile()));
+
+        return result;
     }
 
     public File save(File basepath, RequestDto request) throws IOException {

@@ -6,13 +6,16 @@ import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class RequestRepositoryTest extends RepositoryStubs {
-    private final RequestRepository requestRepository = new RequestRepository();
-    private final CollectionRepository collectionRepository = new CollectionRepository();
+    private final CollectionRepository collectionRepository = Mockito.spy(new CollectionRepository());
+    private final RequestRepository requestRepository = Mockito.spy(new RequestRepository());
 
     @Test
     public void load() throws IOException {
@@ -24,6 +27,30 @@ public class RequestRepositoryTest extends RepositoryStubs {
 
         var result = requestRepository.load(request);
         Assertions.assertThat(result).isNotEmpty();
+    }
+
+    @Test
+    public void loadHeadFull() throws IOException {
+        var file = new File(
+                testData,
+                "workspace-nPUaq0TC/collection-us62qhbS/request-xwNJ3kyc.json"
+        );
+
+        var result = requestRepository.loadHeadFull(file);
+        Assertions.assertThat(result).isNotEmpty();
+        assertNotNull(result.get().getPath());
+        assertNotNull(result.get().getParent());
+    }
+
+    @Test
+    public void loadHeadFull_whenInvalid_returnsEmpty() throws IOException {
+        var file = new File(
+                testData,
+                "workspace-nPUaq0TC/xxx.json"
+        );
+
+        var result = requestRepository.loadHeadFull(file);
+        Assertions.assertThat(result).isEmpty();
     }
 
     @Test
