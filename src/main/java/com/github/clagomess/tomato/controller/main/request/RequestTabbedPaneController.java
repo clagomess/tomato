@@ -13,6 +13,7 @@ import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -64,7 +65,28 @@ public class RequestTabbedPaneController {
         }
     }
 
-    // @TODO: impl. load session
+    public void loadRequestFromSession(
+            OnLoadFI runnable
+    ) throws IOException {
+        var session = workspaceSessionRepository.load();
+
+        for(var item : session.getRequests()){
+            if(item.getFilepath() == null){
+                runnable.load(null, item.getStaging());
+                continue;
+            }
+
+            var requestHead = new RequestHeadDto(); // @TODO: load full head
+
+            if(item.getStaging() != null){
+                runnable.load(requestHead, item.getStaging());
+                continue;
+            }
+
+            var request = requestRepository.load(requestHead).orElseThrow();
+            runnable.load(requestHead, request);
+        }
+    }
 
     protected void loadRequest(
             PublisherEvent<RequestHeadDto> event,
