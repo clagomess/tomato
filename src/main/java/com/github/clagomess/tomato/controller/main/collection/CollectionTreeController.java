@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.controller.main.collection;
 
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import com.github.clagomess.tomato.io.repository.CollectionRepository;
+import com.github.clagomess.tomato.io.repository.TreeRepository;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import lombok.RequiredArgsConstructor;
 
@@ -12,10 +12,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CollectionTreeController {
     protected UUID listenerUuid = null;
-    private final CollectionRepository collectionRepository;
+    private final TreeRepository treeRepository;
 
     public CollectionTreeController() {
-        collectionRepository = new CollectionRepository();
+        treeRepository = new TreeRepository();
     }
 
     public void addOnSwitchListener(Runnable loadCurrentWorkspace) {
@@ -31,7 +31,7 @@ public class CollectionTreeController {
                     .removeListener(listenerUuid);
         }
 
-        var rootCollection = collectionRepository.getWorkspaceCollectionTree();
+        var rootCollection = treeRepository.getWorkspaceCollectionTree();
 
         listenerUuid = WorkspacePublisher.getInstance().getOnChange().addListener(
                 rootCollection.getId(),
