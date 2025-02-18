@@ -2,7 +2,6 @@ package com.github.clagomess.tomato.io.repository;
 
 import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
-import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,11 +14,14 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CollectionRepositoryTest extends RepositoryStubs {
+    private final RequestRepository requestRepository = Mockito.mock(RequestRepository.class);
+    private final WorkspaceRepository workspaceRepository = Mockito.mock(WorkspaceRepository.class);
     private final CollectionRepository collectionRepositoryMock = Mockito.spy(new CollectionRepository());
 
     @BeforeEach
     public void setup() {
-        // mock ConfigurationRepository
+        Mockito.reset(requestRepository);
+        Mockito.reset(workspaceRepository);
         Mockito.reset(collectionRepositoryMock);
     }
 
@@ -30,7 +32,7 @@ public class CollectionRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void load_FromTree() throws IOException {
+    public void load() throws IOException {
         var tree = new CollectionTreeDto();
         tree.setPath(new File(testData, "workspace-JNtdCPvw/collection-a70uf9Xv"));
         tree.setId("a70uf9Xv");
@@ -40,10 +42,10 @@ public class CollectionRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void load_FromDir() throws IOException {
+    public void loadTree() throws IOException {
         var collectionDir = new File(testData, "workspace-JNtdCPvw/collection-a70uf9Xv");
 
-        var result = collectionRepositoryMock.load(collectionDir);
+        var result = collectionRepositoryMock.loadTree(collectionDir);
         assertEquals("a70uf9Xv", result.orElseThrow().getId());
     }
 
@@ -62,64 +64,11 @@ public class CollectionRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getCollectionChildrenTree_whenHasResult_return(){
-        var collectionStart = new CollectionTreeDto();
-        collectionStart.setPath(new File(
-                testData,
-                "workspace-nPUaq0TC"
-        ));
-
-        var result = collectionRepositoryMock.getCollectionChildrenTree(collectionStart).toList();
-
-        Assertions.assertThat(result)
-                .hasSize(1)
-                .anyMatch(item -> item.getId().equals(
-                        "us62qhbS"
-                ))
-                .anyMatch(item -> item.getName().equals(
-                        "Collection-lvl1"
-                ))
-                .allMatch(item -> item.getPath() != null)
-                .allMatch(item -> item.getChildren() != null)
-                .allMatch(item -> item.getRequests() != null)
-        ;
-
-        collectionRepositoryMock.getCollectionChildrenTree(collectionStart).toList().get(0).getRequests().toList();
-
-        var parent = result.get(0);
-        Assertions.assertThat(parent.getRequests())
-                .allMatch(item -> item.getParent() == parent);
-    }
-
-    @Test
-    public void getWorkspaceCollectionTree() throws IOException {
-        WorkspaceDto workspaceDto = new WorkspaceDto();
-        workspaceDto.setId("nPUaq0TC");
-        workspaceDto.setName("ROOT");
-        workspaceDto.setPath(mockDataDir);
-
-        WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
-        Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
-                .thenReturn(workspaceDto);
-
-        CollectionRepository collectionDS = new CollectionRepository(
-                new RequestRepository(),
-                workspaceRepositoryMock
-        );
-
-        var result = collectionDS.getWorkspaceCollectionTree();
-
-        assertEquals("nPUaq0TC", result.getId());
-        assertEquals("ROOT", result.getName());
-        Assertions.assertThat(result.getPath()).isDirectory();
-    }
-
-    @Test
     public void delete() throws IOException {
         var dir = collectionRepositoryMock.save(mockDataDir, new CollectionDto());
         new RequestRepository().save(dir, new RequestDto());
 
-        CollectionTreeDto tree = collectionRepositoryMock.load(dir).orElseThrow();
+        CollectionTreeDto tree = collectionRepositoryMock.loadTree(dir).orElseThrow();
         tree.setPath(dir);
 
         collectionRepositoryMock.delete(tree);
@@ -134,14 +83,14 @@ public class CollectionRepositoryTest extends RepositoryStubs {
         var sourceDir = collectionRepositoryMock.save(mockDataDir, new CollectionDto());
         new RequestRepository().save(sourceDir, new RequestDto());
 
-        CollectionTreeDto sourceTree = collectionRepositoryMock.load(sourceDir).orElseThrow();
+        CollectionTreeDto sourceTree = collectionRepositoryMock.loadTree(sourceDir).orElseThrow();
         sourceTree.setPath(sourceDir);
 
         // create target
         var targetDir = collectionRepositoryMock.save(mockDataDir, new CollectionDto());
         new RequestRepository().save(targetDir, new RequestDto());
 
-        CollectionTreeDto targetTree = collectionRepositoryMock.load(targetDir).orElseThrow();
+        CollectionTreeDto targetTree = collectionRepositoryMock.loadTree(targetDir).orElseThrow();
         targetTree.setPath(targetDir);
 
         // test

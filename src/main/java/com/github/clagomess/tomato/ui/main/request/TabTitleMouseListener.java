@@ -97,7 +97,7 @@ public class TabTitleMouseListener extends MouseAdapter {
                     tab.tabContent().getRequestHeadDto(),
                     tab.tabContent().getRequestDto()
             );
-            parent.removeTab(tab);
+            parent.removeTab(tab, true);
         }).execute();
     }
 
@@ -106,7 +106,7 @@ public class TabTitleMouseListener extends MouseAdapter {
                 .takeWhile(tab -> !tab.tabKey().equals(tabKey))
                 .toList();
 
-        result.forEach(parent::removeTab);
+        result.forEach(tab -> parent.removeTab(tab, false));
     }
 
     private void removeOtherTabs(){
@@ -114,7 +114,7 @@ public class TabTitleMouseListener extends MouseAdapter {
                 .filter(tab -> !tab.tabKey().equals(tabKey))
                 .toList();
 
-        result.forEach(parent::removeTab);
+        result.forEach(tab -> parent.removeTab(tab, false));
     }
 
     private void removeRightTabs(){
@@ -123,6 +123,6 @@ public class TabTitleMouseListener extends MouseAdapter {
                 .filter(tab -> !tab.tabKey().equals(tabKey))
                 .toList();
 
-        result.forEach(parent::removeTab);
+        result.forEach(tab -> parent.removeTab(tab, false));
     }
 }

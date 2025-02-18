@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import com.github.clagomess.tomato.io.repository.CollectionRepository;
+import com.github.clagomess.tomato.io.repository.TreeRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -11,8 +11,8 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CollectionComboBoxTest {
-    private final CollectionRepository collectionRepositoryMock = Mockito.mock(CollectionRepository.class);
-    private final CollectionComboBox comboBoxMock = Mockito.spy(new CollectionComboBox(collectionRepositoryMock));
+    private final TreeRepository treeRepository = Mockito.mock(TreeRepository.class);
+    private final CollectionComboBox comboBoxMock = Mockito.spy(new CollectionComboBox(treeRepository));
 
     @Test
     public void addItens_assertSorted() throws IOException {
@@ -29,7 +29,7 @@ public class CollectionComboBoxTest {
         }};
 
         Mockito.doReturn(root)
-                .when(collectionRepositoryMock)
+                .when(treeRepository)
                 .getWorkspaceCollectionTree();
 
         comboBoxMock.addItens(null);

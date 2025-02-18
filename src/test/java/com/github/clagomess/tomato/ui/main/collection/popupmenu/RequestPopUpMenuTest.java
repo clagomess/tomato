@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.io.repository.RepositoryStubs;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
+import com.github.clagomess.tomato.io.repository.TreeRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import org.assertj.core.api.Assertions;
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RequestPopUpMenuTest extends RepositoryStubs {
     private final RequestRepository requestRepository = new RequestRepository();
+    private final TreeRepository treeRepository = new TreeRepository();
 
     @Test
     public void duplicate() throws IOException {
@@ -25,7 +27,7 @@ public class RequestPopUpMenuTest extends RepositoryStubs {
         CollectionTreeDto collectionTree = new CollectionTreeDto();
         collectionTree.setId("c_a");
         collectionTree.setPath(result.getParentFile());
-        var head = requestRepository.getRequestList(collectionTree)
+        var head = treeRepository.getRequestList(collectionTree)
                 .filter(item -> item.getId().equals(request.getId()))
                 .findFirst()
                 .orElseThrow();

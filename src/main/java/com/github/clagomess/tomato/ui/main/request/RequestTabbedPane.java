@@ -1,10 +1,11 @@
 package com.github.clagomess.tomato.ui.main.request;
 
 import com.github.clagomess.tomato.controller.main.request.RequestTabbedPaneController;
+import com.github.clagomess.tomato.dto.RequestTabSnapshotDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.ui.component.WaitExecution;
+import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -12,9 +13,13 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+
+import static javax.swing.SwingUtilities.invokeLater;
 
 public class RequestTabbedPane extends JTabbedPane {
     @Getter
@@ -30,12 +35,35 @@ public class RequestTabbedPane extends JTabbedPane {
         });
 
         controller.addWorkspaceOnSwitchListener(() -> {
-            new ArrayList<>(tabs).forEach(this::removeTab);
+            new ArrayList<>(tabs).forEach(tab -> removeTab(tab, true));
+            loadRequestFromSession();
         });
 
-        controller.addRequestOnLoadListener((requestHead, request) -> new WaitExecution(() -> {
-            addNewTab(requestHead, request);
-        }).execute());
+        controller.addRequestOnLoadListener((requestHead, request) -> invokeLater(() ->
+            addNewTab(requestHead, request)
+        ));
+
+        controller.addSaveRequestsSnapshotListener(() ->
+            tabs.stream().map(item -> new RequestTabSnapshotDto(
+                    item.tabContent().getRequestStagingMonitor().isDiferent(),
+                    item.tabContent().getRequestHeadDto(),
+                    item.tabContent().getRequestDto()
+            )).toList()
+        );
+
+        loadRequestFromSession();
+    }
+
+    private void loadRequestFromSession(){
+        ForkJoinPool.commonPool().submit(() -> {
+            try {
+                controller.loadRequestFromSession((requestHead, request) ->
+                        invokeLater(() -> addNewTab(requestHead, request))
+                );
+            } catch (IOException e) {
+                new ExceptionDialog(this, e);
+            }
+        });
     }
 
     private void addNewPlusTab(){
@@ -49,8 +77,7 @@ public class RequestTabbedPane extends JTabbedPane {
         btnPlus.setFocusable(false);
         btnPlus.setMargin(new Insets(0,0,0,0));
         btnPlus.addActionListener(l ->
-                new WaitExecution(() -> addNewTab(null, new RequestDto()))
-                        .execute()
+                invokeLater(() -> addNewTab(null, new RequestDto()))
         );
 
         setTabComponentAt(indexOfTab("+"), btnPlus);
@@ -106,8 +133,8 @@ public class RequestTabbedPane extends JTabbedPane {
         return ret == JOptionPane.OK_OPTION;
     }
 
-    protected void removeTab(Tab tab){
-        if(!isSafeToRemoveTab(tab)) return;
+    protected void removeTab(Tab tab, boolean forceRemove){
+        if(!forceRemove && !isSafeToRemoveTab(tab)) return;
 
         var tabId = tab.tabKey().getUuid().toString();
         removeTabAt(indexOfTab(tabId));
@@ -120,7 +147,7 @@ public class RequestTabbedPane extends JTabbedPane {
         tabs.stream()
                 .filter(tab -> tab.tabKey().equals(tabKey))
                 .findFirst()
-                .ifPresent(this::removeTab);
+                .ifPresent(tab -> removeTab(tab, false));
     }
 
     protected record Tab(

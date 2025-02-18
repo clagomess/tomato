@@ -1,9 +1,6 @@
 package com.github.clagomess.tomato.ui.workspace;
 
-import com.github.clagomess.tomato.dto.data.WorkspaceDto;
-import com.github.clagomess.tomato.io.repository.DataSessionRepository;
-import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
-import com.github.clagomess.tomato.publisher.WorkspacePublisher;
+import com.github.clagomess.tomato.controller.workspace.WorkspaceNewFrameController;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -14,10 +11,6 @@ import java.awt.*;
 public class WorkspaceNewFrame extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final JTextField txtName = new JTextField();
-
-    private final DataSessionRepository dataSessionRepository = new DataSessionRepository();
-    private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
-    private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     public WorkspaceNewFrame(
             Component parent
@@ -48,15 +41,8 @@ public class WorkspaceNewFrame extends JFrame {
 
     private void btnSaveAction(){
         new WaitExecution(this, btnSave, () -> {
-            WorkspaceDto dto = new WorkspaceDto();
-            dto.setName(txtName.getText());
-            workspaceRepository.save(dto);
-
-            var session = dataSessionRepository.load();
-            session.setWorkspaceId(dto.getId());
-            dataSessionRepository.save(session);
-
-            workspacePublisher.getOnSwitch().publish(dto);
+            new WorkspaceNewFrameController()
+                    .save(txtName.getText());
 
             setVisible(false);
             dispose();

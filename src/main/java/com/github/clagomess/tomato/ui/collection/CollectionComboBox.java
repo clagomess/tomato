@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import com.github.clagomess.tomato.io.repository.CollectionRepository;
+import com.github.clagomess.tomato.io.repository.TreeRepository;
 import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import org.jetbrains.annotations.Nullable;
@@ -12,22 +12,22 @@ import javax.swing.*;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
-    private final CollectionRepository collectionRepository;
+    private final TreeRepository treeRepository;
 
     @TestOnly
-    protected CollectionComboBox(CollectionRepository collectionRepository) {
-        this.collectionRepository = collectionRepository;
+    protected CollectionComboBox(TreeRepository treeRepository) {
+        this.treeRepository = treeRepository;
     }
 
     public CollectionComboBox(@Nullable CollectionTreeDto selectedCollectionTree) {
-        collectionRepository = new CollectionRepository();
+        treeRepository = new TreeRepository();
         setRenderer(new DtoListCellRenderer<>(CollectionTreeDto::getFlattenedParentString));
         invokeLater(() -> addItens(selectedCollectionTree));
     }
 
     protected void addItens(CollectionTreeDto selectedCollectionTree) {
         try {
-            collectionRepository.getWorkspaceCollectionTree()
+            treeRepository.getWorkspaceCollectionTree()
                     .flattened()
                     .forEachOrdered(this::addItem);
 

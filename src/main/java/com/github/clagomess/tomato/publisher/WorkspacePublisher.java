@@ -12,6 +12,7 @@ public class WorkspacePublisher {
     private static final WorkspacePublisher instance = new WorkspacePublisher();
     private WorkspacePublisher() {}
 
+    private final NoKeyPublisher<String> onBeforeSwitch = new NoKeyPublisher<>();
     private final NoKeyPublisher<WorkspaceDto> onSwitch = new NoKeyPublisher<>();
 
     private final NoKeyPublisher<PublisherEvent<WorkspaceDto>> onChangeAny = new NoKeyPublisher<>();

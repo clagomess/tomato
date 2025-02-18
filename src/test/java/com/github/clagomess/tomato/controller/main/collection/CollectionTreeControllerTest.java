@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.controller.main.collection;
 
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import com.github.clagomess.tomato.io.repository.CollectionRepository;
+import com.github.clagomess.tomato.io.repository.TreeRepository;
 import com.github.clagomess.tomato.publisher.WorkspacePublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -17,16 +17,16 @@ import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CollectionTreeControllerTest {
-    private final CollectionRepository collectionRepositoryMock = Mockito.mock(CollectionRepository.class);
+    private final TreeRepository treeRepository = Mockito.mock(TreeRepository.class);
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     private final CollectionTreeController controller = Mockito.spy(new CollectionTreeController(
-            collectionRepositoryMock
+            treeRepository
     ));
 
     @BeforeEach
     public void setup(){
-        Mockito.reset(collectionRepositoryMock);
+        Mockito.reset(treeRepository);
         Mockito.reset(controller);
     }
 
@@ -44,7 +44,7 @@ public class CollectionTreeControllerTest {
     @Test
     public void loadCurrentWorkspace_assertRemoveOnChangeListener() throws IOException {
         Mockito.doReturn(new CollectionTreeDto())
-                .when(collectionRepositoryMock)
+                .when(treeRepository)
                 .getWorkspaceCollectionTree();
 
         var key = RandomStringUtils.secure().nextAlphanumeric(8);
@@ -72,7 +72,7 @@ public class CollectionTreeControllerTest {
         tree.setId(RandomStringUtils.secure().nextAlphanumeric(8));
 
         Mockito.doReturn(tree)
-                .when(collectionRepositoryMock)
+                .when(treeRepository)
                 .getWorkspaceCollectionTree();
 
         AtomicInteger result = new AtomicInteger();
