@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
+import com.github.clagomess.tomato.io.repository.TreeRepository;
 import com.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.SystemPublisher;
@@ -14,9 +15,11 @@ import com.github.clagomess.tomato.publisher.base.EventTypeEnum;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -30,9 +33,11 @@ public class RequestTabbedPaneControllerTest {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
     private final RequestRepository requestRepositoryMock = Mockito.mock(RequestRepository.class);
     private final WorkspaceSessionRepository workspaceSessionRepository = Mockito.mock(WorkspaceSessionRepository.class);
+    private final TreeRepository treeRepository = Mockito.mock(TreeRepository.class);
     private final RequestTabbedPaneController controller = Mockito.spy(new RequestTabbedPaneController(
             requestRepositoryMock,
-            workspaceSessionRepository
+            workspaceSessionRepository,
+            treeRepository
     ));
 
     @BeforeEach
@@ -127,6 +132,90 @@ public class RequestTabbedPaneControllerTest {
 
         Assertions.assertThat(session.getRequests())
                 .isEmpty();
+    }
+
+    @Nested
+    class LoadRequestFromSession {
+        @Test
+        public void whenNew() throws IOException {
+            var wsRequest = new WorkspaceSessionDto.Request(null, new RequestDto());
+            var ws = new WorkspaceSessionDto();
+            ws.setRequests(List.of(wsRequest));
+
+            Mockito.doReturn(ws)
+                    .when(workspaceSessionRepository)
+                    .load();
+
+            AtomicBoolean triggered = new AtomicBoolean(false);
+            controller.loadRequestFromSession((requestHead, request) -> {
+                triggered.set(true);
+                assertNull(requestHead);
+                assertNotNull(request);
+                assertEquals(request.getId(), wsRequest.getStaging().getId());
+            });
+
+            assertTrue(triggered.get());
+        }
+
+        @Test
+        public void whenModified() throws IOException {
+            var wsRequest = new WorkspaceSessionDto.Request(new File("foo"), new RequestDto());
+            var ws = new WorkspaceSessionDto();
+            ws.setRequests(List.of(wsRequest));
+
+            Mockito.doReturn(ws)
+                    .when(workspaceSessionRepository)
+                    .load();
+
+
+            var requestHeadMock = new RequestHeadDto();
+            Mockito.doReturn(Optional.of(requestHeadMock))
+                    .when(treeRepository)
+                    .loadRequestHead(Mockito.any());
+
+            AtomicBoolean triggered = new AtomicBoolean(false);
+            controller.loadRequestFromSession((requestHead, request) -> {
+                triggered.set(true);
+                assertNotNull(requestHead);
+                assertNotNull(request);
+                assertEquals(requestHead.getId(), requestHeadMock.getId());
+                assertEquals(request.getId(), wsRequest.getStaging().getId());
+            });
+
+            assertTrue(triggered.get());
+        }
+
+        @Test
+        public void whenOpened() throws IOException {
+            var wsRequest = new WorkspaceSessionDto.Request(new File("foo"), null);
+            var ws = new WorkspaceSessionDto();
+            ws.setRequests(List.of(wsRequest));
+
+            Mockito.doReturn(ws)
+                    .when(workspaceSessionRepository)
+                    .load();
+
+            var requestHeadMock = new RequestHeadDto();
+            Mockito.doReturn(Optional.of(requestHeadMock))
+                    .when(treeRepository)
+                    .loadRequestHead(Mockito.any());
+
+            var requestMock = new RequestDto();
+            requestMock.setId(requestHeadMock.getId());
+            Mockito.doReturn(Optional.of(requestMock))
+                    .when(requestRepositoryMock)
+                    .load(Mockito.any());
+
+            AtomicBoolean triggered = new AtomicBoolean(false);
+            controller.loadRequestFromSession((requestHead, request) -> {
+                triggered.set(true);
+                assertNotNull(requestHead);
+                assertNotNull(request);
+                assertEquals(requestHead.getId(), request.getId());
+            });
+
+            assertTrue(triggered.get());
+        }
     }
 
     @Test

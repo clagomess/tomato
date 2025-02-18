@@ -5,7 +5,7 @@ import com.github.clagomess.tomato.dto.RequestTabSnapshotDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.ui.component.WaitExecution;
+import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -13,9 +13,13 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+
+import static javax.swing.SwingUtilities.invokeLater;
 
 public class RequestTabbedPane extends JTabbedPane {
     @Getter
@@ -32,11 +36,12 @@ public class RequestTabbedPane extends JTabbedPane {
 
         controller.addWorkspaceOnSwitchListener(() -> {
             new ArrayList<>(tabs).forEach(tab -> removeTab(tab, true));
+            loadRequestFromSession();
         });
 
-        controller.addRequestOnLoadListener((requestHead, request) -> new WaitExecution(() -> {
-            addNewTab(requestHead, request);
-        }).execute());
+        controller.addRequestOnLoadListener((requestHead, request) -> invokeLater(() ->
+            addNewTab(requestHead, request)
+        ));
 
         controller.addSaveRequestsSnapshotListener(() ->
             tabs.stream().map(item -> new RequestTabSnapshotDto(
@@ -45,6 +50,20 @@ public class RequestTabbedPane extends JTabbedPane {
                     item.tabContent().getRequestDto()
             )).toList()
         );
+
+        loadRequestFromSession();
+    }
+
+    private void loadRequestFromSession(){
+        ForkJoinPool.commonPool().submit(() -> {
+            try {
+                controller.loadRequestFromSession((requestHead, request) ->
+                        invokeLater(() -> addNewTab(requestHead, request))
+                );
+            } catch (IOException e) {
+                new ExceptionDialog(this, e);
+            }
+        });
     }
 
     private void addNewPlusTab(){
@@ -58,8 +77,7 @@ public class RequestTabbedPane extends JTabbedPane {
         btnPlus.setFocusable(false);
         btnPlus.setMargin(new Insets(0,0,0,0));
         btnPlus.addActionListener(l ->
-                new WaitExecution(() -> addNewTab(null, new RequestDto()))
-                        .execute()
+                invokeLater(() -> addNewTab(null, new RequestDto()))
         );
 
         setTabComponentAt(indexOfTab("+"), btnPlus);

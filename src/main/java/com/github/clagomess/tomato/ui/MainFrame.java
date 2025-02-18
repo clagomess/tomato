@@ -22,7 +22,7 @@ public class MainFrame extends JFrame {
         setMinimumSize(new Dimension(1200, 650));
         setJMenuBar(getMenu());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new MainWindowAdapter());
+        addWindowListener(new MainWindowAdapter(this));
 
         setLayout(new MigLayout("insets 5", "[grow, fill]"));
 

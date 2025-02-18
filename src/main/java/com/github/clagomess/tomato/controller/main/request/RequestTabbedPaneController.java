@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.RequestTabSnapshotDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
+import com.github.clagomess.tomato.io.repository.TreeRepository;
 import com.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.SystemPublisher;
@@ -21,10 +22,12 @@ import java.util.List;
 public class RequestTabbedPaneController {
     private final RequestRepository requestRepository;
     private final WorkspaceSessionRepository workspaceSessionRepository;
+    private final TreeRepository treeRepository;
 
     public RequestTabbedPaneController() {
         this.requestRepository = new RequestRepository();
         this.workspaceSessionRepository = new WorkspaceSessionRepository();
+        this.treeRepository = new TreeRepository();
     }
 
     public void addWorkspaceOnSwitchListener(Runnable runnable) {
@@ -76,7 +79,8 @@ public class RequestTabbedPaneController {
                 continue;
             }
 
-            var requestHead = new RequestHeadDto(); // @TODO: load full head
+            var requestHead = treeRepository.loadRequestHead(item.getFilepath())
+                    .orElseThrow();
 
             if(item.getStaging() != null){
                 runnable.load(requestHead, item.getStaging());
