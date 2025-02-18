@@ -1,9 +1,14 @@
 package com.github.clagomess.tomato.publisher.base;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.swing.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
@@ -52,5 +57,22 @@ public class NoKeyPublisherTest {
             doException.removeListener(uuid);
             doException.publish("opa");
         }
+    }
+
+    @Test
+    public void publish_concurrent(){
+        NoKeyPublisher<String> publisher = new NoKeyPublisher<>();
+        List<UUID> uuids = new LinkedList<>();
+
+        IntStream.range(0, 100).forEach(i -> {
+            var uuid = publisher.addListener(event -> {});
+            uuids.add(uuid);
+        });
+
+        uuids.parallelStream()
+                .forEach(i -> {
+                    var dummy = RandomStringUtils.secure().nextAlphanumeric(8);
+                    publisher.publish(dummy);
+                });
     }
 }

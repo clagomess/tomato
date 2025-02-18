@@ -4,26 +4,26 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Slf4j
 @Getter
 abstract class BasePublisher<K, T> {
     private static final List<BasePublisher<?, ?>> toDebug = new LinkedList<>();
-    protected final List<Listener<K, T>> listeners = new LinkedList<>();
+    protected final Queue<Listener<K, T>> listeners = new ConcurrentLinkedQueue<>();
 
     public BasePublisher() {
         toDebug.add(this);
     }
 
     public void removeListener(UUID uuid) {
-        var noConcurrentList = new ArrayList<>(listeners);
-
-        Optional<Listener<K, T>> opt = noConcurrentList.stream()
-                .filter(listener -> listener.uuid.equals(uuid))
+        Optional<Listener<K, T>> opt = listeners.stream()
+                .filter(Objects::nonNull)
+                .filter(listener -> Objects.equals(listener.uuid, uuid))
                 .findFirst();
 
-        if(opt.isPresent()) {
-            if(log.isDebugEnabled()) log.debug("RemoveListener: {}", uuid);
+        if (opt.isPresent()) {
+            if (log.isDebugEnabled()) log.debug("RemoveListener: {}", uuid);
             listeners.remove(opt.get());
         }
     }

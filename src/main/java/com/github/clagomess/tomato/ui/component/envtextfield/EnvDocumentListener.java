@@ -5,7 +5,6 @@ import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
-import com.github.clagomess.tomato.util.ExecutorUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +17,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +30,7 @@ class EnvDocumentListener implements DocumentListener {
     private final List<UUID> listenerUuid = new ArrayList<>(2);
     private final WorkspaceSessionPublisher workspaceSessionPublisher = WorkspaceSessionPublisher.getInstance();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
-    private final ExecutorService singleThreadExecutor = ExecutorUtil.getSingleThreadExecutor();
+    private final ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
 
     private final StyledDocument document;
     private final SimpleAttributeSet defaultStyle = new SimpleAttributeSet();
@@ -48,7 +47,7 @@ class EnvDocumentListener implements DocumentListener {
         StyleConstants.setForeground(envFilledStyle, ColorConstant.GREEN);
         StyleConstants.setForeground(envNotFilledStyle, ColorConstant.RED);
 
-        ForkJoinPool.commonPool().submit(this::updateEnvMap);
+        singleThreadExecutor.submit(this::updateEnvMap);
 
         listenerUuid.add(workspaceSessionPublisher.getOnChange().addListener(event -> {
             updateEnvMap();

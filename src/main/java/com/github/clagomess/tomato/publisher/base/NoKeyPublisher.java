@@ -2,7 +2,6 @@ package com.github.clagomess.tomato.publisher.base;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 @Slf4j
@@ -26,9 +25,7 @@ public class NoKeyPublisher<T> extends BasePublisher<Void, T> {
     public void publish(T event){
         if(log.isDebugEnabled()) log.debug("Publishing: {}", event);
 
-        var noConcurrentList = new ArrayList<>(listeners);
-
-        noConcurrentList.parallelStream().forEach(listener -> {
+        listeners.parallelStream().forEach(listener -> {
             if(log.isDebugEnabled()) {
                 log.debug(
                         "-> trigger: {}\n-> {}",
@@ -39,7 +36,5 @@ public class NoKeyPublisher<T> extends BasePublisher<Void, T> {
 
             listener.getRunnable().change(event);
         });
-
-        noConcurrentList.clear();
     }
 }
