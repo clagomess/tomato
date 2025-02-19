@@ -139,6 +139,7 @@ public class ResponseTabContent extends JPanel {
     private void btnDownloadAction(){
         JFileChooser file = new JFileChooser();
         file.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        file.setSelectedFile(new File(responseDto.getHttpResponse().getBodyDownloadFileName()));
 
         if(file.showSaveDialog(this) != JFileChooser.APPROVE_OPTION){
             return;
@@ -147,6 +148,11 @@ public class ResponseTabContent extends JPanel {
         new WaitExecution(this, btnDownload, () -> {
             File bodyFile = responseDto.getHttpResponse().getBody();
             Files.copy(bodyFile.toPath(), file.getSelectedFile().toPath());
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "File Saved Successfully"
+            );
         }).execute();
     }
 }

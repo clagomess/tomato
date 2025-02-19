@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/sample-pdf-with-disposition-filename"
+  },
+  "response": {
+    "status": 200,
+    "body": "%PDF",
+    "headers": {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": "filename=mypdf.pdf"
+    }
+  }
+}
