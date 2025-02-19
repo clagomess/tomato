@@ -46,4 +46,30 @@ public class ResponseDtoTest {
 
         assertEquals(expectedValue, result.get(expectedKey));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "/response-binary,response.pdf",
+            "/sample.pdf,sample.pdf",
+            "/sample-pdf-with-disposition-filename,mypdf.pdf",
+            "/octet-stream,response.bin",
+    })
+    public void Response_parseBodyDownloadFileName(
+            String method,
+            String expected
+    ) throws URISyntaxException, IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder(new URI(
+                "http://localhost:8500" + method
+        )).GET().build();
+
+        HttpResponse<Path> httpResponse = HttpClient.newHttpClient().send(
+                request,
+                HttpResponse.BodyHandlers.ofFile(HttpService.createTempFile().toPath())
+        );
+
+        var response = new ResponseDto.Response(httpResponse, 0L);
+        var result = response.parseBodyDownloadFileName(httpResponse);
+
+        assertEquals(expected, result);
+    }
 }

@@ -46,6 +46,7 @@ public class ResponseDto {
         private final Map<String, List<String>> headers;
         private final Map<String, String> cookies;
         private final MediaType contentType;
+        private final String bodyDownloadFileName;
 
         private File body;
         private long bodySize;
@@ -62,6 +63,7 @@ public class ResponseDto {
             this.headers = response.headers().map();
             this.cookies = parseSetCookies(this.headers);
             this.contentType = new MediaType(response.headers());
+            this.bodyDownloadFileName = parseBodyDownloadFileName(response);
 
             setBody(convertIfGziped(
                     response.headers(),
@@ -117,6 +119,12 @@ public class ResponseDto {
             });
 
             return result;
+        }
+
+        protected String parseBodyDownloadFileName(
+                HttpResponse<Path> httpResponse
+        ){
+            return null;
         }
 
         protected void buildBodyString() {

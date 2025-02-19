@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/octet-stream"
+  },
+  "response": {
+    "status": 200,
+    "body": "%PDF",
+    "headers": {
+      "Content-Type": "application/octet-stream"
+    }
+  }
+}
