@@ -1,6 +1,8 @@
 package com.github.clagomess.tomato.ui.menu;
 
 import com.github.clagomess.tomato.ui.MainFrame;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxBugIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxInfoCircleIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSliderAltIcon;
 import com.github.clagomess.tomato.ui.settings.*;
 
@@ -14,19 +16,19 @@ public class SettingsMenu extends JMenu {
         mConfiguration.addActionListener(l -> new ConfigurationFrame(mainFrame));
         add(mConfiguration);
 
-        var mAbout = new JMenuItem("About");
+        var mAbout = new JMenuItem("About", new BxInfoCircleIcon());
         mAbout.addActionListener(l -> new AboutFrame(mainFrame));
         add(mAbout);
 
-        var debugPublisher = new JMenuItem("Debug -> Publisher");
+        var debugPublisher = new JMenuItem("Debug -> Publisher", new BxBugIcon());
         debugPublisher.addActionListener(l -> new DebugPublisherFrame(mainFrame));
         add(debugPublisher);
 
-        var debugCache = new JMenuItem("Debug -> Cache");
+        var debugCache = new JMenuItem("Debug -> Cache", new BxBugIcon());
         debugCache.addActionListener(l -> new DebugCacheFrame(mainFrame));
         add(debugCache);
 
-        var debugThreads = new JMenuItem("Debug -> Threads");
+        var debugThreads = new JMenuItem("Debug -> Threads", new BxBugIcon());
         debugThreads.addActionListener(l -> new DebugThreadsFrame(mainFrame));
         add(debugThreads);
     }

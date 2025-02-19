@@ -3,10 +3,8 @@ package com.github.clagomess.tomato.ui.main.request.right;
 import com.github.clagomess.tomato.dto.ResponseDto;
 import com.github.clagomess.tomato.dto.table.KeyValueTMDto;
 import com.github.clagomess.tomato.io.http.MediaType;
-import com.github.clagomess.tomato.ui.component.ColorConstant;
-import com.github.clagomess.tomato.ui.component.RawTextArea;
-import com.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
-import com.github.clagomess.tomato.ui.component.WaitExecution;
+import com.github.clagomess.tomato.ui.component.*;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxDotsVerticalRoundedIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxDownloadIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
 import com.github.clagomess.tomato.ui.component.tablemanager.TableManager;
@@ -27,14 +25,9 @@ import static javax.swing.SwingUtilities.invokeLater;
 public class ResponseTabContent extends JPanel {
     private final StatusResponse statusResponse = new StatusResponse();
 
-    private final JButton btnBeautify = new JButton(new BxsMagicWandIcon()){{
-        setToolTipText("Beautify response");
-        setEnabled(false);
-    }};
-    private final JButton btnDownload = new JButton(new BxDownloadIcon()){{
-        setToolTipText("Download");
-        setEnabled(false);
-    }};
+    private final JButton btnBeautifyResponse = new IconButton(new BxsMagicWandIcon(), "Beautify Response");
+    private final JButton btnSaveResponse = new IconButton(new BxDownloadIcon(), "Save Response");
+    private final JButton btnMoreOptions = new IconButton(new BxDotsVerticalRoundedIcon(), "More Options");
 
     private TRSyntaxTextArea txtResponse;
     private TableManager<KeyValueTMDto> tblResponseHeader;
@@ -49,8 +42,9 @@ public class ResponseTabContent extends JPanel {
         ));
 
         add(statusResponse, "width 100%");
-        add(btnBeautify);
-        add(btnDownload, "wrap");
+        add(btnBeautifyResponse);
+        add(btnSaveResponse);
+        add(btnMoreOptions, "wrap");
 
         JTabbedPane tpResponse = new JTabbedPane();
         add(tpResponse, "span, height 100%");
@@ -61,8 +55,13 @@ public class ResponseTabContent extends JPanel {
         invokeLater(() -> createTabDebug(tpResponse));
 
         // configure
-        btnBeautify.addActionListener(l -> btnBeautifyAction());
-        btnDownload.addActionListener(l -> btnDownloadAction());
+        setButtonsEnabled(false);
+        btnBeautifyResponse.addActionListener(l -> btnBeautifyResponseAction());
+        btnSaveResponse.addActionListener(l -> btnSaveResponseAction());
+        btnMoreOptions.addActionListener(l ->
+                new ResponseOptionsPopUpMenu(this)
+                        .show(btnMoreOptions, 0, 0)
+        );
     }
 
     private void createTabReponse(JTabbedPane tabbedPane){
@@ -85,9 +84,14 @@ public class ResponseTabContent extends JPanel {
         tabbedPane.addTab("Debug", component);
     }
 
+    protected void setButtonsEnabled(boolean enabled){
+        btnBeautifyResponse.setEnabled(enabled);
+        btnSaveResponse.setEnabled(enabled);
+        btnMoreOptions.setEnabled(enabled);
+    }
+
     public void reset(){
-        btnBeautify.setSelected(false);
-        btnDownload.setEnabled(false);
+        setButtonsEnabled(false);
         txtHTTPDebug.reset();
         txtResponse.reset();
         statusResponse.reset();
@@ -98,8 +102,7 @@ public class ResponseTabContent extends JPanel {
         txtHTTPDebug.setText(responseDto.getRequestDebug());
 
         if(responseDto.isRequestStatus()) {
-            btnDownload.setEnabled(true);
-            btnBeautify.setEnabled(true);
+            setButtonsEnabled(true);
 
             txtResponse.setSyntaxStyle(
                     responseDto.getHttpResponse().isRenderBodyByContentType() ?
@@ -123,7 +126,7 @@ public class ResponseTabContent extends JPanel {
         statusResponse.update(responseDto);
     }
 
-    private void btnBeautifyAction(){
+    protected void btnBeautifyResponseAction(){
         new BeautifierDialog(this, responseDto.getHttpResponse().getContentType())
                 .beautify(responseDto.getHttpResponse().getBody(), result -> {
                     responseDto.getHttpResponse().setBody(result);
@@ -136,7 +139,7 @@ public class ResponseTabContent extends JPanel {
                 });
     }
 
-    private void btnDownloadAction(){
+    protected void btnSaveResponseAction(){
         JFileChooser file = new JFileChooser();
         file.setFileSelectionMode(JFileChooser.FILES_ONLY);
         file.setSelectedFile(new File(responseDto.getHttpResponse().getBodyDownloadFileName()));
@@ -145,7 +148,7 @@ public class ResponseTabContent extends JPanel {
             return;
         }
 
-        new WaitExecution(this, btnDownload, () -> {
+        new WaitExecution(this, btnSaveResponse, () -> {
             File bodyFile = responseDto.getHttpResponse().getBody();
             Files.copy(bodyFile.toPath(), file.getSelectedFile().toPath());
 

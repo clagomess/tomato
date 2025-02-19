@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
+import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.StagingMonitor;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
@@ -31,9 +32,7 @@ class Row extends JPanel {
     private final JLabel changeIcon = new JLabel(iconHasNotChanged);
     private final ListenableTextField txtKey = new ListenableTextField();
     private final ListenableTextField txtValue = new ListenableTextField();
-    private final JButton btnRemove = new JButton(new BxTrashIcon()){{
-        setToolTipText("Remove");
-    }};
+    private final JButton btnRemove = new IconButton(new BxTrashIcon(), "Remove");
 
     public Row(
             Container parent,
