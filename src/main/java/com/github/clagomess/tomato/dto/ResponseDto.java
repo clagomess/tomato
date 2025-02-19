@@ -7,15 +7,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
@@ -124,7 +123,25 @@ public class ResponseDto {
         protected String parseBodyDownloadFileName(
                 HttpResponse<Path> httpResponse
         ){
-            return null;
+            Optional<String> contentDisposition = httpResponse.headers()
+                    .firstValue("Content-Disposition");
+
+            if(contentDisposition.isPresent()){
+                var filename = Arrays.stream(contentDisposition.get().split(";"))
+                        .filter(StringUtils::isNotBlank)
+                        .filter(param -> param.contains("filename"))
+                        .map(param -> param.replace("filename=", ""))
+                        .collect(Collectors.joining(""));
+
+                if(StringUtils.isNotBlank(filename)) return filename;
+            }
+
+            String[] paths = httpResponse.uri().getPath().split("/");
+            if(paths.length > 0 && paths[paths.length-1].contains(".")){
+                return paths[paths.length-1];
+            }
+
+            return "response.bin";
         }
 
         protected void buildBodyString() {

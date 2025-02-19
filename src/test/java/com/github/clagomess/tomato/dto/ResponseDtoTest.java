@@ -49,7 +49,7 @@ public class ResponseDtoTest {
 
     @ParameterizedTest
     @CsvSource({
-            "/response-binary,response.pdf",
+            "/response-binary,response.bin",
             "/sample.pdf,sample.pdf",
             "/sample-pdf-with-disposition-filename,mypdf.pdf",
             "/octet-stream,response.bin",
@@ -68,8 +68,7 @@ public class ResponseDtoTest {
         );
 
         var response = new ResponseDto.Response(httpResponse, 0L);
-        var result = response.parseBodyDownloadFileName(httpResponse);
 
-        assertEquals(expected, result);
+        assertEquals(expected, response.getBodyDownloadFileName());
     }
 }
