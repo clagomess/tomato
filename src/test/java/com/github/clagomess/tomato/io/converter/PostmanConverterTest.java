@@ -1,9 +1,9 @@
 package com.github.clagomess.tomato.io.converter;
 
-import com.github.clagomess.tomato.io.repository.CollectionRepository;
-import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
-import com.github.clagomess.tomato.io.repository.RepositoryStubs;
-import com.github.clagomess.tomato.io.repository.RequestRepository;
+import com.github.clagomess.tomato.dto.data.WorkspaceDto;
+import com.github.clagomess.tomato.io.repository.*;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -46,5 +46,39 @@ public class PostmanConverterTest extends RepositoryStubs {
         postmanConverter.pumpEnvironment(
                 postmanCollection
         );
+    }
+
+    @Nested
+    class Dump {
+        private final WorkspaceRepository workspaceRepository = Mockito.spy(new WorkspaceRepository());
+        private final CollectionRepository collectionRepository = Mockito.spy(new CollectionRepository());
+        private final RequestRepository requestRepository = Mockito.spy(new RequestRepository());
+        private final TreeRepository treeRepository = Mockito.spy(new TreeRepository(
+                workspaceRepository,
+                collectionRepository,
+                requestRepository
+        ));
+
+        @Test
+        public void dumpCollection() throws IOException {
+            var workspace = new WorkspaceDto();
+            workspace.setName("ROOT");
+            workspace.setPath(new File(testData, "workspace-JNtdCPvw"));
+
+            Mockito.doReturn(workspace)
+                    .when(workspaceRepository)
+                    .getDataSessionWorkspace();
+
+            var rootTree = treeRepository.getWorkspaceCollectionTree();
+
+            var resultCollectionFile = new File(mockHomeDir, "postman.collection.json");
+            var postmanConverter = new PostmanConverter();
+            postmanConverter.dumpCollection(
+                    resultCollectionFile,
+                    rootTree
+            );
+
+            Assertions.assertThat(resultCollectionFile).exists();
+        }
     }
 }
