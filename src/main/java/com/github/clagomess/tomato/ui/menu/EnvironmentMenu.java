@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.menu;
 import com.github.clagomess.tomato.ui.MainFrame;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxExportIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxImportIcon;
+import com.github.clagomess.tomato.ui.environment.EnvironmentExportFrame;
 import com.github.clagomess.tomato.ui.environment.EnvironmentImportFrame;
 import com.github.clagomess.tomato.ui.environment.EnvironmentNewFrame;
 import com.github.clagomess.tomato.ui.environment.list.EnvironmentListFrame;
@@ -26,7 +27,7 @@ public class EnvironmentMenu extends JMenu {
         add(mImport);
 
         var mExport = new JMenuItem("Export", new BxExportIcon());
-        mExport.addActionListener(l -> {}); //@TODO: Implements - Export Environment
+        mExport.addActionListener(l -> new EnvironmentExportFrame(mainFrame));
         add(mExport);
     }
 }

@@ -181,8 +181,9 @@ public class PostmanConverter {
 
     public void dumpEnvironment(
             File destination,
-            EnvironmentDto environment
+            String environmentId
     ) throws IOException {
+        EnvironmentDto environment = environmentRepository.load(environmentId).orElseThrow();
         PostmanEnvironmentDto postmanEnvironmentDto = environmentDumpMapper.toEnvironmentDto(environment);
 
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(destination))) {

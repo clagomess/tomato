@@ -93,13 +93,15 @@ public class PostmanConverterTest extends RepositoryStubs {
 
         @Test
         public void dumpEnvironment() throws IOException {
-            var environment = environmentRepository.load("KmZxncfJ").orElseThrow();
-
             var resultFile = new File(mockHomeDir, "postman.environment.json");
-            var postmanConverter = new PostmanConverter();
+            var postmanConverter = new PostmanConverter(
+                    collectionRepository,
+                    requestRepository,
+                    environmentRepository
+            );
             postmanConverter.dumpEnvironment(
                     resultFile,
-                    environment
+                    "KmZxncfJ"
             );
 
             Assertions.assertThat(resultFile).exists();

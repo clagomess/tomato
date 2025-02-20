@@ -1,8 +1,6 @@
 package com.github.clagomess.tomato.ui.environment;
 
 import com.github.clagomess.tomato.controller.environment.EnvironmentComboBoxController;
-import com.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
-import com.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
@@ -17,7 +15,7 @@ import java.util.concurrent.ForkJoinPool;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class EnvironmentSwitcherComboBox extends JPanel {
-    private final ComboBox comboBox = new ComboBox();
+    private final EnvironmentComboBox comboBox = new EnvironmentComboBox();
     private final JButton btnEdit = new IconButton(new BxEditIcon(), "Edit Environment");
 
     private final EnvironmentComboBoxController controller = new EnvironmentComboBoxController();
@@ -86,16 +84,5 @@ public class EnvironmentSwitcherComboBox extends JPanel {
             controller.setWorkspaceSessionSelected(comboBox.getSelectedItem());
             setBtnEditEnabledOrDisabled();
         }).execute();
-    }
-
-    private static class ComboBox extends JComboBox<EnvironmentHeadDto> {
-        public ComboBox() {
-            setRenderer(new DtoListCellRenderer<>(EnvironmentHeadDto::getName));
-        }
-
-        @Override
-        public EnvironmentHeadDto getSelectedItem() {
-            return (EnvironmentHeadDto) super.getSelectedItem();
-        }
     }
 }
