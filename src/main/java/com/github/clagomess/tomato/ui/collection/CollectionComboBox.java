@@ -29,11 +29,14 @@ public class CollectionComboBox extends JComboBox<CollectionTreeDto> {
         try {
             treeRepository.getWorkspaceCollectionTree()
                     .flattened()
-                    .forEachOrdered(this::addItem);
+                    .forEachOrdered(item -> {
+                        addItem(item);
 
-            if(selectedCollectionTree != null){
-                setSelectedItem(selectedCollectionTree);
-            }
+                        if(selectedCollectionTree != null &&
+                                item.getId().equals(selectedCollectionTree.getId())){
+                            setSelectedItem(item);
+                        }
+                    });
         } catch (Throwable e){
             new ExceptionDialog(this, e);
         }

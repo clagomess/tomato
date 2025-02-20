@@ -33,7 +33,8 @@ public class CollectionPopUpMenu extends JPopupMenu {
         mImport.addActionListener(ae -> new CollectionImportFrame(parent, collectionTree));
         add(mImport);
 
-        var mExport = new JMenuItem("Export", new BxExportIcon()); //@TODO: implement - Export Collection
+        var mExport = new JMenuItem("Export", new BxExportIcon());
+        mExport.addActionListener(ae -> new CollectionExportFrame(parent, collectionTree));
         add(mExport);
 
         addSeparator();

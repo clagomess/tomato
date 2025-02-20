@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.menu;
 
 import com.github.clagomess.tomato.ui.MainFrame;
+import com.github.clagomess.tomato.ui.collection.CollectionExportFrame;
 import com.github.clagomess.tomato.ui.collection.CollectionImportFrame;
 import com.github.clagomess.tomato.ui.collection.CollectionNewFrame;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxExportIcon;
@@ -21,7 +22,7 @@ public class CollectionMenu extends JMenu {
         add(mImport);
 
         var mExport = new JMenuItem("Export", new BxExportIcon());
-        mExport.addActionListener(l -> {}); //@TODO: Implements - Export Collection
+        mExport.addActionListener(l -> new CollectionExportFrame(mainFrame, null));
         add(mExport);
     }
 }
