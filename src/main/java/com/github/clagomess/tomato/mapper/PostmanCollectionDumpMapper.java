@@ -8,11 +8,12 @@ import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.apache.commons.lang3.StringUtils;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Mapper
 public interface PostmanCollectionDumpMapper {
@@ -26,6 +27,8 @@ public interface PostmanCollectionDumpMapper {
     @Mapping(target = "request.auth", ignore = true)
     @Mapping(target = "request.method", source = "method")
     @Mapping(target = "request.url.raw", source = "url")
+    @Mapping(target = "request.url.host", source = "url", qualifiedByName = "parseUrlHost")
+    @Mapping(target = "request.url.path", source = "url", qualifiedByName = "parseUrlPath")
     @Mapping(target = "request.url.query", source = "urlParam.query")
     @Mapping(target = "request.url.variable", source = "urlParam.path")
     @Mapping(target = "request.header", source = "headers")
@@ -39,6 +42,14 @@ public interface PostmanCollectionDumpMapper {
     ){
         if(source.getBody().getType() == BodyTypeEnum.NO_BODY){
             target.getRequest().setBody(null);
+        }
+
+        if(target.getRequest().getUrl().getQuery().isEmpty()){
+            target.getRequest().getUrl().setQuery(null);
+        }
+
+        if(target.getRequest().getUrl().getVariable().isEmpty()){
+            target.getRequest().getUrl().setVariable(null);
         }
     }
 
@@ -93,5 +104,42 @@ public interface PostmanCollectionDumpMapper {
             KeyValueItemDto source
     ){
         target.setDisabled(!source.isSelected());
+    }
+
+    @Named("parseUrlHost")
+    static List<String> parseUrlHost(String url){
+        if(StringUtils.isBlank(url)) return List.of("");
+
+        if(url.startsWith("http:")){
+            int beginIndex = url.indexOf("://") + 3;
+            String[] result = url.substring(beginIndex).split("/");
+
+            if(result.length == 0){
+                return List.of(url);
+            }else{
+                return List.of(url.substring(0, beginIndex) + result[0]);
+            }
+        }
+
+        if(url.contains("/")){
+            return List.of(url.substring(0, url.indexOf("/")));
+        }else{
+            return List.of(url);
+        }
+    }
+
+    @Named("parseUrlPath")
+    static List<String> parseUrlPath(String url){
+        if(StringUtils.isBlank(url)) return List.of();
+
+        String path = url.substring(parseUrlHost(url).get(0).length());
+
+        if(path.contains("/")) {
+            return Arrays.stream(path.split("/"))
+                    .filter(StringUtils::isNotBlank)
+                    .toList();
+        }else{
+            return List.of();
+        }
     }
 }

@@ -41,6 +41,7 @@ public class PostmanCollectionV210Dto {
         @Setter
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Request {
+            @JsonInclude(JsonInclude.Include.NON_NULL)
             private Auth auth;
             private String method;
 
@@ -146,6 +147,12 @@ public class PostmanCollectionV210Dto {
             @JsonIgnoreProperties(ignoreUnknown = true)
             public static class Url {
                 private String raw;
+
+                @JsonInclude(JsonInclude.Include.NON_NULL)
+                private List<String> host;
+
+                @JsonInclude(JsonInclude.Include.NON_NULL)
+                private List<String> path;
 
                 @JsonInclude(JsonInclude.Include.NON_NULL)
                 private List<Param> query;

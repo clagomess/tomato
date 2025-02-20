@@ -50,12 +50,12 @@ public interface PostmanCollectionPumpMapper {
                 target.setHeaders(new ArrayList<>());
             }
 
-            source.getRequest().getAuth().getBearer().forEach(item -> {
+            source.getRequest().getAuth().getBearer().forEach(item ->
                 target.getHeaders().add(new KeyValueItemDto(
                         "Authorization",
                         "Bearer " + item.getValue()
-                ));
-            });
+                ))
+            );
         }
     }
 

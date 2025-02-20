@@ -13,6 +13,7 @@ import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.enums.HttpMethodEnum;
 import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import com.github.clagomess.tomato.io.repository.RepositoryStubs;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -267,5 +268,51 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
                     form.get(i).getDisabled()
             );
         }
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            ",",
+            "http:,http:",
+            "http://,http://",
+            "http://foo,http://foo",
+            "http://foo/bar,http://foo",
+            "http://foo/bar/a,http://foo",
+            "{{url}},{{url}}",
+            "{{url}}/foo,{{url}}",
+            "{{url}}/foo/bar,{{url}}",
+    })
+    public void parseUrlHost(
+            String input,
+            String expected
+    ){
+        var result = PostmanCollectionDumpMapper.parseUrlHost(input);
+        assertEquals(
+                StringUtils.stripToEmpty(expected),
+                StringUtils.stripToEmpty(result.get(0))
+        );
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            ",",
+            "http:,",
+            "http://,",
+            "http://foo,",
+            "http://foo/bar,bar",
+            "http://foo/bar/a,bar#a",
+            "{{url}},",
+            "{{url}}/foo,foo",
+            "{{url}}/foo/bar,foo#bar",
+    })
+    public void parseUrlPath(
+            String input,
+            String expected
+    ){
+        var result = PostmanCollectionDumpMapper.parseUrlPath(input);
+        assertEquals(
+                StringUtils.stripToEmpty(expected),
+                StringUtils.stripToEmpty(String.join("#", result))
+        );
     }
 }
