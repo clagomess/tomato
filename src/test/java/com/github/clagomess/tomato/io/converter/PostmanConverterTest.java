@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.io.converter;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
 import com.github.clagomess.tomato.io.repository.*;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -58,9 +59,15 @@ public class PostmanConverterTest extends RepositoryStubs {
                 collectionRepository,
                 requestRepository
         ));
+        private final EnvironmentRepository environmentRepository = Mockito.spy(new EnvironmentRepository(
+                workspaceRepository,
+                new WorkspaceSessionRepository()
+        ));
 
-        @Test
-        public void dumpCollection() throws IOException {
+        @BeforeEach
+        public void setup() throws IOException {
+            Mockito.reset(workspaceRepository);
+
             var workspace = new WorkspaceDto();
             workspace.setName("ROOT");
             workspace.setPath(new File(testData, "workspace-JNtdCPvw"));
@@ -68,7 +75,10 @@ public class PostmanConverterTest extends RepositoryStubs {
             Mockito.doReturn(workspace)
                     .when(workspaceRepository)
                     .getDataSessionWorkspace();
+        }
 
+        @Test
+        public void dumpCollection() throws IOException {
             var rootTree = treeRepository.getWorkspaceCollectionTree();
 
             var resultCollectionFile = new File(mockHomeDir, "postman.collection.json");
@@ -79,6 +89,20 @@ public class PostmanConverterTest extends RepositoryStubs {
             );
 
             Assertions.assertThat(resultCollectionFile).exists();
+        }
+
+        @Test
+        public void dumpEnvironment() throws IOException {
+            var environment = environmentRepository.load("KmZxncfJ").orElseThrow();
+
+            var resultFile = new File(mockHomeDir, "postman.environment.json");
+            var postmanConverter = new PostmanConverter();
+            postmanConverter.dumpEnvironment(
+                    resultFile,
+                    environment
+            );
+
+            Assertions.assertThat(resultFile).exists();
         }
     }
 }

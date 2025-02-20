@@ -11,6 +11,7 @@ import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.mapper.PostmanCollectionDumpMapper;
 import com.github.clagomess.tomato.mapper.PostmanCollectionPumpMapper;
+import com.github.clagomess.tomato.mapper.PostmanEnvironmentDumpMapper;
 import com.github.clagomess.tomato.mapper.PostmanEnvironmentPumpMapper;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import com.networknt.schema.ValidationMessage;
@@ -36,6 +37,7 @@ public class PostmanConverter {
     private final PostmanCollectionPumpMapper colectionPumpMapper = PostmanCollectionPumpMapper.INSTANCE;
     private final PostmanCollectionDumpMapper colectionDumpMapper = PostmanCollectionDumpMapper.INSTANCE;
     private final PostmanEnvironmentPumpMapper environmentPumpMapper = PostmanEnvironmentPumpMapper.INSTANCE;
+    private final PostmanEnvironmentDumpMapper environmentDumpMapper = PostmanEnvironmentDumpMapper.INSTANCE;
     private final CollectionRepository collectionRepository;
     private final RequestRepository requestRepository;
     private final EnvironmentRepository environmentRepository;
@@ -175,5 +177,26 @@ public class PostmanConverter {
                 .forEachOrdered(request -> items.add(colectionDumpMapper.toItem(request)));
 
         return items;
+    }
+
+    public void dumpEnvironment(
+            File destination,
+            EnvironmentDto environment
+    ) throws IOException {
+        PostmanEnvironmentDto postmanEnvironmentDto = environmentDumpMapper.toEnvironmentDto(environment);
+
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(destination))) {
+            ObjectMapperUtil.getInstance()
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValue(bw, postmanEnvironmentDto);
+        }
+
+        var schema = JsonSchemaBuilder.getPostmanJsonSchema(ENVIRONMENT);
+
+        Set<ValidationMessage> validations  = schema.validate(
+                mapper.readTree(destination)
+        );
+
+        if(!validations.isEmpty()) throw new IOException(validations.toString());
     }
 }
