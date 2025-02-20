@@ -4,7 +4,7 @@ import com.github.clagomess.tomato.controller.main.collection.CollectionTreeCont
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxHomeIcon;
-import com.github.clagomess.tomato.ui.environment.EnvironmentComboBox;
+import com.github.clagomess.tomato.ui.environment.EnvironmentSwitcherComboBox;
 import com.github.clagomess.tomato.ui.main.collection.node.CollectionTreeNode;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +36,7 @@ public class CollectionTree extends JPanel {
         add(lblCurrentWorkspace, "width 100:200:100% - 14px");
 
         invokeLater(() -> {
-            add(new EnvironmentComboBox(), "cell 0 1, width 100:200:100% - 14px");
+            add(new EnvironmentSwitcherComboBox(), "cell 0 1, width 100:200:100% - 14px");
             revalidate();
             repaint();
         });

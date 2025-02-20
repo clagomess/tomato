@@ -16,13 +16,13 @@ import java.util.concurrent.ForkJoinPool;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
-public class EnvironmentComboBox extends JPanel {
+public class EnvironmentSwitcherComboBox extends JPanel {
     private final ComboBox comboBox = new ComboBox();
     private final JButton btnEdit = new IconButton(new BxEditIcon(), "Edit Environment");
 
     private final EnvironmentComboBoxController controller = new EnvironmentComboBoxController();
 
-    public EnvironmentComboBox(){
+    public EnvironmentSwitcherComboBox(){
         setLayout(new MigLayout(
                 "insets 2",
                 "[grow, fill][]"
