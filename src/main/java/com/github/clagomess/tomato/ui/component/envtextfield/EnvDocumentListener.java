@@ -1,7 +1,5 @@
 package com.github.clagomess.tomato.ui.component.envtextfield;
 
-import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
@@ -15,9 +13,12 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ForkJoinPool;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,12 +26,10 @@ import java.util.regex.Pattern;
 class EnvDocumentListener implements DocumentListener {
     @Getter
     private final List<EnvTextFieldOnChangeFI> onChangeList = new LinkedList<>();
-    private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
 
     private final List<UUID> listenerUuid = new ArrayList<>(2);
     private final WorkspaceSessionPublisher workspaceSessionPublisher = WorkspaceSessionPublisher.getInstance();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
-    private final ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
 
     private final StyledDocument document;
     private final SimpleAttributeSet defaultStyle = new SimpleAttributeSet();
@@ -47,13 +46,13 @@ class EnvDocumentListener implements DocumentListener {
         StyleConstants.setForeground(envFilledStyle, ColorConstant.GREEN);
         StyleConstants.setForeground(envNotFilledStyle, ColorConstant.RED);
 
-        singleThreadExecutor.submit(this::updateEnvMap);
+        listenerUuid.add(workspaceSessionPublisher.getOnChange().addListener(event ->
+            ForkJoinPool.commonPool().submit(this::updateEnvStyle)
+        ));
 
-        listenerUuid.add(workspaceSessionPublisher.getOnChange().addListener(event -> {
-            updateEnvMap();
-            updateEnvStyle();
-            triggerOnChange();
-        }));
+        listenerUuid.add(environmentPublisher.getOnChange().addListener(e ->
+            ForkJoinPool.commonPool().submit(this::updateEnvStyle)
+        ));
     }
 
     public void dispose() {
@@ -65,38 +64,32 @@ class EnvDocumentListener implements DocumentListener {
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        singleThreadExecutor.submit(() -> {
-            updateEnvStyle();
-            triggerOnChange();
-        });
+        ForkJoinPool.commonPool().submit(this::updateEnvStyle);
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        singleThreadExecutor.submit(() -> {
-            updateEnvStyle();
-            triggerOnChange();
-        });
+        ForkJoinPool.commonPool().submit(this::updateEnvStyle);
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {}
 
-    public void triggerOnChange() {
+    protected String getText() {
         try {
-            String text = document.getText(0, document.getLength());
-            onChangeList.forEach(ch -> ch.change(text));
+            if(document.getLength() == 0) return null;
+            return document.getText(0, document.getLength());
         } catch (BadLocationException e) {
             log.error(e.getMessage(), e);
         }
+
+        return null;
     }
 
-    private void updateEnvStyle(){
+    protected synchronized void updateEnvStyle(){
         try {
             envMap.getInjected().clear();
-            if(document.getLength() == 0) return;
-
-            String text = document.getText(0, document.getLength());
+            String text = getText();
             if(StringUtils.isBlank(text)) return;
 
             document.setCharacterAttributes(
@@ -118,29 +111,13 @@ class EnvDocumentListener implements DocumentListener {
                         true
                 );
             }
-        } catch (BadLocationException e) {
+        } catch (IOException e) {
             log.error(e.getMessage(), e);
-        }
-    }
-
-    private void updateEnvMap(){
-        try {
-            envMap.reset();
-            listenerUuid.forEach(uuid -> {
-                environmentPublisher.getOnChange().removeListener(uuid);
-            });
-
-            Optional<EnvironmentDto> current = environmentRepository.getWorkspaceSessionEnvironment();
-            if(current.isEmpty()) return;
-
-            envMap.put(current.get());
-
-            listenerUuid.add(environmentPublisher.getOnChange().addListener(e -> {
-                updateEnvMap();
-                updateEnvStyle();
-            }));
-        } catch (Throwable e) {
-            log.error(e.getMessage(), e);
+        } finally {
+            String text = getText();
+            onChangeList.forEach(ch ->
+                    ForkJoinPool.commonPool().submit(() -> ch.change(text))
+            );
         }
     }
 }
