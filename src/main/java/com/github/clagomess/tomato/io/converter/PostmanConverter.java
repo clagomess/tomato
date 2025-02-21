@@ -13,22 +13,18 @@ import com.github.clagomess.tomato.mapper.PostmanCollectionDumpMapper;
 import com.github.clagomess.tomato.mapper.PostmanCollectionPumpMapper;
 import com.github.clagomess.tomato.mapper.PostmanEnvironmentDumpMapper;
 import com.github.clagomess.tomato.mapper.PostmanEnvironmentPumpMapper;
-import com.github.clagomess.tomato.util.ObjectMapperUtil;
-import com.networknt.schema.ValidationMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import static com.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.COLLECTION;
 import static com.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.ENVIRONMENT;
+import static com.github.clagomess.tomato.io.converter.JsonSchemaBuilder.getPostmanJsonSchema;
 
 @Slf4j
 public class PostmanConverter extends AbstractConverter {
@@ -53,23 +49,15 @@ public class PostmanConverter extends AbstractConverter {
             File destination,
             File postmanCollection
     ) throws IOException {
-        var postmanCollectionSchema = JsonSchemaBuilder.getPostmanJsonSchema(COLLECTION);
-
-        Set<ValidationMessage> validations  = postmanCollectionSchema.validate(
-                mapper.readTree(postmanCollection)
+        validate(
+                getPostmanJsonSchema(COLLECTION),
+                postmanCollection
         );
-
-        if(!validations.isEmpty()) throw new IOException(validations.toString());
 
         PostmanCollectionV210Dto postmanCollectionV210 = mapper.readValue(
                 postmanCollection,
                 PostmanCollectionV210Dto.class
         );
-
-        // validate parse
-        postmanCollectionSchema.validate(mapper.readTree(
-                mapper.writeValueAsString(postmanCollectionV210)
-        ));
 
         List<PostmanCollectionV210Dto.Item> itens = postmanCollectionV210.getItem();
         if(itens.isEmpty()) throw new IOException("Empty postman collection");
@@ -106,23 +94,15 @@ public class PostmanConverter extends AbstractConverter {
     public String pumpEnvironment(
             File postmanEnvironment
     ) throws IOException {
-        var schema = JsonSchemaBuilder.getPostmanJsonSchema(ENVIRONMENT);
-
-        Set<ValidationMessage> validations  = schema.validate(
-                mapper.readTree(postmanEnvironment)
+        validate(
+                getPostmanJsonSchema(ENVIRONMENT),
+                postmanEnvironment
         );
-
-        if(!validations.isEmpty()) throw new IOException(validations.toString());
 
         PostmanEnvironmentDto postmanEnvironmentDto = mapper.readValue(
                 postmanEnvironment,
                 PostmanEnvironmentDto.class
         );
-
-        // validate parse
-        schema.validate(mapper.readTree(
-                mapper.writeValueAsString(postmanEnvironmentDto)
-        ));
 
         EnvironmentDto result = PostmanEnvironmentPumpMapper.INSTANCE.toEnvironmentDto(postmanEnvironmentDto);
 
@@ -142,19 +122,12 @@ public class PostmanConverter extends AbstractConverter {
         postmanCollection.getInfo().setId(UUID.randomUUID().toString());
         postmanCollection.setItem(dumpCollection(collectionTree));
 
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(destination))) {
-            ObjectMapperUtil.getInstance()
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValue(bw, postmanCollection);
-        }
+        write(postmanCollection, destination);
 
-        var postmanCollectionSchema = JsonSchemaBuilder.getPostmanJsonSchema(COLLECTION);
-
-        Set<ValidationMessage> validations  = postmanCollectionSchema.validate(
-                mapper.readTree(destination)
+        validate(
+                getPostmanJsonSchema(COLLECTION),
+                destination
         );
-
-        if(!validations.isEmpty()) throw new IOException(validations.toString());
     }
 
     protected List<PostmanCollectionV210Dto.Item> dumpCollection(
@@ -197,19 +170,12 @@ public class PostmanConverter extends AbstractConverter {
         EnvironmentDto environment = environmentRepository.load(environmentId).orElseThrow();
         PostmanEnvironmentDto postmanEnvironmentDto = PostmanEnvironmentDumpMapper.INSTANCE.toEnvironmentDto(environment);
 
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(destination))) {
-            ObjectMapperUtil.getInstance()
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValue(bw, postmanEnvironmentDto);
-        }
+        write(postmanEnvironmentDto, destination);
 
-        var schema = JsonSchemaBuilder.getPostmanJsonSchema(ENVIRONMENT);
-
-        Set<ValidationMessage> validations  = schema.validate(
-                mapper.readTree(destination)
+        validate(
+                getPostmanJsonSchema(ENVIRONMENT),
+                destination
         );
-
-        if(!validations.isEmpty()) throw new IOException(validations.toString());
     }
 
     @Override
