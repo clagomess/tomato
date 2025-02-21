@@ -1,8 +1,9 @@
 package com.github.clagomess.tomato.ui.environment;
 
-import com.github.clagomess.tomato.io.converter.PostmanConverter;
+import com.github.clagomess.tomato.io.converter.InterfaceConverter;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
+import com.github.clagomess.tomato.ui.component.ConverterComboBox;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -16,11 +17,8 @@ import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 public class EnvironmentImportFrame extends JFrame {
     private final JButton btnImport = new JButton("Import");
     private final FileChooser fileChooser = new FileChooser();
-    private final JComboBox<String> cbType = new JComboBox<>(new String[]{
-            "Postman Environment",
-    });
+    private final ConverterComboBox cbConverter = new ConverterComboBox();
 
-    private final PostmanConverter postmanConverter = new PostmanConverter();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
 
     public EnvironmentImportFrame(
@@ -39,7 +37,7 @@ public class EnvironmentImportFrame extends JFrame {
         add(new JLabel("File"), "wrap");
         add(fileChooser, "width 300!, wrap");
         add(new JLabel("Type"), "wrap");
-        add(cbType, "width 300!, wrap");
+        add(cbConverter, "width 300!, wrap");
         add(btnImport, "align right");
 
         getRootPane().setDefaultButton(btnImport);
@@ -54,7 +52,10 @@ public class EnvironmentImportFrame extends JFrame {
 
     private void btnImportAction(){
         new WaitExecution(this, btnImport, () -> {
-            var id = postmanConverter.pumpEnvironment(fileChooser.getValue());
+            InterfaceConverter converter = cbConverter.getSelectedItem();
+            if(converter == null) throw new Exception("Type is empty");
+
+            var id = converter.pumpEnvironment(fileChooser.getValue());
 
             environmentPublisher.getOnChange()
                     .publish(new PublisherEvent<>(INSERTED, id));

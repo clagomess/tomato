@@ -2,10 +2,11 @@ package com.github.clagomess.tomato.ui.collection;
 
 import com.github.clagomess.tomato.dto.data.CollectionDto;
 import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import com.github.clagomess.tomato.io.converter.PostmanConverter;
+import com.github.clagomess.tomato.io.converter.InterfaceConverter;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
+import com.github.clagomess.tomato.ui.component.ConverterComboBox;
 import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -19,13 +20,8 @@ import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 public class CollectionImportFrame extends JFrame {
     private final JButton btnImport = new JButton("Import");
     private final FileChooser fileChooser = new FileChooser();
-    private final JComboBox<String> cbType = new JComboBox<>(new String[]{
-            "Postman Collection v2.1.0"
-    });
+    private final ConverterComboBox cbConverter = new ConverterComboBox();
     private final CollectionComboBox cbCollectionParent;
-
-    private final PostmanConverter postmanConverter = new PostmanConverter();
-    private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
 
     public CollectionImportFrame(
             Component parent,
@@ -46,7 +42,7 @@ public class CollectionImportFrame extends JFrame {
         add(new JLabel("File"), "wrap");
         add(fileChooser, "width 300!, wrap");
         add(new JLabel("Type"), "wrap");
-        add(cbType, "width 300!, wrap");
+        add(cbConverter, "width 300!, wrap");
         add(new JLabel("Destination"), "wrap");
         add(cbCollectionParent, "width 300!, wrap");
         add(btnImport, "align right");
@@ -64,15 +60,19 @@ public class CollectionImportFrame extends JFrame {
     private void btnImportAction(){
         new WaitExecution(this, btnImport, () -> {
             CollectionTreeDto parent = cbCollectionParent.getSelectedItem();
-            if(parent == null) throw new Exception("Parent is null");
+            if(parent == null) throw new Exception("Destination is empty");
 
-            CollectionDto dto = postmanConverter.pumpCollection(
+            InterfaceConverter converter = cbConverter.getSelectedItem();
+            if(converter == null) throw new Exception("Type is empty");
+
+            CollectionDto dto = converter.pumpCollection(
                     parent.getPath(),
                     fileChooser.getValue()
             );
 
             var key = new ParentCollectionKey(parent.getId());
-            collectionPublisher.getOnChange()
+            CollectionPublisher.getInstance()
+                    .getOnChange()
                     .publish(key, new PublisherEvent<>(INSERTED, dto.getId()));
 
             setVisible(false);

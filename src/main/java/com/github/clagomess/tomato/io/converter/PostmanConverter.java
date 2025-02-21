@@ -15,8 +15,8 @@ import com.github.clagomess.tomato.mapper.PostmanEnvironmentDumpMapper;
 import com.github.clagomess.tomato.mapper.PostmanEnvironmentPumpMapper;
 import com.github.clagomess.tomato.util.ObjectMapperUtil;
 import com.networknt.schema.ValidationMessage;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.TestOnly;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,23 +31,24 @@ import static com.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.COLLECTION
 import static com.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.ENVIRONMENT;
 
 @Slf4j
-@RequiredArgsConstructor
-public class PostmanConverter {
-    private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
-    private final PostmanCollectionPumpMapper colectionPumpMapper = PostmanCollectionPumpMapper.INSTANCE;
-    private final PostmanCollectionDumpMapper colectionDumpMapper = PostmanCollectionDumpMapper.INSTANCE;
-    private final PostmanEnvironmentPumpMapper environmentPumpMapper = PostmanEnvironmentPumpMapper.INSTANCE;
-    private final PostmanEnvironmentDumpMapper environmentDumpMapper = PostmanEnvironmentDumpMapper.INSTANCE;
-    private final CollectionRepository collectionRepository;
-    private final RequestRepository requestRepository;
-    private final EnvironmentRepository environmentRepository;
+public class PostmanConverter extends AbstractConverter {
+    public PostmanConverter() {}
 
-    public PostmanConverter() {
-        collectionRepository = new CollectionRepository();
-        requestRepository = new RequestRepository();
-        environmentRepository = new EnvironmentRepository();
+    @TestOnly
+    public PostmanConverter(
+            CollectionRepository collectionRepository,
+            RequestRepository requestRepository,
+            EnvironmentRepository environmentRepository
+    ) {
+        super(collectionRepository, requestRepository, environmentRepository);
     }
 
+    @Override
+    public String getConverterName() {
+        return "Postman Collection v2.1.0";
+    }
+
+    @Override
     public CollectionDto pumpCollection(
             File destination,
             File postmanCollection
@@ -90,17 +91,18 @@ public class PostmanConverter {
             if(log.isDebugEnabled()) log.debug("processing item: {}", item.getName());
 
             if(item.getRequest() == null){
-                CollectionDto collection = colectionPumpMapper.toCollectionDto(item);
+                CollectionDto collection = PostmanCollectionPumpMapper.INSTANCE.toCollectionDto(item);
                 File collectionDir = collectionRepository.save(destination, collection);
                 pumpCollection(collectionDir, item.getItem());
                 continue;
             }
 
-            RequestDto request = colectionPumpMapper.toRequestDto(item);
+            RequestDto request = PostmanCollectionPumpMapper.INSTANCE.toRequestDto(item);
             requestRepository.save(destination, request);
         }
     }
 
+    @Override
     public String pumpEnvironment(
             File postmanEnvironment
     ) throws IOException {
@@ -122,13 +124,14 @@ public class PostmanConverter {
                 mapper.writeValueAsString(postmanEnvironmentDto)
         ));
 
-        EnvironmentDto result = environmentPumpMapper.toEnvironmentDto(postmanEnvironmentDto);
+        EnvironmentDto result = PostmanEnvironmentPumpMapper.INSTANCE.toEnvironmentDto(postmanEnvironmentDto);
 
         environmentRepository.save(result);
 
         return result.getId();
     }
 
+    @Override
     public void dumpCollection(
             File destination,
             CollectionTreeDto collectionTree
@@ -161,7 +164,7 @@ public class PostmanConverter {
 
         collectionTree.getChildren()
                 .forEachOrdered(tree -> {
-                    PostmanCollectionV210Dto.Item item = colectionDumpMapper.toItem(tree);
+                    PostmanCollectionV210Dto.Item item = PostmanCollectionDumpMapper.INSTANCE.toItem(tree);
                     item.setItem(dumpCollection(tree));
                     items.add(item);
                 });
@@ -174,17 +177,25 @@ public class PostmanConverter {
                         throw new RuntimeException(e);
                     }
                 })
-                .forEachOrdered(request -> items.add(colectionDumpMapper.toItem(request)));
+                .forEachOrdered(request -> items.add(
+                        PostmanCollectionDumpMapper.INSTANCE.toItem(request)
+                ));
 
         return items;
     }
 
+    @Override
+    public String getCollectionDumpFileSuffix() {
+        return ".postman.collection.json";
+    }
+
+    @Override
     public void dumpEnvironment(
             File destination,
             String environmentId
     ) throws IOException {
         EnvironmentDto environment = environmentRepository.load(environmentId).orElseThrow();
-        PostmanEnvironmentDto postmanEnvironmentDto = environmentDumpMapper.toEnvironmentDto(environment);
+        PostmanEnvironmentDto postmanEnvironmentDto = PostmanEnvironmentDumpMapper.INSTANCE.toEnvironmentDto(environment);
 
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(destination))) {
             ObjectMapperUtil.getInstance()
@@ -199,5 +210,10 @@ public class PostmanConverter {
         );
 
         if(!validations.isEmpty()) throw new IOException(validations.toString());
+    }
+
+    @Override
+    public String getEnvironmentDumpFileSuffix() {
+        return ".postman.environment.json";
     }
 }

@@ -2,7 +2,8 @@ package com.github.clagomess.tomato.ui.environment;
 
 import com.github.clagomess.tomato.controller.environment.EnvironmentComboBoxController;
 import com.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
-import com.github.clagomess.tomato.io.converter.PostmanConverter;
+import com.github.clagomess.tomato.io.converter.InterfaceConverter;
+import com.github.clagomess.tomato.ui.component.ConverterComboBox;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -18,12 +19,9 @@ import static javax.swing.SwingUtilities.invokeLater;
 public class EnvironmentExportFrame extends JFrame {
     private final EnvironmentComboBox cbEnvironment = new EnvironmentComboBox();
     private final JButton btnExport = new JButton("Export");
-    private final JComboBox<String> cbType = new JComboBox<>(new String[]{
-            "Postman Environment",
-    });
+    private final ConverterComboBox cbConverter = new ConverterComboBox();
 
     private final EnvironmentComboBoxController controller = new EnvironmentComboBoxController();
-    private final PostmanConverter postmanConverter = new PostmanConverter();
 
     public EnvironmentExportFrame(
             Component parent
@@ -41,7 +39,7 @@ public class EnvironmentExportFrame extends JFrame {
         add(new JLabel("Environment"), "wrap");
         add(cbEnvironment, "width 300!, wrap");
         add(new JLabel("Type"), "wrap");
-        add(cbType, "width 300!, wrap");
+        add(cbConverter, "width 300!, wrap");
         add(btnExport, "align right");
 
         getRootPane().setDefaultButton(btnExport);
@@ -68,17 +66,23 @@ public class EnvironmentExportFrame extends JFrame {
     private void btnExportAction(){
         new WaitExecution(this, btnExport, () -> {
             EnvironmentHeadDto selected = cbEnvironment.getSelectedItem();
-            if(selected == null) throw new Exception("Selected is null");
+            if(selected == null) throw new Exception("Environment is empty");
+
+            InterfaceConverter converter = cbConverter.getSelectedItem();
+            if(converter == null) throw new Exception("Type is empty");
 
             JFileChooser file = new JFileChooser();
             file.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            file.setSelectedFile(new File(selected.getName() + ".environment.json"));
+            file.setSelectedFile(new File(
+                    selected.getName() +
+                    converter.getEnvironmentDumpFileSuffix()
+            ));
 
             if(file.showSaveDialog(this) != JFileChooser.APPROVE_OPTION){
                 return;
             }
 
-            postmanConverter.dumpEnvironment(
+            converter.dumpEnvironment(
                     file.getSelectedFile(),
                     selected.getId()
             );
