@@ -8,6 +8,7 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxDotsVerticalR
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxDownloadIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
 import com.github.clagomess.tomato.ui.component.tablemanager.TableManager;
+import com.github.clagomess.tomato.ui.main.request.right.cookie.CookieTable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
@@ -31,6 +32,7 @@ public class ResponseTabContent extends JPanel {
 
     private TRSyntaxTextArea txtResponse;
     private TableManager<KeyValueTMDto> tblResponseHeader;
+    private CookieTable cookieTable;
     private RawTextArea txtHTTPDebug;
 
     private ResponseDto responseDto = null;
@@ -51,7 +53,7 @@ public class ResponseTabContent extends JPanel {
 
         invokeLater(() -> createTabReponse(tpResponse));
         invokeLater(() -> createTabHeader(tpResponse));
-        // @TODO: add cookie viewer
+        invokeLater(() -> createTabCookie(tpResponse));
         invokeLater(() -> createTabDebug(tpResponse));
 
         // configure
@@ -76,6 +78,11 @@ public class ResponseTabContent extends JPanel {
         var component = new JScrollPane(tblResponseHeader.getTable());
         component.setBorder(new MatteBorder(0, 1, 1, 1, ColorConstant.GRAY));
         tabbedPane.addTab("Header", component);
+    }
+
+    private void createTabCookie(JTabbedPane tabbedPane){
+        cookieTable = new CookieTable();
+        tabbedPane.addTab("Cookie", cookieTable);
     }
 
     private void createTabDebug(JTabbedPane tabbedPane){
@@ -121,6 +128,8 @@ public class ResponseTabContent extends JPanel {
                     ));
                 });
             });
+
+            cookieTable.refresh(responseDto.getHttpResponse().getCookies());
         }
 
         statusResponse.update(responseDto);
