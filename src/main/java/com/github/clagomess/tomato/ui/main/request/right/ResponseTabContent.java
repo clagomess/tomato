@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.right;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.table.KeyValueTMDto;
 import com.github.clagomess.tomato.io.http.MediaType;
 import com.github.clagomess.tomato.ui.component.*;
@@ -8,6 +9,7 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxDotsVerticalR
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxDownloadIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
 import com.github.clagomess.tomato.ui.component.tablemanager.TableManager;
+import com.github.clagomess.tomato.ui.main.request.right.cookie.CookieTable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
@@ -23,6 +25,7 @@ import static javax.swing.SwingUtilities.invokeLater;
 @Slf4j
 @Getter
 public class ResponseTabContent extends JPanel {
+    private final TabKey tabKey;
     private final StatusResponse statusResponse = new StatusResponse();
 
     private final JButton btnBeautifyResponse = new IconButton(new BxsMagicWandIcon(), "Beautify Response");
@@ -31,11 +34,16 @@ public class ResponseTabContent extends JPanel {
 
     private TRSyntaxTextArea txtResponse;
     private TableManager<KeyValueTMDto> tblResponseHeader;
+    private CookieTable cookieTable;
     private RawTextArea txtHTTPDebug;
 
     private ResponseDto responseDto = null;
 
-    public ResponseTabContent(){
+    public ResponseTabContent(
+            TabKey tabKey
+    ){
+        this.tabKey = tabKey;
+
         setLayout(new MigLayout(
                 "insets 5 5 2 2",
                 "[grow,fill][][]"
@@ -51,7 +59,7 @@ public class ResponseTabContent extends JPanel {
 
         invokeLater(() -> createTabReponse(tpResponse));
         invokeLater(() -> createTabHeader(tpResponse));
-        // @TODO: add cookie viewer
+        invokeLater(() -> createTabCookie(tpResponse));
         invokeLater(() -> createTabDebug(tpResponse));
 
         // configure
@@ -76,6 +84,11 @@ public class ResponseTabContent extends JPanel {
         var component = new JScrollPane(tblResponseHeader.getTable());
         component.setBorder(new MatteBorder(0, 1, 1, 1, ColorConstant.GRAY));
         tabbedPane.addTab("Header", component);
+    }
+
+    private void createTabCookie(JTabbedPane tabbedPane){
+        cookieTable = new CookieTable(this.tabKey);
+        tabbedPane.addTab("Cookie", cookieTable);
     }
 
     private void createTabDebug(JTabbedPane tabbedPane){
@@ -121,6 +134,8 @@ public class ResponseTabContent extends JPanel {
                     ));
                 });
             });
+
+            cookieTable.refresh(responseDto.getHttpResponse().getCookies());
         }
 
         statusResponse.update(responseDto);

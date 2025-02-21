@@ -1,16 +1,11 @@
 package com.github.clagomess.tomato.ui.main.request.keyvalue;
 
-import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
-import com.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
-import com.github.clagomess.tomato.ui.component.FileChooser;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
-import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
-import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextfieldOptions;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.Getter;
@@ -20,12 +15,8 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
-
-import static com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.FILE;
 
 @Slf4j
 @Getter
@@ -41,7 +32,7 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
             KeyValueTypeEnum.values()
     );
     private final ListenableTextField txtKey = new ListenableTextField();
-    private JComponent cValue;
+    private ValueComponent<T> cValue;
     private final JCheckBox cbSelected = new JCheckBox();
     private final JButton btnRemove = new IconButton(new BxTrashIcon(), "Remove");
 
@@ -86,9 +77,9 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
         txtKey.addOnChange(this::txtKeyOnChange);
         add(txtKey, "width 100!");
 
-        cValue = createCValue();
-        cValue.setEnabled(item.isSelected());
-        add(cValue, "width 100:100:100%");
+        cValue = new ValueComponent<>(requestStagingMonitor, options, item);
+        cValue.getComponent().setEnabled(item.isSelected());
+        add(cValue.getComponent(), "width 100:100:100%");
 
         btnRemove.setEnabled(item.isSelected());
         btnRemove.addActionListener(l -> btnRemoveAction());
@@ -102,12 +93,12 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
         fvItem.setType(selectedType);
         requestStagingMonitor.update();
 
-        int index = ComponentUtil.getComponentIndex(this, cValue);
+        int index = ComponentUtil.getComponentIndex(this, cValue.getComponent());
         remove(index);
 
-        cValue = createCValue();
+        cValue = new ValueComponent<>(requestStagingMonitor, options, item);
 
-        add(cValue, "width 100:100:100%", index);
+        add(cValue.getComponent(), "width 100:100:100%", index);
         revalidate();
         repaint();
     }
@@ -130,14 +121,6 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
         options.getOnChange().run(item);
     }
 
-    private void valueOnChange(String value){
-        if(Objects.equals(value, item.getValue())) return;
-
-        item.setValue(value);
-        requestStagingMonitor.update();
-        options.getOnChange().run(item);
-    }
-
     private void btnRemoveAction(){
         listItens.remove(item);
         requestStagingMonitor.update();
@@ -148,63 +131,16 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
         parent.repaint();
     }
 
-    private JComponent createCValue(){
-        if(item instanceof FileKeyValueItemDto fvItem && fvItem.getType() == FILE){
-            var fileChooser = new FileChooser();
-            fileChooser.setValue(fvItem.getValue());
-            fileChooser.addOnChange(file -> {
-                try {
-                    fvItem.setValueContentType(file != null ?
-                            Files.probeContentType(file.toPath()) :
-                            null
-                    );
-                }catch(IOException e){
-                    log.warn(e.getMessage());
-                }
-
-                valueOnChange(file != null ? file.getAbsolutePath() : null);
-            });
-            return fileChooser;
-        }
-
-        var envTextfieldOptions = EnvTextfieldOptions.builder().build();
-
-        if(item instanceof ContentTypeKeyValueItemDto ctItem){
-            envTextfieldOptions.setValueEditorShowContentTypeEdit(true);
-            envTextfieldOptions.setValueEditorSelectedRawBodyType(
-                    RawBodyTypeEnum.valueOfContentType(ctItem.getValueContentType())
-            );
-            envTextfieldOptions.setValueEditorOnDispose((rawBodyType, text) -> {
-                if(Objects.equals(
-                        ctItem.getValueContentType(),
-                        rawBodyType.getContentType().toString()
-                )) return;
-
-                envTextfieldOptions.setValueEditorSelectedRawBodyType(rawBodyType);
-                ctItem.setValueContentType(rawBodyType.getContentType().toString());
-                requestStagingMonitor.update();
-                options.getOnChange().run(item);
-            });
-        }
-
-        var textField = new EnvTextField(envTextfieldOptions);
-        textField.setText(item.getValue());
-        textField.addOnChange(this::valueOnChange);
-        return textField;
-    }
-
     public void  setEnabled(boolean enabled){
         cbType.setEnabled(enabled);
         txtKey.setEnabled(enabled);
-        cValue.setEnabled(enabled);
+        cValue.getComponent().setEnabled(enabled);
         btnRemove.setEnabled(enabled);
     }
 
     public void dispose(){
         options.getOnChange().run(null);
-        if(cValue instanceof EnvTextField envTextField){
-            envTextField.dispose();
-        }
+        cValue.dispose();
     }
 
     @FunctionalInterface

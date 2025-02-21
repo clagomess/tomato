@@ -119,11 +119,14 @@ public class RequestSplitPane extends JPanel {
         splitPane.setContinuousLayout(true);
 
         this.requestContent = new RequestTabContent(
+                this.key,
                 requestDto,
                 requestStagingMonitor
         );
 
-        this.responseContent = new ResponseTabContent();
+        this.responseContent = new ResponseTabContent(
+                this.key
+        );
 
         splitPane.setLeftComponent(requestContent);
         splitPane.setRightComponent(responseContent);

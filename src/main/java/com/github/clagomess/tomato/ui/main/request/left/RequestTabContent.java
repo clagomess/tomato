@@ -4,7 +4,9 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.request.UrlParamDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
+import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValue;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueOptions;
@@ -13,12 +15,16 @@ import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
 @Getter
 @Setter
 public class RequestTabContent extends JPanel {
+    private final TabKey tabKey;
     private final RequestDto requestDto;
     private final RequestStagingMonitor requestStagingMonitor;
 
@@ -29,9 +35,11 @@ public class RequestTabContent extends JPanel {
     private KeyValue<KeyValueItemDto> cookies;
 
     public RequestTabContent(
+            TabKey tabKey,
             RequestDto requestDto,
             RequestStagingMonitor requestStagingMonitor
     ){
+        this.tabKey = tabKey;
         this.requestDto = requestDto;
         this.requestStagingMonitor = requestStagingMonitor;
 
@@ -68,6 +76,8 @@ public class RequestTabContent extends JPanel {
         setSelectedTabWithContent(tpRequest);
 
         add(tpRequest, "height 100%");
+
+        addCookieSetListener();
 
         // @TODO: update tab title when modify content
     }
@@ -209,11 +219,44 @@ public class RequestTabContent extends JPanel {
         return comboBox;
     }
 
+    private UUID cookieListenerUuid = null;
+    private void addCookieSetListener(){
+        cookieListenerUuid = RequestPublisher.getInstance()
+                .getOnCookieSet()
+                .addListener(tabKey, event -> {
+                    if (cookies != null) {
+                        cookies.update(event.getKey(), event.getValue());
+                        return;
+                    }
+
+                    Optional<KeyValueItemDto> cookie = requestDto.getCookies().stream()
+                            .filter(item -> Objects.equals(event.getKey(), item.getKey()))
+                            .findFirst();
+
+                    if (cookie.isPresent()) {
+                        cookie.get().setValue(event.getValue());
+                    } else {
+                        requestDto.getCookies().add(new KeyValueItemDto(
+                                event.getKey(),
+                                event.getValue()
+                        ));
+                    }
+
+                    requestStagingMonitor.update();
+                });
+    }
+
     public void dispose(){
         if(queryParams != null) queryParams.dispose();
         if(pathVariables != null) pathVariables.dispose();
         if(body != null) body.dispose();
         if(headers != null) headers.dispose();
         if(cookies != null) cookies.dispose();
+
+        if(cookieListenerUuid != null){
+            RequestPublisher.getInstance()
+                    .getOnCookieSet()
+                    .removeListener(cookieListenerUuid);
+        }
     }
 }
