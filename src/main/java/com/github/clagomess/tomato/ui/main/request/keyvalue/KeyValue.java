@@ -12,11 +12,14 @@ import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 public class KeyValue<T extends KeyValueItemDto> extends JPanel {
+    private final Class<T> itemClass;
     private final List<T> listItens;
     private final RequestStagingMonitor requestStagingMonitor;
     private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add new");
@@ -42,6 +45,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel {
             RequestStagingMonitor requestStagingMonitor,
             KeyValueOptions options
     ){
+        this.itemClass = itemClass;
         this.listItens = listItens;
         this.requestStagingMonitor = requestStagingMonitor;
         this.options = options;
@@ -84,20 +88,23 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, "width ::100%, height 100%");
 
-        btnAddNew.addActionListener(l -> {
-            try {
-                var item = itemClass.getDeclaredConstructor().newInstance();
-                addRow(item);
-                options.getOnChange().run(item);
-                requestStagingMonitor.update();
-            }catch (Exception e){
-                throw new RuntimeException(e);
-            }
-        });
+        btnAddNew.addActionListener(l -> addNewRow(null, null));
 
-        SwingUtilities.invokeLater(() -> {
-            this.listItens.forEach(this::addRow);
-        });
+        SwingUtilities.invokeLater(() -> this.listItens.forEach(this::addRow));
+    }
+
+    private void addNewRow(String key, String value){
+        try {
+            var item = itemClass.getDeclaredConstructor().newInstance();
+            item.setKey(key);
+            item.setValue(value);
+
+            addRow(item);
+            options.getOnChange().run(item);
+            requestStagingMonitor.update();
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     private void addRow(T item){
@@ -111,6 +118,20 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel {
 
         rowsPanel.add(row, "wrap 4");
         rowsPanel.revalidate();
+    }
+
+    public void update(String key, String value){
+        Optional<? extends RowComponent<?>> result = Arrays.stream(rowsPanel.getComponents())
+                .filter(row -> row instanceof RowComponent)
+                .map(row -> (RowComponent<?>) row)
+                .filter(row -> Objects.equals(key, row.getItem().getKey()))
+                .findFirst();
+
+        if(result.isPresent()){
+            result.get().getCValue().setValue(value);
+        }else{
+            addNewRow(key, value);
+        }
     }
 
     public void dispose(){

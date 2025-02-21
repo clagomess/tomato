@@ -112,6 +112,16 @@ class ValueComponent<T extends KeyValueItemDto> {
         options.getOnChange().run(item);
     }
 
+    public void setValue(String value){
+        if(component instanceof EnvTextField envTextField){
+            envTextField.setText(value);
+        }
+
+        if(component instanceof FileChooser fileChooser){
+            fileChooser.setValue(value);
+        }
+    }
+
     public void dispose(){
         if(component instanceof EnvTextField envTextField){
             envTextField.dispose();
