@@ -1,6 +1,8 @@
 package com.github.clagomess.tomato.ui.main.request.right.cookie;
 
-import com.github.clagomess.tomato.ui.component.ExceptionDialog;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
+import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSaveIcon;
 import lombok.Getter;
@@ -15,14 +17,17 @@ import java.util.Map;
 @Setter
 class Row extends JPanel {
     private final Container parent;
+    private final TabKey tabKey;
     private final Map.Entry<String, String> item;
     private final JButton btnSave = new IconButton(new BxSaveIcon(), "Set Cookie");
 
     public Row(
             Container parent,
+            TabKey tabKey,
             Map.Entry<String, String> item
     ){
         this.parent = parent;
+        this.tabKey = tabKey;
         this.item = item;
 
         // listeners
@@ -39,6 +44,8 @@ class Row extends JPanel {
     }
 
     private void btnSaveAction(){
-        new ExceptionDialog(parent, "Impl!");
+        RequestPublisher.getInstance()
+                .getOnCookieSet()
+                .publish(tabKey, new KeyValueItemDto(item.getKey(), item.getValue()));
     }
 }

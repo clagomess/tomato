@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.main.request.right;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.table.KeyValueTMDto;
 import com.github.clagomess.tomato.io.http.MediaType;
 import com.github.clagomess.tomato.ui.component.*;
@@ -24,6 +25,7 @@ import static javax.swing.SwingUtilities.invokeLater;
 @Slf4j
 @Getter
 public class ResponseTabContent extends JPanel {
+    private final TabKey tabKey;
     private final StatusResponse statusResponse = new StatusResponse();
 
     private final JButton btnBeautifyResponse = new IconButton(new BxsMagicWandIcon(), "Beautify Response");
@@ -37,7 +39,11 @@ public class ResponseTabContent extends JPanel {
 
     private ResponseDto responseDto = null;
 
-    public ResponseTabContent(){
+    public ResponseTabContent(
+            TabKey tabKey
+    ){
+        this.tabKey = tabKey;
+
         setLayout(new MigLayout(
                 "insets 5 5 2 2",
                 "[grow,fill][][]"
@@ -81,7 +87,7 @@ public class ResponseTabContent extends JPanel {
     }
 
     private void createTabCookie(JTabbedPane tabbedPane){
-        cookieTable = new CookieTable();
+        cookieTable = new CookieTable(this.tabKey);
         tabbedPane.addTab("Cookie", cookieTable);
     }
 

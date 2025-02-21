@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.publisher;
 
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.publisher.base.KeyPublisher;
@@ -30,4 +31,6 @@ public class RequestPublisher {
             );
         }
     };
+
+    private final KeyPublisher<TabKey, KeyValueItemDto> onCookieSet = new KeyPublisher<>();
 }

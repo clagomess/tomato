@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.ui.main.request.right.cookie;
 
+import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
 import net.miginfocom.swing.MigLayout;
 
@@ -12,9 +13,12 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class CookieTable extends JPanel {
+    private final TabKey tabKey;
     private final JPanel rowsPanel;
 
-    public CookieTable() {
+    public CookieTable(TabKey tabKey) {
+        this.tabKey = tabKey;
+
         setLayout(new MigLayout(
                 "insets 0 0 0 0",
                 "[grow, fill]"
@@ -51,7 +55,7 @@ public class CookieTable extends JPanel {
             rowsPanel.removeAll();
 
             for (Map.Entry<String, String> cookie : cookies.entrySet()) {
-                var row = new Row(rowsPanel, cookie);
+                var row = new Row(rowsPanel, tabKey, cookie);
 
                 rowsPanel.add(row, "wrap 4");
             }
