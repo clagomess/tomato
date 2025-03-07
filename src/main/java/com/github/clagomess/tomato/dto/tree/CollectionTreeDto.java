@@ -60,7 +60,7 @@ public class CollectionTreeDto implements Comparable<CollectionTreeDto> {
 
     @Override
     public int compareTo(CollectionTreeDto o) {
-        return StringUtils.compare(this.getName(), o.getName());
+        return StringUtils.compareIgnoreCase(this.getName(), o.getName());
     }
 
     @FunctionalInterface
