@@ -4,7 +4,9 @@ import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.stream.IntStream;
@@ -47,7 +49,13 @@ public class CollectionTreeNodeTest {
     public void loadChildren(){
         var rootNode = new CollectionTreeNode(treeModel, collectionTree);
         treeModel.setRoot(rootNode);
-        rootNode.loadChildren();
+
+        try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
+            msSwing.when(SwingUtilities::isEventDispatchThread)
+                    .thenReturn(true);
+
+            rootNode.loadChildren();
+        }
 
         assertEquals(4, rootNode.getChildCount());
     }
@@ -56,7 +64,12 @@ public class CollectionTreeNodeTest {
     public void loadChildren_assertSortedCollections(){
         var rootNode = new CollectionTreeNode(treeModel, collectionTree);
         treeModel.setRoot(rootNode);
-        rootNode.loadChildren();
+        try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
+            msSwing.when(SwingUtilities::isEventDispatchThread)
+                    .thenReturn(true);
+
+            rootNode.loadChildren();
+        }
 
         var result = IntStream.range(0, rootNode.getChildCount())
                 .mapToObj(rootNode::getChildAt)
@@ -73,13 +86,18 @@ public class CollectionTreeNodeTest {
     public void loadChildren_assertSortedRequests(){
         var rootNode = new CollectionTreeNode(treeModel, collectionTree);
         treeModel.setRoot(rootNode);
-        rootNode.loadChildren();
+        try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
+            msSwing.when(SwingUtilities::isEventDispatchThread)
+                    .thenReturn(true);
+
+            rootNode.loadChildren();
+        }
 
         var result = IntStream.range(0, rootNode.getChildCount())
                 .mapToObj(rootNode::getChildAt)
                 .filter(item -> item instanceof RequestTreeNode)
                 .map(item -> (RequestTreeNode) item)
-                .map(item -> item.getHead().getName())
+                .map(item -> ((RequestHeadDto) item.getUserObject()).getName())
                 .toList();
 
         assertEquals("LEVEL 1 - C", result.get(0));
