@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
+import static javax.swing.SwingUtilities.invokeLater;
+import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 @Setter
 @Getter
@@ -63,25 +65,30 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
     }
 
     public void loadChildren() {
+        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+
+        var collectionList = tree.getChildren().toList();
+        var requestList = tree.getRequests().toList();
+
         this.removeAllChildren();
 
-        tree.getChildren().forEachOrdered(collection -> {
+        for(var collection : collectionList){
             this.add(new CollectionTreeNode(treeModel, collection));
-        });
+        }
 
-        tree.getRequests().forEachOrdered(request -> {
+        for(var request : requestList){
             this.add(new RequestTreeNode(treeModel, this, request));
-        });
-
-        addRequestOnParentCollectionChangeListener();
+        }
 
         treeModel.reload(this);
+
+        addRequestOnParentCollectionChangeListener();
     }
 
     private void addOnChangeListener(){
         var key = new ParentCollectionKey(tree.getId());
         var uuid = collectionPublisher.getOnChange()
-                .addListener(key, event -> loadChildren());
+                .addListener(key, event -> invokeLater(this::loadChildren));
         listenerUuid.add(uuid);
     }
 
@@ -92,8 +99,10 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
                 .addListener(key, event -> {
                     if(event.getType() != INSERTED) return;
 
-                    this.add(new RequestTreeNode(treeModel, this, event.getEvent()));
-                    treeModel.reload(this);
+                    invokeLater(() -> {
+                        this.add(new RequestTreeNode(treeModel, this, event.getEvent()));
+                        treeModel.reload(this);
+                    });
                 });
 
         listenerUuid.add(uuid);

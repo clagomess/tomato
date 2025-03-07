@@ -58,16 +58,16 @@ public class RequestFrameController {
     ){
         if(requestHead == null) return;
 
-        var key = new RequestKey(requestHead);
-
-        RequestPublisher.getInstance().getOnChange().addListener(
-                key,
-                event -> title.setText(event.getEvent().getName())
-        );
+        var uuid = RequestPublisher.getInstance()
+                .getOnChange()
+                .addListener(
+                    new RequestKey(requestHead),
+                    event -> title.setText(event.getEvent().getName())
+                );
 
         dispose.add(() -> RequestPublisher.getInstance()
                 .getOnChange()
-                .removeListener(key));
+                .removeListener(uuid));
     }
 
     public void dispose(){

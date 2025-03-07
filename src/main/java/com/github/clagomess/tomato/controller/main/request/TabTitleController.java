@@ -22,18 +22,19 @@ public class TabTitleController {
     ){
         if(requestHead == null) return;
 
-        var key = new RequestKey(requestHead);
-
-        RequestPublisher.getInstance()
+        var uuid = RequestPublisher.getInstance()
                 .getOnChange()
-                .addListener(key, event -> title.update(
-                        event.getEvent().getMethod(),
-                        event.getEvent().getName()
-                ));
+                .addListener(
+                        new RequestKey(requestHead),
+                        event -> title.update(
+                            event.getEvent().getMethod(),
+                            event.getEvent().getName()
+                        )
+                );
 
         dispose.add(() -> RequestPublisher.getInstance()
                 .getOnChange()
-                .removeListener(key));
+                .removeListener(uuid));
     }
 
     public void addOnStagingListener(

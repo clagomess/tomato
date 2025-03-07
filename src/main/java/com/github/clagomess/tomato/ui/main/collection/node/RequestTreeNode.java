@@ -10,14 +10,15 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import java.util.UUID;
 
+import static javax.swing.SwingUtilities.invokeLater;
+import static javax.swing.SwingUtilities.isEventDispatchThread;
+
 @Getter
 public class RequestTreeNode extends DefaultMutableTreeNode {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
     private final UUID listenerUuid;
 
     private final DefaultTreeModel treeModel;
-    private final CollectionTreeNode parentNode;
-    private final RequestHeadDto head;
     private final RequestKey requestKey;
 
     public RequestTreeNode(
@@ -27,8 +28,6 @@ public class RequestTreeNode extends DefaultMutableTreeNode {
     ) {
         super(head, false);
         this.treeModel = treeModel;
-        this.parentNode = parentNode;
-        this.head = head;
         this.requestKey = new RequestKey(
                 head.getParent().getId(),
                 head.getId()
@@ -36,8 +35,8 @@ public class RequestTreeNode extends DefaultMutableTreeNode {
 
         this.listenerUuid = requestPublisher.getOnChange().addListener(requestKey, event -> {
             switch (event.getType()){
-                case UPDATED -> onUpdate(event.getEvent());
-                case DELETED -> onDelete();
+                case UPDATED -> invokeLater(() -> onUpdate(parentNode, this, event.getEvent()));
+                case DELETED -> invokeLater(() -> onDelete(parentNode, this));
             }
         });
     }
@@ -50,19 +49,31 @@ public class RequestTreeNode extends DefaultMutableTreeNode {
         }
     }
 
-    private void onUpdate(RequestHeadDto requestHead) {
+    private void onUpdate(
+            CollectionTreeNode parentNode,
+            RequestTreeNode node,
+            RequestHeadDto requestHead
+    ) {
+        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+
+        int nodeIdx = parentNode.getIndex(node);
+        node.removeFromParent();
+
         parentNode.insert(
                 new RequestTreeNode(treeModel, parentNode, requestHead),
-                parentNode.getIndex(this)
+                nodeIdx
         );
-
-        removeFromParent();
 
         treeModel.reload(parentNode);
     }
 
-    private void onDelete(){
-        removeFromParent();
+    private void onDelete(
+            CollectionTreeNode parentNode,
+            RequestTreeNode node
+    ){
+        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+
+        node.removeFromParent();
         treeModel.reload(parentNode);
     }
 }

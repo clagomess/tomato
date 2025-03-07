@@ -6,7 +6,8 @@ import com.github.clagomess.tomato.ui.main.collection.node.RequestTreeNode;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import java.util.concurrent.ForkJoinPool;
+
+import static javax.swing.SwingUtilities.invokeLater;
 
 public class CollectionTreeExpansionListener implements TreeExpansionListener {
     @Override
@@ -23,7 +24,7 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
             return;
         }
 
-        ForkJoinPool.commonPool().submit(node::loadChildren);
+        invokeLater(node::loadChildren);
     }
 
     @Override
