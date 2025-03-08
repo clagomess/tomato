@@ -75,14 +75,13 @@ public class RequestTabContent extends JPanel {
         add(tpRequest, "height 100%");
 
         addCookieSetListener();
-
-        // @TODO: update tab title when modify content
     }
 
     private void createTabTitleQueryParams(JTabbedPane tabbedPane){
         var queryParamsTabTitle = new TabTitle(
+                tabKey,
                 "Query Params",
-                !requestDto.getUrlParam().getQuery().isEmpty()
+                () -> !requestDto.getUrlParam().getQuery().isEmpty()
         );
 
         tabbedPane.addTab(queryParamsTabTitle.getTitle(), new LoadingPane());
@@ -107,8 +106,9 @@ public class RequestTabContent extends JPanel {
 
     private void createTabTitlePathVariables(JTabbedPane tabbedPane){
         var pathVariablesTabTitle = new TabTitle(
+                tabKey,
                 "Path Variables",
-                !requestDto.getUrlParam().getPath().isEmpty()
+                () -> !requestDto.getUrlParam().getPath().isEmpty()
         );
 
         tabbedPane.addTab(pathVariablesTabTitle.getTitle(), new LoadingPane());
@@ -133,8 +133,9 @@ public class RequestTabContent extends JPanel {
 
     private void createTabTitleBody(JTabbedPane tabbedPane){
         var bodyTabTabTitle = new TabTitle(
+                tabKey,
                 "Body",
-                requestDto.getBody().getType() != BodyTypeEnum.NO_BODY
+                () -> requestDto.getBody().getType() != BodyTypeEnum.NO_BODY
         );
 
         tabbedPane.addTab(bodyTabTabTitle.getTitle(), new LoadingPane());
@@ -152,8 +153,9 @@ public class RequestTabContent extends JPanel {
 
     private void createTabTitleHeaders(JTabbedPane tabbedPane){
         var headersTabTitle = new TabTitle(
+                tabKey,
                 "Headers",
-                !requestDto.getHeaders().isEmpty()
+                () -> !requestDto.getHeaders().isEmpty()
         );
 
         tabbedPane.addTab(headersTabTitle.getTitle(), new LoadingPane());
@@ -172,8 +174,9 @@ public class RequestTabContent extends JPanel {
 
     private void createTabTitleCookies(JTabbedPane tabbedPane){
         var cookiesTabTitle = new TabTitle(
+                tabKey,
                 "Cookies",
-                !requestDto.getCookies().isEmpty()
+                () -> !requestDto.getCookies().isEmpty()
         );
 
         tabbedPane.addTab(cookiesTabTitle.getTitle(), new LoadingPane());
