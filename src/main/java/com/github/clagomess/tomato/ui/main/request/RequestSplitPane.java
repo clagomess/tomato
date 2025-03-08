@@ -18,6 +18,8 @@ import com.github.clagomess.tomato.ui.main.request.right.ResponseTabContent;
 import com.github.clagomess.tomato.ui.request.RequestSaveFrame;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -25,6 +27,7 @@ import java.awt.*;
 import java.util.Arrays;
 
 import static javax.swing.SwingUtilities.invokeLater;
+import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 @Getter
 public class RequestSplitPane extends JPanel {
@@ -56,17 +59,17 @@ public class RequestSplitPane extends JPanel {
 
 
     public RequestSplitPane(
-            RequestHeadDto requestHeadDto,
-            RequestDto requestDto
+            @NotNull TabKey key,
+            @NotNull RequestStagingMonitor requestStagingMonitor,
+            @Nullable RequestHeadDto requestHeadDto,
+            @NotNull RequestDto requestDto
     ) {
-        this.key = new TabKey(requestDto.getId());
+        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+
+        this.key = key;
+        this.requestStagingMonitor = requestStagingMonitor;
         this.requestHeadDto = requestHeadDto;
         this.requestDto = requestDto;
-        this.requestStagingMonitor = new RequestStagingMonitor(
-                key,
-                requestHeadDto,
-                requestDto
-        );
 
         setLayout(new MigLayout(
                 "insets 5",
