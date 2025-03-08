@@ -6,8 +6,10 @@ import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.request.UrlParamDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
+import com.github.clagomess.tomato.publisher.DisposableListener;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
+import com.github.clagomess.tomato.ui.component.LoadingPane;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValue;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueOptions;
 import lombok.Getter;
@@ -15,11 +17,11 @@ import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.LinkedList;
+import java.util.List;
 
 import static javax.swing.SwingUtilities.invokeLater;
+import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 @Getter
 @Setter
@@ -28,11 +30,7 @@ public class RequestTabContent extends JPanel {
     private final RequestDto requestDto;
     private final RequestStagingMonitor requestStagingMonitor;
 
-    private KeyValue<ContentTypeKeyValueItemDto> queryParams;
-    private KeyValue<KeyValueItemDto> pathVariables;
-    private Body body;
-    private KeyValue<KeyValueItemDto> headers;
-    private KeyValue<KeyValueItemDto> cookies;
+    private final List<DisposableListener> disposables = new LinkedList<>();
 
     public RequestTabContent(
             TabKey tabKey,
@@ -60,40 +58,37 @@ public class RequestTabContent extends JPanel {
         tpRequest.addChangeListener(e -> {
             int selectedIndex = tpRequest.getSelectedIndex();
 
-            if(!(tpRequest.getComponentAt(selectedIndex) instanceof JLabel)) return;
+            if(!(tpRequest.getComponentAt(selectedIndex) instanceof LoadingPane)) return;
 
-            invokeLater(() -> {
-                switch (selectedIndex){
-                    case 0: createTabQueryParams(tpRequest); break;
-                    case 1: createTabPathVariables(tpRequest); break;
-                    case 2: createTabBody(tpRequest); break;
-                    case 3: createTabHeaders(tpRequest); break;
-                    case 4: createTabCookies(tpRequest); break;
-                }
-            });
+            switch (selectedIndex){
+                case 0: createTabQueryParams(tpRequest); break;
+                case 1: createTabPathVariables(tpRequest); break;
+                case 2: createTabBody(tpRequest); break;
+                case 3: createTabHeaders(tpRequest); break;
+                case 4: createTabCookies(tpRequest); break;
+            }
         });
 
         setSelectedTabWithContent(tpRequest);
 
         add(tpRequest, "height 100%");
 
-        addCookieSetListener();
-
-        // @TODO: update tab title when modify content
+        addCookieSetListener(tpRequest);
     }
 
     private void createTabTitleQueryParams(JTabbedPane tabbedPane){
         var queryParamsTabTitle = new TabTitle(
+                tabKey,
                 "Query Params",
-                !requestDto.getUrlParam().getQuery().isEmpty()
+                () -> !requestDto.getUrlParam().getQuery().isEmpty()
         );
 
-        tabbedPane.addTab(queryParamsTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.addTab(queryParamsTabTitle.getTitle(), new LoadingPane());
         tabbedPane.setTabComponentAt(0, queryParamsTabTitle);
     }
 
     private void createTabQueryParams(JTabbedPane tabbedPane){
-        queryParams = new KeyValue<>(
+        var queryParams = new KeyValue<>(
                 requestDto.getUrlParam().getQuery(),
                 ContentTypeKeyValueItemDto.class,
                 requestStagingMonitor,
@@ -106,20 +101,22 @@ public class RequestTabContent extends JPanel {
         );
 
         tabbedPane.setComponentAt(0, queryParams);
+        disposables.add(queryParams);
     }
 
     private void createTabTitlePathVariables(JTabbedPane tabbedPane){
         var pathVariablesTabTitle = new TabTitle(
+                tabKey,
                 "Path Variables",
-                !requestDto.getUrlParam().getPath().isEmpty()
+                () -> !requestDto.getUrlParam().getPath().isEmpty()
         );
 
-        tabbedPane.addTab(pathVariablesTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.addTab(pathVariablesTabTitle.getTitle(), new LoadingPane());
         tabbedPane.setTabComponentAt(1, pathVariablesTabTitle);
     }
 
     private void createTabPathVariables(JTabbedPane tabbedPane){
-        pathVariables = new KeyValue<>(
+        var pathVariables = new KeyValue<>(
                 requestDto.getUrlParam().getPath(),
                 KeyValueItemDto.class,
                 requestStagingMonitor,
@@ -132,65 +129,90 @@ public class RequestTabContent extends JPanel {
         );
 
         tabbedPane.setComponentAt(1, pathVariables);
+        disposables.add(pathVariables);
     }
 
     private void createTabTitleBody(JTabbedPane tabbedPane){
         var bodyTabTabTitle = new TabTitle(
+                tabKey,
                 "Body",
-                requestDto.getBody().getType() != BodyTypeEnum.NO_BODY
+                () -> requestDto.getBody().getType() != BodyTypeEnum.NO_BODY
         );
 
-        tabbedPane.addTab(bodyTabTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.addTab(bodyTabTabTitle.getTitle(), new LoadingPane());
         tabbedPane.setTabComponentAt(2, bodyTabTabTitle);
     }
 
     private void createTabBody(JTabbedPane tabbedPane){
-        body = new Body(
+        var body = new Body(
                 requestDto.getBody(),
                 requestStagingMonitor
         );
 
         tabbedPane.setComponentAt(2, body);
+        disposables.add(body);
     }
 
     private void createTabTitleHeaders(JTabbedPane tabbedPane){
         var headersTabTitle = new TabTitle(
+                tabKey,
                 "Headers",
-                !requestDto.getHeaders().isEmpty()
+                () -> !requestDto.getHeaders().isEmpty()
         );
 
-        tabbedPane.addTab(headersTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.addTab(headersTabTitle.getTitle(), new LoadingPane());
         tabbedPane.setTabComponentAt(3, headersTabTitle);
     }
 
     private void createTabHeaders(JTabbedPane tabbedPane){
-        headers = new KeyValue<>(
+        var headers = new KeyValue<>(
                 requestDto.getHeaders(),
                 KeyValueItemDto.class,
                 requestStagingMonitor
         );
 
         tabbedPane.setComponentAt(3, headers);
+        disposables.add(headers);
     }
 
     private void createTabTitleCookies(JTabbedPane tabbedPane){
         var cookiesTabTitle = new TabTitle(
+                tabKey,
                 "Cookies",
-                !requestDto.getCookies().isEmpty()
+                () -> !requestDto.getCookies().isEmpty()
         );
 
-        tabbedPane.addTab(cookiesTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.addTab(cookiesTabTitle.getTitle(), new LoadingPane());
         tabbedPane.setTabComponentAt(4, cookiesTabTitle);
     }
 
     private void createTabCookies(JTabbedPane tabbedPane){
-        cookies = new KeyValue<>(
+        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+
+        var cookies = new KeyValue<>(
                 requestDto.getCookies(),
                 KeyValueItemDto.class,
                 requestStagingMonitor
         );
 
         tabbedPane.setComponentAt(4, cookies);
+        disposables.add(cookies);
+    }
+
+    private void addCookieSetListener(JTabbedPane tabbedPane){
+        var uuid = RequestPublisher.getInstance()
+                .getOnCookieSet()
+                .addListener(tabKey, event -> invokeLater(() -> {
+                    tabbedPane.setSelectedIndex(4);
+
+                    if(tabbedPane.getComponentAt(4) instanceof KeyValue<?> cookies){
+                        cookies.update(event.getKey(), event.getValue());
+                    }
+                }));
+
+        disposables.add(() -> RequestPublisher.getInstance()
+                .getOnCookieSet()
+                .removeListener(uuid));
     }
 
     private void setSelectedTabWithContent(JTabbedPane tabbedPane){
@@ -219,44 +241,7 @@ public class RequestTabContent extends JPanel {
         return comboBox;
     }
 
-    private UUID cookieListenerUuid = null;
-    private void addCookieSetListener(){
-        cookieListenerUuid = RequestPublisher.getInstance()
-                .getOnCookieSet()
-                .addListener(tabKey, event -> {
-                    if (cookies != null) {
-                        cookies.update(event.getKey(), event.getValue());
-                        return;
-                    }
-
-                    Optional<KeyValueItemDto> cookie = requestDto.getCookies().stream()
-                            .filter(item -> Objects.equals(event.getKey(), item.getKey()))
-                            .findFirst();
-
-                    if (cookie.isPresent()) {
-                        cookie.get().setValue(event.getValue());
-                    } else {
-                        requestDto.getCookies().add(new KeyValueItemDto(
-                                event.getKey(),
-                                event.getValue()
-                        ));
-                    }
-
-                    requestStagingMonitor.update();
-                });
-    }
-
     public void dispose(){
-        if(queryParams != null) queryParams.dispose();
-        if(pathVariables != null) pathVariables.dispose();
-        if(body != null) body.dispose();
-        if(headers != null) headers.dispose();
-        if(cookies != null) cookies.dispose();
-
-        if(cookieListenerUuid != null){
-            RequestPublisher.getInstance()
-                    .getOnCookieSet()
-                    .removeListener(cookieListenerUuid);
-        }
+        disposables.forEach(DisposableListener::dispose);
     }
 }
