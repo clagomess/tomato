@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
+import com.github.clagomess.tomato.publisher.DisposableListener;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValue;
@@ -17,7 +18,7 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.Arrays;
 
-public class Body extends JPanel {
+public class Body extends JPanel implements DisposableListener {
     private final BodyDto body;
     private final RequestStagingMonitor requestStagingMonitor;
     private final ButtonGroup bgBodyType = new ButtonGroup();

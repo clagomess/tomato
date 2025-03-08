@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.main.request.keyvalue;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.publisher.DisposableListener;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
@@ -17,8 +18,9 @@ import java.util.Optional;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
+import static javax.swing.SwingUtilities.isEventDispatchThread;
 
-public class KeyValue<T extends KeyValueItemDto> extends JPanel {
+public class KeyValue<T extends KeyValueItemDto> extends JPanel implements DisposableListener {
     private final Class<T> itemClass;
     private final List<T> listItens;
     private final RequestStagingMonitor requestStagingMonitor;
@@ -45,6 +47,8 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel {
             RequestStagingMonitor requestStagingMonitor,
             KeyValueOptions options
     ){
+        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+
         this.itemClass = itemClass;
         this.listItens = listItens;
         this.requestStagingMonitor = requestStagingMonitor;
@@ -90,7 +94,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel {
 
         btnAddNew.addActionListener(l -> addNewRow(null, null));
 
-        SwingUtilities.invokeLater(() -> this.listItens.forEach(this::addRow));
+        this.listItens.forEach(this::addRow);
     }
 
     private void addNewRow(String key, String value){
@@ -118,6 +122,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel {
 
         rowsPanel.add(row, "wrap 4");
         rowsPanel.revalidate();
+        rowsPanel.repaint();
     }
 
     public void update(String key, String value){
