@@ -35,7 +35,6 @@ $env:Path += ";build-windows/wix"
 --main-class com.github.clagomess.tomato.Main `
 --java-options "-splash:`$APPDIR/splash.png -Dfile.encoding=UTF-8" `
 --win-upgrade-uuid "a6f3d5f2-ad83-4fc7-97ce-6444c991e2fe" `
---win-dir-chooser `
 --win-per-user-install `
 --win-menu `
 --win-shortcut `
