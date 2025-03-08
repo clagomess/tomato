@@ -1,9 +1,9 @@
 {
-  "id" : "60ODtoRs",
-  "createTime" : "2024-12-18T22:57:29",
-  "updateTime" : "2025-02-06T13:39:25",
-  "name" : "/echo.php",
-  "method" : "GET",
+  "id" : "IcWr9ZzV",
+  "createTime" : "2024-12-18T23:38:23",
+  "updateTime" : "2025-03-08T00:05:48",
+  "name" : "Basic HEAD",
+  "method" : "HEAD",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
     "charset" : "UTF-8",

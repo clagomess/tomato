@@ -1,9 +1,9 @@
 {
-  "id" : "rppSDkLD",
-  "createTime" : "2024-12-18T23:00:22",
-  "updateTime" : "2025-02-06T13:39:38",
-  "name" : "/echo.php",
-  "method" : "POST",
+  "id" : "60ODtoRs",
+  "createTime" : "2024-12-18T22:57:29",
+  "updateTime" : "2025-03-08T00:04:12",
+  "name" : "Basic GET",
+  "method" : "GET",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
     "charset" : "UTF-8",

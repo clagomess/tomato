@@ -1,10 +1,10 @@
 {
-  "id" : "4Ggthbte",
-  "createTime" : "2024-12-18T23:20:09",
-  "updateTime" : "2025-02-06T13:39:48",
-  "name" : "/sample.pdf",
-  "method" : "GET",
-  "url" : "{{echoServer}}/sample.pdf",
+  "id" : "bcjK27md",
+  "createTime" : "2024-12-18T23:40:07",
+  "updateTime" : "2025-03-08T00:05:28",
+  "name" : "Basic PATCH",
+  "method" : "PATCH",
+  "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
     "charset" : "UTF-8",
     "path" : [ ],

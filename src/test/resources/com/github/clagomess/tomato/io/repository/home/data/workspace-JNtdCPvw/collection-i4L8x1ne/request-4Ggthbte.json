@@ -1,10 +1,10 @@
 {
-  "id" : "lYK0zytu",
-  "createTime" : "2024-12-18T23:13:33",
-  "updateTime" : "2025-02-06T13:39:50",
-  "name" : "/text-plain.txt",
+  "id" : "4Ggthbte",
+  "createTime" : "2024-12-18T23:20:09",
+  "updateTime" : "2025-03-08T00:07:52",
+  "name" : "Response PDF",
   "method" : "GET",
-  "url" : "{{echoServer}}/text-plain.txt",
+  "url" : "{{echoServer}}/sample.pdf",
   "urlParam" : {
     "charset" : "UTF-8",
     "path" : [ ],

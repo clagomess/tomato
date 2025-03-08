@@ -1,8 +1,8 @@
 {
   "id" : "Rm4aTjxJ",
   "createTime" : "2024-12-18T23:30:14",
-  "updateTime" : "2025-02-06T13:40:05",
-  "name" : "body-json",
+  "updateTime" : "2025-03-08T00:24:22",
+  "name" : "Body Json",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {

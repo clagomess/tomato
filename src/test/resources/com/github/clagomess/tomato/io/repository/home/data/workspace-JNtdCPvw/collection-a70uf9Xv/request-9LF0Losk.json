@@ -1,10 +1,10 @@
 {
   "id" : "9LF0Losk",
   "createTime" : "2024-12-18T23:33:47",
-  "updateTime" : "2025-02-06T19:54:43",
-  "name" : "body-binary",
+  "updateTime" : "2025-03-08T00:24:14",
+  "name" : "Binary File",
   "method" : "POST",
-  "url" : "{{echoServer}}/echo.php?selected-file",
+  "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
     "charset" : "UTF-8",
     "path" : [ ],

@@ -1,8 +1,8 @@
 {
   "id" : "gtD5ZcKC",
   "createTime" : "2024-12-18T23:40:42",
-  "updateTime" : "2025-02-06T13:40:22",
-  "name" : "/xml-iso-8859-1.php",
+  "updateTime" : "2025-03-08T00:13:51",
+  "name" : "Response XML",
   "method" : "GET",
   "url" : "{{echoServer}}/xml-iso-8859-1.php",
   "urlParam" : {

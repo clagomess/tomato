@@ -1,10 +1,10 @@
 {
-  "id" : "keyXRqWc",
-  "createTime" : "2024-12-18T23:15:15",
-  "updateTime" : "2025-02-06T13:39:22",
-  "name" : "/delay.php",
+  "id" : "55w7W0xw",
+  "createTime" : "2024-12-18T23:06:02",
+  "updateTime" : "2025-03-08T00:07:40",
+  "name" : "Response Redirect",
   "method" : "GET",
-  "url" : "{{echoServer}}/delay.php",
+  "url" : "{{echoServer}}/redirect.php",
   "urlParam" : {
     "charset" : "UTF-8",
     "path" : [ ],

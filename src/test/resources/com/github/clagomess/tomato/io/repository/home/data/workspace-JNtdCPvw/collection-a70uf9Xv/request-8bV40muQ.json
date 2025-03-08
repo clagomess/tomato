@@ -1,8 +1,8 @@
 {
   "id" : "8bV40muQ",
   "createTime" : "2024-12-18T23:36:03",
-  "updateTime" : "2025-02-06T13:39:27",
-  "name" : "/echo.php",
+  "updateTime" : "2025-03-08T00:24:47",
+  "name" : "Json Body",
   "method" : "PUT",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {

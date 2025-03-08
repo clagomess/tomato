@@ -1,8 +1,8 @@
 {
   "id" : "UsxByseb",
   "createTime" : "2024-12-18T23:02:11",
-  "updateTime" : "2025-02-06T13:39:41",
-  "name" : "/echo.php?param=value",
+  "updateTime" : "2025-03-08T00:23:57",
+  "name" : "Raw QueryParam",
   "method" : "GET",
   "url" : "http://localhost:8000/echo.php?param=value",
   "urlParam" : {

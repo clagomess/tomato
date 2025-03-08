@@ -1,8 +1,8 @@
 {
   "id" : "tmCsbrzA",
   "createTime" : "2024-12-18T23:26:19",
-  "updateTime" : "2025-02-06T19:43:49",
-  "name" : "multipart-form",
+  "updateTime" : "2025-03-08T00:27:29",
+  "name" : "Multipart Form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
@@ -23,9 +23,9 @@
       "type" : "TEXT"
     }, {
       "key" : "myfile",
-      "value" : "C:\\Users\\claudio\\OneDrive\\Documentos\\BhuiyanManuscript.pdf",
+      "value" : "C:\\Users\\claudio\\OneDrive\\Portada.jpg",
       "selected" : true,
-      "valueContentType" : "application/pdf",
+      "valueContentType" : "image/jpeg",
       "type" : "FILE"
     }, {
       "key" : "token",

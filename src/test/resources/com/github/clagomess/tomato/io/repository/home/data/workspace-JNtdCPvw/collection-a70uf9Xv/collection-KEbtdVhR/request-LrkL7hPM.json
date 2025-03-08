@@ -1,8 +1,8 @@
 {
   "id" : "LrkL7hPM",
   "createTime" : "2024-12-18T23:37:37",
-  "updateTime" : "2025-02-06T13:39:36",
-  "name" : "/echo.php",
+  "updateTime" : "2025-03-08T00:06:16",
+  "name" : "Basic DELETE",
   "method" : "DELETE",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {

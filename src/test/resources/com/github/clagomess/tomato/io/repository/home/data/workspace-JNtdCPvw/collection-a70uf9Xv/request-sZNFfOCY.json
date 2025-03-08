@@ -1,8 +1,8 @@
 {
   "id" : "sZNFfOCY",
   "createTime" : "2025-01-17T17:02:00",
-  "updateTime" : "2025-02-06T13:39:53",
-  "name" : "Path Variables",
+  "updateTime" : "2025-03-08T00:24:06",
+  "name" : "Variables Builder",
   "method" : "GET",
   "url" : "{{echoServer}}/echo.php?localtoken=:localtoken&disabled=:disabled",
   "urlParam" : {

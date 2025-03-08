@@ -1,8 +1,8 @@
 {
   "id" : "x4woN3gk",
   "createTime" : "2024-12-18T23:04:19",
-  "updateTime" : "2025-02-06T13:40:07",
-  "name" : "custom-header",
+  "updateTime" : "2025-03-08T00:23:47",
+  "name" : "Custom Headers",
   "method" : "GET",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {

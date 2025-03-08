@@ -1,8 +1,8 @@
 {
   "id" : "8EJRkvf4",
   "createTime" : "2025-01-31T17:15:07",
-  "updateTime" : "2025-02-04T17:00:44",
-  "name" : "body-xml",
+  "updateTime" : "2025-03-08T00:14:24",
+  "name" : "Body XML",
   "method" : "POST",
   "url" : "{{echoServer}}/echo-iso-8859-1.php",
   "urlParam" : {

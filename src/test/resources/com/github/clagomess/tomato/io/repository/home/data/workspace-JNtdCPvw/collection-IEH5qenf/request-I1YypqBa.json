@@ -1,8 +1,8 @@
 {
   "id" : "I1YypqBa",
   "createTime" : "2025-01-31T17:11:52",
-  "updateTime" : "2025-02-06T13:40:27",
-  "name" : "multipart-form",
+  "updateTime" : "2025-03-08T00:14:40",
+  "name" : "Multipart Form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo-iso-8859-1.php",
   "urlParam" : {

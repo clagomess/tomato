@@ -1,9 +1,9 @@
 {
-  "id" : "bcjK27md",
-  "createTime" : "2024-12-18T23:40:07",
-  "updateTime" : "2025-02-06T13:39:29",
-  "name" : "/echo.php",
-  "method" : "PATCH",
+  "id" : "IWBXn64Q",
+  "createTime" : "2024-12-18T23:39:42",
+  "updateTime" : "2025-03-08T00:06:04",
+  "name" : "Basic OPTIONS",
+  "method" : "OPTIONS",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
     "charset" : "UTF-8",

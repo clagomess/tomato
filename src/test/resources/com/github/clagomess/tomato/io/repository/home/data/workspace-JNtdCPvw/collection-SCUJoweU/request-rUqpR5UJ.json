@@ -1,8 +1,8 @@
 {
   "id" : "rUqpR5UJ",
   "createTime" : "2025-01-20T14:00:36",
-  "updateTime" : "2025-02-06T13:39:19",
-  "name" : "/cookie.php",
+  "updateTime" : "2025-03-08T00:15:50",
+  "name" : "Response Set Cookie",
   "method" : "GET",
   "url" : "{{echoServer}}/cookie.php",
   "urlParam" : {

@@ -1,8 +1,8 @@
 {
   "id" : "eIrkVbCc",
   "createTime" : "2025-01-17T16:59:24",
-  "updateTime" : "2025-02-06T13:39:56",
-  "name" : "Query Params",
+  "updateTime" : "2025-03-08T00:12:31",
+  "name" : "Query Params Builder",
   "method" : "GET",
   "url" : "{{echoServer}}/echo.php",
   "urlParam" : {
