@@ -2,10 +2,12 @@ package com.github.clagomess.tomato.ui.main.request;
 
 import com.github.clagomess.tomato.controller.main.request.TabTitleController;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxXIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
+import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +29,8 @@ class TabTitle extends JPanel {
 
     public TabTitle(
             @Nullable RequestTabbedPane parent,
-            @NotNull RequestSplitPane requestSplitPane,
+            @NotNull TabKey key,
+            @NotNull RequestStagingMonitor requestStagingMonitor,
             @Nullable RequestHeadDto requestHead,
             @NotNull RequestDto request,
             @NotNull ActionListener onClose
@@ -38,7 +41,7 @@ class TabTitle extends JPanel {
         add(httpMethod);
         add(title, "width ::200");
         add(btnClose);
-        addMouseListener(new TabTitleMouseListener(requestSplitPane.getKey(), parent));
+        addMouseListener(new TabTitleMouseListener(key, parent));
         setToolTipText(request.getName());
 
         // set data
@@ -46,19 +49,19 @@ class TabTitle extends JPanel {
         title.setText(request.getName());
         btnClose.addActionListener(onClose);
         btnClose.addActionListener(l -> dispose());
-
-        if(requestSplitPane.getRequestStagingMonitor().isDiferent()){
-            changeIcon.setIcon(iconHasChanged);
-        }
+        changeIcon.setIcon(requestStagingMonitor.isDiferent() ?
+                iconHasChanged :
+                iconHasNotChanged
+        );
 
         controller.addOnChangeListener(requestHead, (method, name) -> {
             httpMethod.setIcon(method.getIcon());
             title.setText(name);
         });
 
-        controller.addOnStagingListener(requestSplitPane.getKey(), hasChanged -> {
-            changeIcon.setIcon(hasChanged ? iconHasChanged : iconHasNotChanged);
-        });
+        controller.addOnStagingListener(key, hasChanged ->
+            changeIcon.setIcon(hasChanged ? iconHasChanged : iconHasNotChanged)
+        );
     }
 
     public void dispose(){

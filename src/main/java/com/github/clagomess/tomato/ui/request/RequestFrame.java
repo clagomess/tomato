@@ -2,10 +2,12 @@ package com.github.clagomess.tomato.ui.request;
 
 import com.github.clagomess.tomato.controller.request.RequestFrameController;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.ui.MainFrame;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import com.github.clagomess.tomato.ui.main.request.RequestSplitPane;
+import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
@@ -35,20 +37,32 @@ public class RequestFrame extends JFrame {
                 "[grow,fill]"
         ));
 
-        var requestSplitPane = new RequestSplitPane(requestHead, loadedRequest);
+        var key = new TabKey(loadedRequest.getId());
+        var requestStagingMonitor = new RequestStagingMonitor(
+                key,
+                requestHead,
+                loadedRequest
+        );
+        var requestSplitPane = new RequestSplitPane(
+                key,
+                requestStagingMonitor,
+                requestHead,
+                loadedRequest
+        );
+
         controller.getDispose().add(requestSplitPane::dispose);
 
         add(requestSplitPane, "height 100%");
 
         controller.addOnStagingListener(
-                requestSplitPane.getKey(),
+                key,
                 loadedRequest,
                 this::setTitle
         );
 
         controller.addOnChangeListener(requestHead, this::setTitle);
 
-        if(requestSplitPane.getRequestStagingMonitor().isDiferent()) {
+        if(requestStagingMonitor.isDiferent()) {
             setTitle("[*] " + loadedRequest.getName());
         }
 

@@ -6,7 +6,9 @@ import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
+import com.github.clagomess.tomato.ui.component.LoadingPane;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
+import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 import static javax.swing.SwingUtilities.invokeLater;
+import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 public class RequestTabbedPane extends JTabbedPane {
     @Getter
@@ -84,39 +87,51 @@ public class RequestTabbedPane extends JTabbedPane {
     }
 
     protected void addNewTab(
-            @Nullable RequestHeadDto requestHeadDto,
-            @NotNull RequestDto requestDto
+            @Nullable RequestHeadDto requestHead,
+            @NotNull RequestDto request
     ){
-        // add content
-        var requestSplitPane = new RequestSplitPane(requestHeadDto, requestDto);
-        var tabId = requestSplitPane.getKey().getUuid().toString();
+        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
 
-        insertTab(
-                tabId,
-                null,
-                requestSplitPane,
-                null,
-                getTabCount() - 1
+        int tabPosition = getTabCount() - 1;
+        var key = new TabKey(request.getId());
+        var tabId = key.getUuid().toString();
+        var requestStagingMonitor = new RequestStagingMonitor(
+                key,
+                requestHead,
+                request
         );
 
         // setup tab title
         var tabTitle = new TabTitle(
                 this,
-                requestSplitPane,
-                requestHeadDto,
-                requestDto,
-                l -> removeTab(requestSplitPane.getKey())
+                key,
+                requestStagingMonitor,
+                requestHead,
+                request,
+                l -> removeTab(key)
         );
 
-        setTabComponentAt(indexOfTab(tabId), tabTitle);
-        tabs.add(new Tab(
-                requestSplitPane.getKey(),
-                tabTitle,
-                requestSplitPane
-        ));
+        insertTab(tabId, null, new LoadingPane(), null, tabPosition);
+        setTabComponentAt(tabPosition, tabTitle);
+        setSelectedIndex(tabPosition);
 
-        // select
-        setSelectedIndex(getTabCount() -2);
+        // lazy load content
+        invokeLater(() -> {
+            var requestSplitPane = new RequestSplitPane(
+                    key,
+                    requestStagingMonitor,
+                    requestHead,
+                    request
+            );
+
+            setComponentAt(tabPosition, requestSplitPane);
+
+            tabs.add(new Tab(
+                    key,
+                    tabTitle,
+                    requestSplitPane
+            ));
+        });
     }
 
     protected boolean isSafeToRemoveTab(Tab tab){
