@@ -8,6 +8,7 @@ import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
+import com.github.clagomess.tomato.ui.component.LoadingPane;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValue;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueOptions;
 import lombok.Getter;
@@ -18,8 +19,6 @@ import javax.swing.*;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-
-import static javax.swing.SwingUtilities.invokeLater;
 
 @Getter
 @Setter
@@ -60,17 +59,15 @@ public class RequestTabContent extends JPanel {
         tpRequest.addChangeListener(e -> {
             int selectedIndex = tpRequest.getSelectedIndex();
 
-            if(!(tpRequest.getComponentAt(selectedIndex) instanceof JLabel)) return;
+            if(!(tpRequest.getComponentAt(selectedIndex) instanceof LoadingPane)) return;
 
-            invokeLater(() -> {
-                switch (selectedIndex){
-                    case 0: createTabQueryParams(tpRequest); break;
-                    case 1: createTabPathVariables(tpRequest); break;
-                    case 2: createTabBody(tpRequest); break;
-                    case 3: createTabHeaders(tpRequest); break;
-                    case 4: createTabCookies(tpRequest); break;
-                }
-            });
+            switch (selectedIndex){
+                case 0: createTabQueryParams(tpRequest); break;
+                case 1: createTabPathVariables(tpRequest); break;
+                case 2: createTabBody(tpRequest); break;
+                case 3: createTabHeaders(tpRequest); break;
+                case 4: createTabCookies(tpRequest); break;
+            }
         });
 
         setSelectedTabWithContent(tpRequest);
@@ -88,7 +85,7 @@ public class RequestTabContent extends JPanel {
                 !requestDto.getUrlParam().getQuery().isEmpty()
         );
 
-        tabbedPane.addTab(queryParamsTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.addTab(queryParamsTabTitle.getTitle(), new LoadingPane());
         tabbedPane.setTabComponentAt(0, queryParamsTabTitle);
     }
 
@@ -114,7 +111,7 @@ public class RequestTabContent extends JPanel {
                 !requestDto.getUrlParam().getPath().isEmpty()
         );
 
-        tabbedPane.addTab(pathVariablesTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.addTab(pathVariablesTabTitle.getTitle(), new LoadingPane());
         tabbedPane.setTabComponentAt(1, pathVariablesTabTitle);
     }
 
@@ -140,7 +137,7 @@ public class RequestTabContent extends JPanel {
                 requestDto.getBody().getType() != BodyTypeEnum.NO_BODY
         );
 
-        tabbedPane.addTab(bodyTabTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.addTab(bodyTabTabTitle.getTitle(), new LoadingPane());
         tabbedPane.setTabComponentAt(2, bodyTabTabTitle);
     }
 
@@ -159,7 +156,7 @@ public class RequestTabContent extends JPanel {
                 !requestDto.getHeaders().isEmpty()
         );
 
-        tabbedPane.addTab(headersTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.addTab(headersTabTitle.getTitle(), new LoadingPane());
         tabbedPane.setTabComponentAt(3, headersTabTitle);
     }
 
@@ -179,7 +176,7 @@ public class RequestTabContent extends JPanel {
                 !requestDto.getCookies().isEmpty()
         );
 
-        tabbedPane.addTab(cookiesTabTitle.getTitle(), new JLabel("loading"));
+        tabbedPane.addTab(cookiesTabTitle.getTitle(), new LoadingPane());
         tabbedPane.setTabComponentAt(4, cookiesTabTitle);
     }
 
