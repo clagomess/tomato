@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Tomato
-Exec=tomato
-Icon=tomato
-Terminal=false
-Categories=Development;Utility;
-StartupWMClass=com-github-clagomess-tomato-Main
