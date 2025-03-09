@@ -18,8 +18,9 @@ Check: [Latest Release](https://github.com/clagomess/tomato/releases/latest)
 
 Avaiable binaries:
 
-- Windows MSI Installer - amd64
-- Debian and derivatives - multiarch
+- Windows MSI Installer - x64
+- Debian and derivatives (*.deb) - multiarch
+- Fedora/RHEL (*.rpm) - multiarch
 - Zip without JRE (Required Java JRE >= 17)
 
 ## Data structure
