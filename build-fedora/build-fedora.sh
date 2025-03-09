@@ -16,11 +16,9 @@ mkdir -p "${TOMATO_TARBALL}/desktop"
 cp -R ../target/release/** "${TOMATO_TARBALL}/release"
 cp ../build-linux/tomato.sh "${TOMATO_TARBALL}/desktop"
 
-# copy icons
+# copy desktop assets
 cp ../build-linux/icon-64x64.png "${TOMATO_TARBALL}/desktop"
 cp ../build-linux/icon-128x128.png "${TOMATO_TARBALL}/desktop"
-
-# copy desktop entry
 cp ../build-linux/tomato.desktop "${TOMATO_TARBALL}/desktop"
 
 # tar
