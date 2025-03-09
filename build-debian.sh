@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # prepare
-GIT_TAG=`git describe --tags --abbrev=0 | sed 's/v//'`
+GIT_TAG=$(git describe --tags --abbrev=0 | sed 's/v//')
 
 rm -rf /tmp/tomato**
 mkdir -p /tmp/tomato/DEBIAN
@@ -38,7 +38,7 @@ cp ./build-debian/copyright /tmp/tomato/usr/share/doc/tomato/
 
 # build
 dpkg-deb --build /tmp/tomato
-mv /tmp/tomato.deb /tmp/tomato-${GIT_TAG}-all.deb
+mv /tmp/tomato.deb "/tmp/tomato-${GIT_TAG}-all.deb"
 
 # install (Test Only)
 # sudo apt install /tmp/tomato.deb -y
