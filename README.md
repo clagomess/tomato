@@ -23,6 +23,10 @@ Avaiable binaries:
 - Fedora/RHEL (*.rpm) - multiarch
 - Zip without JRE (Required Java JRE >= 17)
 
+## Screenshot
+
+![Screenshot of Main UI](https://github.com/clagomess/tomato/master/screenshots/screenshot-001.png)
+
 ## Data structure
 
 By default, Tomato save configuration and your data at `~/.tomato` for POSIX and `%homepath%\.tomato` for Windows.
