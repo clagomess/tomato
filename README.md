@@ -1,12 +1,13 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/clagomess/pirilampo/blob/master/src/main/resources/com/github/clagomess/tomato/ui/component/favicon/favicon.svg" width="64" alt="Logo">
+    <img src="https://github.com/clagomess/tomato/blob/master/src/main/resources/com/github/clagomess/tomato/ui/component/favicon/favicon.svg" width="64" alt="Tomato">
 </p>
 
 # Tomato
 
-[![release](https://github.com/clagomess/tomato/actions/workflows/release.yml/badge.svg)](https://github.com/clagomess/tomato/actions/workflows/release.yml)
-[![test](https://github.com/clagomess/tomato/actions/workflows/test.yml/badge.svg)](https://github.com/clagomess/tomato/actions/workflows/test.yml)
-
+![GitHub License](https://img.shields.io/github/license/clagomess/tomato)
+[![Release CI](https://github.com/clagomess/tomato/actions/workflows/release.yml/badge.svg)](https://github.com/clagomess/tomato/actions/workflows/release.yml)
+[![Test CI](https://github.com/clagomess/tomato/actions/workflows/test.yml/badge.svg)](https://github.com/clagomess/tomato/actions/workflows/test.yml)
+![Release](https://img.shields.io/github/v/release/clagomess/tomato)
 
 The open source and 100% offline REST Client tool.
 
