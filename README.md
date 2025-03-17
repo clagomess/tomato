@@ -4,10 +4,10 @@
 
 # Tomato
 
-![GitHub License](https://img.shields.io/github/license/clagomess/tomato)
+[![GitHub License](https://img.shields.io/github/license/clagomess/tomato)](https://github.com/clagomess/tomato/blob/master/LICENSE)
 [![Release CI](https://github.com/clagomess/tomato/actions/workflows/release.yml/badge.svg)](https://github.com/clagomess/tomato/actions/workflows/release.yml)
 [![Test CI](https://github.com/clagomess/tomato/actions/workflows/test.yml/badge.svg)](https://github.com/clagomess/tomato/actions/workflows/test.yml)
-![Release](https://img.shields.io/github/v/release/clagomess/tomato)
+[![Release](https://img.shields.io/github/v/release/clagomess/tomato)](https://github.com/clagomess/tomato/releases)
 
 The open source and 100% offline REST Client tool.
 
