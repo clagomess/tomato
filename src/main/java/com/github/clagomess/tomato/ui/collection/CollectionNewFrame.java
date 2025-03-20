@@ -8,6 +8,7 @@ import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import com.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextField;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -17,7 +18,7 @@ import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
 public class CollectionNewFrame extends JFrame {
     private final JButton btnSave = new JButton("Save");
-    private final JTextField txtName = new JTextField();
+    private final UndoableTextField txtName = new UndoableTextField();
     private final CollectionComboBox cbCollectionParent;
 
     private final CollectionRepository collectionRepository = new CollectionRepository();

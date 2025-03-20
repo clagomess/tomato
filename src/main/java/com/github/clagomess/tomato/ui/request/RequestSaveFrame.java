@@ -11,6 +11,7 @@ import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.collection.CollectionComboBox;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import com.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextField;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ public class RequestSaveFrame extends JFrame {
     private final RequestDto requestDto;
     private final OnSaveFI onSaveListener;
     private final JButton btnSave = new JButton("Save");
-    private final JTextField txtName = new JTextField();
+    private final UndoableTextField txtName = new UndoableTextField();
     private final CollectionComboBox cbCollection = new CollectionComboBox(null);
 
     private final RequestRepository requestRepository = new RequestRepository();

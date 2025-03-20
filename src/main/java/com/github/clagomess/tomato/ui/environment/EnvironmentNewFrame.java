@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import com.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextField;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
 public class EnvironmentNewFrame extends JFrame {
     private final JButton btnSave = new JButton("Save");
-    private final JTextField txtName = new JTextField();
+    private final UndoableTextField txtName = new UndoableTextField();
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();

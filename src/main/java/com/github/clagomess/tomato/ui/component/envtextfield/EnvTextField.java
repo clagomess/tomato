@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLinkExternalIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxListPlusIcon;
+import com.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextPane;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ public class EnvTextField extends JPanel {
     private final EnvDocumentListener envDocumentListener;
     private final JButton btnEnvView;
     private final JButton btnExpand;
-    private final JTextPane textPane;
+    private final UndoableTextPane textPane;
 
     public EnvTextField(EnvTextfieldOptions options) {
         this.btnEnvView = new IconButton(new BxListPlusIcon(), "View Injected Environment");
@@ -25,7 +26,7 @@ public class EnvTextField extends JPanel {
         this.btnExpand = new IconButton(new BxLinkExternalIcon(), "Expand to value editor");
         this.btnExpand.addActionListener(e -> btnExpandAction(options));
 
-        this.textPane = new JTextPane();
+        this.textPane = new UndoableTextPane();
 
         this.envDocumentListener = new EnvDocumentListener(this.textPane.getStyledDocument());
         this.textPane.getStyledDocument().addDocumentListener(this.envDocumentListener);
