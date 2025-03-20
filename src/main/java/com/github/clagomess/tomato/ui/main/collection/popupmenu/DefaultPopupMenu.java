@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.NEW;
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 
 public class DefaultPopupMenu extends JPopupMenu {
     public DefaultPopupMenu(Component parent) {
@@ -18,9 +19,9 @@ public class DefaultPopupMenu extends JPopupMenu {
         add(mNewRequest);
 
         var mNewCollection = new JMenuItem("New Collection");
-        mNewCollection.addActionListener(e -> new CollectionNewFrame(
-                parent,
-                null
+        mNewCollection.addActionListener(e -> toFrontIfExists(
+                CollectionNewFrame.class,
+                () -> new CollectionNewFrame(parent,null)
         ));
         add(mNewCollection);
     }

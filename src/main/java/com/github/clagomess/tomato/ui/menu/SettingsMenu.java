@@ -8,28 +8,45 @@ import com.github.clagomess.tomato.ui.settings.*;
 
 import javax.swing.*;
 
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
+
 public class SettingsMenu extends JMenu {
     public SettingsMenu(MainFrame mainFrame) {
         super("Settings");
 
         var mConfiguration = new JMenuItem("Configuration", new BxSliderAltIcon());
-        mConfiguration.addActionListener(l -> new ConfigurationFrame(mainFrame));
+        mConfiguration.addActionListener(l -> toFrontIfExists(
+                ConfigurationFrame.class,
+                () -> new ConfigurationFrame(mainFrame)
+        ));
         add(mConfiguration);
 
         var mAbout = new JMenuItem("About", new BxInfoCircleIcon());
-        mAbout.addActionListener(l -> new AboutFrame(mainFrame));
+        mAbout.addActionListener(l -> toFrontIfExists(
+                AboutFrame.class,
+                () -> new AboutFrame(mainFrame)
+        ));
         add(mAbout);
 
         var debugPublisher = new JMenuItem("Debug -> Publisher", new BxBugIcon());
-        debugPublisher.addActionListener(l -> new DebugPublisherFrame(mainFrame));
+        debugPublisher.addActionListener(l -> toFrontIfExists(
+                DebugPublisherFrame.class,
+                () -> new DebugPublisherFrame(mainFrame)
+        ));
         add(debugPublisher);
 
         var debugCache = new JMenuItem("Debug -> Cache", new BxBugIcon());
-        debugCache.addActionListener(l -> new DebugCacheFrame(mainFrame));
+        debugCache.addActionListener(l -> toFrontIfExists(
+                DebugCacheFrame.class,
+                () -> new DebugCacheFrame(mainFrame)
+        ));
         add(debugCache);
 
         var debugThreads = new JMenuItem("Debug -> Threads", new BxBugIcon());
-        debugThreads.addActionListener(l -> new DebugThreadsFrame(mainFrame));
+        debugThreads.addActionListener(l -> toFrontIfExists(
+                DebugThreadsFrame.class,
+                () -> new DebugThreadsFrame(mainFrame)
+        ));
         add(debugThreads);
     }
 }
