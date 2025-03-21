@@ -73,13 +73,21 @@ public interface PostmanCollectionDumpMapper {
         }
     }
 
+    @Mapping(target = "type", ignore = true)
+    @Mapping(target = "disabled", ignore = true)
+    PostmanCollectionV210Dto.Item.Request.Body.UrlEncoded mapUrlEncoded(ContentTypeKeyValueItemDto source);
+
     @AfterMapping
-    default void mapAfter(
+    default void mapUrlEncodedAfter(
             @MappingTarget PostmanCollectionV210Dto.Item.Request.Body.UrlEncoded target,
             ContentTypeKeyValueItemDto source
     ){
         target.setDisabled(!source.isSelected());
     }
+
+    @Mapping(target = "src", ignore = true)
+    @Mapping(target = "disabled", ignore = true)
+    PostmanCollectionV210Dto.Item.Request.Body.FormData mapFormData(FileKeyValueItemDto source);
 
     @AfterMapping
     default void mapAfter(
@@ -90,13 +98,29 @@ public interface PostmanCollectionDumpMapper {
         target.setType(source.getType().name().toLowerCase());
     }
 
+    @Mapping(target = "disabled", ignore = true)
+    PostmanCollectionV210Dto.Item.Request.Header mapHeader(KeyValueItemDto source);
+
     @AfterMapping
-    default void mapAfter(
+    default void mapHeaderAfter(
             @MappingTarget PostmanCollectionV210Dto.Item.Request.Header target,
             KeyValueItemDto source
     ){
         target.setDisabled(!source.isSelected());
     }
+
+    @Mapping(target = "disabled", ignore = true)
+    PostmanCollectionV210Dto.Item.Request.Url.Param map(ContentTypeKeyValueItemDto source);
+
+    default void mapAfter(
+            @MappingTarget PostmanCollectionV210Dto.Item.Request.Url.Param target,
+            ContentTypeKeyValueItemDto source
+    ){
+        target.setDisabled(!source.isSelected());
+    }
+
+    @Mapping(target = "disabled", ignore = true)
+    PostmanCollectionV210Dto.Item.Request.Url.Param map(KeyValueItemDto source);
 
     @AfterMapping
     default void mapAfter(
