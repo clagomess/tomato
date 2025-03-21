@@ -26,6 +26,7 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.Arrays;
 
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
 import static javax.swing.SwingUtilities.invokeLater;
 import static javax.swing.SwingUtilities.isEventDispatchThread;
 
@@ -163,10 +164,13 @@ public class RequestSplitPane extends JPanel {
     }
 
     public void btnViewRenderedUrlAction(){
-        new WaitExecution(
-                btnViewRenderedUrl,
-                () -> new ViewRenderedUrlFrame(this, requestDto)
-        ).execute();
+        disposeIfExists(
+                ViewRenderedUrlFrame.class,
+                () -> new WaitExecution(
+                        btnViewRenderedUrl,
+                        () -> new ViewRenderedUrlFrame(this, requestDto)
+                ).execute()
+        );
     }
 
     public void btnSaveRequestAction(){

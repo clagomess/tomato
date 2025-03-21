@@ -6,12 +6,15 @@ import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
+import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditFrame;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceDeleteDialog;
 import com.github.clagomess.tomato.ui.workspace.WorkspaceRenameFrame;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
+
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 
 class Row extends JPanel {
     public Row(
@@ -27,12 +30,12 @@ class Row extends JPanel {
 
         // edit
         var btnEdit = new IconButton(new BxEditIcon(), "Edit workspace");
-        btnEdit.addActionListener(l -> {
-            new WaitExecution(parent, btnEdit, () -> new WorkspaceRenameFrame(
+        btnEdit.addActionListener(l ->
+            new WaitExecution(parent, btnEdit, () -> btnEditAction(
                     parent,
                     workspace
-            )).execute();
-        });
+            )).execute()
+        );
 
         // delete
         var btnDelete = new IconButton(new BxTrashIcon(), "Delete workspace");
@@ -46,5 +49,18 @@ class Row extends JPanel {
         add(new JLabel(workspace.getName()));
         add(btnEdit);
         add(btnDelete);
+    }
+
+    private void btnEditAction(
+            WorkspaceListFrame parent,
+            WorkspaceDto workspace
+    ) {
+        toFrontIfExists(
+                EnvironmentEditFrame.class,
+                () -> new WorkspaceRenameFrame(
+                        parent,
+                        workspace
+                )
+        );
     }
 }

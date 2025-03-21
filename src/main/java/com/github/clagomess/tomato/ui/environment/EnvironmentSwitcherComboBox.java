@@ -9,9 +9,13 @@ import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditFrame;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
 
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class EnvironmentSwitcherComboBox extends JPanel {
@@ -37,7 +41,7 @@ public class EnvironmentSwitcherComboBox extends JPanel {
             setBtnEditEnabledOrDisabled();
             if(comboBox.getSelectedItem() == null) return;
 
-            new WaitExecution(this, btnEdit, () -> new EnvironmentEditFrame(
+            new WaitExecution(this, btnEdit, () -> btnEditAction(
                     this,
                     comboBox.getSelectedItem().getId()
             )).execute();
@@ -84,5 +88,16 @@ public class EnvironmentSwitcherComboBox extends JPanel {
             controller.setWorkspaceSessionSelected(comboBox.getSelectedItem());
             setBtnEditEnabledOrDisabled();
         }).execute();
+    }
+
+    private void btnEditAction(
+            Container parent,
+            String id
+    ) throws IOException {
+        toFrontIfExists(
+                EnvironmentEditFrame.class,
+                () -> new EnvironmentEditFrame(parent, id),
+                item -> Objects.equals(id, item.getEnvironment().getId())
+        );
     }
 }
