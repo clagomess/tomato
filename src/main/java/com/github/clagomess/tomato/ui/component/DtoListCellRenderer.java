@@ -20,6 +20,7 @@ public class DtoListCellRenderer<T> extends DefaultListCellRenderer {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Component getListCellRendererComponent(
             JList<?> list,
             Object value,
