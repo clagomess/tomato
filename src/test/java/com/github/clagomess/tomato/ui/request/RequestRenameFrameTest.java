@@ -6,11 +6,11 @@ import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.key.RequestKey;
+import com.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextField;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,7 +35,7 @@ public class RequestRenameFrameTest {
                 .when(requestRenameFrame)
                 .save(Mockito.any());
 
-        Mockito.doReturn(new JTextField())
+        Mockito.doReturn(new UndoableTextField())
                 .when(requestRenameFrame)
                 .getTxtName();
 

@@ -3,6 +3,7 @@ package com.github.clagomess.tomato.ui.workspace;
 import com.github.clagomess.tomato.controller.workspace.WorkspaceNewFrameController;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import com.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextField;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -10,7 +11,7 @@ import java.awt.*;
 
 public class WorkspaceNewFrame extends JFrame {
     private final JButton btnSave = new JButton("Save");
-    private final JTextField txtName = new JTextField();
+    private final UndoableTextField txtName = new UndoableTextField();
 
     public WorkspaceNewFrame(
             Component parent
