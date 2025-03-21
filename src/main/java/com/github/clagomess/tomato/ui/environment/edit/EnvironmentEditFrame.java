@@ -8,6 +8,7 @@ import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.StagingMonitor;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -26,6 +27,8 @@ public class EnvironmentEditFrame extends JFrame {
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
+
+    @Getter
     private final EnvironmentDto environment;
 
     public EnvironmentEditFrame(

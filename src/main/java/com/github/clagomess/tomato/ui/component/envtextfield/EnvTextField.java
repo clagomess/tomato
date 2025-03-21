@@ -9,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
@@ -66,17 +67,23 @@ public class EnvTextField extends JPanel {
     }
 
     private void btnEnvViewAction(){
-        SwingUtilities.invokeLater(() -> new ViewInjectedEnvironmentFrame(
-                this,
-                envDocumentListener.getEnvMap()
-        ));
+        disposeIfExists(
+                ViewInjectedEnvironmentFrame.class,
+                () -> new ViewInjectedEnvironmentFrame(
+                        this,
+                        envDocumentListener.getEnvMap()
+                )
+        );
     }
 
     private void btnExpandAction(EnvTextfieldOptions options){
-        new WaitExecution(
-                this,
-                () -> new ValueEditorFrame(this, options)
-        ).execute();
+        disposeIfExists(
+                ValueEditorFrame.class,
+                () -> new WaitExecution(
+                    this,
+                    () -> new ValueEditorFrame(this, options)
+                ).execute()
+        );
     }
 
     public void setText(String text){

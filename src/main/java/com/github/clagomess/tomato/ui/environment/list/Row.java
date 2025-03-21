@@ -13,6 +13,10 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.io.IOException;
+import java.util.Objects;
+
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 
 class Row extends JPanel {
     public Row(
@@ -28,12 +32,12 @@ class Row extends JPanel {
 
         // edit
         var btnEdit = new IconButton(new BxEditIcon(), "Edit environment");
-        btnEdit.addActionListener(l -> {
-            new WaitExecution(parent, btnEdit, () -> new EnvironmentEditFrame(
+        btnEdit.addActionListener(l ->
+            new WaitExecution(parent, btnEdit, () -> btnEditAction(
                     parent,
                     environment.getId()
-            )).execute();
-        });
+            )).execute()
+        );
 
         // delete
         var btnDelete = new IconButton(new BxTrashIcon(), "Delete environment");
@@ -50,5 +54,16 @@ class Row extends JPanel {
         add(new JLabel(environment.getName()));
         add(btnEdit);
         add(btnDelete);
+    }
+
+    private void btnEditAction(
+            Container parent,
+            String id
+    ) throws IOException {
+        toFrontIfExists(
+                EnvironmentEditFrame.class,
+                () -> new EnvironmentEditFrame(parent, id),
+                item -> Objects.equals(id, item.getEnvironment().getId())
+        );
     }
 }

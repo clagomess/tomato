@@ -8,20 +8,31 @@ import com.github.clagomess.tomato.ui.workspace.list.WorkspaceListFrame;
 
 import javax.swing.*;
 
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
+
 public class WorkspaceMenu extends JMenu {
     public WorkspaceMenu(MainFrame mainFrame) {
         super("Workspace");
 
         var mSwitch = new JMenuItem("Switch", new BxTransferAltIcon());
-        mSwitch.addActionListener(e -> new WorkspaceSwitchFrame(mainFrame));
+        mSwitch.addActionListener(e -> toFrontIfExists(
+                WorkspaceSwitchFrame.class,
+                () -> new WorkspaceSwitchFrame(mainFrame)
+        ));
         add(mSwitch);
 
         var mNew = new JMenuItem("New Workspace");
-        mNew.addActionListener(l -> new WorkspaceNewFrame(mainFrame));
+        mNew.addActionListener(l -> toFrontIfExists(
+                WorkspaceNewFrame.class,
+                () -> new WorkspaceNewFrame(mainFrame)
+        ));
         add(mNew);
 
         var mEdit = new JMenuItem("Edit Workspace");
-        mEdit.addActionListener(l -> new WorkspaceListFrame(mainFrame));
+        mEdit.addActionListener(l -> toFrontIfExists(
+                WorkspaceListFrame.class,
+                () -> new WorkspaceListFrame(mainFrame)
+        ));
         add(mEdit);
     }
 }
