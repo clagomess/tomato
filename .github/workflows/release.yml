@@ -73,6 +73,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: tomato-${{env.GIT_TAG}}
+          retention-days: 5
           path: ./target/dist
 
   release-windows:
@@ -138,6 +139,7 @@ jobs:
         with:
           name: tomato-${{env.GIT_TAG}}-x64.msi
           compression-level: 0
+          retention-days: 5
           path: ./target/dist/Tomato-${{env.GIT_TAG}}-x64.msi
 
   release-debian:
@@ -204,6 +206,7 @@ jobs:
         with:
           name: tomato-${{env.GIT_TAG}}-all.deb
           compression-level: 0
+          retention-days: 5
           path: ./tomato-${{env.GIT_TAG}}-all.deb
 
   release-fedora:
@@ -259,5 +262,6 @@ jobs:
         with:
           name: tomato-${{env.GIT_TAG}}-noarch.rpm
           compression-level: 0
+          retention-days: 5
           path: ~/rpmbuild/RPMS/noarch/tomato-*.rpm
 
