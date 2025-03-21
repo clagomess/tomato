@@ -246,7 +246,7 @@ jobs:
       - name: Copy Spec
         run: |
           mkdir -p ~/rpmbuild/SPECS
-          cp ./build-fedora/tomato.spec ~/rpmbuild/SPECS
+          cp ./build-fedora/tomato.spec ~/rpmbuild/SPECS/
           sed -i "s/0.0.0/${{env.GIT_TAG}}/" ~/rpmbuild/SPECS/tomato.spec
           echo "* $(date '+%a %b %d %Y') Cláudio Gomes <cla.gomess@gmail.com>" >> ~/rpmbuild/SPECS/tomato.spec
           echo "- ${{env.GIT_TAG}}" >> ~/rpmbuild/SPECS/tomato.spec
