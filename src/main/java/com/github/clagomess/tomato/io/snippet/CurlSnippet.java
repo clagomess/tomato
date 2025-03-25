@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 
+import static com.github.clagomess.tomato.io.http.MediaType.HTTP_CONTENT_TYPE;
+
 @RequiredArgsConstructor
 public class CurlSnippet {
     private final Type type;
@@ -82,7 +84,7 @@ public class CurlSnippet {
             StringBuilder code
     ){
         writeHeader(
-                "Content-Type",
+                HTTP_CONTENT_TYPE,
                 binaryBody.getContentType(),
                 code
         );
@@ -100,7 +102,7 @@ public class CurlSnippet {
             StringBuilder code
     ){
         writeHeader(
-                "Content-Type",
+                HTTP_CONTENT_TYPE,
                 rawBody.getType().getContentType().toString(),
                 code
         ); //@TODO: check
