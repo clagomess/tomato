@@ -7,6 +7,7 @@ import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -14,7 +15,6 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -28,8 +28,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 public class MultipartFormDataBodyTest {
-    private final EnvironmentRepository environmentRepositoryMock = Mockito.mock(EnvironmentRepository.class);
     private final String boundary = "tomato-test";
+    private final EnvironmentDto environment = new EnvironmentDto(){{
+        setEnvs(List.of(new KeyValueItemDto("foo", "bar")));
+    }};
+
+    private BodyDto body;
+
+    @BeforeEach
+    public void setup() throws IOException {
+        body = new BodyDto();
+        body.setType(MULTIPART_FORM);
+    }
 
     @Test
     public void build() throws IOException {
@@ -37,130 +47,116 @@ public class MultipartFormDataBodyTest {
                         .getResource("MultipartFormDataBodyTest/dummy.txt"))
                 .getFile();
 
-        var form = List.of(
+        body.setMultiPartForm(List.of(
                 new FileKeyValueItemDto(TEXT, "myparam", "myvalue", null, true),
                 new FileKeyValueItemDto(TEXT, null, null, null, true),
                 new FileKeyValueItemDto(TEXT,  " ", null, null, true),
                 new FileKeyValueItemDto(FILE, "myfile", formFile, null, true)
-        );
+        ));
 
-        var body = new BodyDto();
-        body.setType(MULTIPART_FORM);
-        body.setMultiPartForm(form);
+        try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
+            var multipart = new MultipartFormDataBody(boundary, body);
+            var tmpFile = multipart.build();
 
-        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, body);
-        var tmpFile = multipart.build();
-
-        Assertions.assertThat(tmpFile)
-                .isFile()
-                .content()
-                .contains("--tomato-")
-                .contains(
-                        """
-                        Content-Type: text/plain\r
-                        Content-Disposition: form-data; name="myparam"\r
-                        \r
-                        myvalue"""
-                )
-                .contains(
-                        """
-                        Content-Type: application/octet-stream\r
-                        Content-Disposition: form-data; name="myfile"; filename="dummy.txt"\r
-                        \r
-                        Hello"""
-                )
-        ;
+            Assertions.assertThat(tmpFile)
+                    .isFile()
+                    .content()
+                    .contains("--tomato-")
+                    .contains(
+                            """
+                                    Content-Type: text/plain\r
+                                    Content-Disposition: form-data; name="myparam"\r
+                                    \r
+                                    myvalue"""
+                    )
+                    .contains(
+                            """
+                                    Content-Type: application/octet-stream\r
+                                    Content-Disposition: form-data; name="myfile"; filename="dummy.txt"\r
+                                    \r
+                                    Hello"""
+                    )
+            ;
+        }
     }
 
     @Test
     public void build_whenNullTextParam_sendEmpty() throws IOException {
-        var form = List.of(
+        body.setMultiPartForm(List.of(
                 new FileKeyValueItemDto(TEXT, "myparam", null, null, true)
-        );
+        ));
 
-        var body = new BodyDto();
-        body.setType(MULTIPART_FORM);
-        body.setMultiPartForm(form);
+        try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
+            var multipart = new MultipartFormDataBody(boundary, body);
+            var tmpFile = multipart.build();
 
-        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, body);
-        var tmpFile = multipart.build();
-
-        Assertions.assertThat(tmpFile)
-                .isFile()
-                .content()
-                .contains("Content-Disposition: form-data; name=\"myparam\"")
-        ;
+            Assertions.assertThat(tmpFile)
+                    .isFile()
+                    .content()
+                    .contains("Content-Disposition: form-data; name=\"myparam\"")
+            ;
+        }
     }
 
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"foo/bar"})
     public void build_whenNullOrInvalidFileParam_throws(String fileParam) {
-        var form = List.of(
+        body.setMultiPartForm(List.of(
                 new FileKeyValueItemDto(FILE, "myfile", fileParam, null, true)
-        );
+        ));
 
-        var body = new BodyDto();
-        body.setType(MULTIPART_FORM);
-        body.setMultiPartForm(form);
+        try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
+            var multipart = new MultipartFormDataBody(boundary, body);
 
-        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, body);
-
-        assertThrows(FileNotFoundException.class, multipart::build);
+            assertThrows(FileNotFoundException.class, multipart::build);
+        }
     }
 
     @Test
     public void build_whenNotSelectedParam_notSend() throws IOException {
-        var form = List.of(
+        body.setMultiPartForm(List.of(
                 new FileKeyValueItemDto(TEXT, "myparam", "myvalue", null, true),
                 new FileKeyValueItemDto(TEXT, "mysecondparam", "myvalue", null, false)
-        );
+        ));
 
-        var body = new BodyDto();
-        body.setType(MULTIPART_FORM);
-        body.setMultiPartForm(form);
+        try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
+            var multipart = new MultipartFormDataBody(boundary, body);
+            var tmpFile = multipart.build();
 
-        var multipart = new MultipartFormDataBody(environmentRepositoryMock, boundary, body);
-        var tmpFile = multipart.build();
-
-        Assertions.assertThat(tmpFile)
-                .isFile()
-                .content()
-                .contains("Content-Disposition: form-data; name=\"myparam\"")
-                .doesNotContain("Content-Disposition: form-data; name=\"mysecondparam\"")
-        ;
+            Assertions.assertThat(tmpFile)
+                    .isFile()
+                    .content()
+                    .contains("Content-Disposition: form-data; name=\"myparam\"")
+                    .doesNotContain("Content-Disposition: form-data; name=\"mysecondparam\"")
+            ;
+        }
     }
 
     @Test
     public void build_whenEnvDefined_replace() throws IOException {
-        EnvironmentDto dto = new EnvironmentDto();
-        dto.setEnvs(List.of(
-                new KeyValueItemDto("foo", "bar")
+        body.setMultiPartForm(List.of(
+                new FileKeyValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
         ));
 
-        Mockito.when(environmentRepositoryMock.getWorkspaceSessionEnvironment())
-                .thenReturn(Optional.of(dto));
+        try(var ignored = Mockito.mockConstruction(
+                EnvironmentRepository.class,
+                (mock, context) -> Mockito.doReturn(Optional.of(environment))
+                        .when(mock)
+                        .getWorkspaceSessionEnvironment()
+        )) {
+            var multipart = new MultipartFormDataBody(
+                    "tomato-1",
+                    body
+            );
+            var tmpFile = multipart.build();
 
-        var form = List.of(
-                new FileKeyValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
-        );
-
-        var body = new BodyDto();
-        body.setType(MULTIPART_FORM);
-        body.setMultiPartForm(form);
-
-        var multipart = new MultipartFormDataBody(
-                environmentRepositoryMock,
-                "tomato-1",
-                body
-        );
-        var tmpFile = multipart.build();
-
-        Assertions.assertThat(tmpFile)
-                .isFile()
-                .content()
-                .contains("bar")
-        ;
+            Assertions.assertThat(tmpFile)
+                    .isFile()
+                    .content()
+                    .contains("bar")
+            ;
+        }
     }
 
     @ParameterizedTest
@@ -170,32 +166,24 @@ public class MultipartFormDataBodyTest {
             "a-{{bar}},a-{{bar}}",
     })
     public void writeTextBoundary_assertEnvInject(String input, String expected) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        List<KeyValueItemDto> envs = List.of(
-                new KeyValueItemDto("foo", "bar")
-        );
+        body.setMultiPartForm(List.of(
+                new FileKeyValueItemDto("mykey", input)
+        ));
 
-        var body = new BodyDto();
-        body.setType(MULTIPART_FORM);
-        body.setMultiPartForm(List.of());
+        try(var ignored = Mockito.mockConstruction(
+                EnvironmentRepository.class,
+                (mock, context) -> Mockito.doReturn(Optional.of(environment))
+                        .when(mock)
+                        .getWorkspaceSessionEnvironment()
+        )) {
+            var form = new MultipartFormDataBody(body);
+            var tmpFile = form.build();
 
-        var form = new MultipartFormDataBody(body);
-        form.writeTextBoundary(baos, envs, "mykey", input);
-
-        Assertions.assertThat(baos.toString()).contains(expected);
-    }
-
-    @Test
-    public void writeTextBoundary_whenEnvListIsNull_doNothing() throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        var body = new BodyDto();
-        body.setType(MULTIPART_FORM);
-        body.setMultiPartForm(List.of());
-
-        var form = new MultipartFormDataBody(body);
-        form.writeTextBoundary(baos, null, "mykey", "myvalue");
-
-        Assertions.assertThat(baos.toString()).contains("myvalue");
+            Assertions.assertThat(tmpFile)
+                    .isFile()
+                    .content()
+                    .contains(expected)
+            ;
+        }
     }
 }

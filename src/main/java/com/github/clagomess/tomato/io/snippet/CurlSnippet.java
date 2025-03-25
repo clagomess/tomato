@@ -1,6 +1,9 @@
 package com.github.clagomess.tomato.io.snippet;
 
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import com.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
 import com.github.clagomess.tomato.dto.data.request.RawBodyDto;
@@ -11,15 +14,17 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.github.clagomess.tomato.io.http.MediaType.HTTP_CONTENT_TYPE;
 
 @RequiredArgsConstructor
 public class CurlSnippet {
     private final Type type;
+    private RequestBuilder requestBuilder;
 
     public StringBuilder build(RequestDto request) throws IOException {
-        var requestBuilder = new RequestBuilder(request);
+        requestBuilder = new RequestBuilder();
 
         StringBuilder code = new StringBuilder();
         code.append("curl -X ");
@@ -29,14 +34,14 @@ public class CurlSnippet {
         code.append(new UrlBuilder(request).buildUri().toString());
         code.append(type.getStringQuote());
 
-        buildHeaders(requestBuilder, code);
-        buildCookies(requestBuilder, code);
+        buildHeaders(request.getHeaders(), code);
+        buildCookies(request.getCookies(), code);
 
         switch (request.getBody().getType()){
             case RAW -> buildBodyRaw(request.getBody().getRaw(), code);
             case BINARY -> buildBodyBinary(request.getBody().getBinary(), code);
-            case URL_ENCODED_FORM -> buildUrlEncodedForm(requestBuilder, code);
-            case MULTIPART_FORM -> buildMultipartFormData(requestBuilder, code);
+            case URL_ENCODED_FORM -> buildUrlEncodedForm(request.getBody().getUrlEncodedForm(), code);
+            case MULTIPART_FORM -> buildMultipartFormData(request.getBody().getMultiPartForm(), code);
         }
 
         return code;
@@ -58,19 +63,19 @@ public class CurlSnippet {
 
 
     protected void buildHeaders(
-            RequestBuilder requestBuilder,
+            List<KeyValueItemDto> headers,
             StringBuilder code
     ) {
-        requestBuilder.buildHeaders().forEach(item ->
+        requestBuilder.buildHeaders(headers).forEach(item ->
             writeHeader(item.getKey(), item.getValue(), code)
         );
     }
 
     protected void buildCookies(
-            RequestBuilder requestBuilder,
+            List<KeyValueItemDto> cookies,
             StringBuilder code
     ) {
-        requestBuilder.buildCookies().forEach(item ->
+        requestBuilder.buildCookies(cookies).forEach(item ->
             writeHeader(
                     "Cookie",
                     item.getKey() + "=" + item.getValue(),
@@ -115,10 +120,10 @@ public class CurlSnippet {
     }
 
     protected void buildUrlEncodedForm(
-            RequestBuilder requestBuilder,
+            List<ContentTypeKeyValueItemDto> form,
             StringBuilder code
     ) {
-        requestBuilder.buildUrlEncodedForm().forEach(item -> {
+        requestBuilder.buildUrlEncodedForm(form).forEach(item -> {
             code.append(type.getNewLine());
             code.append("-d ");
             code.append(type.getStringQuote());
@@ -130,10 +135,10 @@ public class CurlSnippet {
     }
 
     protected void buildMultipartFormData(
-            RequestBuilder requestBuilder,
+            List<FileKeyValueItemDto> form,
             StringBuilder code
     ) {
-        requestBuilder.buildMultipartFormData().forEach(item -> {
+        requestBuilder.buildMultipartFormData(form).forEach(item -> {
             code.append(type.getNewLine());
             code.append("-F ");
             code.append(type.getStringQuote());

@@ -1,7 +1,6 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
@@ -16,72 +15,82 @@ import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class RequestBuilder {
-    private final EnvironmentRepository environmentRepository;
-    private final RequestDto request;
     private final List<KeyValueItemDto> envs;
 
-    public RequestBuilder(RequestDto request) throws IOException {
-        this.request = request;
-        this.environmentRepository = new EnvironmentRepository();
-        this.envs = environmentRepository.getWorkspaceSessionEnvironment()
+    public RequestBuilder() throws IOException {
+        this.envs = new EnvironmentRepository().getWorkspaceSessionEnvironment()
                 .map(EnvironmentDto::getEnvs)
                 .orElse(Collections.emptyList());
     }
 
-    protected String injectEnv(
-            List<KeyValueItemDto> envs,
+    protected String injectEnvironment(
             String value
     ){
         if(value == null) return "";
+        if(envs == null || envs.isEmpty()) return value;
 
-        if(envs != null){
-            for(var env : envs) {
-                value = value.replace(
-                        String.format("{{%s}}", env.getKey()),
+        StringBuilder valueBuilder = new StringBuilder(value);
+
+        for(var env : envs) {
+            int idx = 0;
+            var key = String.format("{{%s}}", env.getKey());
+
+            while ((idx = valueBuilder.indexOf(key, idx)) != -1){
+                valueBuilder.replace(
+                        idx,
+                        idx + key.length(),
                         env.getValue()
                 );
             }
         }
 
-        return value;
+        return valueBuilder.toString();
     }
 
-    public Stream<KeyValueItemDto> buildHeaders(){
-        return request.getHeaders().stream()
+    public Stream<KeyValueItemDto> buildHeaders(
+            List<KeyValueItemDto> headers
+    ){
+        return headers.stream()
                 .filter(KeyValueItemDto::isSelected)
                 .map(header -> new KeyValueItemDto(
                         header.getKey(),
-                        injectEnv(envs, header.getValue())
+                        injectEnvironment(header.getValue())
                 ));
     }
 
-    public Stream<KeyValueItemDto> buildCookies(){
-        return request.getCookies().stream()
+    public Stream<KeyValueItemDto> buildCookies(
+            List<KeyValueItemDto> cookies
+    ){
+        return cookies.stream()
                 .filter(KeyValueItemDto::isSelected)
                 .map(cookie -> new KeyValueItemDto(
                         cookie.getKey(),
-                        injectEnv(envs, cookie.getValue())
+                        injectEnvironment(cookie.getValue())
                 ));
     }
 
-    public Stream<ContentTypeKeyValueItemDto> buildUrlEncodedForm(){
-        return request.getBody().getUrlEncodedForm().stream()
+    public Stream<ContentTypeKeyValueItemDto> buildUrlEncodedForm(
+            List<ContentTypeKeyValueItemDto> form
+    ){
+        return form.stream()
                 .filter(KeyValueItemDto::isSelected)
                 .filter(item -> StringUtils.isNotBlank(item.getKey()))
                 .map(item -> new ContentTypeKeyValueItemDto(
                         item.getKey(),
-                        injectEnv(envs, item.getValue())
+                        injectEnvironment(item.getValue())
                 ));
     }
 
-    public Stream<FileKeyValueItemDto> buildMultipartFormData(){
-        return request.getBody().getMultiPartForm().stream()
+    public Stream<FileKeyValueItemDto> buildMultipartFormData(
+            List<FileKeyValueItemDto> form
+    ){
+        return form.stream()
                 .filter(FileKeyValueItemDto::isSelected)
                 .filter(item -> StringUtils.isNotBlank(item.getKey()))
                 .map(item -> new FileKeyValueItemDto(
                         item.getType(),
                         item.getKey(),
-                        injectEnv(envs, item.getValue()),
+                        injectEnvironment(item.getValue()),
                         item.getValueContentType(),
                         item.isSelected()
                 ));
