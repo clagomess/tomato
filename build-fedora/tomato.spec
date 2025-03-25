@@ -8,7 +8,7 @@ License:        MIT
 URL:            https://github.com/clagomess/tomato
 Source0:        %{name}-%{version}.tar.gz
 
-Requires:       java-17-openjdk
+Requires:       java-21-openjdk
 
 %description
 %{summary}

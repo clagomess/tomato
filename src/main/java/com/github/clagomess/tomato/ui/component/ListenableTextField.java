@@ -1,12 +1,13 @@
 package com.github.clagomess.tomato.ui.component;
 
-import javax.swing.*;
+import com.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextField;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ListenableTextField extends JTextField {
+public class ListenableTextField extends UndoableTextField {
     private final List<OnChangeFI> onChangeList = new LinkedList<>();
 
     public ListenableTextField() {

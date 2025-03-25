@@ -10,24 +10,38 @@ import com.github.clagomess.tomato.ui.environment.list.EnvironmentListFrame;
 
 import javax.swing.*;
 
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
+
 public class EnvironmentMenu extends JMenu {
     public EnvironmentMenu(MainFrame mainFrame) {
         super("Environment");
 
         var mNew = new JMenuItem("New Environment");
-        mNew.addActionListener(l -> new EnvironmentNewFrame(mainFrame));
+        mNew.addActionListener(l -> toFrontIfExists(
+                EnvironmentNewFrame.class,
+                () -> new EnvironmentNewFrame(mainFrame)
+        ));
         add(mNew);
 
         var mEdit = new JMenuItem("Edit Environments");
-        mEdit.addActionListener(l -> new EnvironmentListFrame(mainFrame));
+        mEdit.addActionListener(l -> toFrontIfExists(
+                EnvironmentListFrame.class,
+                () -> new EnvironmentListFrame(mainFrame)
+        ));
         add(mEdit);
 
         var mImport = new JMenuItem("Import", new BxImportIcon());
-        mImport.addActionListener(l -> new EnvironmentImportFrame(mainFrame));
+        mImport.addActionListener(l -> toFrontIfExists(
+                EnvironmentImportFrame.class,
+                () -> new EnvironmentImportFrame(mainFrame)
+        ));
         add(mImport);
 
         var mExport = new JMenuItem("Export", new BxExportIcon());
-        mExport.addActionListener(l -> new EnvironmentExportFrame(mainFrame));
+        mExport.addActionListener(l -> toFrontIfExists(
+                EnvironmentExportFrame.class,
+                () -> new EnvironmentExportFrame(mainFrame)
+        ));
         add(mExport);
     }
 }

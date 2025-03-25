@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.LOAD;
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
 
 public class RequestPopUpMenu extends JPopupMenu {
     public RequestPopUpMenu(
@@ -47,11 +48,17 @@ public class RequestPopUpMenu extends JPopupMenu {
         add(mDuplicate);
 
         var mMove = new JMenuItem("Move", new BxSortAlt2Icon());
-        mMove.addActionListener(e -> new RequestMoveFrame(parent, requestHead));
+        mMove.addActionListener(e -> disposeIfExists(
+                RequestMoveFrame.class,
+                () -> new RequestMoveFrame(parent, requestHead)
+        ));
         add(mMove);
 
         var mRename = new JMenuItem("Rename");
-        mRename.addActionListener(e -> new RequestRenameFrame(parent, requestHead));
+        mRename.addActionListener(e -> disposeIfExists(
+                RequestRenameFrame.class,
+                () -> new RequestRenameFrame(parent, requestHead)
+        ));
         add(mRename);
 
         addSeparator();

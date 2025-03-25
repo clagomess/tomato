@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# sudo dnf install -y rpmdevtools rpmlint
+# sudo apt install rpm rpmlint
 
 GIT_TAG=$(git describe --tags --abbrev=0 | sed 's/v//')
 
 rm -rf ~/rpmbuild
-rpmdev-setuptree
 
 # define tarball content
 TOMATO_TARBALL="${HOME}/rpmbuild/SOURCES/tomato-${GIT_TAG}"
@@ -26,7 +25,8 @@ tar -cvf "${HOME}/rpmbuild/SOURCES/tomato-${GIT_TAG}.tar.gz" -C ~/rpmbuild/SOURC
 rm -rf "${TOMATO_TARBALL}"
 
 # copy spec
-cp tomato.spec ~/rpmbuild/SPECS
+mkdir -p ~/rpmbuild/SPECS
+cp tomato.spec ~/rpmbuild/SPECS/
 sed -i "s/0.0.0/${GIT_TAG}/" ~/rpmbuild/SPECS/tomato.spec
 echo "* $(date '+%a %b %d %Y') Cláudio Gomes <cla.gomess@gmail.com>" >> ~/rpmbuild/SPECS/tomato.spec
 echo "- ${GIT_TAG}" >> ~/rpmbuild/SPECS/tomato.spec
@@ -34,6 +34,7 @@ echo "- ${GIT_TAG}" >> ~/rpmbuild/SPECS/tomato.spec
 # build
 rpmlint ~/rpmbuild/SPECS/tomato.spec
 rpmbuild -bb ~/rpmbuild/SPECS/tomato.spec
+cp ~/rpmbuild/RPMS/noarch/tomato-*.rpm .
 
 # install (Test Only)
 # sudo dnf install ~/rpmbuild/RPMS/noarch/tomato-*.rpm

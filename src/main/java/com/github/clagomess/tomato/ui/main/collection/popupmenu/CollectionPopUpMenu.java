@@ -10,31 +10,48 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
+
 public class CollectionPopUpMenu extends JPopupMenu {
     public CollectionPopUpMenu(
             Component parent,
             CollectionTreeDto collectionTree
     ) {
         var mMove = new JMenuItem("Move", new BxSortAlt2Icon());
-        mMove.addActionListener(e -> new CollectionMoveFrame(parent, collectionTree));
+        mMove.addActionListener(e -> disposeIfExists(
+                CollectionMoveFrame.class,
+                () -> new CollectionMoveFrame(parent, collectionTree)
+        ));
         add(mMove);
 
         var mRename = new JMenuItem("Rename");
-        mRename.addActionListener(e -> new CollectionRenameFrame(parent, collectionTree));
+        mRename.addActionListener(e -> disposeIfExists(
+                CollectionRenameFrame.class,
+                () -> new CollectionRenameFrame(parent, collectionTree)
+        ));
         add(mRename);
 
         addSeparator();
 
         var mNewCollection = new JMenuItem("New Collection");
-        mNewCollection.addActionListener(ae -> new CollectionNewFrame(parent, collectionTree));
+        mNewCollection.addActionListener(ae -> disposeIfExists(
+                CollectionNewFrame.class,
+                () -> new CollectionNewFrame(parent, collectionTree)
+        ));
         add(mNewCollection);
 
         var mImport = new JMenuItem("Import", new BxImportIcon());
-        mImport.addActionListener(ae -> new CollectionImportFrame(parent, collectionTree));
+        mImport.addActionListener(ae -> disposeIfExists(
+                CollectionImportFrame.class,
+                () -> new CollectionImportFrame(parent, collectionTree)
+        ));
         add(mImport);
 
         var mExport = new JMenuItem("Export", new BxExportIcon());
-        mExport.addActionListener(ae -> new CollectionExportFrame(parent, collectionTree));
+        mExport.addActionListener(ae -> disposeIfExists(
+                CollectionExportFrame.class,
+                () -> new CollectionExportFrame(parent, collectionTree)
+        ));
         add(mExport);
 
         addSeparator();

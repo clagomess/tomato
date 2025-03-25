@@ -9,20 +9,31 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxImportIcon;
 
 import javax.swing.*;
 
+import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
+
 public class CollectionMenu extends JMenu {
     public CollectionMenu(MainFrame mainFrame) {
         super("Collection");
 
         var mNew = new JMenuItem("New Collection");
-        mNew.addActionListener(l -> new CollectionNewFrame(mainFrame, null));
+        mNew.addActionListener(l -> toFrontIfExists(
+                CollectionNewFrame.class,
+                () -> new CollectionNewFrame(mainFrame, null)
+        ));
         add(mNew);
 
         var mImport = new JMenuItem("Import", new BxImportIcon());
-        mImport.addActionListener(l -> new CollectionImportFrame(mainFrame, null));
+        mImport.addActionListener(l -> toFrontIfExists(
+                CollectionImportFrame.class,
+                () -> new CollectionImportFrame(mainFrame, null)
+        ));
         add(mImport);
 
         var mExport = new JMenuItem("Export", new BxExportIcon());
-        mExport.addActionListener(l -> new CollectionExportFrame(mainFrame, null));
+        mExport.addActionListener(l -> toFrontIfExists(
+                CollectionExportFrame.class,
+                () -> new CollectionExportFrame(mainFrame, null)
+        ));
         add(mExport);
     }
 }

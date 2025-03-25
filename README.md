@@ -1,13 +1,22 @@
+<p align="center">
+    <img src="https://github.com/clagomess/tomato/blob/master/src/main/resources/com/github/clagomess/tomato/ui/component/favicon/favicon.svg" width="64" alt="Tomato">
+</p>
+
 # Tomato
+
+[![GitHub License](https://img.shields.io/github/license/clagomess/tomato)](https://github.com/clagomess/tomato/blob/master/LICENSE)
+[![Release CI](https://github.com/clagomess/tomato/actions/workflows/release.yml/badge.svg)](https://github.com/clagomess/tomato/actions/workflows/release.yml)
+[![Test CI](https://github.com/clagomess/tomato/actions/workflows/test.yml/badge.svg)](https://github.com/clagomess/tomato/actions/workflows/test.yml)
+[![Release](https://img.shields.io/github/v/release/clagomess/tomato)](https://github.com/clagomess/tomato/releases)
 
 The open source and 100% offline REST Client tool.
 
 Features:
 
-- All data created are managed by you. You own the data! No freak cloud sync. You can easily select where is stored and decide witch strategie to do backup and share.
-- All data generated is git friendly in readable JSON format.
-- You can import collections from other tools and export for them.
-- No account is required.
+- All created data is managed by you. You own the data! No freak cloud sync. You can easily select where it'll be stored and decide which strategy will be used to backup and share.
+- All generated data is git friendly in readable JSON format.
+- You can import and export collections from/for other tools.
+- No account required.
 - No sneaky subscriptions plans.
 
 Actually the project are in BETA stage, more functionalities will come soon, be patient.
@@ -22,6 +31,10 @@ Avaiable binaries:
 - Debian and derivatives (*.deb) - multiarch
 - Fedora/RHEL (*.rpm) - multiarch
 - Zip without JRE (Required Java JRE >= 17)
+
+## Screenshot
+
+![Screenshot of Main UI](https://github.com/clagomess/tomato/blob/master/screenshots/screenshot-001.png)
 
 ## Data structure
 
