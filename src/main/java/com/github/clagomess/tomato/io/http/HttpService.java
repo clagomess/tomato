@@ -20,6 +20,8 @@ import java.util.concurrent.ForkJoinPool;
 
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.POST;
 import static com.github.clagomess.tomato.enums.HttpMethodEnum.PUT;
+import static com.github.clagomess.tomato.io.http.MediaType.APPLICATION_FORM_URLENCODED_TYPE;
+import static com.github.clagomess.tomato.io.http.MediaType.HTTP_CONTENT_TYPE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -122,11 +124,11 @@ public class HttpService {
     ){
         if(requestDto.getHeaders().stream()
                 .noneMatch(item ->
-                        "content-type".equalsIgnoreCase(item.getKey())
+                        HTTP_CONTENT_TYPE.equalsIgnoreCase(item.getKey())
                 )
         ) {
             httpRequestBuilder.header(
-                    "Content-Type",
+                    HTTP_CONTENT_TYPE,
                     requestDto.getBody()
                             .getRaw()
                             .getType()
@@ -151,7 +153,7 @@ public class HttpService {
             HttpRequest.Builder httpRequestBuilder
     ) throws FileNotFoundException {
         httpRequestBuilder.header(
-                "Content-Type",
+                HTTP_CONTENT_TYPE,
                 requestDto.getBody()
                         .getBinary()
                         .getContentType()
@@ -175,8 +177,8 @@ public class HttpService {
         var form = new UrlEncodedFormBody(requestDto.getBody());
 
         httpRequestBuilder.header(
-                "Content-Type",
-                form.getContentType()
+                HTTP_CONTENT_TYPE,
+                APPLICATION_FORM_URLENCODED_TYPE
         );
 
         String body = form.build();
@@ -196,7 +198,7 @@ public class HttpService {
         var form = new MultipartFormDataBody(requestDto.getBody());
 
         httpRequestBuilder.header(
-                "Content-Type",
+                HTTP_CONTENT_TYPE,
                 form.getContentType()
         );
 

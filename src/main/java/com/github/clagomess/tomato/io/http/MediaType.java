@@ -63,7 +63,7 @@ public class MediaType {
     }
 
     public MediaType(HttpHeaders headers){
-        this(headers.firstValue("content-type")
+        this(headers.firstValue(HTTP_CONTENT_TYPE)
                 .orElse("*/*")
         );
     }
@@ -112,6 +112,8 @@ public class MediaType {
         ).anyMatch(s -> toString().contains(s));
     }
 
+    public final static String HTTP_CONTENT_TYPE = "Content-Type";
+
     public final static MediaType WILDCARD = new MediaType("*", "*");
     public final static MediaType TEXT_PLAIN = new MediaType("text", "plain");
     public final static MediaType APPLICATION_JSON = new MediaType("application", "json");
@@ -121,4 +123,5 @@ public class MediaType {
 
     public final static String TEXT_PLAIN_TYPE = "text/plain";
     public final static String APPLICATION_OCTET_STREAM_TYPE = "application/octet-stream";
+    public final static String APPLICATION_FORM_URLENCODED_TYPE = "application/x-www-form-urlencoded";
 }

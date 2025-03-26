@@ -6,13 +6,12 @@ import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
+import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
 import com.github.clagomess.tomato.ui.component.envtextfield.EnvTextfieldOptions;
-import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxBlockIcon;
-import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxGlobeIcon;
-import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSaveIcon;
-import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSendIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
+import com.github.clagomess.tomato.ui.main.request.codesnippet.CodeSnippetFrame;
 import com.github.clagomess.tomato.ui.main.request.left.*;
 import com.github.clagomess.tomato.ui.main.request.right.ResponseTabContent;
 import com.github.clagomess.tomato.ui.request.RequestSaveFrame;
@@ -37,12 +36,18 @@ public class RequestSplitPane extends JPanel {
     private final RequestDto requestDto;
 
     private final RequestNameTextField txtRequestName = new RequestNameTextField();
-    private final JButton btnViewRenderedUrl = new JButton(new BxGlobeIcon()){{
-       setToolTipText("View Rendered Url");
-    }};
-    private final JButton btnSaveRequest = new JButton(new BxSaveIcon()){{
-        setToolTipText("Save");
-    }};
+    private final IconButton btnViewRenderedUrl = new IconButton(
+            new BxGlobeIcon(),
+            "View Rendered Url"
+    );
+    private final IconButton btnCodeSnippet = new IconButton(
+            new BxCodeAltIcon(),
+        "Code Snippet"
+    );
+    private final IconButton btnSaveRequest = new IconButton(
+            new BxSaveIcon(),
+        "Save"
+    );
 
     private final HttpMethodComboBox cbHttpMethod = new HttpMethodComboBox();
     private final EnvTextField txtRequestUrl = new EnvTextField(EnvTextfieldOptions.builder().build());
@@ -83,6 +88,7 @@ public class RequestSplitPane extends JPanel {
         ));
         paneRequestName.add(txtRequestName, "width 300::100%");
         paneRequestName.add(btnViewRenderedUrl);
+        paneRequestName.add(btnCodeSnippet);
         paneRequestName.add(btnSaveRequest);
         add(paneRequestName, "wrap");
 
@@ -113,6 +119,7 @@ public class RequestSplitPane extends JPanel {
         });
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnViewRenderedUrl.addActionListener(l -> btnViewRenderedUrlAction());
+        btnCodeSnippet.addActionListener(l -> btnCodeSnippetAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
 
         // # REQUEST / RESPONSE
@@ -169,6 +176,16 @@ public class RequestSplitPane extends JPanel {
                 () -> new WaitExecution(
                         btnViewRenderedUrl,
                         () -> new ViewRenderedUrlFrame(this, requestDto)
+                ).execute()
+        );
+    }
+
+    public void btnCodeSnippetAction(){
+        disposeIfExists(
+                CodeSnippetFrame.class,
+                () -> new WaitExecution(
+                        btnCodeSnippet,
+                        () -> new CodeSnippetFrame(this, requestDto)
                 ).execute()
         );
     }
