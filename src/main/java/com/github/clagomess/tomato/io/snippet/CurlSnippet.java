@@ -6,7 +6,6 @@ import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import com.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
-import com.github.clagomess.tomato.dto.data.request.RawBodyDto;
 import com.github.clagomess.tomato.io.http.RequestBuilder;
 import com.github.clagomess.tomato.io.http.UrlBuilder;
 import lombok.AllArgsConstructor;
@@ -47,7 +46,7 @@ public class CurlSnippet implements CodeSnippet {
         buildCookies(request.getCookies(), code);
 
         switch (request.getBody().getType()){
-            case RAW -> buildBodyRaw(request.getBody().getRaw(), code);
+            case RAW -> buildBodyRaw(request, code);
             case BINARY -> buildBodyBinary(request.getBody().getBinary(), code);
             case URL_ENCODED_FORM -> buildUrlEncodedForm(request.getBody().getUrlEncodedForm(), code);
             case MULTIPART_FORM -> buildMultipartFormData(request.getBody().getMultiPartForm(), code);
@@ -112,19 +111,27 @@ public class CurlSnippet implements CodeSnippet {
     }
 
     protected void buildBodyRaw(
-            RawBodyDto rawBody,
+            RequestDto request,
             StringBuilder code
     ){
-        writeHeader(
-                HTTP_CONTENT_TYPE,
-                rawBody.getType().getContentType().toString(),
-                code
-        ); //@TODO: check
+        var raw = request.getBody().getRaw();
+
+        if(request.getHeaders().stream()
+                .noneMatch(item ->
+                        HTTP_CONTENT_TYPE.equalsIgnoreCase(item.getKey())
+                )
+        ) {
+            writeHeader(
+                    HTTP_CONTENT_TYPE,
+                    raw.getType().getContentType().toString(),
+                    code
+            );
+        }
 
         code.append(type.getNewLine());
         code.append("--data-raw ");
         code.append(type.getStringQuote());
-        code.append(rawBody.getRaw());
+        code.append(raw.getRaw());
         code.append(type.getStringQuote());
     }
 

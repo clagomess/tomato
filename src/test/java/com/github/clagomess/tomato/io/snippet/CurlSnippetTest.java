@@ -148,6 +148,31 @@ public class CurlSnippetTest {
     }
 
     @Test
+    public void raw_whenRequestWithContentType() throws IOException {
+        var request = new RequestDto();
+        request.setUrl("http://localhost:8000");
+        request.setMethod(HttpMethodEnum.POST);
+        request.setHeaders(List.of(
+                new ContentTypeKeyValueItemDto("Content-Type", "text/html")
+        ));
+        request.getBody().setType(BodyTypeEnum.RAW);
+        request.getBody().setRaw(new RawBodyDto(
+                RawBodyTypeEnum.JSON,
+                "{\"foo\":\"bar\"}"
+        ));
+
+        try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
+            var result = curlSnippet.build(request);
+            Assertions.assertThat(result)
+                    .isEqualToIgnoringNewLines("""
+                    curl -X POST 'http://localhost:8000' \\
+                    -H 'Content-Type: text/html' \\
+                    --data-raw '{"foo":"bar"}'
+                    """);
+        }
+    }
+
+    @Test
     public void binary() throws IOException {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
