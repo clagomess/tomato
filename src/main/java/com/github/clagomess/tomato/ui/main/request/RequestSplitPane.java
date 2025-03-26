@@ -144,7 +144,29 @@ public class RequestSplitPane extends JPanel {
         add(splitPane, "height 100%");
     }
 
+    protected boolean canPerformRequest(){
+        try{
+            if(!controller.isProductionEnvironment()) return true;
+
+            int ret = JOptionPane.showConfirmDialog(
+                    this,
+                    "You are using the PRODUCTION environment!\nDo you really want to continue?",
+                    "Production Protection",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            return ret == JOptionPane.OK_OPTION;
+        } catch (Exception e) {
+            new ExceptionDialog(this, e);
+        }
+
+        return false;
+    }
+
     public void btnSendRequestAction(){
+        if(!canPerformRequest()) return;
+
         btnSendRequest.setEnabled(false);
         btnCancelRequest.setEnabled(true);
         responseContent.reset();

@@ -16,6 +16,9 @@
     "name": {
       "type": "string"
     },
+    "production": {
+      "type": "boolean"
+    },
     "envs": {
       "type": "array",
       "items": {
@@ -40,6 +43,7 @@
     "createTime",
     "updateTime",
     "name",
+    "production",
     "envs"
   ]
 }

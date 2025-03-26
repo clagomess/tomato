@@ -16,6 +16,19 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EnvironmentDto extends MetadataDto {
-    private String name = "New Environment";
-    private List<KeyValueItemDto> envs = new ArrayList<>();
+    private static final String DEFAULT_NAME = "New Environment";
+
+    private String name;
+    private List<KeyValueItemDto> envs;
+    private boolean production;
+
+    public String getName() {
+        if(name == null) name = DEFAULT_NAME;
+        return name;
+    }
+
+    public List<KeyValueItemDto> getEnvs() {
+        if(envs == null) envs = new ArrayList<>();
+        return envs;
+    }
 }

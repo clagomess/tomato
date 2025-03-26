@@ -15,6 +15,7 @@ public interface PostmanEnvironmentPumpMapper {
     @Mapping(target = "updateTime", ignore = true)
     @Mapping(target = "createTime", ignore = true)
     @Mapping(target = "envs", source = "values")
+    @Mapping(target = "production", ignore = true)
     EnvironmentDto toEnvironmentDto(PostmanEnvironmentDto source);
 
     @Mapping(target = "selected", ignore = true)

@@ -17,6 +17,7 @@ import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 public class EnvironmentNewFrame extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final UndoableTextField txtName = new UndoableTextField();
+    private final JCheckBox chkProduction = new JCheckBox();
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
@@ -34,6 +35,8 @@ public class EnvironmentNewFrame extends JFrame {
         ));
         add(new JLabel("Name"), "wrap");
         add(txtName, "width 300!, wrap");
+        add(new JLabel("Production?"), "wrap");
+        add(chkProduction, "wrap");
         add(btnSave, "align right");
 
         getRootPane().setDefaultButton(btnSave);
@@ -50,6 +53,7 @@ public class EnvironmentNewFrame extends JFrame {
         new WaitExecution(this, btnSave, () -> {
             EnvironmentDto environment = new EnvironmentDto();
             environment.setName(txtName.getText());
+            environment.setProduction(chkProduction.isSelected());
 
             environmentRepository.save(environment);
             environmentPublisher.getOnChange()

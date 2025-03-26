@@ -21,6 +21,7 @@ import static javax.swing.SwingUtilities.invokeLater;
 public class EnvironmentEditFrame extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final ListenableTextField txtName = new ListenableTextField();
+    private final JCheckBox chkProduction = new JCheckBox();
     private final KeyValue keyValue;
     private final StagingMonitor<EnvironmentDto> stagingMonitor;
     private final String title;
@@ -47,8 +48,13 @@ public class EnvironmentEditFrame extends JFrame {
         setResizable(true);
 
         txtName.setText(environment.getName());
+        chkProduction.setSelected(environment.isProduction());
         txtName.addOnChange(value -> {
             environment.setName(value);
+            updateStagingMonitor();
+        });
+        chkProduction.addActionListener(listener -> {
+            environment.setProduction(chkProduction.isSelected());
             updateStagingMonitor();
         });
         keyValue = new KeyValue(environment.getEnvs());
@@ -59,6 +65,8 @@ public class EnvironmentEditFrame extends JFrame {
         ));
         add(new JLabel("Name"), "wrap");
         add(txtName, "width 100%, wrap");
+        add(new JLabel("Production?"), "wrap");
+        add(chkProduction, "wrap");
         add(keyValue, "width 100%, height 100%, wrap");
         add(btnSave, "align right");
 
