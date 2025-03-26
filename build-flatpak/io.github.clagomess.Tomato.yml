@@ -1,27 +1,28 @@
 id: io.github.clagomess.Tomato
 runtime: org.freedesktop.Platform
-runtime-version: '23.08'
+runtime-version: '24.08'
 sdk: org.freedesktop.Sdk
 command: tomato
-sdk-extensions:
-  - org.freedesktop.Sdk.Extension.openjdk17
 
 finish-args:
+  - --socket=x11
   - --share=network
   - --filesystem=home
-  - --env=PATH=/app/bin:/usr/bin:/app/lib/jvm/java-17-openjdk/bin
-  - --env=JAVA_HOME=/app/lib/jvm/java-17-openjdk
+  - --env=PATH=/app/bin:/usr/bin:/app/lib/temurin-17-jre/bin
+  - --env=JAVA_HOME=/app/lib/temurin-17-jre
 
 modules:
   - name: tomato
     buildsystem: simple
     build-commands:
-      - install -v -Dm755 build-linux/tomato.sh /app/bin/tomato
-      - mkdir -p /app/share
-      - cp -R release/** /app/share/
-      - install -v -D build-linux/tomato.desktop /app/share/applications/tomato.desktop
-      - install -v -D build-linux/icon-64x64.png /app/share/icons/hicolor/64x64/apps/tomato.png
-      - install -v -D build-linux/icon-128x128.png /app/share/icons/hicolor/128x128/apps/tomato.png
+      - install -v -Dm755 build-linux/tomato.sh ${FLATPAK_DEST}/bin/tomato
+      - install -v -D build-linux/tomato.desktop ${FLATPAK_DEST}/share/applications/tomato.desktop
+      - install -v -D build-linux/icon-64x64.png ${FLATPAK_DEST}/share/icons/hicolor/64x64/apps/tomato.png
+      - install -v -D build-linux/icon-128x128.png ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps/tomato.png
+      - cp -R release/** ${FLATPAK_DEST}/share/
+      - mkdir -p ${FLATPAK_DEST}/lib
+      - tar -xvf temurin-17-jre.tar.gz --one-top-level=temurin-17-jre --strip-components=1 -C ${FLATPAK_DEST}/lib
+      
     sources:
       - type: dir
         path: /tmp/tomato/release
@@ -30,3 +31,10 @@ modules:
       - type: dir
         path: /tmp/tomato/build-linux
         dest: build-linux
+
+      - type: file 
+        dest-filename: "temurin-17-jre.tar.gz"
+        sha256: a4b0015872758aac6a5d17139e952a3951ee536ae6d9a99828823a80a71add56
+        url: "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jre_x64_linux_hotspot_17.0.14_7.tar.gz"
+        only-arches:
+          - "x86_64"
