@@ -10,4 +10,5 @@ import lombok.Setter;
 public class EnvironmentHeadDto {
     private String id;
     private String name;
+    private boolean production;
 }

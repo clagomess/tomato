@@ -1,11 +1,12 @@
 {
   "id" : "7rZO7Z1T",
   "createTime" : "2024-12-17T11:08:31",
-  "updateTime" : "2025-02-06T13:43:34",
+  "updateTime" : "2025-03-26T16:06:27",
   "name" : "sample-env",
   "envs" : [ {
     "key" : "AAA",
     "value" : "BBB",
     "selected" : true
-  } ]
+  } ],
+  "production" : false
 }

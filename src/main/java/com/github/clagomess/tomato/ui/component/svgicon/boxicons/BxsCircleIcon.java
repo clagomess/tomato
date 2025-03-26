@@ -6,10 +6,14 @@ import java.awt.*;
 
 public class BxsCircleIcon extends SvgIcon {
     public BxsCircleIcon(Color color) {
+        this(color, 8);
+    }
+
+    public BxsCircleIcon(Color color, int size) {
         super(
                 "bxs-circle.svg",
-                8,
-                8,
+                size,
+                size,
                 color
         );
     }

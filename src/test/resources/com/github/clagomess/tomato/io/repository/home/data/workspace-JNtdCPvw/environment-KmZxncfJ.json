@@ -1,7 +1,7 @@
 {
   "id" : "KmZxncfJ",
   "createTime" : "2025-01-08T10:35:34",
-  "updateTime" : "2025-02-06T13:43:20",
+  "updateTime" : "2025-03-26T16:06:18",
   "name" : "Local",
   "envs" : [ {
     "key" : "echoServer",
@@ -11,5 +11,6 @@
     "key" : "token",
     "value" : "xyz",
     "selected" : true
-  } ]
+  } ],
+  "production" : false
 }

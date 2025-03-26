@@ -6,6 +6,7 @@ import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import com.github.clagomess.tomato.ui.environment.EnvironmentDeleteDialog;
 import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditFrame;
 import net.miginfocom.swing.MigLayout;
@@ -16,9 +17,12 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
+import static com.github.clagomess.tomato.ui.component.ColorConstant.RED;
 import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 
 class Row extends JPanel {
+    private static final BxsCircleIcon ICON_PRODUCTION = new BxsCircleIcon(RED, 18);
+
     public Row(
             Container parent,
             EnvironmentHeadDto environment
@@ -51,7 +55,10 @@ class Row extends JPanel {
         });
         btnDelete.setEnabled(true);
 
-        add(new JLabel(environment.getName()));
+        var label = new JLabel(environment.getName());
+        if(environment.isProduction()) label.setIcon(ICON_PRODUCTION);
+
+        add(label);
         add(btnEdit);
         add(btnDelete);
     }
