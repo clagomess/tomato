@@ -1,9 +1,11 @@
 package com.github.clagomess.tomato.controller.main.request;
 
 import com.github.clagomess.tomato.dto.ResponseDto;
+import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import com.github.clagomess.tomato.io.http.HttpService;
+import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.io.repository.RequestRepository;
 import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 
@@ -22,6 +25,14 @@ public class RequestSplitPaneController {
 
     public RequestSplitPaneController() {
         this.requestRepository = new RequestRepository();
+    }
+
+    public boolean isProductionEnvironment() throws IOException {
+        Optional<EnvironmentDto> current = new EnvironmentRepository()
+                .getWorkspaceSessionEnvironment();
+
+        return current.map(EnvironmentDto::isProduction)
+                .orElse(false);
     }
 
     public Thread sendRequest(
