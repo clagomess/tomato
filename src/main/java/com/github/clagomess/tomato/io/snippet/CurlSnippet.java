@@ -17,13 +17,22 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.github.clagomess.tomato.io.http.MediaType.HTTP_CONTENT_TYPE;
+import static org.fife.ui.rsyntaxtextarea.SyntaxConstants.*;
 
 @RequiredArgsConstructor
-public class CurlSnippet {
+public class CurlSnippet implements CodeSnippet {
     private final Type type;
     private RequestBuilder requestBuilder;
 
-    public StringBuilder build(RequestDto request) throws IOException {
+    public String getName(){
+        return type.getName();
+    }
+
+    public String getSyntaxStyle(){
+        return type.getSyntaxStyle();
+    }
+
+    public String build(RequestDto request) throws IOException {
         requestBuilder = new RequestBuilder();
 
         StringBuilder code = new StringBuilder();
@@ -44,7 +53,7 @@ public class CurlSnippet {
             case MULTIPART_FORM -> buildMultipartFormData(request.getBody().getMultiPartForm(), code);
         }
 
-        return code;
+        return code.toString();
     }
 
     protected void writeHeader(
@@ -157,11 +166,27 @@ public class CurlSnippet {
     @Getter
     @AllArgsConstructor
     public enum Type {
-        BASH("cURL - BASH", "'", " \\\n"),
-        POWERSHELL("cURL - PowerShell", "'", " `\n"),
-        CMD("cURL - CMD", "\"", " ^\n");
+        BASH(
+                "cURL - BASH",
+                SYNTAX_STYLE_UNIX_SHELL,
+                "'",
+                " \\\n"
+        ),
+        POWERSHELL(
+                "cURL - PowerShell",
+                SYNTAX_STYLE_NONE,
+                "'",
+                " `\n"
+        ),
+        CMD(
+                "cURL - CMD",
+                SYNTAX_STYLE_WINDOWS_BATCH,
+                "\"",
+                " ^\n"
+        );
 
         private final String name;
+        private final String syntaxStyle;
         private final String stringQuote;
         private final String newLine;
     }
