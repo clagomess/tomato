@@ -1,11 +1,9 @@
 package com.github.clagomess.tomato.ui.main.collection.popupmenu;
 
+import com.github.clagomess.tomato.controller.main.collection.popupmenu.RequestPopUpMenuController;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import com.github.clagomess.tomato.io.repository.RequestRepository;
-import com.github.clagomess.tomato.mapper.RequestMapper;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
-import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.component.WaitExecution;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxCodeAltIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLinkExternalIcon;
@@ -20,11 +18,12 @@ import com.github.clagomess.tomato.ui.request.RequestRenameFrame;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.LOAD;
 import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
 
 public class RequestPopUpMenu extends JPopupMenu {
+    private final RequestPopUpMenuController controller = new RequestPopUpMenuController();
+
     public RequestPopUpMenu(
             Component parent,
             RequestHeadDto requestHead
@@ -86,9 +85,7 @@ public class RequestPopUpMenu extends JPopupMenu {
                 () -> new WaitExecution(
                         parent,
                         () -> {
-                            var request = new RequestRepository()
-                                    .load(requestHead)
-                                    .orElseThrow();
+                            var request = controller.load(requestHead);
                             new CodeSnippetFrame(this, request);
                         }
                 ).execute()
@@ -96,32 +93,8 @@ public class RequestPopUpMenu extends JPopupMenu {
     }
 
     protected void duplicate(RequestHeadDto requestHead) {
-        new WaitExecution(() -> {
-            var requestRepository = new RequestRepository();
-
-            var request = requestRepository.load(requestHead)
-                    .map(RequestMapper.INSTANCE::duplicate)
-                    .orElseThrow();
-            request.setName(request.getName() + " Copy");
-
-            var filePath = requestRepository.save(
-                    requestHead.getParent().getPath(),
-                    request
-            );
-
-            var newRequestHead = RequestMapper.INSTANCE.toRequestHead(
-                    request,
-                    requestHead.getParent(),
-                    filePath
-            );
-
-            RequestPublisher.getInstance()
-                    .getOnChange()
-                    .publish(
-                            new RequestKey(newRequestHead),
-                            new PublisherEvent<>(INSERTED, newRequestHead)
-                    );
-        }).execute();
+        new WaitExecution(() -> controller.duplicate(requestHead))
+                .execute();
     }
 
     protected void move(
