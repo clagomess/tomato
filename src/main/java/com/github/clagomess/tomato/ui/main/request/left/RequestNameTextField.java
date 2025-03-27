@@ -8,6 +8,7 @@ import com.github.clagomess.tomato.publisher.key.RequestKey;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -37,15 +38,16 @@ public class RequestNameTextField extends JPanel {
     }
 
     public void setText(
-            @Nullable RequestHeadDto requestHeadDto,
-            RequestDto requestDto
+            @Nullable RequestHeadDto requestHead,
+            @NotNull RequestDto request
     ){
-        if(requestHeadDto != null && requestHeadDto.getParent() != null){
-            parent.setText(requestHeadDto.getParent().getFlattenedParentString());
+        if(requestHead != null && requestHead.getParent() != null){
+            parent.setText(requestHead.getParent().getFlattenedParentString());
 
-            listenerUuid = requestPublisher.getOnChange().addListener(new RequestKey(requestHeadDto), event -> {
+            listenerUuid = requestPublisher.getOnChange().addListener(new RequestKey(requestHead), event -> {
                 parent.setText(event.getEvent().getParent().getFlattenedParentString());
                 lblRequestName.setText(event.getEvent().getName());
+                request.setName(event.getEvent().getName());
             });
         }else{
             try {
@@ -55,7 +57,7 @@ public class RequestNameTextField extends JPanel {
             }
         }
 
-        lblRequestName.setText(requestDto.getName());
+        lblRequestName.setText(request.getName());
     }
 
     public void dispose(){
