@@ -1,0 +1,39 @@
+id: io.github.clagomess.Tomato
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: tomato
+
+finish-args:
+  - --socket=x11
+  - --share=network
+  - --filesystem=home
+  - --env=PATH=/app/bin:/usr/bin:/app/lib/temurin-17-jre/bin
+  - --env=JAVA_HOME=/app/lib/temurin-17-jre
+
+modules:
+  - name: tomato
+    buildsystem: simple
+    build-commands:
+      - install -v -Dm755 build-linux/tomato.sh ${FLATPAK_DEST}/bin/tomato
+      - install -v -D build-linux/tomato.desktop ${FLATPAK_DEST}/share/applications/tomato.desktop
+      - install -v -D build-linux/icon-64x64.png ${FLATPAK_DEST}/share/icons/hicolor/64x64/apps/tomato.png
+      - install -v -D build-linux/icon-128x128.png ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps/tomato.png
+      - cp -R release/** ${FLATPAK_DEST}/share/
+      - mkdir -p ${FLATPAK_DEST}/lib
+      - tar -xvf temurin-17-jre.tar.gz --one-top-level=temurin-17-jre --strip-components=1 -C ${FLATPAK_DEST}/lib
+      
+    sources:
+      - type: dir
+        path: /opt/release
+        dest: release
+
+      - type: dir
+        path: /opt/build-linux
+        dest: build-linux
+
+      - type: file 
+        dest-filename: "temurin-17-jre.tar.gz"
+        path: "/opt/temurin-17-jre.tar.gz"
+        only-arches:
+          - "x86_64"

@@ -27,10 +27,13 @@ Check: [Latest Release](https://github.com/clagomess/tomato/releases/latest)
 
 Avaiable binaries:
 
-- Windows MSI Installer - x64
-- Debian and derivatives (*.deb) - multiarch
-- Fedora/RHEL (*.rpm) - multiarch
-- Zip without JRE (Required Java JRE >= 17)
+| Platform                                  | Arch | Filename                      |
+|-------------------------------------------|------|-------------------------------|
+| Windows                                   | x64  | Tomato-[version]-x64.msi      |
+| Debian and derivatives                    | all  | tomato-[version]-all.deb      |
+| Fedora/RHEL                               | all  | tomato-[version]-1.noarch.rpm |
+| Flatpak                                   | x64  | tomato-[version]-x64.flatpak  |
+| Zip without JRE (Required Java JRE >= 17) | all  | tomato-[version].zip          |
 
 ## Screenshot
 
@@ -69,3 +72,13 @@ JVM properties:
 
 - Enable debug Log: `TOMATO_LOG_LEVEL=DEBUG`
 - Aways point to test data: `TOMATO_AWAYS_USE_TEST_DATA=true`
+
+Docker Builder - `build-flatpak`:
+
+```bash
+docker build --progress=plain \
+-t ghcr.io/clagomess/tomato-build-flatpak \
+-f build-flatpak/Dockerfile .
+
+docker push ghcr.io/clagomess/tomato-build-flatpak:latest
+```

@@ -1,0 +1,9 @@
+services:
+  build-flatpak:
+    build:
+      dockerfile: build-flatpak/Dockerfile
+    image: ghcr.io/clagomess/tomato-build-flatpak
+    privileged: true
+    volumes:
+      - "./build-flatpak:/opt/result"
+      - "./target/release:/opt/release"
