@@ -7,3 +7,13 @@ services:
     volumes:
       - "./build-flatpak:/opt/result"
       - "./target/release:/opt/release"
+
+  echo-server:
+    build:
+      dockerfile: src/test/resources/echo-server/Dockerfile
+    image: ghcr.io/clagomess/tomato-echo-server
+    volumes:
+      - ./src/test/resources/echo-server:/var/www/html
+    ports:
+      - "8000:80"
+      - "8443:443"

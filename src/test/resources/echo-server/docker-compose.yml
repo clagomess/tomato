@@ -1,9 +1,0 @@
-services:
-  echo-server:
-    build: .
-    image: ghcr.io/clagomess/tomato-echo-server
-    volumes:
-      - .:/var/www/html
-    ports:
-      - "8000:80"
-      - "8443:443"
