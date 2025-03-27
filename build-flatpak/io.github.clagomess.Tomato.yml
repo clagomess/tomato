@@ -25,16 +25,15 @@ modules:
       
     sources:
       - type: dir
-        path: /tmp/tomato/release
+        path: /opt/release
         dest: release
 
       - type: dir
-        path: /tmp/tomato/build-linux
+        path: /opt/build-linux
         dest: build-linux
 
       - type: file 
         dest-filename: "temurin-17-jre.tar.gz"
-        sha256: a4b0015872758aac6a5d17139e952a3951ee536ae6d9a99828823a80a71add56
-        url: "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14%2B7/OpenJDK17U-jre_x64_linux_hotspot_17.0.14_7.tar.gz"
+        path: "/opt/temurin-17-jre.tar.gz"
         only-arches:
           - "x86_64"

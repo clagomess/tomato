@@ -1,0 +1,11 @@
+services:
+  build-flatpak:
+    build:
+      dockerfile: build-flatpak/Dockerfile
+    image: ghcr.io/clagomess/build-flatpak
+    privileged: true
+    environment:
+      GIT_TAG: "0.0.1"
+    volumes:
+      - "./build-flatpak:/opt/result"
+      - "./target/release:/opt/release"
