@@ -16,6 +16,7 @@ import com.github.clagomess.tomato.ui.main.request.left.*;
 import com.github.clagomess.tomato.ui.main.request.right.ResponseTabContent;
 import com.github.clagomess.tomato.ui.request.RequestSaveFrame;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,12 +24,14 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.Arrays;
 
 import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
 import static javax.swing.SwingUtilities.invokeLater;
 import static javax.swing.SwingUtilities.isEventDispatchThread;
 
+@Slf4j
 @Getter
 public class RequestSplitPane extends JPanel {
     private final TabKey key;
@@ -121,6 +124,7 @@ public class RequestSplitPane extends JPanel {
         btnViewRenderedUrl.addActionListener(l -> btnViewRenderedUrlAction());
         btnCodeSnippet.addActionListener(l -> btnCodeSnippetAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
+        addSaveKeyboardAction();
 
         // # REQUEST / RESPONSE
         var splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -229,6 +233,14 @@ public class RequestSplitPane extends JPanel {
             controller.save(requestHeadDto, requestDto);
             requestStagingMonitor.reset();
         }).execute();
+    }
+
+    public void addSaveKeyboardAction() {
+        this.registerKeyboardAction(
+                l -> btnSaveRequestAction(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK),
+                JComponent.WHEN_IN_FOCUSED_WINDOW
+        );
     }
 
     public void dispose(){
