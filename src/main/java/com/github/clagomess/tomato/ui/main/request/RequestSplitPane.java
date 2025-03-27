@@ -14,6 +14,7 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
 import com.github.clagomess.tomato.ui.main.request.codesnippet.CodeSnippetFrame;
 import com.github.clagomess.tomato.ui.main.request.left.*;
 import com.github.clagomess.tomato.ui.main.request.right.ResponseTabContent;
+import com.github.clagomess.tomato.ui.request.RequestRenameFrame;
 import com.github.clagomess.tomato.ui.request.RequestSaveFrame;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,10 @@ public class RequestSplitPane extends JPanel {
     private final IconButton btnViewRenderedUrl = new IconButton(
             new BxGlobeIcon(),
             "View Rendered Url"
+    );
+    private final IconButton btnRename = new IconButton(
+            new BxEditIcon(),
+            "Rename"
     );
     private final IconButton btnCodeSnippet = new IconButton(
             new BxCodeAltIcon(),
@@ -91,6 +96,7 @@ public class RequestSplitPane extends JPanel {
         ));
         paneRequestName.add(txtRequestName, "width 300::100%");
         paneRequestName.add(btnViewRenderedUrl);
+        paneRequestName.add(btnRename);
         paneRequestName.add(btnCodeSnippet);
         paneRequestName.add(btnSaveRequest);
         add(paneRequestName, "wrap");
@@ -122,6 +128,7 @@ public class RequestSplitPane extends JPanel {
         });
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnViewRenderedUrl.addActionListener(l -> btnViewRenderedUrlAction());
+        btnRename.addActionListener(l -> btnRenameAction());
         btnCodeSnippet.addActionListener(l -> btnCodeSnippetAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
         addSaveKeyboardAction();
@@ -213,6 +220,13 @@ public class RequestSplitPane extends JPanel {
                         btnCodeSnippet,
                         () -> new CodeSnippetFrame(this, requestDto)
                 ).execute()
+        );
+    }
+
+    protected void btnRenameAction(){
+        disposeIfExists(
+                RequestRenameFrame.class,
+                () -> new RequestRenameFrame(this, requestHeadDto)
         );
     }
 
