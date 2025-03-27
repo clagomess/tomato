@@ -265,3 +265,40 @@ jobs:
           retention-days: 5
           path: ~/rpmbuild/RPMS/noarch/tomato-*.rpm
 
+  release-flatpak:
+    needs: [ version, build ]
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    env:
+      GIT_TAG: ${{ needs.version.outputs.git_tag }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: tomato-${{env.GIT_TAG}}
+          path: ./target/release
+
+      - name: Log in
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        run: |
+          docker run --rm --privileged \
+          -v "./build-flatpak:/opt/result" \
+          -v "./target/release:/opt/release" \
+          -e GIT_TAG=${{env.GIT_TAG}} \
+          ghcr.io/clagomess/tomato-build-flatpak
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tomato-${{env.GIT_TAG}}-x64.flatpak
+          compression-level: 0
+          retention-days: 5
+          path: ./build-flatpak/tomato-*.flatpak
+
