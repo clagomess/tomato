@@ -6,15 +6,13 @@ import com.github.clagomess.tomato.publisher.DisposableListener;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSortAZIcon;
 import com.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
@@ -24,6 +22,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
     private final Class<T> itemClass;
     private final List<T> listItens;
     private final RequestStagingMonitor requestStagingMonitor;
+    private final IconButton btnSortByKey = new IconButton(new BxSortAZIcon(), "Sort by Key");
     private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add new");
     private final JPanel rowsPanel;
     private final KeyValueOptions options;
@@ -75,6 +74,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
             header.add(options.getCharsetComboBox());
         }
 
+        header.add(btnSortByKey);
         header.add(btnAddNew);
 
         add(header, "width 100%, wrap");
@@ -92,6 +92,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, "width ::100%, height 100%");
 
+        btnSortByKey.addActionListener(e -> sortByKey());
         btnAddNew.addActionListener(l -> addNewRow(null, null));
 
         this.listItens.forEach(this::addRow);
@@ -123,6 +124,14 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
         rowsPanel.add(row, "wrap 4");
         rowsPanel.revalidate();
         rowsPanel.repaint();
+    }
+
+    private void sortByKey(){
+        dispose();
+        Collections.sort(listItens);
+        rowsPanel.removeAll();
+        listItens.forEach(this::addRow);
+        requestStagingMonitor.update();
     }
 
     public void update(String key, String value){
