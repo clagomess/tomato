@@ -1,21 +1,36 @@
 package com.github.clagomess.tomato.io.keepass;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigInteger;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class PasswordEntropyCalculator {
-    protected int getSymbolLength(char ch){
-        if(ch < 32) return 32;
-        if(ch >= 48 && ch <= 57) return 10;
-        if(ch >= 65 && ch <= 90) return 26;
-        if(ch >= 97 && ch <= 122) return 26;
-        if(ch <= 127) return 34;
-        if(ch <= 255) return 128;
+    @Getter
+    @RequiredArgsConstructor
+    public enum Symbol {
+        CONTROL(32),
+        DIGIT(10),
+        LOWERCASE(26),
+        UPPERCASE(26),
+        SPECIAL(34),
+        EXTENDED(128),
+        UNICODE(65279);
 
-        return 65279;
+        private final int length;
+    }
+
+    protected Symbol getSymbol(char ch){
+        if(ch < 32) return Symbol.CONTROL;
+        if(ch >= 48 && ch <= 57) return Symbol.DIGIT;
+        if(ch >= 65 && ch <= 90) return Symbol.UPPERCASE;
+        if(ch >= 97 && ch <= 122) return Symbol.LOWERCASE;
+        if(ch <= 127) return Symbol.SPECIAL;
+        if(ch <= 255) return Symbol.EXTENDED;
+
+        return Symbol.UNICODE;
     }
 
     protected Set<Character> getUniqueSymbols(String password){
@@ -35,8 +50,9 @@ public class PasswordEntropyCalculator {
         if(uniqueSymbols.isEmpty()) return new Entropy(0, 0, 0);
 
         int symbolLength = uniqueSymbols.stream()
-                .map(this::getSymbolLength)
+                .map(this::getSymbol)
                 .distinct()
+                .map(Symbol::getLength)
                 .reduce(0, Integer::sum);
 
         int bits = BigInteger.valueOf(symbolLength)

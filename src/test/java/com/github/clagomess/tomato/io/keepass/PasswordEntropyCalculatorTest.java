@@ -10,19 +10,22 @@ public class PasswordEntropyCalculatorTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "\r,32",
-            "1,10",
-            "a,26",
-            "A,26",
-            "@,34",
-            "ç,128",
-            "ご,65279",
-            "😂,65279",
+            "\r,CONTROL",
+            "1,DIGIT",
+            "a,LOWERCASE",
+            "A,UPPERCASE",
+            "@,SPECIAL",
+            "ç,EXTENDED",
+            "ご,UNICODE",
+            "😂,UNICODE",
     }, ignoreLeadingAndTrailingWhitespace = false)
-    public void getSymbolLength(String ch, int expected) {
+    public void getSymbol(
+            String ch,
+            PasswordEntropyCalculator.Symbol expected
+    ) {
         assertEquals(
                 expected,
-                calculator.getSymbolLength(ch.charAt(0))
+                calculator.getSymbol(ch.charAt(0))
         );
     }
 
@@ -50,10 +53,10 @@ public class PasswordEntropyCalculatorTest {
             "qwerty,29,LOW",
             "aaaaaaaa,5,LOW",
             "00000000,4,LOW",
-            "iF10!6,37,LOW",
-            "$xZ6@Mg115f,62,MEDIUM",
+            "iF10!6,40,LOW",
+            "$xZ6@Mg115f,66,MEDIUM",
             "😂y%a#laHgç~,176,HIGH",
-            "resuITrecetreprOfolYcefAnCeIStBowkNisTaw,113,HIGH",
+            "resuITrecetreprOfolYcefAnCeIStBowkNisTaw,137,HIGH",
     })
     public void calculateEntropy(
             String password,
