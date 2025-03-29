@@ -50,8 +50,8 @@ public class PasswordEntropyCalculatorTest {
             "qwerty,29,LOW",
             "aaaaaaaa,5,LOW",
             "00000000,4,LOW",
-            "iF10!6,29,LOW",
-            "$xZ6@Mg115f,48,MEDIUM",
+            "iF10!6,37,LOW",
+            "$xZ6@Mg115f,62,MEDIUM",
             "😂y%a#laHgç~,176,HIGH",
             "resuITrecetreprOfolYcefAnCeIStBowkNisTaw,113,HIGH",
     })

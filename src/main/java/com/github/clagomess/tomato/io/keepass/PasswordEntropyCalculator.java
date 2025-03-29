@@ -34,17 +34,12 @@ public class PasswordEntropyCalculator {
         Set<Character> uniqueSymbols = getUniqueSymbols(password);
         if(uniqueSymbols.isEmpty()) return new Entropy(0, 0, 0);
 
-        int symbolLength = 0;
+        int symbolLength = uniqueSymbols.stream()
+                .map(this::getSymbolLength)
+                .distinct()
+                .reduce(0, Integer::sum);
 
-        int currentLength = 0;
-        for(char ch : uniqueSymbols){
-            currentLength = getSymbolLength(ch);
-            if(currentLength > symbolLength){
-                symbolLength = currentLength;
-            }
-        }
-
-        int bits = BigInteger.valueOf(currentLength)
+        int bits = BigInteger.valueOf(symbolLength)
                 .pow(uniqueSymbols.size())
                 .bitLength();
 
