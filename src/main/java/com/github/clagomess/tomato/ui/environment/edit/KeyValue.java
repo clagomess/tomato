@@ -32,10 +32,11 @@ class KeyValue extends JPanel {
 
         JPanel header = new JPanel(new MigLayout(
                 "insets 5 0 5 0",
-                "[][][grow, fill][]"
+                "[][][][grow, fill][]"
         ));
         header.setBorder(new MatteBorder(0, 0, 1, 0, ColorConstant.GRAY));
         header.add(new JLabel(), "width 8!");
+        header.add(new JLabel("Type"), "width 70!");
         header.add(new JLabel("Key"), "width 150!");
         header.add(new JLabel("Value"), "width 100%");
         header.add(btnAddNew);

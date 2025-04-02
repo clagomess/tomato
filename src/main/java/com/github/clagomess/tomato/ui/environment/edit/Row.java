@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
@@ -30,6 +31,9 @@ class Row extends JPanel {
     private final BxsCircleIcon iconHasNotChanged = new BxsCircleIcon(Color.GRAY);
 
     private final JLabel changeIcon = new JLabel(iconHasNotChanged);
+    private final JComboBox<EnvironmentItemTypeEnum> cbType = new JComboBox<>(
+            EnvironmentItemTypeEnum.values()
+    );
     private final ListenableTextField txtKey = new ListenableTextField();
     private final ListenableTextField txtValue = new ListenableTextField();
     private final JButton btnRemove = new IconButton(new BxTrashIcon(), "Remove");
@@ -48,29 +52,36 @@ class Row extends JPanel {
             this.list.add(this.item);
         }
 
-        // set values
-        txtKey.setText(item.getKey());
-        txtValue.setText(item.getValue());
+        setLayout(new MigLayout(
+                "insets 2",
+                "[][][][grow, fill][]"
+        ));
 
-        // listeners
+        // set values & add layout
+        add(changeIcon, "width 8!");
+
+        cbType.setSelectedItem(item.getType());
+        cbType.addActionListener(e -> {
+            item.setType((EnvironmentItemTypeEnum) cbType.getSelectedItem());
+            updateStagingMonitor();
+        });
+        add(cbType, "width 70!");
+
+        txtKey.setText(item.getKey());
         txtKey.addOnChange(value -> {
             item.setKey(value);
             updateStagingMonitor();
         });
+        add(txtKey, "width 150!");
+
+        txtValue.setText(item.getValue());
         txtValue.addOnChange(value -> {
             item.setValue(value);
             updateStagingMonitor();
         });
-        btnRemove.addActionListener(l -> btnRemoveAction());
-
-        // layout
-        setLayout(new MigLayout(
-                "insets 2",
-                "[][][grow, fill][]"
-        ));
-        add(changeIcon, "width 8!");
-        add(txtKey, "width 150!");
         add(txtValue, "width 150:150:100%");
+
+        btnRemove.addActionListener(l -> btnRemoveAction());
         add(btnRemove);
     }
 
