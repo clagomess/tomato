@@ -35,11 +35,12 @@ class Row extends JPanel {
             EnvironmentItemTypeEnum.values()
     );
     private final ListenableTextField txtKey = new ListenableTextField();
-    private final ListenableTextField txtValue = new ListenableTextField();
+    private final ValueTextField txtValue;
     private final JButton btnRemove = new IconButton(new BxTrashIcon(), "Remove");
 
     public Row(
             Container parent,
+            String environmentId,
             List<EnvironmentItemDto> list,
             EnvironmentItemDto item
     ){
@@ -74,9 +75,8 @@ class Row extends JPanel {
         });
         add(txtKey, "width 150!");
 
-        txtValue.setText(item.getValue());
+        txtValue = new ValueTextField(environmentId, item);
         txtValue.addOnChange(value -> {
-            item.setValue(value);
             updateStagingMonitor();
         });
         add(txtValue, "width 150:150:100%");

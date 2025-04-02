@@ -1,20 +1,23 @@
 package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum;
+import com.github.clagomess.tomato.io.keepass.EnvironmentSecret;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
+import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import com.github.clagomess.tomato.publisher.base.PublisherEvent;
-import com.github.clagomess.tomato.ui.component.ListenableTextField;
-import com.github.clagomess.tomato.ui.component.StagingMonitor;
-import com.github.clagomess.tomato.ui.component.WaitExecution;
+import com.github.clagomess.tomato.ui.component.*;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 
+import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static javax.swing.SwingUtilities.invokeLater;
 
@@ -28,6 +31,7 @@ public class EnvironmentEditFrame extends JFrame {
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
+    private final EnvironmentSecret environmentSecret;
 
     @Getter
     private final EnvironmentDto environment;
@@ -37,6 +41,7 @@ public class EnvironmentEditFrame extends JFrame {
             String environmentId
     ) throws IOException {
         this.environment = environmentRepository.load(environmentId).orElseThrow();
+        this.environmentSecret = getEnvironmentSecret(environmentId);
         this.stagingMonitor = new StagingMonitor<>(environment);
         this.title = "Environment - " + environment.getName();
 
@@ -57,7 +62,10 @@ public class EnvironmentEditFrame extends JFrame {
             environment.setProduction(chkProduction.isSelected());
             updateStagingMonitor();
         });
-        keyValue = new KeyValue(environment.getEnvs());
+        keyValue = new KeyValue(
+                environment.getId(),
+                environment.getEnvs()
+        );
 
         setLayout(new MigLayout(
                 "insets 10",
@@ -79,6 +87,22 @@ public class EnvironmentEditFrame extends JFrame {
         setVisible(true);
     }
 
+    private EnvironmentSecret getEnvironmentSecret(String environmentId) {
+        try {
+            File workspacePath = new WorkspaceRepository()
+                    .getDataSessionWorkspace()
+                    .getPath();
+
+            var environmentSecret = new EnvironmentSecret(workspacePath, environmentId);
+            environmentSecret.setGetPassword(() -> new PasswordDialog(this).showDialog());
+            environmentSecret.setGetNewPassword(() -> new NewPasswordDialog(this).showDialog());
+
+            return environmentSecret;
+        }catch (IOException e){
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
     public void updateStagingMonitor(){
         stagingMonitor.update();
 
@@ -97,6 +121,13 @@ public class EnvironmentEditFrame extends JFrame {
 
     private void btnSaveAction(){
         new WaitExecution(this, btnSave, () -> {
+            /*
+            environment.getEnvs().stream()
+                    .filter(item -> item.getType().equals(SECRET))
+                    .map(item -> new EnvironmentSecret.Entry())
+            ;
+             */
+
             environmentRepository.save(environment);
 
             resetStagingMonitor();

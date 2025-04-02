@@ -21,6 +21,7 @@ class KeyValue extends JPanel {
     private final JPanel rowsPanel;
 
     public KeyValue(
+            String environmentId,
             List<EnvironmentItemDto> list
     ) {
         this.list = list;
@@ -56,22 +57,26 @@ class KeyValue extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, "width ::100%, height 100%");
         btnAddNew.addActionListener(l -> {
-            addRow(new EnvironmentItemDto());
+            addRow(environmentId, new EnvironmentItemDto());
 
             var parent = (EnvironmentEditFrame) getAncestorOfClass(EnvironmentEditFrame.class, this);
             parent.updateStagingMonitor();
         });
 
-        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() ->
             this.list.stream()
                     .sorted()
-                    .forEach(this::addRow);
-        });
+                    .forEach(item -> addRow(environmentId, item))
+        );
     }
 
-    private void addRow(EnvironmentItemDto item){
+    private void addRow(
+            String environmentId,
+            EnvironmentItemDto item
+    ){
         var row = new Row(
                 rowsPanel,
+                environmentId,
                 this.list,
                 item
         );
