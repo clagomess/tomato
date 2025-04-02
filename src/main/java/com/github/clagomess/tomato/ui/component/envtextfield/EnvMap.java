@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.component.envtextfield;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.Getter;
 
@@ -20,7 +20,7 @@ class EnvMap {
         Optional<EnvironmentDto> current = environmentRepository.getWorkspaceSessionEnvironment();
         if(current.isEmpty()) return false;
 
-        Optional<KeyValueItemDto> result = current.get().getEnvs().parallelStream()
+        Optional<EnvironmentItemDto> result = current.get().getEnvs().parallelStream()
                 .filter(env -> token.equals("{{" + env.getKey() + "}}"))
                 .findFirst();
 

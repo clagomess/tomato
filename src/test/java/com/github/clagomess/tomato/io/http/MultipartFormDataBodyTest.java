@@ -1,8 +1,8 @@
 package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class MultipartFormDataBodyTest {
     private final String boundary = "tomato-test";
     private final EnvironmentDto environment = new EnvironmentDto(){{
-        setEnvs(List.of(new KeyValueItemDto("foo", "bar")));
+        setEnvs(List.of(new EnvironmentItemDto("foo", "bar")));
     }};
 
     private BodyDto body;

@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.mapper;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.dto.external.PostmanEnvironmentDto;
 import org.assertj.core.api.Assertions;
@@ -17,7 +18,7 @@ public class PostmanEnvironmentDumpMapperTest {
     public void toEnvironmentDto(){
         var source = new EnvironmentDto();
         source.setName("foo");
-        source.setEnvs(List.of(new KeyValueItemDto("mKey", "mValue")));
+        source.setEnvs(List.of(new EnvironmentItemDto("mKey", "mValue")));
 
         PostmanEnvironmentDto result = dumpMapper.toEnvironmentDto(source);
         assertEquals("foo", result.getName());

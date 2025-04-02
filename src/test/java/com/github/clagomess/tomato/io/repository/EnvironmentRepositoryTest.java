@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.io.repository;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.WorkspaceDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,7 +87,7 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
     @Test
     public void save() throws IOException {
         var environment = new EnvironmentDto();
-        environment.getEnvs().add(new KeyValueItemDto("AAA", "BBB"));
+        environment.getEnvs().add(new EnvironmentItemDto("AAA", "BBB"));
         var envFile = new File(mockDataDir, "environment-"+environment.getId()+".json");
 
         Mockito.doReturn(envFile)
@@ -101,7 +101,7 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
     @Test
     public void delete() throws IOException {
         var environment = new EnvironmentDto();
-        environment.getEnvs().add(new KeyValueItemDto("AAA", "BBB"));
+        environment.getEnvs().add(new EnvironmentItemDto("AAA", "BBB"));
         var envFile = new File(mockDataDir, "environment-"+environment.getId()+".json");
 
         Mockito.doReturn(envFile)

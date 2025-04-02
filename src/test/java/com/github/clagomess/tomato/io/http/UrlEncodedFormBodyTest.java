@@ -2,7 +2,7 @@ package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.dto.data.request.BodyDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.assertj.core.api.Assertions;
@@ -23,7 +23,7 @@ public class UrlEncodedFormBodyTest {
     private BodyDto body;
 
     private final EnvironmentDto environment = new EnvironmentDto(){{
-        setEnvs(List.of(new KeyValueItemDto("foo", "bar")));
+        setEnvs(List.of(new EnvironmentItemDto("foo", "bar")));
     }};
 
     @BeforeEach

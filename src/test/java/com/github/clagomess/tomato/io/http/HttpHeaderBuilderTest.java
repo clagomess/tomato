@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.assertj.core.api.Assertions;
@@ -19,7 +20,7 @@ public class HttpHeaderBuilderTest {
     private HttpRequest.Builder httpRequestBuilder;
 
     private final EnvironmentDto environment = new EnvironmentDto(){{
-        setEnvs(List.of(new KeyValueItemDto("foo", "bar")));
+        setEnvs(List.of(new EnvironmentItemDto("foo", "bar")));
     }};
 
     @BeforeEach

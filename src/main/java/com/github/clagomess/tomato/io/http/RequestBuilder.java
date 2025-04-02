@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.io.http;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class RequestBuilder {
-    private final List<KeyValueItemDto> envs;
+    private final List<EnvironmentItemDto> envs;
 
     public RequestBuilder() throws IOException {
         this.envs = new EnvironmentRepository().getWorkspaceSessionEnvironment()

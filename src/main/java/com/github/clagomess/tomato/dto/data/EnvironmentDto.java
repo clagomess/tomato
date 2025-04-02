@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ public class EnvironmentDto extends MetadataDto {
     private static final String DEFAULT_NAME = "New Environment";
 
     private String name;
-    private List<KeyValueItemDto> envs;
+    private List<EnvironmentItemDto> envs;
     private boolean production;
 
     public String getName() {
@@ -27,7 +27,7 @@ public class EnvironmentDto extends MetadataDto {
         return name;
     }
 
-    public List<KeyValueItemDto> getEnvs() {
+    public List<EnvironmentItemDto> getEnvs() {
         if(envs == null) envs = new ArrayList<>();
         return envs;
     }
