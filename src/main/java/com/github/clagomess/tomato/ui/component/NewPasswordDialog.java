@@ -145,4 +145,9 @@ public class NewPasswordDialog extends JDialog {
 
         strength.setString(result.getBits() + " bits");
     }
+
+    public String showDialog(){
+        setVisible(true);
+        return new String(txtPassword.getPassword());
+    }
 }

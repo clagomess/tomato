@@ -39,6 +39,10 @@ public class PasswordDialog extends JDialog {
 
         pack();
         setLocationRelativeTo(parent);
+    }
+
+    public String showDialog(){
         setVisible(true);
+        return new String(txtPassword.getPassword());
     }
 }
