@@ -6,6 +6,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.formdev.flatlaf.FlatClientProperties.STYLE;
+
 public class PasswordDialog extends JDialog {
     private final JPasswordField txtPassword = new JPasswordField();
     private final JButton btnSubmit = new JButton("Submit");
@@ -26,6 +28,8 @@ public class PasswordDialog extends JDialog {
                 "",
                 "[][grow, fill]"
         ));
+
+        txtPassword.putClientProperty(STYLE, "showRevealButton: true");
 
         add(new JLabel("Password:"));
         add(txtPassword, "wrap");

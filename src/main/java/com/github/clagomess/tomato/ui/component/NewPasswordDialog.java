@@ -10,9 +10,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 
+import static com.formdev.flatlaf.FlatClientProperties.STYLE;
 import static com.github.clagomess.tomato.ui.component.ColorConstant.*;
 
 public class NewPasswordDialog extends JDialog {
+    private static final String DEFAULT_STYLE = "showRevealButton: true";
+    private static final String ERROR_STYLE = "outline: error; showRevealButton: true";
+
     private final JPasswordField txtPassword = new JPasswordField();
     private final JPasswordField txtConfirmPassword = new JPasswordField();
     private final JProgressBar strength = new JProgressBar();
@@ -67,7 +71,7 @@ public class NewPasswordDialog extends JDialog {
         txtPassword.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                txtPassword.putClientProperty("FlatLaf.style", "");
+                txtPassword.putClientProperty(STYLE, DEFAULT_STYLE);
                 refreshStrength();
                 checkPasswordsEquals();
             }
@@ -75,7 +79,7 @@ public class NewPasswordDialog extends JDialog {
             @Override
             public void removeUpdate(DocumentEvent e) {
                 if(e.getDocument().getLength() == 0){
-                    txtPassword.putClientProperty("FlatLaf.style", "outline: error");
+                    txtPassword.putClientProperty(STYLE, ERROR_STYLE);
                 }
 
                 refreshStrength();
@@ -109,10 +113,10 @@ public class NewPasswordDialog extends JDialog {
         var confirmPassword = new String(txtConfirmPassword.getPassword());
 
         if (StringUtils.equals(password, confirmPassword)) {
-            txtConfirmPassword.putClientProperty("FlatLaf.style", "");
+            txtConfirmPassword.putClientProperty(STYLE, DEFAULT_STYLE);
             btnSubmit.setEnabled(true);
         }else{
-            txtConfirmPassword.putClientProperty("FlatLaf.style", "outline: error");
+            txtConfirmPassword.putClientProperty(STYLE, ERROR_STYLE);
             btnSubmit.setEnabled(false);
         }
     }

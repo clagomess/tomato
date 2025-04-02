@@ -9,6 +9,8 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.formdev.flatlaf.FlatClientProperties.STYLE_CLASS;
+
 public class AboutFrame extends JFrame {
     public AboutFrame(MainFrame mainFrame) {
         setTitle("About");
@@ -27,7 +29,7 @@ public class AboutFrame extends JFrame {
 
         // title
         var title = new JLabel("Tomato");
-        title.putClientProperty("FlatLaf.styleClass", "h1");
+        title.putClientProperty(STYLE_CLASS, "h1");
         add(title, "wrap 10");
 
         // uri
@@ -40,7 +42,7 @@ public class AboutFrame extends JFrame {
                 RevisionUtil.getInstance().getDeployTag(),
                 RevisionUtil.getInstance().getDeployCommit()
         ));
-        release.putClientProperty("FlatLaf.styleClass", "small");
+        release.putClientProperty(STYLE_CLASS, "small");
         add(release);
 
         pack();

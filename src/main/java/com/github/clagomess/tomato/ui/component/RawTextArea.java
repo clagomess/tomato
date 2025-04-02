@@ -3,12 +3,14 @@ package com.github.clagomess.tomato.ui.component;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 
+import static com.formdev.flatlaf.FlatClientProperties.STYLE;
+
 public class RawTextArea extends JTextArea {
     public RawTextArea() {
         setLineWrap(true);
         setWrapStyleWord(true);
         setEditable(false);
-        putClientProperty("FlatLaf.style", "font: monospaced -1");
+        putClientProperty(STYLE, "font: monospaced -1");
     }
 
     public void reset(){
