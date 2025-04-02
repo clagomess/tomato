@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -99,22 +100,27 @@ public class EnvironmentSecret {
                 );
     }
 
-    public UUID saveEntry(
-            @Nullable UUID entryId,
-            @NotNull String key,
-            @NotNull String value
+    public List<Entry> saveEntries(
+            @NotNull List<Entry> entries
     ) throws IOException {
+        if(entries.isEmpty()) return entries;
+
         var database = getDatabase();
 
-        if(entryId == null) entryId = UUID.randomUUID();
+        for(var item : entries){
+            if(item.getEntryId() == null){
+                item.setEntryId(UUID.randomUUID());
+            }
 
-        var entry = database.newEntry();
-        entry.setTitle(key);
-        entry.setUsername(entryId.toString());
-        entry.setPassword(value);
+            var entry = database.newEntry();
+            entry.setTitle(item.getKey());
+            entry.setUsername(item.getEntryId().toString());
+            entry.setPassword(item.getValue());
 
-        removeEntry(database, entryId);
-        database.getRootGroup().addEntry(entry);
+            removeEntry(database, item.getEntryId());
+            database.getRootGroup().addEntry(entry);
+        }
+
 
         KdbxCreds credential = getCredential(databaseFile.isFile() ?
                 getPassword.get() :
@@ -123,7 +129,7 @@ public class EnvironmentSecret {
 
         saveDatabase(database, credential);
 
-        return entryId;
+        return entries;
     }
 
     public Optional<String> loadSecret(
@@ -143,5 +149,23 @@ public class EnvironmentSecret {
     public void changeDatabasePassword() throws IOException {
         var database = getDatabase();
         saveDatabase(database, getCredential(getNewPassword.get()));
+    }
+
+    @Getter
+    public static class Entry {
+        @Setter
+        private UUID entryId;
+        private final String key;
+        private final String value;
+
+        public Entry(
+                @Nullable UUID entryId,
+                @NotNull String key,
+                @NotNull String value
+        ) {
+            this.entryId = entryId;
+            this.key = key;
+            this.value = value;
+        }
     }
 }

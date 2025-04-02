@@ -12,6 +12,7 @@ import org.linguafranca.pwdb.kdbx.jackson.JacksonDatabase;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,11 +102,11 @@ public class EnvironmentSecretTest extends RepositoryStubs {
     class saveEntry {
         @Test
         public void whenNewEntry() throws IOException {
-            var entryId = environmentSecretsEmpty.saveEntry(
+            var entries = environmentSecretsEmpty.saveEntries(List.of(new EnvironmentSecret.Entry(
                     null,
                     "token",
                     "mysecrettoken"
-            );
+            )));
 
             var database = environmentSecretsEmpty.getDatabase();
             var result = database.getRootGroup().findEntries("token", false)
@@ -114,7 +115,7 @@ public class EnvironmentSecretTest extends RepositoryStubs {
                     .orElseThrow();
 
             assertEquals("token", result.getTitle());
-            assertEquals(entryId.toString(), result.getUsername());
+            assertEquals(entries.get(0).getEntryId().toString(), result.getUsername());
             assertEquals("mysecrettoken", result.getPassword());
         }
 
@@ -123,11 +124,11 @@ public class EnvironmentSecretTest extends RepositoryStubs {
             var entryId = UUID.randomUUID();
 
             for(int i = 0; i <= 2; i++) {
-                environmentSecretsEmpty.saveEntry(
+                environmentSecretsEmpty.saveEntries(List.of(new EnvironmentSecret.Entry(
                         entryId,
                         "token",
                         "mysecrettoken"
-                );
+                )));
             }
 
             var database = environmentSecretsEmpty.getDatabase();
