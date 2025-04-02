@@ -1,11 +1,12 @@
 package com.github.clagomess.tomato.io.keepass;
 
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.linguafranca.pwdb.base.AbstractEntry;
 import org.linguafranca.pwdb.kdbx.KdbxCreds;
 import org.linguafranca.pwdb.kdbx.jackson.JacksonDatabase;
@@ -152,20 +153,17 @@ public class EnvironmentSecret {
     }
 
     @Getter
+    @AllArgsConstructor
     public static class Entry {
         @Setter
         private UUID entryId;
         private final String key;
         private final String value;
 
-        public Entry(
-                @Nullable UUID entryId,
-                @NotNull String key,
-                @NotNull String value
-        ) {
-            this.entryId = entryId;
-            this.key = key;
-            this.value = value;
+        public Entry(EnvironmentItemDto item) {
+            this.entryId = item.getSecretId();
+            this.key = item.getKey();
+            this.value = item.getValue();
         }
     }
 }

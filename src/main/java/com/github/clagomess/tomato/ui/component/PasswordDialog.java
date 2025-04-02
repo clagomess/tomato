@@ -30,6 +30,7 @@ public class PasswordDialog extends JDialog {
         ));
 
         txtPassword.putClientProperty(STYLE, "showRevealButton: true");
+        btnSubmit.addActionListener(l -> dispose());
 
         add(new JLabel("Password:"));
         add(txtPassword, "wrap");

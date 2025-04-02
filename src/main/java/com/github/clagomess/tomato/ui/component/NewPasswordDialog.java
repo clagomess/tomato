@@ -46,6 +46,7 @@ public class NewPasswordDialog extends JDialog {
         strength.setMinimum(0);
         strength.setStringPainted(true);
         btnSubmit.setEnabled(false);
+        btnSubmit.addActionListener(l -> dispose());
 
         add(new JLabel("Password:"));
         add(txtPassword, "wrap");

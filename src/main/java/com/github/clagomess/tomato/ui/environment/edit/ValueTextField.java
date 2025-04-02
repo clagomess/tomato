@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 import static com.formdev.flatlaf.FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT;
 import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.TEXT;
@@ -18,20 +17,26 @@ import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeE
 @Slf4j
 public class ValueTextField extends ListenableTextField {
     private static final String UNKNOW_SECRET = "***";
+
     private final EnvironmentItemDto item;
+    private final OnChangeFI onChangeFI;
+
     private final EnvironmentSecret environmentSecret;
 
     private final IconButton btnEditSecret = new IconButton(new BxSaveIcon(), "Edit Secret");
 
     public ValueTextField(
             @NotNull String environmentId,
-            @NotNull EnvironmentItemDto item
+            @NotNull EnvironmentItemDto item,
+            OnChangeFI onChangeFI
     ) {
         this.item = item;
+        this.onChangeFI = onChangeFI;
         this.environmentSecret = getEnvironmentSecret(environmentId);
 
         if(item.getType() == TEXT) {
-            addOnChange(item::setValue);
+            setText(item.getValue());
+            addOnChange(onChangeFI);
         }else{
             setText(UNKNOW_SECRET);
             setEnabled(false);
@@ -62,25 +67,17 @@ public class ValueTextField extends ListenableTextField {
 
     public void btnEditSecretAction(){
         try {
-            UUID uuid = null;
+            String text = null;
 
-            try {
-                uuid = UUID.fromString(item.getValue());
-            }catch (Throwable e){
-                log.warn(e.getMessage());
-                setText("");
-            }
-
-            if(uuid != null) {
-                environmentSecret.loadSecret(uuid)
-                        .ifPresentOrElse(
-                                this::setText,
-                                () -> setText("")
-                        );
+            if(item.getSecretId() != null) {
+                text = environmentSecret.loadSecret(item.getSecretId())
+                        .orElse(null);
             }
 
             btnEditSecret.setEnabled(false);
             setEnabled(true);
+            setText(text);
+            addOnChange(onChangeFI);
         } catch (Throwable e) {
             new ExceptionDialog(this, e);
         }

@@ -75,8 +75,8 @@ class Row extends JPanel {
         });
         add(txtKey, "width 150!");
 
-        txtValue = new ValueTextField(environmentId, item);
-        txtValue.addOnChange(value -> {
+        txtValue = new ValueTextField(environmentId, item, value -> {
+            item.setValue(value);
             updateStagingMonitor();
         });
         add(txtValue, "width 150:150:100%");

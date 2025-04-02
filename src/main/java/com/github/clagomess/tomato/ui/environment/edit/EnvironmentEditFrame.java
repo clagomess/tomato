@@ -1,7 +1,6 @@
 package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum;
 import com.github.clagomess.tomato.io.keepass.EnvironmentSecret;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
@@ -16,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
@@ -121,12 +121,21 @@ public class EnvironmentEditFrame extends JFrame {
 
     private void btnSaveAction(){
         new WaitExecution(this, btnSave, () -> {
-            /*
-            environment.getEnvs().stream()
+            List<EnvironmentSecret.Entry> secretsToSave = environment.getEnvs().stream()
                     .filter(item -> item.getType().equals(SECRET))
-                    .map(item -> new EnvironmentSecret.Entry())
-            ;
-             */
+                    .filter(item -> item.getValue() != null)
+                    .map(EnvironmentSecret.Entry::new)
+                    .toList();
+
+            environmentSecret.saveEntries(secretsToSave).forEach(entry ->
+                environment.getEnvs().stream()
+                        .filter(env -> env.getKey().equals(entry.getKey()))
+                        .findFirst()
+                        .ifPresent(env -> {
+                            env.setSecretId(entry.getEntryId());
+                            env.setValue(null);
+                        })
+            );
 
             environmentRepository.save(environment);
 
