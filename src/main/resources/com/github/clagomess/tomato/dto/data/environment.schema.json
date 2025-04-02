@@ -27,6 +27,9 @@
           "type": {
             "enum": ["TEXT", "SECRET"]
           },
+          "secretId": {
+            "type": ["string", "null"]
+          },
           "key": {
             "type": "string"
           },

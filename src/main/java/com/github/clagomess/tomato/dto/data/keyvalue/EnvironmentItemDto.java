@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.UUID;
+
 import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.TEXT;
 
 @Getter
@@ -16,6 +18,7 @@ import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeE
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EnvironmentItemDto implements Comparable<EnvironmentItemDto> {
     private EnvironmentItemTypeEnum type;
+    private UUID secretId;
     private String key;
     private String value;
 

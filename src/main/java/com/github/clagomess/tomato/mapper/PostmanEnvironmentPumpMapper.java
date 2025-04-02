@@ -18,6 +18,7 @@ public interface PostmanEnvironmentPumpMapper {
     @Mapping(target = "production", ignore = true)
     EnvironmentDto toEnvironmentDto(PostmanEnvironmentDto source);
 
+    @Mapping(target = "secretId", ignore = true)
     @Mapping(target = "type", ignore = true)
     EnvironmentItemDto map(PostmanEnvironmentDto.Value source);
 }
