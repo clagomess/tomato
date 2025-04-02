@@ -4,7 +4,8 @@ import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.io.keepass.EnvironmentSecret;
 import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.ui.component.*;
-import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSaveIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLockIcon;
+import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLockOpenIcon;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,11 @@ public class ValueTextField extends ListenableTextField {
 
     private final EnvironmentSecret environmentSecret;
 
-    private final IconButton btnEditSecret = new IconButton(new BxSaveIcon(), "Edit Secret");
+    private final IconButton btnUnlockSecret = new IconButton(
+            new BxLockIcon(),
+            new BxLockOpenIcon(),
+            "Unlock Secret"
+    );
 
     public ValueTextField(
             @NotNull String environmentId,
@@ -42,11 +47,11 @@ public class ValueTextField extends ListenableTextField {
             setEnabled(false);
             putClientProperty(
                     TEXT_FIELD_TRAILING_COMPONENT,
-                    btnEditSecret
+                    btnUnlockSecret
             );
         }
 
-        btnEditSecret.addActionListener(e -> btnEditSecretAction());
+        btnUnlockSecret.addActionListener(e -> btnEditSecretAction());
     }
 
     private EnvironmentSecret getEnvironmentSecret(String environmentId) {
@@ -74,7 +79,7 @@ public class ValueTextField extends ListenableTextField {
                         .orElse(null);
             }
 
-            btnEditSecret.setEnabled(false);
+            btnUnlockSecret.setEnabled(false);
             setEnabled(true);
             setText(text);
             addOnChange(onChangeFI);

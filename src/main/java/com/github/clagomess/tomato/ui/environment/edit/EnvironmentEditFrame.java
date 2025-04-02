@@ -69,14 +69,14 @@ public class EnvironmentEditFrame extends JFrame {
 
         setLayout(new MigLayout(
                 "insets 10",
-                "[grow]"
+                "[][grow, fill]"
         ));
-        add(new JLabel("Name"), "wrap");
-        add(txtName, "width 100%, wrap");
-        add(new JLabel("Production?"), "wrap");
+        add(new JLabel("Name:"));
+        add(txtName, "wrap");
+        add(new JLabel("Production?:"));
         add(chkProduction, "wrap");
-        add(keyValue, "width 100%, height 100%, wrap");
-        add(btnSave, "align right");
+        add(keyValue, "span 2, width 100%, height 100%, wrap");
+        add(btnSave, "span 2, align right");
 
         btnSave.addActionListener(l -> btnSaveAction());
 

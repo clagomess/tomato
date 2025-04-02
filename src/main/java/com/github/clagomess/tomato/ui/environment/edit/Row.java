@@ -66,7 +66,7 @@ class Row extends JPanel {
             item.setType((EnvironmentItemTypeEnum) cbType.getSelectedItem());
             updateStagingMonitor();
         });
-        add(cbType, "width 70!");
+        add(cbType, "width 80!");
 
         txtKey.setText(item.getKey());
         txtKey.addOnChange(value -> {
