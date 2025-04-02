@@ -45,7 +45,7 @@ public class PasswordEntropyCalculator {
         return result;
     }
 
-    protected Entropy calculateEntropy(String password){
+    public Entropy calculateEntropy(String password){
         Set<Character> uniqueSymbols = getUniqueSymbols(password);
         if(uniqueSymbols.isEmpty()) return new Entropy(0, 0, 0);
 
