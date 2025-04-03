@@ -63,7 +63,7 @@ public class EnvironmentEditFrame extends JFrame {
             updateStagingMonitor();
         });
         keyValue = new KeyValue(
-                environment.getId(),
+                environmentSecret,
                 environment.getEnvs()
         );
 

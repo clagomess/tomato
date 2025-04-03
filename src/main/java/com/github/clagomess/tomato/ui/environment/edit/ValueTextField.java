@@ -2,15 +2,13 @@ package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.io.keepass.EnvironmentSecret;
-import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
-import com.github.clagomess.tomato.ui.component.*;
+import com.github.clagomess.tomato.ui.component.ExceptionDialog;
+import com.github.clagomess.tomato.ui.component.IconButton;
+import com.github.clagomess.tomato.ui.component.ListenableTextField;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLockIcon;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLockOpenIcon;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.io.IOException;
 
 import static com.formdev.flatlaf.FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT;
 import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.TEXT;
@@ -31,13 +29,13 @@ public class ValueTextField extends ListenableTextField {
     );
 
     public ValueTextField(
-            @NotNull String environmentId,
+            @NotNull EnvironmentSecret environmentSecret,
             @NotNull EnvironmentItemDto item,
             OnChangeFI onChangeFI
     ) {
         this.item = item;
         this.onChangeFI = onChangeFI;
-        this.environmentSecret = getEnvironmentSecret(environmentId);
+        this.environmentSecret = environmentSecret;
 
         if(item.getType() == TEXT) {
             setText(item.getValue());
@@ -52,22 +50,6 @@ public class ValueTextField extends ListenableTextField {
         }
 
         btnUnlockSecret.addActionListener(e -> btnEditSecretAction());
-    }
-
-    private EnvironmentSecret getEnvironmentSecret(String environmentId) {
-        try {
-            File workspacePath = new WorkspaceRepository()
-                    .getDataSessionWorkspace()
-                    .getPath();
-
-            var environmentSecret = new EnvironmentSecret(workspacePath, environmentId);
-            environmentSecret.setGetPassword(() -> new PasswordDialog(this).showDialog());
-            environmentSecret.setGetNewPassword(() -> new NewPasswordDialog(this).showDialog());
-
-            return environmentSecret;
-        }catch (IOException e){
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
 
     public void btnEditSecretAction(){

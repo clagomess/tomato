@@ -2,6 +2,7 @@ package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum;
+import com.github.clagomess.tomato.io.keepass.EnvironmentSecret;
 import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
@@ -11,6 +12,7 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +42,7 @@ class Row extends JPanel {
 
     public Row(
             Container parent,
-            String environmentId,
+            @NotNull EnvironmentSecret environmentSecret,
             List<EnvironmentItemDto> list,
             EnvironmentItemDto item
     ){
@@ -75,7 +77,7 @@ class Row extends JPanel {
         });
         add(txtKey, "width 150!");
 
-        txtValue = new ValueTextField(environmentId, item, value -> {
+        txtValue = new ValueTextField(environmentSecret, item, value -> {
             item.setValue(value);
             updateStagingMonitor();
         });
