@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.ui.component;
 
 import com.github.clagomess.tomato.io.keepass.PasswordEntropyCalculator;
+import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -33,11 +34,12 @@ public class NewPasswordDialog extends JDialog {
                 Dialog.DEFAULT_MODALITY_TYPE
         );
 
+        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(350, 100));
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setLayout(new MigLayout(
-                "",
+                "insets 10",
                 "[][grow, fill]"
         ));
 
@@ -48,6 +50,7 @@ public class NewPasswordDialog extends JDialog {
         btnSubmit.setEnabled(false);
         btnSubmit.addActionListener(l -> dispose());
 
+        add(new JLabel("Create a new keystore for current environment:"), "span 2, wrap");
         add(new JLabel("Password:"));
         add(txtPassword, "wrap");
         add(new JLabel("Confirm password:"));

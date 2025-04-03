@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.ui.component;
 
+import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,17 +22,19 @@ public class PasswordDialog extends JDialog {
                 Dialog.DEFAULT_MODALITY_TYPE
         );
 
+        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(350, 100));
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setLayout(new MigLayout(
-                "",
+                "insets 10",
                 "[][grow, fill]"
         ));
 
         txtPassword.putClientProperty(STYLE, "showRevealButton: true");
         btnSubmit.addActionListener(l -> dispose());
 
+        add(new JLabel("Enter the password for the current environment keystore:"), "span 2, wrap");
         add(new JLabel("Password:"));
         add(txtPassword, "wrap");
         add(btnSubmit, "span 2, align right");

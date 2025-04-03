@@ -75,15 +75,19 @@ public class EnvironmentSecret {
     }
 
     protected JacksonDatabase getDatabase() throws IOException {
-        if (databaseFile.isFile()) {
-            try(FileInputStream fis = new FileInputStream(databaseFile)) {
-                return JacksonDatabase.load(
-                        getCredential(),
-                        fis
-                );
-            }
-        }else{
-            return new JacksonDatabase();
+        if(!databaseFile.isFile()) return new JacksonDatabase();
+
+        try (FileInputStream fis = new FileInputStream(databaseFile)) {
+            return JacksonDatabase.load(
+                    getCredential(),
+                    fis
+            );
+        } catch (IllegalStateException e) {
+            credentialCache.evict(databaseFile);
+            throw new IllegalStateException("Invalid password or corrupted keystore", e);
+        } catch (IOException e) {
+            credentialCache.evict(databaseFile);
+            throw e;
         }
     }
 
