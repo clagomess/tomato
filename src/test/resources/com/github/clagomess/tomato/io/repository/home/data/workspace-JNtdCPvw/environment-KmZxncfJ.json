@@ -1,16 +1,18 @@
 {
   "id" : "KmZxncfJ",
   "createTime" : "2025-01-08T10:35:34",
-  "updateTime" : "2025-03-26T16:06:18",
+  "updateTime" : "2025-04-03T11:48:04",
   "name" : "Local",
   "envs" : [ {
+    "type" : "TEXT",
+    "secretId" : null,
     "key" : "echoServer",
-    "value" : "http://localhost:8000",
-    "selected" : true
+    "value" : "http://localhost:8000"
   }, {
+    "type" : "SECRET",
+    "secretId" : "b77de78d-e521-42b8-acba-5d1fc208b48a",
     "key" : "token",
-    "value" : "xyz",
-    "selected" : true
+    "value" : null
   } ],
   "production" : false
 }
