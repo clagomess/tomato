@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.io.keepass;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import com.github.clagomess.tomato.util.CacheManager;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,15 +25,20 @@ import java.util.function.Supplier;
 
 public class EnvironmentSecret {
     private static final String FILE_NAME = "environment-%s.kdbx";
+    private static final String MSG_BLANK_PASSWORD = "Password is blank";
 
     @Getter(AccessLevel.PROTECTED)
     private final File databaseFile;
 
     @Setter
-    private Supplier<String> getPassword = () -> null;
+    private Supplier<String> getPassword = () -> {
+        throw new RuntimeException("Needs override 'getPassword'");
+    };
 
     @Setter
-    private Supplier<String> getNewPassword = () -> null;
+    private Supplier<String> getNewPassword = () -> {
+        throw new RuntimeException("Needs override 'getNewPassword'");
+    };
 
     public EnvironmentSecret(
             File workspacePath,
@@ -44,9 +50,25 @@ public class EnvironmentSecret {
         );
     }
 
-    protected KdbxCreds getCredential(String password) {
+    protected static final CacheManager<File, KdbxCreds> credentialCache = new CacheManager<>();
+    protected KdbxCreds getCredential() {
+        return credentialCache.get(databaseFile, () -> {
+            String password = getPassword.get();
+
+            if(StringUtils.isBlank(password)){
+                throw new IllegalArgumentException(MSG_BLANK_PASSWORD);
+            }
+
+            return new KdbxCreds(password.getBytes());
+        });
+    }
+
+    protected KdbxCreds getNewCredential() {
+        credentialCache.evict(databaseFile);
+        String password = getNewPassword.get();
+
         if(StringUtils.isBlank(password)){
-            throw new IllegalArgumentException("The password is blank");
+            throw new IllegalArgumentException(MSG_BLANK_PASSWORD);
         }
 
         return new KdbxCreds(password.getBytes());
@@ -56,7 +78,7 @@ public class EnvironmentSecret {
         if (databaseFile.isFile()) {
             try(FileInputStream fis = new FileInputStream(databaseFile)) {
                 return JacksonDatabase.load(
-                        getCredential(getPassword.get()),
+                        getCredential(),
                         fis
                 );
             }
@@ -122,11 +144,9 @@ public class EnvironmentSecret {
             database.getRootGroup().addEntry(entry);
         }
 
-
-        KdbxCreds credential = getCredential(databaseFile.isFile() ?
-                getPassword.get() :
-                getNewPassword.get()
-        );
+        KdbxCreds credential = databaseFile.isFile() ?
+                getCredential() :
+                getNewCredential();
 
         saveDatabase(database, credential);
 
@@ -149,7 +169,7 @@ public class EnvironmentSecret {
 
     public void changeDatabasePassword() throws IOException {
         var database = getDatabase();
-        saveDatabase(database, getCredential(getNewPassword.get()));
+        saveDatabase(database, getNewCredential());
     }
 
     @Getter

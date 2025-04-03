@@ -35,7 +35,7 @@ public class NewPasswordDialog extends JDialog {
 
         setMinimumSize(new Dimension(350, 100));
         setResizable(false);
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setLayout(new MigLayout(
                 "",
                 "[][grow, fill]"
@@ -65,7 +65,6 @@ public class NewPasswordDialog extends JDialog {
 
         pack();
         setLocationRelativeTo(parent);
-        setVisible(true);
     }
 
     private void addPasswordChangeListener() {

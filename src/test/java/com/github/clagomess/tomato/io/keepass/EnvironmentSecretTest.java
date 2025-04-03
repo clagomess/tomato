@@ -24,6 +24,8 @@ public class EnvironmentSecretTest extends RepositoryStubs {
 
     @BeforeEach
     public void setup() {
+        EnvironmentSecret.credentialCache.evictAll();
+
         environmentSecretsEmpty = new EnvironmentSecret(
                 mockDataDir,
                 RandomStringUtils.secure().nextAlphanumeric(8)
