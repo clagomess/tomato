@@ -7,7 +7,11 @@ import java.util.UUID;
 
 @Slf4j
 public class KeyPublisher<K, T> extends BasePublisher<K, T> {
-    public UUID addListener(K key, OnChangeFI<T> runnable) {
+    public UUID addListener(K key, EventPublishFI<T> runnable) {
+        return addListenerGeneric(key, runnable);
+    }
+
+    private UUID addListenerGeneric(K key, EventFI<T> runnable) {
         Listener<K, T> listener = new Listener<>(key, runnable);
 
         if(log.isDebugEnabled()){
@@ -37,7 +41,7 @@ public class KeyPublisher<K, T> extends BasePublisher<K, T> {
     public void publish(K key, T event){
         if(log.isDebugEnabled()) log.debug("Publishing: {} - {}", key, event);
 
-        listeners.stream().parallel()
+        listeners.parallelStream()
                 .filter(item -> Objects.equals(item.getKey(), key))
                 .forEach(listener -> {
                     if (log.isDebugEnabled()) {
@@ -49,7 +53,9 @@ public class KeyPublisher<K, T> extends BasePublisher<K, T> {
                         );
                     }
 
-                    listener.getRunnable().change(event);
+                    if(listener.getRunnable() instanceof EventPublishFI<T> runnable){
+                        runnable.run(event);
+                    }
                 });
     }
 }

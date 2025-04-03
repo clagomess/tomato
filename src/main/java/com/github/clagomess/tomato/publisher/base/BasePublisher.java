@@ -28,18 +28,25 @@ abstract class BasePublisher<K, T> {
         }
     }
 
+    public interface EventFI<T> {}
+
     @FunctionalInterface
-    public interface OnChangeFI<T> {
-        void change(T event);
+    public interface EventPublishFI<T> extends EventFI<T> {
+        void run(T event);
+    }
+
+    @FunctionalInterface
+    public interface EventRequestFI<T> extends EventFI<T> {
+        T get();
     }
 
     @Getter
     protected static class Listener<K, T> {
         private final UUID uuid = UUID.randomUUID();
         private final K key;
-        private final OnChangeFI<T> runnable;
+        private final EventFI<T> runnable;
 
-        public Listener(K key, OnChangeFI<T> runnable) {
+        public Listener(K key, EventFI<T> runnable) {
             this.key = key;
             this.runnable = runnable;
         }

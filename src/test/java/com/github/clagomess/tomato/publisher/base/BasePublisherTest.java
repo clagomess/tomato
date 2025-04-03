@@ -18,7 +18,7 @@ public class BasePublisherTest {
         IntStream.range(0, 100).forEach(i -> {
             var listener = new BasePublisher.Listener<String, String>(
                     RandomStringUtils.secure().nextAlphanumeric(8),
-                    (event) -> {}
+                    new BasePublisher.EventFI<>(){}
             );
 
             publisher.getListeners().add(listener);

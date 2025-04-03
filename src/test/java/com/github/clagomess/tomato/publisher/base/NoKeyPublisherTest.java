@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 public class NoKeyPublisherTest {
@@ -74,5 +75,14 @@ public class NoKeyPublisherTest {
                     var dummy = RandomStringUtils.secure().nextAlphanumeric(8);
                     publisher.publish(dummy);
                 });
+    }
+
+    @Test
+    public void request(){
+        NoKeyPublisher<String> publisher = new NoKeyPublisher<>();
+        publisher.addListener(() -> "opa1");
+        publisher.addListener(() -> "opa2");
+
+        assertEquals("opa2", publisher.request());
     }
 }
