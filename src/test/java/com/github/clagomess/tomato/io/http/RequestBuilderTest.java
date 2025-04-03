@@ -14,10 +14,12 @@ public class RequestBuilderTest {
             "myvalue,myvalue",
             "{{foo}},bar",
             "a-{{bar}},a-{{bar}}",
+            "a-{{null-env}},a-",
     })
     public void injectEnvironment(String input, String expected){
         List<EnvironmentItemDto> envs = List.of(
-                new EnvironmentItemDto("foo", "bar")
+                new EnvironmentItemDto("foo", "bar"),
+                new EnvironmentItemDto("null-env", null)
         );
 
         var result = new RequestBuilder(envs)

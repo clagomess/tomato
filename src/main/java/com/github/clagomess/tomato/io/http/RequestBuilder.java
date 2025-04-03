@@ -34,13 +34,14 @@ public class RequestBuilder {
 
         for(var env : envs) {
             int idx = 0;
-            var key = String.format("{{%s}}", env.getKey());
+            var envKey = String.format("{{%s}}", env.getKey());
+            var envValue = env.getValue() != null ? env.getValue() : "";
 
-            while ((idx = valueBuilder.indexOf(key, idx)) != -1){
+            while ((idx = valueBuilder.indexOf(envKey, idx)) != -1){
                 valueBuilder.replace(
                         idx,
-                        idx + key.length(),
-                        env.getValue()
+                        idx + envKey.length(),
+                        envValue
                 );
             }
         }
