@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static com.formdev.flatlaf.FlatClientProperties.STYLE;
+import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 public class PasswordDialog extends JDialog {
     private final JPasswordField txtPassword = new JPasswordField();
@@ -21,6 +22,8 @@ public class PasswordDialog extends JDialog {
                 "Enter Password",
                 Dialog.DEFAULT_MODALITY_TYPE
         );
+
+        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
 
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(350, 100));

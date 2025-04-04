@@ -1,16 +1,13 @@
 package com.github.clagomess.tomato.io.http;
 
-import com.github.clagomess.tomato.dto.data.EnvironmentDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import com.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
-import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
+import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -18,10 +15,10 @@ import java.util.stream.Stream;
 public class RequestBuilder {
     private final List<EnvironmentItemDto> envs;
 
-    public RequestBuilder() throws IOException {
-        this.envs = new EnvironmentRepository().getWorkspaceSessionEnvironment()
-                .map(EnvironmentDto::getEnvs)
-                .orElse(Collections.emptyList());
+    public RequestBuilder() {
+        this.envs = EnvironmentPublisher.getInstance()
+                .getCurrentEnvs()
+                .request();
     }
 
     protected String injectEnvironment(

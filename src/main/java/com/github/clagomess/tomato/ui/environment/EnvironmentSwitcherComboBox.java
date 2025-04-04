@@ -1,9 +1,7 @@
 package com.github.clagomess.tomato.ui.environment;
 
 import com.github.clagomess.tomato.controller.environment.EnvironmentComboBoxController;
-import com.github.clagomess.tomato.ui.component.ExceptionDialog;
-import com.github.clagomess.tomato.ui.component.IconButton;
-import com.github.clagomess.tomato.ui.component.WaitExecution;
+import com.github.clagomess.tomato.ui.component.*;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import com.github.clagomess.tomato.ui.environment.edit.EnvironmentEditFrame;
 import net.miginfocom.swing.MigLayout;
@@ -14,9 +12,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
-import static javax.swing.SwingUtilities.invokeLater;
+import static javax.swing.SwingUtilities.*;
 
 public class EnvironmentSwitcherComboBox extends JPanel {
     private final EnvironmentComboBox comboBox = new EnvironmentComboBox();
@@ -25,6 +25,8 @@ public class EnvironmentSwitcherComboBox extends JPanel {
     private final EnvironmentComboBoxController controller = new EnvironmentComboBoxController();
 
     public EnvironmentSwitcherComboBox(){
+        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+
         setLayout(new MigLayout(
                 "insets 2",
                 "[grow, fill][]"
@@ -32,7 +34,7 @@ public class EnvironmentSwitcherComboBox extends JPanel {
         add(comboBox, "width ::100% - 32px");
         add(btnEdit);
 
-        invokeLater(this::refreshItems);
+        refreshItems();
 
         controller.addEnvironmentOnChangeListener(() -> invokeLater(this::refreshItems));
         controller.addWorkspaceOnSwitchListener(() -> invokeLater(this::refreshItems));
@@ -49,6 +51,8 @@ public class EnvironmentSwitcherComboBox extends JPanel {
     }
 
     private void refreshItems() {
+        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+
         Arrays.stream(comboBox.getActionListeners())
                 .forEach(comboBox::removeActionListener);
         comboBox.removeAllItems();
@@ -64,11 +68,12 @@ public class EnvironmentSwitcherComboBox extends JPanel {
                             comboBox.addItem(item);
                             if(selected) comboBox.setSelectedItem(item);
                         }),
-                        () -> invokeLater(() -> {
+                        () -> new WaitExecution(this, () -> {
                             setBtnEditEnabledOrDisabled();
+                            refreshEnvironmentCurrentEnvsListener();
                             comboBox.addActionListener(event ->
                                     setWorkspaceSessionSelected());
-                        })
+                        }).execute()
                 );
             } catch (Throwable e){
                 invokeLater(() -> new ExceptionDialog(this, e));
@@ -87,7 +92,47 @@ public class EnvironmentSwitcherComboBox extends JPanel {
         new WaitExecution(this, () -> {
             controller.setWorkspaceSessionSelected(comboBox.getSelectedItem());
             setBtnEditEnabledOrDisabled();
+            refreshEnvironmentCurrentEnvsListener();
         }).execute();
+    }
+
+    private void refreshEnvironmentCurrentEnvsListener() throws IOException {
+        Supplier<String> getPassword = () -> {
+            if(isEventDispatchThread()){
+                return new PasswordDialog(this).showDialog();
+            }
+
+            var result = new AtomicReference<String>();
+            try {
+                invokeAndWait(() -> result.set(
+                        new PasswordDialog(this).showDialog()
+                ));
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+            return result.get();
+        };
+
+        Supplier<String> getNewPassword = () -> {
+            if(isEventDispatchThread()){
+                return new NewPasswordDialog(this).showDialog();
+            }
+
+            var result = new AtomicReference<String>();
+            try {
+                invokeAndWait(() -> result.set(
+                        new NewPasswordDialog(this).showDialog()
+                ));
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+            return result.get();
+        };
+
+        controller.refreshEnvironmentCurrentEnvsListener(
+                getPassword,
+                getNewPassword
+        );
     }
 
     private void btnEditAction(
