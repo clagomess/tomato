@@ -1,5 +1,6 @@
 package com.github.clagomess.tomato.io.keepass;
 
+import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.io.repository.RepositoryStubs;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
@@ -142,13 +144,49 @@ public class EnvironmentSecretTest extends RepositoryStubs {
         }
     }
 
-    @Test
-    public void loadSecret() throws IOException {
-        var secret = environmentSecretsExisting.loadSecret(
-                UUID.fromString("28780cff-2570-415f-8e9d-b91d891beb25")
-        );
+    @Nested
+    class loadSecret {
+        @Test
+        public void loadSecret_byUUID() throws IOException {
+            var secret = environmentSecretsExisting.loadSecret(
+                    UUID.fromString("28780cff-2570-415f-8e9d-b91d891beb25")
+            );
 
-        assertEquals("mysecrettoken", secret.orElseThrow());
+            assertEquals("mysecrettoken", secret.orElseThrow());
+        }
+
+        @Test
+        public void loadSecret_ByItensWithoutSecretType() throws IOException {
+            var input = List.of(new EnvironmentItemDto("key", "value"));
+            var result = environmentSecretsExisting.loadSecret(input);
+            Assertions.assertThat(result)
+                    .isEqualTo(input);
+        }
+
+        @Test
+        public void loadSecret_ByItensWithSecretType() throws IOException {
+            var optA = new EnvironmentItemDto("key", "value");
+            var optB = new EnvironmentItemDto(
+                    SECRET,
+                    UUID.fromString("28780cff-2570-415f-8e9d-b91d891beb25"),
+                    "foo",
+                    null
+            );
+            var input = List.of(optA, optB);
+
+            var result = environmentSecretsExisting.loadSecret(input);
+            Assertions.assertThat(result)
+                    .isNotEqualTo(input)
+                    .doesNotContain(optB)
+                    .hasSize(2)
+            ;
+
+            Assertions.assertThat(result)
+                    .filteredOn(item -> item.getType().equals(SECRET))
+                    .first()
+                    .matches(item -> item != optB) // check new instance
+                    .matches(item -> item.getValue().equals("mysecrettoken"));
+        }
     }
 
     @Test

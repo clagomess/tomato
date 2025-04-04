@@ -1,10 +1,7 @@
 package com.github.clagomess.tomato.dto.data.keyvalue;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.UUID;
@@ -15,6 +12,7 @@ import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeE
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EnvironmentItemDto implements Comparable<EnvironmentItemDto> {
     private EnvironmentItemTypeEnum type;

@@ -1,6 +1,7 @@
 package com.github.clagomess.tomato.io.keepass;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import com.github.clagomess.tomato.mapper.EnvironmentItemMapper;
 import com.github.clagomess.tomato.util.CacheManager;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,11 +18,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Supplier;
+
+import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
 
 public class EnvironmentSecret {
     private static final String FILE_NAME = "environment-%s.kdbx";
@@ -157,11 +157,44 @@ public class EnvironmentSecret {
         return entries;
     }
 
+    public List<EnvironmentItemDto> loadSecret(
+            @NotNull List<EnvironmentItemDto> itens
+    ) throws IOException {
+        boolean containsSecret = itens.stream()
+                .anyMatch(item -> item.getType() == SECRET);
+        if(!containsSecret) return itens;
+
+        var database = getDatabase();
+        var toReturn = new ArrayList<EnvironmentItemDto>(itens.size());
+
+        for(var item : itens){
+            if(item.getType() != SECRET){
+                toReturn.add(item);
+                continue;
+            }
+
+            var env = EnvironmentItemMapper.INSTANCE.clone(item);
+
+            loadSecret(database, item.getSecretId())
+                    .ifPresent(env::setValue);
+
+            toReturn.add(env);
+        }
+
+        return toReturn;
+    }
+
     public Optional<String> loadSecret(
             @NotNull UUID entryId
     ) throws IOException {
         var database = getDatabase();
+        return loadSecret(database, entryId);
+    }
 
+    private Optional<String> loadSecret(
+            @NotNull JacksonDatabase database,
+            @NotNull UUID entryId
+    ) {
         return database.getRootGroup()
                 .findEntries(item -> Objects.equals(
                         item.getUsername(),
