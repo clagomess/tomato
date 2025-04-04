@@ -26,6 +26,7 @@ public class EnvironmentSecretTest extends RepositoryStubs {
 
     @BeforeEach
     public void setup() {
+        EnvironmentSecret.databaseCache.evictAll();
         EnvironmentSecret.credentialCache.evictAll();
 
         environmentSecretsEmpty = new EnvironmentSecret(

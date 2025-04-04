@@ -74,18 +74,23 @@ public class EnvironmentSecret {
         return new KdbxCreds(password.getBytes());
     }
 
+    protected static final CacheManager<File, JacksonDatabase> databaseCache = new CacheManager<>();
     protected JacksonDatabase getDatabase() throws IOException {
-        if(!databaseFile.isFile()) return new JacksonDatabase();
+        if(!databaseFile.isFile()){
+            return databaseCache.get(databaseFile, JacksonDatabase::new);
+        }
 
         try (FileInputStream fis = new FileInputStream(databaseFile)) {
-            return JacksonDatabase.load(
+            return databaseCache.get(databaseFile, () -> JacksonDatabase.load(
                     getCredential(),
                     fis
-            );
+            ));
         } catch (IllegalStateException e) {
+            databaseCache.evict(databaseFile);
             credentialCache.evict(databaseFile);
             throw new IllegalStateException("Invalid password or corrupted keystore", e);
-        } catch (IOException e) {
+        } catch (Throwable e){
+            databaseCache.evict(databaseFile);
             credentialCache.evict(databaseFile);
             throw e;
         }
