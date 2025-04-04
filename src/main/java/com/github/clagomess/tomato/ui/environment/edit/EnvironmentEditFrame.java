@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.EnvironmentDto;
-import com.github.clagomess.tomato.io.keepass.EnvironmentSecret;
+import com.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import com.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import com.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import com.github.clagomess.tomato.publisher.EnvironmentPublisher;
@@ -31,7 +31,7 @@ public class EnvironmentEditFrame extends JFrame {
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
-    private final EnvironmentSecret environmentSecret;
+    private final EnvironmentKeystore environmentKeystore;
 
     @Getter
     private final EnvironmentDto environment;
@@ -41,7 +41,7 @@ public class EnvironmentEditFrame extends JFrame {
             String environmentId
     ) throws IOException {
         this.environment = environmentRepository.load(environmentId).orElseThrow();
-        this.environmentSecret = getEnvironmentSecret(environmentId);
+        this.environmentKeystore = getEnvironmentKeystore(environmentId);
         this.stagingMonitor = new StagingMonitor<>(environment);
         this.title = "Environment - " + environment.getName();
 
@@ -63,7 +63,7 @@ public class EnvironmentEditFrame extends JFrame {
             updateStagingMonitor();
         });
         keyValue = new KeyValue(
-                environmentSecret,
+                environmentKeystore,
                 environment.getEnvs()
         );
 
@@ -87,17 +87,17 @@ public class EnvironmentEditFrame extends JFrame {
         setVisible(true);
     }
 
-    private EnvironmentSecret getEnvironmentSecret(String environmentId) {
+    private EnvironmentKeystore getEnvironmentKeystore(String environmentId) {
         try {
             File workspacePath = new WorkspaceRepository()
                     .getDataSessionWorkspace()
                     .getPath();
 
-            var environmentSecret = new EnvironmentSecret(workspacePath, environmentId);
-            environmentSecret.setGetPassword(() -> new PasswordDialog(this).showDialog());
-            environmentSecret.setGetNewPassword(() -> new NewPasswordDialog(this).showDialog());
+            var environmentKeystore = new EnvironmentKeystore(workspacePath, environmentId);
+            environmentKeystore.setGetPassword(() -> new PasswordDialog(this).showDialog());
+            environmentKeystore.setGetNewPassword(() -> new NewPasswordDialog(this).showDialog());
 
-            return environmentSecret;
+            return environmentKeystore;
         }catch (IOException e){
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -121,13 +121,13 @@ public class EnvironmentEditFrame extends JFrame {
 
     private void btnSaveAction(){
         new WaitExecution(this, btnSave, () -> {
-            List<EnvironmentSecret.Entry> secretsToSave = environment.getEnvs().stream()
+            List<EnvironmentKeystore.Entry> secretsToSave = environment.getEnvs().stream()
                     .filter(item -> item.getType().equals(SECRET))
                     .filter(item -> item.getValue() != null)
-                    .map(EnvironmentSecret.Entry::new)
+                    .map(EnvironmentKeystore.Entry::new)
                     .toList();
 
-            environmentSecret.saveEntries(secretsToSave).forEach(entry ->
+            environmentKeystore.saveEntries(secretsToSave).forEach(entry ->
                 environment.getEnvs().stream()
                         .filter(env -> env.getKey().equals(entry.getKey()))
                         .findFirst()

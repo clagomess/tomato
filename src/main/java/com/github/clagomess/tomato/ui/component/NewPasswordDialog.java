@@ -1,6 +1,6 @@
 package com.github.clagomess.tomato.ui.component;
 
-import com.github.clagomess.tomato.io.keepass.PasswordEntropyCalculator;
+import com.github.clagomess.tomato.io.keystore.PasswordEntropyCalculator;
 import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang3.StringUtils;

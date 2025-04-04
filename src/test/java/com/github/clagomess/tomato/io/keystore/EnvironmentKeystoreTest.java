@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.io.keepass;
+package com.github.clagomess.tomato.io.keystore;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.io.repository.RepositoryStubs;
@@ -20,51 +20,51 @@ import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeE
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-public class EnvironmentSecretTest extends RepositoryStubs {
-    private EnvironmentSecret environmentSecretsEmpty;
-    private EnvironmentSecret environmentSecretsExisting;
+public class EnvironmentKeystoreTest extends RepositoryStubs {
+    private EnvironmentKeystore environmentKeystoreEmpty;
+    private EnvironmentKeystore environmentKeystoreExisting;
 
     @BeforeEach
     public void setup() {
-        EnvironmentSecret.databaseCache.evictAll();
-        EnvironmentSecret.credentialCache.evictAll();
+        EnvironmentKeystore.databaseCache.evictAll();
+        EnvironmentKeystore.credentialCache.evictAll();
 
-        environmentSecretsEmpty = new EnvironmentSecret(
+        environmentKeystoreEmpty = new EnvironmentKeystore(
                 mockDataDir,
                 RandomStringUtils.secure().nextAlphanumeric(8)
         );
 
-        environmentSecretsEmpty.setGetPassword(() -> "supersecret");
-        environmentSecretsEmpty.setGetNewPassword(() -> "supersecret");
+        environmentKeystoreEmpty.setGetPassword(() -> "supersecret");
+        environmentKeystoreEmpty.setGetNewPassword(() -> "supersecret");
 
-        environmentSecretsExisting = new EnvironmentSecret(
+        environmentKeystoreExisting = new EnvironmentKeystore(
                 new File(testData, "workspace-nPUaq0TC"),
                 "7rZO7Z1T"
         );
-        environmentSecretsExisting.setGetPassword(() -> "supersecret");
+        environmentKeystoreExisting.setGetPassword(() -> "supersecret");
     }
 
     @Nested
     class getDatabase {
         @Test
         public void whenNewDatabase() throws IOException {
-            var result = environmentSecretsEmpty.getDatabase();
+            var result = environmentKeystoreEmpty.getDatabase();
             assertNotNull(result);
         }
 
         @Test
         public void whenExistingDatabase() throws IOException {
-            var result = environmentSecretsExisting.getDatabase();
+            var result = environmentKeystoreExisting.getDatabase();
             assertNotNull(result);
         }
 
         @Test
         public void whenExistingDatabaseAndWrongPassword() {
-            environmentSecretsExisting.setGetPassword(() -> "wrongpassword");
+            environmentKeystoreExisting.setGetPassword(() -> "wrongpassword");
 
             assertThrows(
                     IllegalStateException.class,
-                    environmentSecretsExisting::getDatabase
+                    environmentKeystoreExisting::getDatabase
             );
         }
     }
@@ -73,30 +73,30 @@ public class EnvironmentSecretTest extends RepositoryStubs {
     class saveDatabase {
         @Test
         public void whenNewDatabase() throws IOException {
-            environmentSecretsEmpty.saveDatabase(
+            environmentKeystoreEmpty.saveDatabase(
                     new JacksonDatabase(),
                     new KdbxCreds("supersecret".getBytes())
             );
 
-            Assertions.assertThat(environmentSecretsEmpty.getDatabaseFile())
+            Assertions.assertThat(environmentKeystoreEmpty.getDatabaseFile())
                     .isFile();
         }
 
         @Test
         public void whenExistingDatabase() throws IOException {
             for(int i = 0; i <= 2; i++) {
-                environmentSecretsEmpty.saveDatabase(
+                environmentKeystoreEmpty.saveDatabase(
                         new JacksonDatabase(),
                         new KdbxCreds("supersecret".getBytes())
                 );
             }
 
             var backupFile = new File(
-                    environmentSecretsEmpty.getDatabaseFile().getParentFile(),
-                    environmentSecretsEmpty.getDatabaseFile().getName() + ".bkp"
+                    environmentKeystoreEmpty.getDatabaseFile().getParentFile(),
+                    environmentKeystoreEmpty.getDatabaseFile().getName() + ".bkp"
             );
 
-            Assertions.assertThat(environmentSecretsEmpty.getDatabaseFile())
+            Assertions.assertThat(environmentKeystoreEmpty.getDatabaseFile())
                     .isFile();
             Assertions.assertThat(backupFile)
                     .isFile();
@@ -107,13 +107,13 @@ public class EnvironmentSecretTest extends RepositoryStubs {
     class saveEntry {
         @Test
         public void whenNewEntry() throws IOException {
-            var entries = environmentSecretsEmpty.saveEntries(List.of(new EnvironmentSecret.Entry(
+            var entries = environmentKeystoreEmpty.saveEntries(List.of(new EnvironmentKeystore.Entry(
                     null,
                     "token",
                     "mysecrettoken"
             )));
 
-            var database = environmentSecretsEmpty.getDatabase();
+            var database = environmentKeystoreEmpty.getDatabase();
             var result = database.getRootGroup().findEntries("token", false)
                     .stream()
                     .findFirst()
@@ -129,14 +129,14 @@ public class EnvironmentSecretTest extends RepositoryStubs {
             var entryId = UUID.randomUUID();
 
             for(int i = 0; i <= 2; i++) {
-                environmentSecretsEmpty.saveEntries(List.of(new EnvironmentSecret.Entry(
+                environmentKeystoreEmpty.saveEntries(List.of(new EnvironmentKeystore.Entry(
                         entryId,
                         "token",
                         "mysecrettoken"
                 )));
             }
 
-            var database = environmentSecretsEmpty.getDatabase();
+            var database = environmentKeystoreEmpty.getDatabase();
             int result = database.getRootGroup()
                     .findEntries("token", false)
                     .size();
@@ -149,7 +149,7 @@ public class EnvironmentSecretTest extends RepositoryStubs {
     class loadSecret {
         @Test
         public void loadSecret_byUUID() throws IOException {
-            var secret = environmentSecretsExisting.loadSecret(
+            var secret = environmentKeystoreExisting.loadSecret(
                     UUID.fromString("28780cff-2570-415f-8e9d-b91d891beb25")
             );
 
@@ -159,7 +159,7 @@ public class EnvironmentSecretTest extends RepositoryStubs {
         @Test
         public void loadSecret_ByItensWithoutSecretType() throws IOException {
             var input = List.of(new EnvironmentItemDto("key", "value"));
-            var result = environmentSecretsExisting.loadSecret(input);
+            var result = environmentKeystoreExisting.loadSecret(input);
             Assertions.assertThat(result)
                     .isEqualTo(input);
         }
@@ -175,7 +175,7 @@ public class EnvironmentSecretTest extends RepositoryStubs {
             );
             var input = List.of(optA, optB);
 
-            var result = environmentSecretsExisting.loadSecret(input);
+            var result = environmentKeystoreExisting.loadSecret(input);
             Assertions.assertThat(result)
                     .isNotEqualTo(input)
                     .doesNotContain(optB)
@@ -192,10 +192,10 @@ public class EnvironmentSecretTest extends RepositoryStubs {
 
     @Test
     public void changeDatabasePassword() throws IOException {
-        environmentSecretsEmpty.setGetNewPassword(() -> "new-supersecret");
-        environmentSecretsEmpty.changeDatabasePassword();
+        environmentKeystoreEmpty.setGetNewPassword(() -> "new-supersecret");
+        environmentKeystoreEmpty.changeDatabasePassword();
 
-        environmentSecretsEmpty.setGetPassword(() -> "new-supersecret");
-        environmentSecretsEmpty.getDatabase();
+        environmentKeystoreEmpty.setGetPassword(() -> "new-supersecret");
+        environmentKeystoreEmpty.getDatabase();
     }
 }

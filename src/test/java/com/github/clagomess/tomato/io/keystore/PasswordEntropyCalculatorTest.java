@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.io.keepass;
+package com.github.clagomess.tomato.io.keystore;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

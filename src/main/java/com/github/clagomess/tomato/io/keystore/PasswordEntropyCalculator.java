@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.io.keepass;
+package com.github.clagomess.tomato.io.keystore;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

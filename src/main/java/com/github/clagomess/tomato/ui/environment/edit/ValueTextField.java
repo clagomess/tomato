@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
-import com.github.clagomess.tomato.io.keepass.EnvironmentSecret;
+import com.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.ListenableTextField;
@@ -20,7 +20,7 @@ public class ValueTextField extends ListenableTextField {
     private final EnvironmentItemDto item;
     private final OnChangeFI onChangeFI;
 
-    private final EnvironmentSecret environmentSecret;
+    private final EnvironmentKeystore environmentKeystore;
 
     private final IconButton btnUnlockSecret = new IconButton(
             new BxLockIcon(),
@@ -29,13 +29,13 @@ public class ValueTextField extends ListenableTextField {
     );
 
     public ValueTextField(
-            @NotNull EnvironmentSecret environmentSecret,
+            @NotNull EnvironmentKeystore environmentKeystore,
             @NotNull EnvironmentItemDto item,
             OnChangeFI onChangeFI
     ) {
         this.item = item;
         this.onChangeFI = onChangeFI;
-        this.environmentSecret = environmentSecret;
+        this.environmentKeystore = environmentKeystore;
 
         if(item.getType() == TEXT) {
             setText(item.getValue());
@@ -57,7 +57,7 @@ public class ValueTextField extends ListenableTextField {
             String text = null;
 
             if(item.getSecretId() != null) {
-                text = environmentSecret.loadSecret(item.getSecretId())
+                text = environmentKeystore.loadSecret(item.getSecretId())
                         .orElse(null);
             }
 

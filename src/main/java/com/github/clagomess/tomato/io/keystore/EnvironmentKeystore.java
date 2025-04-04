@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.io.keepass;
+package com.github.clagomess.tomato.io.keystore;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import com.github.clagomess.tomato.mapper.EnvironmentItemMapper;
@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
 
-public class EnvironmentSecret {
+public class EnvironmentKeystore {
     private static final String FILE_NAME = "environment-%s.kdbx";
     private static final String MSG_BLANK_PASSWORD = "Password is blank";
 
@@ -40,7 +40,7 @@ public class EnvironmentSecret {
         throw new RuntimeException("Needs override 'getNewPassword'");
     };
 
-    public EnvironmentSecret(
+    public EnvironmentKeystore(
             File workspacePath,
             String environmentId
     ) {

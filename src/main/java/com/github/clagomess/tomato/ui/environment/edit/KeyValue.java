@@ -1,7 +1,7 @@
 package com.github.clagomess.tomato.ui.environment.edit;
 
 import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
-import com.github.clagomess.tomato.io.keepass.EnvironmentSecret;
+import com.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import com.github.clagomess.tomato.ui.component.ColorConstant;
 import com.github.clagomess.tomato.ui.component.IconButton;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
@@ -22,7 +22,7 @@ class KeyValue extends JPanel {
     private final JPanel rowsPanel;
 
     public KeyValue(
-            EnvironmentSecret environmentSecret,
+            EnvironmentKeystore environmentKeystore,
             List<EnvironmentItemDto> list
     ) {
         this.list = list;
@@ -58,7 +58,7 @@ class KeyValue extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, "width ::100%, height 100%");
         btnAddNew.addActionListener(l -> {
-            addRow(environmentSecret, new EnvironmentItemDto());
+            addRow(environmentKeystore, new EnvironmentItemDto());
 
             var parent = (EnvironmentEditFrame) getAncestorOfClass(EnvironmentEditFrame.class, this);
             parent.updateStagingMonitor();
@@ -67,17 +67,17 @@ class KeyValue extends JPanel {
         SwingUtilities.invokeLater(() ->
             this.list.stream()
                     .sorted()
-                    .forEach(item -> addRow(environmentSecret, item))
+                    .forEach(item -> addRow(environmentKeystore, item))
         );
     }
 
     private void addRow(
-            EnvironmentSecret environmentSecret,
+            EnvironmentKeystore environmentKeystore,
             EnvironmentItemDto item
     ){
         var row = new Row(
                 rowsPanel,
-                environmentSecret,
+                environmentKeystore,
                 this.list,
                 item
         );
