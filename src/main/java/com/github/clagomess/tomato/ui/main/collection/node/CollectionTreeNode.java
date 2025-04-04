@@ -4,6 +4,7 @@ import com.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import com.github.clagomess.tomato.publisher.CollectionPublisher;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.publisher.key.ParentCollectionKey;
+import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +17,6 @@ import java.util.UUID;
 
 import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 import static javax.swing.SwingUtilities.invokeLater;
-import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 @Setter
 @Getter
@@ -65,7 +65,7 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
     }
 
     public void loadChildren() {
-        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+        ComponentUtil.checkIsEventDispatchThread();
 
         var collectionList = tree.getChildren().toList();
         var requestList = tree.getRequests().toList();

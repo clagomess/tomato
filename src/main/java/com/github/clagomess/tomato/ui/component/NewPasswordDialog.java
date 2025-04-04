@@ -13,7 +13,6 @@ import java.awt.*;
 
 import static com.formdev.flatlaf.FlatClientProperties.STYLE;
 import static com.github.clagomess.tomato.ui.component.ColorConstant.*;
-import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 public class NewPasswordDialog extends JDialog {
     private static final String DEFAULT_STYLE = "showRevealButton: true";
@@ -35,7 +34,7 @@ public class NewPasswordDialog extends JDialog {
                 Dialog.DEFAULT_MODALITY_TYPE
         );
 
-        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+        ComponentUtil.checkIsEventDispatchThread();
 
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(350, 100));

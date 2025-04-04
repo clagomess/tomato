@@ -9,6 +9,7 @@ import com.github.clagomess.tomato.enums.BodyTypeEnum;
 import com.github.clagomess.tomato.publisher.DisposableListener;
 import com.github.clagomess.tomato.publisher.RequestPublisher;
 import com.github.clagomess.tomato.ui.component.CharsetComboBox;
+import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.LoadingPane;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValue;
 import com.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueOptions;
@@ -21,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static javax.swing.SwingUtilities.invokeLater;
-import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 @Getter
 @Setter
@@ -187,7 +187,7 @@ public class RequestTabContent extends JPanel {
     }
 
     private void createTabCookies(JTabbedPane tabbedPane){
-        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+        ComponentUtil.checkIsEventDispatchThread();
 
         var cookies = new KeyValue<>(
                 requestDto.getCookies(),

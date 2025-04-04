@@ -5,6 +5,7 @@ import com.github.clagomess.tomato.dto.RequestTabSnapshotDto;
 import com.github.clagomess.tomato.dto.data.RequestDto;
 import com.github.clagomess.tomato.dto.key.TabKey;
 import com.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import com.github.clagomess.tomato.ui.component.ComponentUtil;
 import com.github.clagomess.tomato.ui.component.ExceptionDialog;
 import com.github.clagomess.tomato.ui.component.LoadingPane;
 import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 import static javax.swing.SwingUtilities.invokeLater;
-import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 public class RequestTabbedPane extends JTabbedPane {
     @Getter
@@ -90,7 +90,7 @@ public class RequestTabbedPane extends JTabbedPane {
             @Nullable RequestHeadDto requestHead,
             @NotNull RequestDto request
     ){
-        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+        ComponentUtil.checkIsEventDispatchThread();
 
         int tabPosition = getTabCount() - 1;
         var key = new TabKey(request.getId());

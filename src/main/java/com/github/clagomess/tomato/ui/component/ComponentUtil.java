@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
+import static javax.swing.SwingUtilities.isEventDispatchThread;
+
 public class ComponentUtil {
     public static int getComponentIndex(Container container, JComponent searched){
         container.getComponentCount();
@@ -15,5 +17,14 @@ public class ComponentUtil {
         }
 
         return -1;
+    }
+
+    public static void checkIsEventDispatchThread(){
+        if(!isEventDispatchThread()){
+            throw new IllegalThreadStateException(
+                    "Not running on EDT. Current thread is: " +
+                    Thread.currentThread().getName()
+            );
+        }
     }
 }

@@ -25,7 +25,7 @@ public class EnvironmentSwitcherComboBox extends JPanel {
     private final EnvironmentComboBoxController controller = new EnvironmentComboBoxController();
 
     public EnvironmentSwitcherComboBox(){
-        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+        ComponentUtil.checkIsEventDispatchThread();
 
         setLayout(new MigLayout(
                 "insets 2",
@@ -51,7 +51,7 @@ public class EnvironmentSwitcherComboBox extends JPanel {
     }
 
     private void refreshItems() {
-        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+        ComponentUtil.checkIsEventDispatchThread();
 
         Arrays.stream(comboBox.getActionListeners())
                 .forEach(comboBox::removeActionListener);
