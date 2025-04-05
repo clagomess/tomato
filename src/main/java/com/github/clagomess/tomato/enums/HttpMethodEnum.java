@@ -10,15 +10,13 @@ import javax.swing.*;
 @Getter
 @AllArgsConstructor
 public enum HttpMethodEnum {
-    POST("POST", new HttpPostIcon()),
-    GET("GET", new HttpGetIcon()),
-    PUT("PUT", new HttpPutIcon()),
-    DELETE("DELETE", new HttpDeleteIcon()),
-    HEAD("HEAD", new HttpHeadIcon()),
-    OPTIONS("OPTIONS", new HttpOptionsIcon()),
-    PATCH("PATCH", new HttpPatchIcon());
-
-    private final String method;
+    POST(new HttpPostIcon()),
+    GET(new HttpGetIcon()),
+    PUT(new HttpPutIcon()),
+    DELETE(new HttpDeleteIcon()),
+    HEAD(new HttpHeadIcon()),
+    OPTIONS(new HttpOptionsIcon()),
+    PATCH(new HttpPatchIcon());
 
     @JsonIgnore
     private final Icon icon;
