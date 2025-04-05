@@ -1,8 +1,8 @@
-package com.github.clagomess.tomato.io.keystore;
+package io.github.clagomess.tomato.io.keystore;
 
-import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
-import com.github.clagomess.tomato.mapper.EnvironmentItemMapper;
-import com.github.clagomess.tomato.util.CacheManager;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import io.github.clagomess.tomato.mapper.EnvironmentItemMapper;
+import io.github.clagomess.tomato.util.CacheManager;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +21,7 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Supplier;
 
-import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
+import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
 
 public class EnvironmentKeystore {
     private static final String FILE_NAME = "environment-%s.kdbx";

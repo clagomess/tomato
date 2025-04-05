@@ -1,6 +1,6 @@
-package com.github.clagomess.tomato.mapper;
+package io.github.clagomess.tomato.mapper;
 
-import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

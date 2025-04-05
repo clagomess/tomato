@@ -1,6 +1,6 @@
 package io.github.clagomess.tomato.publisher;
 
-import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.publisher.base.NoKeyPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import lombok.Getter;

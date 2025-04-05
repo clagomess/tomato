@@ -5,6 +5,7 @@ import io.github.clagomess.tomato.dto.RequestTabSnapshotDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.key.TabKey;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import io.github.clagomess.tomato.ui.component.ExceptionDialog;
 import io.github.clagomess.tomato.ui.component.LoadingPane;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;

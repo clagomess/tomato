@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.dto.data.keyvalue;
+package io.github.clagomess.tomato.dto.data.keyvalue;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.UUID;
 
-import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.TEXT;
+import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.TEXT;
 
 @Getter
 @Setter

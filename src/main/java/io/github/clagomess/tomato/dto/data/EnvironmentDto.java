@@ -1,7 +1,7 @@
 package io.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

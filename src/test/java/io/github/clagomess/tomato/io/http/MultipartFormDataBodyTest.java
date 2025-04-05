@@ -1,8 +1,8 @@
 package io.github.clagomess.tomato.io.http;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
-import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.extern.slf4j.Slf4j;

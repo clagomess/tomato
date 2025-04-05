@@ -1,4 +1,4 @@
-package com.github.clagomess.tomato.dto.data.keyvalue;
+package io.github.clagomess.tomato.dto.data.keyvalue;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

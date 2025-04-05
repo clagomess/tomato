@@ -1,7 +1,7 @@
 package io.github.clagomess.tomato.ui.component.envtextfield;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
-import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import lombok.Getter;
 

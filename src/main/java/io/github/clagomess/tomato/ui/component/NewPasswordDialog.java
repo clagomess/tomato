@@ -1,7 +1,7 @@
-package com.github.clagomess.tomato.ui.component;
+package io.github.clagomess.tomato.ui.component;
 
-import com.github.clagomess.tomato.io.keystore.PasswordEntropyCalculator;
-import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import io.github.clagomess.tomato.io.keystore.PasswordEntropyCalculator;
+import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +12,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 import static com.formdev.flatlaf.FlatClientProperties.STYLE;
-import static com.github.clagomess.tomato.ui.component.ColorConstant.*;
+import static io.github.clagomess.tomato.ui.component.ColorConstant.*;
 
 public class NewPasswordDialog extends JDialog {
     private static final String DEFAULT_STYLE = "showRevealButton: true";

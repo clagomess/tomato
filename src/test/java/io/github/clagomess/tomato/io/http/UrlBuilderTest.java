@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.io.http;
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.junit.jupiter.api.BeforeEach;

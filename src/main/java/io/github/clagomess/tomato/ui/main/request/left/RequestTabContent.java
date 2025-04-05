@@ -9,6 +9,7 @@ import io.github.clagomess.tomato.enums.BodyTypeEnum;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.ui.component.CharsetComboBox;
+import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import io.github.clagomess.tomato.ui.component.LoadingPane;
 import io.github.clagomess.tomato.ui.main.request.keyvalue.KeyValue;
 import io.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueOptions;

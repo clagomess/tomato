@@ -1,8 +1,8 @@
 package io.github.clagomess.tomato.ui.environment.edit;
 
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
-import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum;
-import com.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum;
+import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import io.github.clagomess.tomato.ui.component.IconButton;
 import io.github.clagomess.tomato.ui.component.ListenableTextField;

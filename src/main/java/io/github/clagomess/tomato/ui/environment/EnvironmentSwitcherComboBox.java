@@ -1,9 +1,7 @@
 package io.github.clagomess.tomato.ui.environment;
 
 import io.github.clagomess.tomato.controller.environment.EnvironmentComboBoxController;
-import io.github.clagomess.tomato.ui.component.ExceptionDialog;
-import io.github.clagomess.tomato.ui.component.IconButton;
-import io.github.clagomess.tomato.ui.component.WaitExecution;
+import io.github.clagomess.tomato.ui.component.*;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import io.github.clagomess.tomato.ui.environment.edit.EnvironmentEditFrame;
 import net.miginfocom.swing.MigLayout;

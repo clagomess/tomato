@@ -1,7 +1,7 @@
-package com.github.clagomess.tomato.io.keystore;
+package io.github.clagomess.tomato.io.keystore;
 
-import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
-import com.github.clagomess.tomato.io.repository.RepositoryStubs;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import io.github.clagomess.tomato.io.repository.RepositoryStubs;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
+import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j

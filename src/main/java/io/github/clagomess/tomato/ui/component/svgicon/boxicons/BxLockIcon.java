@@ -1,6 +1,6 @@
-package com.github.clagomess.tomato.ui.component.svgicon.boxicons;
+package io.github.clagomess.tomato.ui.component.svgicon.boxicons;
 
-import com.github.clagomess.tomato.ui.component.svgicon.SvgIcon;
+import io.github.clagomess.tomato.ui.component.svgicon.SvgIcon;
 
 public class BxLockIcon extends SvgIcon {
     public BxLockIcon() {

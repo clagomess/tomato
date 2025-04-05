@@ -1,12 +1,12 @@
 package io.github.clagomess.tomato.ui.environment.edit;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
+import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
+import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
-import io.github.clagomess.tomato.ui.component.ListenableTextField;
-import io.github.clagomess.tomato.ui.component.StagingMonitor;
-import io.github.clagomess.tomato.ui.component.WaitExecution;
+import io.github.clagomess.tomato.ui.component.*;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
+import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static javax.swing.SwingUtilities.invokeLater;
 

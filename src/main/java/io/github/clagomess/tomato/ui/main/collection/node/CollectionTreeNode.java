@@ -4,7 +4,7 @@ import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.publisher.CollectionPublisher;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.key.ParentCollectionKey;
-import com.github.clagomess.tomato.ui.component.ComponentUtil;
+import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import lombok.Getter;
 import lombok.Setter;
 

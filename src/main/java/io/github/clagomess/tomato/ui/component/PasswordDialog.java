@@ -1,6 +1,6 @@
-package com.github.clagomess.tomato.ui.component;
+package io.github.clagomess.tomato.ui.component;
 
-import com.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
 

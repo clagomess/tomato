@@ -1,19 +1,19 @@
-package com.github.clagomess.tomato.ui.environment.edit;
+package io.github.clagomess.tomato.ui.environment.edit;
 
-import com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
-import com.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
-import com.github.clagomess.tomato.ui.component.ExceptionDialog;
-import com.github.clagomess.tomato.ui.component.IconButton;
-import com.github.clagomess.tomato.ui.component.ListenableTextField;
-import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLockIcon;
-import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLockOpenIcon;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
+import io.github.clagomess.tomato.ui.component.ExceptionDialog;
+import io.github.clagomess.tomato.ui.component.IconButton;
+import io.github.clagomess.tomato.ui.component.ListenableTextField;
+import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLockIcon;
+import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLockOpenIcon;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 import static com.formdev.flatlaf.FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT;
-import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.TEXT;
+import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.TEXT;
 
 @Slf4j
 public class ValueTextField extends ListenableTextField {
