@@ -2,5 +2,5 @@
   "id" : "Z6eKPSYs",
   "createTime" : "2024-12-07T00:18:46",
   "updateTime" : "2025-02-02T21:00:55",
-  "dataDirectory" : "src/test/resources/com/github/clagomess/tomato/io/repository/home/data"
+  "dataDirectory" : "src/test/resources/io/github/clagomess/tomato/io/repository/home/data"
 }

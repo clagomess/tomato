@@ -118,7 +118,7 @@ abstract class AbstractRepository {
     protected File getHomeDir(){
         return cacheHomeDir.get(() -> {
             if("true".equals(System.getProperty("TOMATO_AWAYS_USE_TEST_DATA"))){
-                return new File("src/test/resources/com/github/clagomess/tomato/io/repository/home");
+                return new File("src/test/resources/io/github/clagomess/tomato/io/repository/home");
             }
 
             return createDirectoryIfNotExists(new File(
