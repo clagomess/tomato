@@ -10,12 +10,16 @@ import com.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLockOpenIcon;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+
 import static com.formdev.flatlaf.FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT;
 import static com.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.TEXT;
 
 @Slf4j
 public class ValueTextField extends ListenableTextField {
     private static final String UNKNOW_SECRET = "***";
+    private static final Icon LOCK_ICON = new BxLockIcon();
+    private static final Icon LOCK_OPEN_ICON = new BxLockOpenIcon();
 
     private final EnvironmentItemDto item;
     private final OnChangeFI onChangeFI;
@@ -23,8 +27,8 @@ public class ValueTextField extends ListenableTextField {
     private final EnvironmentKeystore environmentKeystore;
 
     private final IconButton btnUnlockSecret = new IconButton(
-            new BxLockIcon(),
-            new BxLockOpenIcon(),
+            LOCK_ICON,
+            LOCK_OPEN_ICON,
             "Unlock Secret"
     );
 
