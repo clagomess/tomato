@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/clagomess/tomato/blob/master/src/main/resources/com/github/clagomess/tomato/ui/component/favicon/favicon.svg" width="64" alt="Tomato">
+    <img src="https://github.com/clagomess/tomato/blob/master/src/main/resources/io/github/clagomess/tomato/ui/component/favicon/favicon.svg" width="64" alt="Tomato">
 </p>
 
 # Tomato

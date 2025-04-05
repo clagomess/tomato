@@ -5,7 +5,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.github.clagomess.tomato" level="debug" />
+    <logger name="io.github.clagomess.tomato" level="debug" />
 
     <root level="info">
         <appender-ref ref="console" />

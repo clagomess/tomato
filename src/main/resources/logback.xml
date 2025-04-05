@@ -9,7 +9,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.github.clagomess.tomato" level="${TOMATO_LOG_LEVEL}" />
+    <logger name="io.github.clagomess.tomato" level="${TOMATO_LOG_LEVEL}" />
 
     <root level="info">
         <appender-ref ref="console" />
