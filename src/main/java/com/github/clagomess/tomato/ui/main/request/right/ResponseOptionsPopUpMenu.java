@@ -13,14 +13,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class ResponseOptionsPopUpMenu extends JPopupMenu {
+    private static final Icon MAGIC_WAND_ICON = new BxsMagicWandIcon();
+    private static final Icon DOWNLOAD_ICON = new BxDownloadIcon();
+
     public ResponseOptionsPopUpMenu(
             ResponseTabContent parent
     ) {
-        var mBeautify = new JMenuItem("Beautify Response", new BxsMagicWandIcon());
+        var mBeautify = new JMenuItem("Beautify Response", MAGIC_WAND_ICON);
         mBeautify.addActionListener(e -> parent.btnBeautifyResponseAction());
         add(mBeautify);
 
-        var mSaveResponse = new JMenuItem("Save Response", new BxDownloadIcon());
+        var mSaveResponse = new JMenuItem("Save Response", DOWNLOAD_ICON);
         mSaveResponse.addActionListener(e -> parent.btnSaveResponseAction());
         add(mSaveResponse);
 

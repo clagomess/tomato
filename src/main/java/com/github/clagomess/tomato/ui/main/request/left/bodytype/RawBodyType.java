@@ -15,13 +15,15 @@ import javax.swing.border.MatteBorder;
 
 @Slf4j
 public class RawBodyType extends JPanel {
+    private static final Icon MAGIC_WAND_ICON = new BxsMagicWandIcon();
+
     private final RawBodyDto rawBody;
     private final RequestStagingMonitor requestStagingMonitor;
 
     private final JComboBox<RawBodyTypeEnum> cbContentType = new JComboBox<>(
             RawBodyTypeEnum.values()
     );
-    private final JButton btnBeautify = new JButton(new BxsMagicWandIcon()){{
+    private final JButton btnBeautify = new JButton(MAGIC_WAND_ICON){{
         setToolTipText("Beautify body");
     }};
     private final TRSyntaxTextArea textArea = new TRSyntaxTextArea();

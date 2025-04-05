@@ -11,10 +11,12 @@ import javax.swing.*;
 import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 
 public class WorkspaceMenu extends JMenu {
+    private static final Icon TRANSFER_ALT_ICON = new BxTransferAltIcon();
+
     public WorkspaceMenu(MainFrame mainFrame) {
         super("Workspace");
 
-        var mSwitch = new JMenuItem("Switch", new BxTransferAltIcon());
+        var mSwitch = new JMenuItem("Switch", TRANSFER_ALT_ICON);
         mSwitch.addActionListener(e -> toFrontIfExists(
                 WorkspaceSwitchFrame.class,
                 () -> new WorkspaceSwitchFrame(mainFrame)

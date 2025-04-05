@@ -17,6 +17,9 @@ import javax.swing.border.MatteBorder;
 import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 
 class Row extends JPanel {
+    private static final Icon EDIT_ICON = new BxEditIcon();
+    private static final Icon TRASH_ICON = new BxTrashIcon();
+
     public Row(
             WorkspaceListFrame parent,
             WorkspaceDto workspace
@@ -29,7 +32,7 @@ class Row extends JPanel {
         setBorder(new MatteBorder(0, 0, 1, 0, ColorConstant.GRAY));
 
         // edit
-        var btnEdit = new IconButton(new BxEditIcon(), "Edit workspace");
+        var btnEdit = new IconButton(EDIT_ICON, "Edit workspace");
         btnEdit.addActionListener(l ->
             new WaitExecution(parent, btnEdit, () -> btnEditAction(
                     parent,
@@ -38,7 +41,7 @@ class Row extends JPanel {
         );
 
         // delete
-        var btnDelete = new IconButton(new BxTrashIcon(), "Delete workspace");
+        var btnDelete = new IconButton(TRASH_ICON, "Delete workspace");
         btnDelete.addActionListener(l -> {
             new WaitExecution(parent, btnDelete, () -> new WorkspaceDeleteDialog(
                     parent,

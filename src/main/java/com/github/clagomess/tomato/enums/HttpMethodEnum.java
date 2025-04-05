@@ -10,26 +10,16 @@ import javax.swing.*;
 @Getter
 @AllArgsConstructor
 public enum HttpMethodEnum {
-    POST("POST"),
-    GET("GET"),
-    PUT("PUT"),
-    DELETE("DELETE"),
-    HEAD("HEAD"),
-    OPTIONS("OPTIONS"),
-    PATCH("PATCH");
+    POST("POST", new HttpPostIcon()),
+    GET("GET", new HttpGetIcon()),
+    PUT("PUT", new HttpPutIcon()),
+    DELETE("DELETE", new HttpDeleteIcon()),
+    HEAD("HEAD", new HttpHeadIcon()),
+    OPTIONS("OPTIONS", new HttpOptionsIcon()),
+    PATCH("PATCH", new HttpPatchIcon());
 
     private final String method;
 
     @JsonIgnore
-    public Icon getIcon(){
-        return switch (this) {
-            case POST -> new HttpPostIcon();
-            case GET -> new HttpGetIcon();
-            case PUT -> new HttpPutIcon();
-            case DELETE -> new HttpDeleteIcon();
-            case HEAD -> new HttpHeadIcon();
-            case OPTIONS -> new HttpOptionsIcon();
-            case PATCH -> new HttpPatchIcon();
-        };
-    }
+    private final Icon icon;
 }

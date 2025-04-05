@@ -13,9 +13,11 @@ import java.util.List;
 import static javax.swing.JFileChooser.FILES_ONLY;
 
 public class FileChooser extends JPanel {
+    private static final Icon FOLDER_OPEN_ICON = new BxFolderOpenIcon();
+
     private final List<OnChangeFI> onChangeList = new LinkedList<>();
     private final JTextField txtFilepath = new JTextField();
-    private final JButton btnSelect = new JButton(new BxFolderOpenIcon()){{
+    private final JButton btnSelect = new JButton(FOLDER_OPEN_ICON){{
         setToolTipText("Select");
     }};
 

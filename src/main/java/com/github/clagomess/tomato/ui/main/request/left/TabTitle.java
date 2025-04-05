@@ -14,6 +14,8 @@ import static javax.swing.SwingUtilities.invokeLater;
 
 @Getter
 public class TabTitle extends JPanel {
+    private static final Icon HAS_CONTENT_ICON = new BxsCircleIcon(Color.ORANGE);
+
     private final String title;
     private boolean hasContent;
 
@@ -44,7 +46,7 @@ public class TabTitle extends JPanel {
         removeAll();
 
         if(this.hasContent){
-            add(new JLabel(new BxsCircleIcon(Color.ORANGE)));
+            add(new JLabel(HAS_CONTENT_ICON));
         }
 
         add(new JLabel(title));

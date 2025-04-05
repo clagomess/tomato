@@ -14,17 +14,26 @@ import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 public class EnvTextField extends JPanel {
+    private static final Icon LIST_PLUS_ICON = new BxListPlusIcon();
+    private static final Icon LINK_EXTERNAL_ICON = new BxLinkExternalIcon();
+
     private final EnvDocumentListener envDocumentListener;
     private final JButton btnEnvView;
     private final JButton btnExpand;
     private final UndoableTextPane textPane;
 
     public EnvTextField(EnvTextfieldOptions options) {
-        this.btnEnvView = new IconButton(new BxListPlusIcon(), "View Injected Environment");
+        this.btnEnvView = new IconButton(
+                LIST_PLUS_ICON,
+                "View Injected Environment"
+        );
         this.btnEnvView.addActionListener(e -> btnEnvViewAction());
         this.btnEnvView.setEnabled(false);
 
-        this.btnExpand = new IconButton(new BxLinkExternalIcon(), "Expand to value editor");
+        this.btnExpand = new IconButton(
+                LINK_EXTERNAL_ICON,
+                "Expand to value editor"
+        );
         this.btnExpand.addActionListener(e -> btnExpandAction(options));
 
         this.textPane = new UndoableTextPane();

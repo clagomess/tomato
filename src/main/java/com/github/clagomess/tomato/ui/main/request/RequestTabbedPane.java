@@ -25,6 +25,8 @@ import java.util.concurrent.ForkJoinPool;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class RequestTabbedPane extends JTabbedPane {
+    private static final Icon PLUS_ICON = new BxPlusIcon();
+
     @Getter
     private final List<Tab> tabs = new LinkedList<>();
     private final RequestTabbedPaneController controller = new RequestTabbedPaneController();
@@ -73,7 +75,7 @@ public class RequestTabbedPane extends JTabbedPane {
         addTab("+", new JPanel());
         setSelectedIndex(-1);
 
-        JButton btnPlus = new JButton(new BxPlusIcon());
+        JButton btnPlus = new JButton(PLUS_ICON);
         btnPlus.setToolTipText("Add a new request");
         btnPlus.setBorderPainted(false);
         btnPlus.setContentAreaFilled(false);

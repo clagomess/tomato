@@ -21,9 +21,11 @@ import static javax.swing.SwingUtilities.invokeLater;
 @Getter
 @Setter
 public class CollectionTree extends JPanel {
+    private static final Icon HOME_ICON = new BxHomeIcon();
+
     private DefaultTreeModel treeModel;
     private JTree tree;
-    private final JLabel lblCurrentWorkspace = new JLabel(new BxHomeIcon());
+    private final JLabel lblCurrentWorkspace = new JLabel(HOME_ICON);
 
     private final CollectionTreeController controller = new CollectionTreeController();
 

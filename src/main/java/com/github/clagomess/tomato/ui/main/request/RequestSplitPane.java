@@ -31,32 +31,39 @@ import static javax.swing.SwingUtilities.invokeLater;
 @Slf4j
 @Getter
 public class RequestSplitPane extends JPanel {
+    private static final Icon BLOCK_ICON = new BxBlockIcon(Color.RED);
+    private static final Icon GLOBE_ICON = new BxGlobeIcon();
+    private static final Icon EDIT_ICON = new BxEditIcon();
+    private static final Icon CODE_ALT_ICON = new BxCodeAltIcon();
+    private static final Icon SAVE_ICON = new BxSaveIcon();
+    private static final Icon SEND_ICON = new BxSendIcon();
+
     private final TabKey key;
     private RequestHeadDto requestHeadDto;
     private final RequestDto requestDto;
 
     private final RequestNameTextField txtRequestName = new RequestNameTextField();
     private final IconButton btnViewRenderedUrl = new IconButton(
-            new BxGlobeIcon(),
+            GLOBE_ICON,
             "View Rendered Url"
     );
     private final IconButton btnRename = new IconButton(
-            new BxEditIcon(),
+            EDIT_ICON,
             "Rename"
     );
     private final IconButton btnCodeSnippet = new IconButton(
-            new BxCodeAltIcon(),
+            CODE_ALT_ICON,
         "Code Snippet"
     );
     private final IconButton btnSaveRequest = new IconButton(
-            new BxSaveIcon(),
+            SAVE_ICON,
         "Save"
     );
 
     private final HttpMethodComboBox cbHttpMethod = new HttpMethodComboBox();
     private final EnvTextField txtRequestUrl = new EnvTextField(EnvTextfieldOptions.builder().build());
-    private final JButton btnSendRequest = new JButton("Send", new BxSendIcon());
-    private final JButton btnCancelRequest = new JButton(new BxBlockIcon(Color.RED)){{
+    private final JButton btnSendRequest = new JButton("Send", SEND_ICON);
+    private final JButton btnCancelRequest = new JButton(BLOCK_ICON){{
         setToolTipText("Cancel");
         setEnabled(false);
     }};
