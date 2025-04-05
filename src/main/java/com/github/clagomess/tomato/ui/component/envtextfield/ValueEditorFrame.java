@@ -14,6 +14,8 @@ import java.awt.*;
 import java.util.Objects;
 
 class ValueEditorFrame extends JFrame {
+    private static final Icon MAGIC_WAND_ICON = new BxsMagicWandIcon();
+
     private final EnvTextField parent;
     private final EnvTextfieldOptions options;
 
@@ -21,7 +23,7 @@ class ValueEditorFrame extends JFrame {
             RawBodyTypeEnum.values()
     );
 
-    private final JButton btnBeautify = new JButton(new BxsMagicWandIcon()){{
+    private final JButton btnBeautify = new JButton(MAGIC_WAND_ICON){{
         setToolTipText("Beautify value");
     }};
 

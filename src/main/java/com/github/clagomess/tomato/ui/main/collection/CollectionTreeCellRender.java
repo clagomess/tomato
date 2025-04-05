@@ -10,6 +10,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 
 public class CollectionTreeCellRender extends DefaultTreeCellRenderer {
+    private static final Icon FOLDER_ICON = new BxFolderIcon();
+
     @Override
     public Component getTreeCellRendererComponent(
             JTree tree,
@@ -34,7 +36,7 @@ public class CollectionTreeCellRender extends DefaultTreeCellRenderer {
         if(userObject instanceof CollectionTreeDto dto){
             return new JLabel(
                     dto.getName(),
-                    new BxFolderIcon(),
+                    FOLDER_ICON,
                     SwingConstants.LEFT
             );
         }

@@ -22,6 +22,8 @@ import java.util.Objects;
 @Getter
 @Setter
 class RowComponent<T extends KeyValueItemDto> extends JPanel {
+    private static final Icon TRASH_ICON = new BxTrashIcon();
+
     private final Container parent;
     private final RequestStagingMonitor requestStagingMonitor;
     private final List<T> listItens;
@@ -34,7 +36,7 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
     private final ListenableTextField txtKey = new ListenableTextField();
     private ValueComponent<T> cValue;
     private final JCheckBox cbSelected = new JCheckBox();
-    private final JButton btnRemove = new IconButton(new BxTrashIcon(), "Remove");
+    private final JButton btnRemove = new IconButton(TRASH_ICON, "Remove");
 
     public RowComponent(
             Container parent,

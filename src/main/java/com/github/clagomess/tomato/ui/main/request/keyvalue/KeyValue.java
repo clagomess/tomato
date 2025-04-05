@@ -19,11 +19,14 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 public class KeyValue<T extends KeyValueItemDto> extends JPanel implements DisposableListener {
+    private static final Icon SORT_AZ_ICON = new BxSortAZIcon();
+    private static final Icon PLUS_ICON = new BxPlusIcon();
+
     private final Class<T> itemClass;
     private final List<T> listItens;
     private final RequestStagingMonitor requestStagingMonitor;
-    private final IconButton btnSortByKey = new IconButton(new BxSortAZIcon(), "Sort by Key");
-    private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add new");
+    private final IconButton btnSortByKey = new IconButton(SORT_AZ_ICON, "Sort by Key");
+    private final IconButton btnAddNew = new IconButton(PLUS_ICON, "Add new");
     private final JPanel rowsPanel;
     private final KeyValueOptions options;
 

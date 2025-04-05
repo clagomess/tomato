@@ -25,12 +25,16 @@ import static javax.swing.SwingUtilities.invokeLater;
 @Slf4j
 @Getter
 public class ResponseTabContent extends JPanel {
+    private static final Icon MAGIC_WAND_ICON = new BxsMagicWandIcon();
+    private static final Icon DOWNLOAD_ICON = new BxDownloadIcon();
+    private static final Icon DOTS_VERTICAL_ROUNDED_ICON = new BxDotsVerticalRoundedIcon();
+
     private final TabKey tabKey;
     private final StatusResponse statusResponse = new StatusResponse();
 
-    private final JButton btnBeautifyResponse = new IconButton(new BxsMagicWandIcon(), "Beautify Response");
-    private final JButton btnSaveResponse = new IconButton(new BxDownloadIcon(), "Save Response");
-    private final JButton btnMoreOptions = new IconButton(new BxDotsVerticalRoundedIcon(), "More Options");
+    private final JButton btnBeautifyResponse = new IconButton(MAGIC_WAND_ICON, "Beautify Response");
+    private final JButton btnSaveResponse = new IconButton(DOWNLOAD_ICON, "Save Response");
+    private final JButton btnMoreOptions = new IconButton(DOTS_VERTICAL_ROUNDED_ICON, "More Options");
 
     private TRSyntaxTextArea txtResponse;
     private TableManager<KeyValueTMDto> tblResponseHeader;

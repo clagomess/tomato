@@ -21,7 +21,9 @@ import static com.github.clagomess.tomato.ui.component.ColorConstant.RED;
 import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 
 class Row extends JPanel {
-    private static final BxsCircleIcon ICON_PRODUCTION = new BxsCircleIcon(RED, 18);
+    private static final Icon PRODUCTION_ICON = new BxsCircleIcon(RED, 18);
+    private static final Icon EDIT_ICON = new BxEditIcon();
+    private static final Icon TRASH_ICON = new BxTrashIcon();
 
     public Row(
             Container parent,
@@ -35,7 +37,10 @@ class Row extends JPanel {
         setBorder(new MatteBorder(0, 0, 1, 0, ColorConstant.GRAY));
 
         // edit
-        var btnEdit = new IconButton(new BxEditIcon(), "Edit environment");
+        var btnEdit = new IconButton(
+                EDIT_ICON,
+                "Edit environment"
+        );
         btnEdit.addActionListener(l ->
             new WaitExecution(parent, btnEdit, () -> btnEditAction(
                     parent,
@@ -44,7 +49,10 @@ class Row extends JPanel {
         );
 
         // delete
-        var btnDelete = new IconButton(new BxTrashIcon(), "Delete environment");
+        var btnDelete = new IconButton(
+                TRASH_ICON,
+                "Delete environment"
+        );
         btnDelete.addActionListener(l -> {
             new WaitExecution(parent, btnEdit, () -> {
                 new EnvironmentDeleteDialog(
@@ -56,7 +64,7 @@ class Row extends JPanel {
         btnDelete.setEnabled(true);
 
         var label = new JLabel(environment.getName());
-        if(environment.isProduction()) label.setIcon(ICON_PRODUCTION);
+        if(environment.isProduction()) label.setIcon(PRODUCTION_ICON);
 
         add(label);
         add(btnEdit);

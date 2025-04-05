@@ -13,11 +13,16 @@ import java.awt.*;
 import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
 
 public class CollectionPopUpMenu extends JPopupMenu {
+    private static final Icon SORT_ALT_2_ICON = new BxSortAlt2Icon();
+    private static final Icon IMPORT_ICON = new BxImportIcon();
+    private static final Icon EXPORT_ICON = new BxExportIcon();
+    private static final Icon TRASH_ICON = new BxTrashIcon();
+
     public CollectionPopUpMenu(
             Component parent,
             CollectionTreeDto collectionTree
     ) {
-        var mMove = new JMenuItem("Move", new BxSortAlt2Icon());
+        var mMove = new JMenuItem("Move", SORT_ALT_2_ICON);
         mMove.addActionListener(e -> disposeIfExists(
                 CollectionMoveFrame.class,
                 () -> new CollectionMoveFrame(parent, collectionTree)
@@ -40,14 +45,14 @@ public class CollectionPopUpMenu extends JPopupMenu {
         ));
         add(mNewCollection);
 
-        var mImport = new JMenuItem("Import", new BxImportIcon());
+        var mImport = new JMenuItem("Import", IMPORT_ICON);
         mImport.addActionListener(ae -> disposeIfExists(
                 CollectionImportFrame.class,
                 () -> new CollectionImportFrame(parent, collectionTree)
         ));
         add(mImport);
 
-        var mExport = new JMenuItem("Export", new BxExportIcon());
+        var mExport = new JMenuItem("Export", EXPORT_ICON);
         mExport.addActionListener(ae -> disposeIfExists(
                 CollectionExportFrame.class,
                 () -> new CollectionExportFrame(parent, collectionTree)
@@ -56,7 +61,7 @@ public class CollectionPopUpMenu extends JPopupMenu {
 
         addSeparator();
 
-        var mDelete = new JMenuItem("Delete", new BxTrashIcon());
+        var mDelete = new JMenuItem("Delete", TRASH_ICON);
         mDelete.addActionListener(ae -> new CollectionDeleteDialog(parent, collectionTree).showConfirmDialog());
         add(mDelete);
     }

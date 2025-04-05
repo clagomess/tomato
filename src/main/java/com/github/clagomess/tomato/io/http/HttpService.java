@@ -112,7 +112,7 @@ public class HttpService {
             HttpRequest.Builder httpRequestBuilder
     ){
         httpRequestBuilder.method(
-                requestDto.getMethod().getMethod(),
+                requestDto.getMethod().name(),
                 HttpRequest.BodyPublishers.noBody()
         );
 
@@ -139,7 +139,7 @@ public class HttpService {
         debug.setRequestBodyString(requestDto.getBody().getRaw().getRaw());
 
         httpRequestBuilder.method(
-                requestDto.getMethod().getMethod(),
+                requestDto.getMethod().name(),
                 HttpRequest.BodyPublishers.ofString(
                         requestDto.getBody().getRaw().getRaw(),
                         requestDto.getBody().getCharset()
@@ -162,7 +162,7 @@ public class HttpService {
         debug.setRequestBodyFile(new File(requestDto.getBody().getBinary().getFile()));
 
         httpRequestBuilder.method(
-                requestDto.getMethod().getMethod(),
+                requestDto.getMethod().name(),
                 HttpRequest.BodyPublishers.ofFile(
                         Path.of(requestDto.getBody().getBinary().getFile())
                 )
@@ -185,7 +185,7 @@ public class HttpService {
         debug.setRequestBodyString(body);
 
         httpRequestBuilder.method(
-                requestDto.getMethod().getMethod(),
+                requestDto.getMethod().name(),
                 HttpRequest.BodyPublishers.ofString(body)
         );
 
@@ -206,7 +206,7 @@ public class HttpService {
         debug.setRequestBodyFile(body);
 
         httpRequestBuilder.method(
-                requestDto.getMethod().getMethod(),
+                requestDto.getMethod().name(),
                 HttpRequest.BodyPublishers.ofFile(body.toPath())
         );
 

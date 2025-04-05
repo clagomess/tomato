@@ -21,18 +21,22 @@ import static javax.swing.SwingUtilities.invokeLater;
 @Getter
 @Setter
 class Row extends JPanel {
+    private static final Icon HAS_CHANGED_ICON = new BxsCircleIcon(Color.ORANGE);
+    private static final Icon HAS_NOT_CHANGED_ICON = new BxsCircleIcon(Color.GRAY);
+    private static final Icon TRASH_ICON = new BxTrashIcon();
+
     private final Container parent;
     private final List<KeyValueItemDto> list;
     private final KeyValueItemDto item;
     private final StagingMonitor<KeyValueItemDto> stagingMonitor;
 
-    private final BxsCircleIcon iconHasChanged = new BxsCircleIcon(Color.ORANGE);
-    private final BxsCircleIcon iconHasNotChanged = new BxsCircleIcon(Color.GRAY);
-
-    private final JLabel changeIcon = new JLabel(iconHasNotChanged);
+    private final JLabel changeIcon = new JLabel(HAS_NOT_CHANGED_ICON);
     private final ListenableTextField txtKey = new ListenableTextField();
     private final ListenableTextField txtValue = new ListenableTextField();
-    private final JButton btnRemove = new IconButton(new BxTrashIcon(), "Remove");
+    private final JButton btnRemove = new IconButton(
+            TRASH_ICON,
+            "Remove"
+    );
 
     public Row(
             Container parent,
@@ -92,14 +96,14 @@ class Row extends JPanel {
         updateParentStagingMonitor();
 
         if(stagingMonitor.isDiferent()){
-            invokeLater(() -> changeIcon.setIcon(iconHasChanged));
+            invokeLater(() -> changeIcon.setIcon(HAS_CHANGED_ICON));
         }else{
-            invokeLater(() -> changeIcon.setIcon(iconHasNotChanged));
+            invokeLater(() -> changeIcon.setIcon(HAS_NOT_CHANGED_ICON));
         }
     }
 
     public void resetStagingMonitor(){
         stagingMonitor.reset();
-        invokeLater(() -> changeIcon.setIcon(iconHasNotChanged));
+        invokeLater(() -> changeIcon.setIcon(HAS_NOT_CHANGED_ICON));
     }
 }
