@@ -35,7 +35,7 @@ If(!(Test-Path -Path '../target/dist')){
 --icon favicon.ico `
 --input ../target/release `
 --main-jar tomato-$git_tag.jar `
---main-class com.github.clagomess.tomato.Main `
+--main-class io.github.clagomess.tomato.Main `
 --java-options "-splash:`$APPDIR/splash.png -Dfile.encoding=UTF-8" `
 --win-upgrade-uuid "a6f3d5f2-ad83-4fc7-97ce-6444c991e2fe" `
 --win-per-user-install `
