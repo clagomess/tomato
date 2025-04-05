@@ -16,8 +16,13 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 import static javax.swing.SwingUtilities.getAncestorOfClass;
 
 class KeyValue extends JPanel {
+    private static final Icon PLUS_ICON = new BxPlusIcon();
+
     private final List<KeyValueItemDto> list;
-    private final IconButton btnAddNew = new IconButton(new BxPlusIcon(), "Add a new environment");
+    private final IconButton btnAddNew = new IconButton(
+            PLUS_ICON,
+            "Add a new environment"
+    );
     private final JPanel rowsPanel;
 
     public KeyValue(

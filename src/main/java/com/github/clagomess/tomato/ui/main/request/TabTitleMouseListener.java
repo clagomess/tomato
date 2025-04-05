@@ -15,6 +15,8 @@ import static java.awt.event.MouseEvent.BUTTON3;
 
 @RequiredArgsConstructor
 public class TabTitleMouseListener extends MouseAdapter {
+    private static final Icon LINK_EXTERNAL_ICON = new BxLinkExternalIcon();
+
     private final TabKey tabKey;
     private final RequestTabbedPane parent;
 
@@ -60,7 +62,7 @@ public class TabTitleMouseListener extends MouseAdapter {
     private void showPopupMenu(MouseEvent e) {
         JPopupMenu popup = new JPopupMenu();
 
-        popup.add(new JMenuItem("Detach", new BxLinkExternalIcon()){{
+        popup.add(new JMenuItem("Detach", LINK_EXTERNAL_ICON){{
             addActionListener(e -> detachTab());
         }});
 

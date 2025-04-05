@@ -19,8 +19,13 @@ import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFro
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class EnvironmentSwitcherComboBox extends JPanel {
+    private static final Icon EDIT_ICON = new BxEditIcon();
+
     private final EnvironmentComboBox comboBox = new EnvironmentComboBox();
-    private final JButton btnEdit = new IconButton(new BxEditIcon(), "Edit Environment");
+    private final JButton btnEdit = new IconButton(
+            EDIT_ICON,
+            "Edit Environment"
+    );
 
     private final EnvironmentComboBoxController controller = new EnvironmentComboBoxController();
 

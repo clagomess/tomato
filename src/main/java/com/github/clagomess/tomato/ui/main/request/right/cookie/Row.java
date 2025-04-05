@@ -16,10 +16,12 @@ import java.util.Map;
 @Getter
 @Setter
 class Row extends JPanel {
+    private static final Icon SAVE_ICON = new BxSaveIcon();
+
     private final Container parent;
     private final TabKey tabKey;
     private final Map.Entry<String, String> item;
-    private final JButton btnSave = new IconButton(new BxSaveIcon(), "Set Cookie");
+    private final JButton btnSave = new IconButton(SAVE_ICON, "Set Cookie");
 
     public Row(
             Container parent,

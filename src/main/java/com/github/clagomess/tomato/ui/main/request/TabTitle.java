@@ -17,13 +17,14 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 class TabTitle extends JPanel {
-    protected final BxsCircleIcon iconHasChanged = new BxsCircleIcon(Color.ORANGE);
-    protected final BxsCircleIcon iconHasNotChanged = new BxsCircleIcon(Color.GRAY);
+    private static final Icon HAS_CHANGED_ICON = new BxsCircleIcon(Color.ORANGE);
+    private static final Icon HAS_NOT_CHANGED_ICON = new BxsCircleIcon(Color.GRAY);
+    private static final Icon X_ICON = new BxXIcon();
 
     protected final JLabel changeIcon = new JLabel();
     protected final JLabel httpMethod = new JLabel();
     protected final JLabel title = new JLabel();
-    private final IconButton btnClose = new IconButton(new BxXIcon(), "Close");
+    private final IconButton btnClose = new IconButton(X_ICON, "Close");
 
     private final TabTitleController controller = new TabTitleController();
 
@@ -50,8 +51,8 @@ class TabTitle extends JPanel {
         btnClose.addActionListener(onClose);
         btnClose.addActionListener(l -> dispose());
         changeIcon.setIcon(requestStagingMonitor.isDiferent() ?
-                iconHasChanged :
-                iconHasNotChanged
+                HAS_CHANGED_ICON :
+                HAS_NOT_CHANGED_ICON
         );
 
         controller.addOnChangeListener(requestHead, (method, name) -> {
@@ -60,7 +61,7 @@ class TabTitle extends JPanel {
         });
 
         controller.addOnStagingListener(key, hasChanged ->
-            changeIcon.setIcon(hasChanged ? iconHasChanged : iconHasNotChanged)
+            changeIcon.setIcon(hasChanged ? HAS_CHANGED_ICON : HAS_NOT_CHANGED_ICON)
         );
     }
 

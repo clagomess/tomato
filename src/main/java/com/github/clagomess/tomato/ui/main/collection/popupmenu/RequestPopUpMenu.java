@@ -22,6 +22,11 @@ import static com.github.clagomess.tomato.publisher.base.EventTypeEnum.LOAD;
 import static com.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
 
 public class RequestPopUpMenu extends JPopupMenu {
+    private static final Icon LINK_EXTERNAL_ICON = new BxLinkExternalIcon();
+    private static final Icon CODE_ALT_ICON = new BxCodeAltIcon();
+    private static final Icon SORT_ALT_2_ICON = new BxSortAlt2Icon();
+    private static final Icon TRASH_ICON = new BxTrashIcon();
+
     private final RequestPopUpMenuController controller = new RequestPopUpMenuController();
 
     public RequestPopUpMenu(
@@ -33,11 +38,11 @@ public class RequestPopUpMenu extends JPopupMenu {
         mOpen.addActionListener(e -> open(requestHead));
         add(mOpen);
 
-        var mOpenDetached = new JMenuItem("Open Detached", new BxLinkExternalIcon());
+        var mOpenDetached = new JMenuItem("Open Detached", LINK_EXTERNAL_ICON);
         mOpenDetached.addActionListener(e -> openDetached(requestHead));
         add(mOpenDetached);
 
-        var mCodeSnippet = new JMenuItem("Code Snippet", new BxCodeAltIcon());
+        var mCodeSnippet = new JMenuItem("Code Snippet", CODE_ALT_ICON);
         mCodeSnippet.addActionListener(e -> codeSnippet(parent, requestHead));
         add(mCodeSnippet);
 
@@ -47,7 +52,7 @@ public class RequestPopUpMenu extends JPopupMenu {
         mDuplicate.addActionListener(e -> duplicate(requestHead));
         add(mDuplicate);
 
-        var mMove = new JMenuItem("Move", new BxSortAlt2Icon());
+        var mMove = new JMenuItem("Move", SORT_ALT_2_ICON);
         mMove.addActionListener(e -> move(parent, requestHead));
         add(mMove);
 
@@ -57,7 +62,7 @@ public class RequestPopUpMenu extends JPopupMenu {
 
         addSeparator();
 
-        var mDelete = new JMenuItem("Delete", new BxTrashIcon());
+        var mDelete = new JMenuItem("Delete", TRASH_ICON);
         mDelete.addActionListener(e -> delete(parent, requestHead));
         add(mDelete);
     }
