@@ -138,6 +138,7 @@ public class RequestSplitPane extends JPanel {
         btnRename.addActionListener(l -> btnRenameAction());
         btnCodeSnippet.addActionListener(l -> btnCodeSnippetAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
+        resetBtnState();
         addSaveKeyboardAction();
 
         // # REQUEST / RESPONSE
@@ -180,6 +181,10 @@ public class RequestSplitPane extends JPanel {
         }
 
         return false;
+    }
+
+    private void resetBtnState(){
+        btnRename.setEnabled(requestHeadDto != null);
     }
 
     public void btnSendRequestAction(){
@@ -245,6 +250,7 @@ public class RequestSplitPane extends JPanel {
                     requestHead -> {
                         this.requestHeadDto = requestHead;
                         requestStagingMonitor.reset();
+                        resetBtnState();
                     }
             );
             return;
@@ -253,6 +259,7 @@ public class RequestSplitPane extends JPanel {
         new WaitExecution(this, btnSaveRequest, () -> {
             controller.save(requestHeadDto, requestDto);
             requestStagingMonitor.reset();
+            resetBtnState();
         }).execute();
     }
 
