@@ -23,14 +23,8 @@ jobs:
           java-version: 17
           cache: 'maven'
 
-      - name: Maven - go-offline
-        run: mvn dependency:go-offline
-
-      - name: Maven - resolve
-        run: mvn dependency:resolve
-
-      - name: Maven - resolve-plugins
-        run: mvn dependency:resolve-plugins
+      - name: Maven
+        run: mvn dependency:resolve-plugins dependency:go-offline
 
   junit:
     needs: [maven-go-offline]
@@ -62,4 +56,4 @@ jobs:
           cache: 'maven'
 
       - name: Maven
-        run: mvn -B compile -DskipTests -Dmaven.compiler.showDeprecation=true -Dmaven.compiler.failOnWarning=true
+        run: mvn compile -DskipTests -Dmaven.compiler.showDeprecation=true -Dmaven.compiler.failOnWarning=true
