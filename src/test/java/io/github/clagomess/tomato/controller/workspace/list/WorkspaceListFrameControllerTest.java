@@ -29,6 +29,7 @@ public class WorkspaceListFrameControllerTest {
     public void setup(){
         Mockito.reset(workspaceRepositoryMock);
         Mockito.reset(controller);
+        workspacePublisher.getOnChangeAny().getListeners().clear();
     }
 
     @AfterEach
