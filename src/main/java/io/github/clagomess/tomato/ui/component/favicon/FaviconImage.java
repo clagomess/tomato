@@ -1,9 +1,9 @@
 package io.github.clagomess.tomato.ui.component.favicon;
 
 import com.github.weisj.jsvg.SVGDocument;
-import com.github.weisj.jsvg.attributes.ViewBox;
 import com.github.weisj.jsvg.parser.SVGLoader;
-import com.github.weisj.jsvg.renderer.awt.NullPlatformSupport;
+import com.github.weisj.jsvg.renderer.NullPlatformSupport;
+import com.github.weisj.jsvg.view.ViewBox;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

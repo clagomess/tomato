@@ -1,12 +1,9 @@
 package io.github.clagomess.tomato.ui.component.svgicon;
 
 import com.github.weisj.jsvg.SVGDocument;
-import com.github.weisj.jsvg.attributes.ViewBox;
-import com.github.weisj.jsvg.parser.DefaultParserProvider;
-import com.github.weisj.jsvg.parser.DomProcessor;
-import com.github.weisj.jsvg.parser.ParsedElement;
+import com.github.weisj.jsvg.parser.LoaderContext;
 import com.github.weisj.jsvg.parser.SVGLoader;
-import lombok.RequiredArgsConstructor;
+import com.github.weisj.jsvg.view.ViewBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,9 +51,12 @@ public class SvgIcon implements Icon {
         }
 
         SVGDocument document = Objects.requireNonNull(
-                new SVGLoader().load(svgUrl, new ColorParserProvider(
-                        component.isEnabled() ? color : "#616365"
-                ))
+                new SVGLoader().load(svgUrl, LoaderContext.builder()
+                        .preProcessor(root -> root.setAttribute(
+                                "fill",
+                                component.isEnabled() ? color : "#616365"
+                        ))
+                        .build())
         );
 
         documentMap.put(component.isEnabled(), document);
@@ -82,25 +82,5 @@ public class SvgIcon implements Icon {
     @Override
     public int getIconHeight() {
         return iconHeight;
-    }
-
-    @RequiredArgsConstructor
-    private static class ColorParserProvider extends DefaultParserProvider {
-        private final String color;
-
-        @Override
-        public DomProcessor createPreProcessor() {
-            return new CustomDomProcessor(color);
-        }
-    }
-
-    @RequiredArgsConstructor
-    private static class CustomDomProcessor implements DomProcessor {
-        private final String color;
-
-        @Override
-        public void process(ParsedElement root) {
-            root.attributeNode().attributes().put("fill", this.color);
-        }
     }
 }
