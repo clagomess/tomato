@@ -9,6 +9,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
+import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
+
 @Mapper
 public interface PostmanEnvironmentDumpMapper {
     PostmanEnvironmentDumpMapper INSTANCE = Mappers.getMapper(PostmanEnvironmentDumpMapper.class);
@@ -21,8 +23,13 @@ public interface PostmanEnvironmentDumpMapper {
 
     @AfterMapping
     default void map(
-            @MappingTarget PostmanEnvironmentDto.Value target
+            @MappingTarget PostmanEnvironmentDto.Value target,
+            EnvironmentItemDto source
     ) {
         target.setEnabled(true);
+
+        if(source.getType() == SECRET){
+            target.setValue("***");
+        }
     }
 }
