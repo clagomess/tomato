@@ -45,4 +45,4 @@ jobs:
           java-version: 17
 
       - name: Maven
-        run: mvn compile -DskipTests -Dmaven.compiler.showDeprecation=true -Dmaven.compiler.failOnWarning=true
+        run: mvn compile -Dmaven.test.skip -Dmaven.compiler.showDeprecation=true -Dmaven.compiler.failOnWarning=true
