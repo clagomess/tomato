@@ -21,7 +21,6 @@ public class HttpHeaderBuilderTest extends RepositoryStubs {
 
     @BeforeAll
     public static void setup(){
-        System.setProperty("TOMATO_AWAYS_USE_TEST_DATA", "true");
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .addListener(() -> List.of(new EnvironmentItemDto("foo", "bar")));
@@ -29,7 +28,6 @@ public class HttpHeaderBuilderTest extends RepositoryStubs {
 
     @AfterAll
     public static void unload(){
-        System.clearProperty("TOMATO_AWAYS_USE_TEST_DATA");
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .getListeners()

@@ -24,17 +24,25 @@ public abstract class RepositoryStubs {
 
     @BeforeEach
     public void setupDirs() {
-        mockHomeDir = new File("target", "home-" + RandomStringUtils.secure().nextAlphanumeric(8));
+        File userHome = new File(
+                "target",
+                "home-" + RandomStringUtils.secure().nextAlphanumeric(8)
+        );
+
+        mockHomeDir = new File(userHome, ".tomato");
         assertTrue(mockHomeDir.mkdirs());
 
         mockDataDir = new File(mockHomeDir, "data");
         assertTrue(mockDataDir.mkdirs());
+
+        System.setProperty("user.home", userHome.getAbsolutePath());
     }
 
     @BeforeEach
     public void cleanCache() {
         ConfigurationRepository.cache.evictAll();
         ConfigurationRepository.cacheHomeDir.evictAll();
+        ConfigurationRepository.cacheDatadir.evictAll();
         DataSessionRepository.cache.evictAll();
         EnvironmentRepository.cache.evictAll();
         WorkspaceRepository.cacheList.evictAll();
