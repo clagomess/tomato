@@ -41,14 +41,10 @@ public class RequestNameTextField extends JPanel {
             @Nullable RequestHeadDto requestHead,
             @NotNull RequestDto request
     ){
+        lblRequestName.setText(request.getName());
+
         if(requestHead != null && requestHead.getParent() != null){
             parent.setText(requestHead.getParent().getFlattenedParentString());
-
-            listenerUuid = requestPublisher.getOnChange().addListener(new RequestKey(requestHead), event -> {
-                parent.setText(event.getEvent().getParent().getFlattenedParentString());
-                lblRequestName.setText(event.getEvent().getName());
-                request.setName(event.getEvent().getName());
-            });
         }else{
             try {
                 parent.setText(workspaceRepository.getDataSessionWorkspace().getName());
@@ -57,7 +53,13 @@ public class RequestNameTextField extends JPanel {
             }
         }
 
-        lblRequestName.setText(request.getName());
+        RequestKey key = new RequestKey(requestHead, request);
+
+        listenerUuid = requestPublisher.getOnChange().addListener(key, event -> {
+            parent.setText(event.getEvent().getParent().getFlattenedParentString());
+            lblRequestName.setText(event.getEvent().getName());
+            request.setName(event.getEvent().getName());
+        });
     }
 
     public void dispose(){
