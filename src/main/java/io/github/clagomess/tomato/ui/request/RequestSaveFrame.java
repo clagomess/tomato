@@ -82,11 +82,16 @@ public class RequestSaveFrame extends JFrame {
                     filePath
             );
 
-            requestPublisher.getOnChange().publish(
-                    new RequestKey(requestHead),
-                    new PublisherEvent<>(INSERTED, requestHead)
-            );
+            var oldKey = new RequestKey(null, requestHead.getId());
+            var newKey = new RequestKey(requestHead);
+            var event = new PublisherEvent<>(INSERTED, requestHead);
+
             onSaveListener.response(requestHead);
+
+            requestPublisher.getOnChange().publish(oldKey, event);
+            requestPublisher.getOnChange().publish(newKey, event);
+            requestPublisher.getOnChange()
+                    .changeKey(oldKey, newKey);
 
             setVisible(false);
             dispose();

@@ -25,12 +25,13 @@ public class TabTitleControllerTest {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     private TabKey tabKey;
+    private RequestDto request;
     private RequestHeadDto requestHead;
     private final TabTitleController controller = Mockito.spy(TabTitleController.class);
 
     @BeforeEach
     public void setup() {
-        var request = new RequestDto();
+        request = new RequestDto();
 
         requestHead = new RequestHeadDto();
         requestHead.setId(request.getId());
@@ -60,7 +61,7 @@ public class TabTitleControllerTest {
         AtomicReference<HttpMethodEnum> methodResult = new AtomicReference<>();
         AtomicReference<String> nameResult = new AtomicReference<>();
 
-        controller.addOnChangeListener(requestHead, (method, name) -> {
+        controller.addOnChangeListener(request, requestHead, (method, name) -> {
             methodResult.set(method);
             nameResult.set(name);
         });
