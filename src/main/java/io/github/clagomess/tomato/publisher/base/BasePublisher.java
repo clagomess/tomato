@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.publisher.base;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -34,9 +35,10 @@ abstract class BasePublisher<K, T> {
     }
 
     @Getter
+    @Setter
     protected static class Listener<K, T> {
         private final UUID uuid = UUID.randomUUID();
-        private final K key;
+        private K key;
         private final OnChangeFI<T> runnable;
 
         public Listener(K key, OnChangeFI<T> runnable) {

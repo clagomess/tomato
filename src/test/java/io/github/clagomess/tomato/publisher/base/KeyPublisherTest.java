@@ -3,9 +3,7 @@ package io.github.clagomess.tomato.publisher.base;
 import io.github.clagomess.tomato.io.repository.DirectoryCreateException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,18 +23,10 @@ public class KeyPublisherTest {
             throw new RuntimeException("OK");
         });
 
-        try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
-            msSwing.when(() -> SwingUtilities.invokeLater(Mockito.any()))
-                    .thenAnswer(answer -> {
-                        ((Runnable) answer.getArgument(0)).run();
-                        return null;
-                    });
-
-            assertThrowsExactly(
-                    RuntimeException.class,
-                    () -> doException.publish(2, "opa")
-            );
-        }
+        assertThrowsExactly(
+                RuntimeException.class,
+                () -> doException.publish(2, "opa")
+        );
     }
 
     @Test
@@ -47,21 +37,13 @@ public class KeyPublisherTest {
             throw new RuntimeException("OK");
         });
 
-        try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
-            msSwing.when(() -> SwingUtilities.invokeLater(Mockito.any()))
-                    .thenAnswer(answer -> {
-                        ((Runnable) answer.getArgument(0)).run();
-                        return null;
-                    });
+        assertThrowsExactly(
+                RuntimeException.class,
+                () -> doException.publish(1, "opa")
+        );
 
-            assertThrowsExactly(
-                    RuntimeException.class,
-                    () -> doException.publish(1, "opa")
-            );
-
-            doException.removeListener(1);
-            doException.publish(1, "opa");
-        }
+        doException.removeListener(1);
+        doException.publish(1, "opa");
     }
 
     @Test
@@ -80,5 +62,32 @@ public class KeyPublisherTest {
                     var dummy = RandomStringUtils.secure().nextAlphanumeric(8);
                     publisher.publish(key, dummy);
                 });
+    }
+
+    @Test
+    public void changeKey(){
+        KeyPublisher<Integer, String> doException = new KeyPublisher<>();
+        doException.addListener(1, event -> {
+            throw new RuntimeException();
+        });
+        doException.addListener(2, event -> {
+            throw new IllegalArgumentException();
+        });
+
+        doException.changeKey(1, 3);
+        doException.changeKey(2, 4);
+
+        doException.publish(1, "opa");
+        doException.publish(2, "opa");
+
+        assertThrowsExactly(
+                RuntimeException.class,
+                () -> doException.publish(3, "opa")
+        );
+
+        assertThrowsExactly(
+                IllegalArgumentException.class,
+                () -> doException.publish(4, "opa")
+        );
     }
 }
