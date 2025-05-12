@@ -31,6 +31,7 @@ class Row extends JPanel {
     private final Container parent;
     private final List<EnvironmentItemDto> list;
     private final EnvironmentItemDto item;
+    private final EnvironmentKeystore environmentKeystore;
     private final StagingMonitor<EnvironmentItemDto> stagingMonitor;
 
     private final JLabel changeIcon = new JLabel(HAS_NOT_CHANGED_ICON);
@@ -38,7 +39,7 @@ class Row extends JPanel {
             EnvironmentItemTypeEnum.values()
     );
     private final ListenableTextField txtKey = new ListenableTextField();
-    private final ValueTextField txtValue;
+    private ValueTextField txtValue;
     private final JButton btnRemove = new IconButton(
             TRASH_ICON,
             "Remove"
@@ -53,6 +54,7 @@ class Row extends JPanel {
         this.parent = parent;
         this.list = list;
         this.item = item;
+        this.environmentKeystore = environmentKeystore;
         this.stagingMonitor = new StagingMonitor<>(item);
 
         if(!this.list.contains(this.item)){
@@ -70,6 +72,7 @@ class Row extends JPanel {
         cbType.setSelectedItem(item.getType());
         cbType.addActionListener(e -> {
             item.setType((EnvironmentItemTypeEnum) cbType.getSelectedItem());
+            onChangeType();
             updateStagingMonitor();
         });
         add(cbType, "width 80!");
@@ -81,19 +84,36 @@ class Row extends JPanel {
         });
         add(txtKey, "width 150!");
 
-        txtValue = new ValueTextField(environmentKeystore, item, value -> {
-            item.setValue(value);
-            updateStagingMonitor();
-        });
+        txtValue = createTxtValue();
         add(txtValue, "width 150:150:100%");
 
         btnRemove.addActionListener(l -> btnRemoveAction());
         add(btnRemove);
     }
 
+    protected ValueTextField createTxtValue(){
+        return new ValueTextField(environmentKeystore, item, value -> {
+            item.setValue(value);
+            updateStagingMonitor();
+        });
+    }
+
     private void updateParentStagingMonitor(){
         var parent = (EnvironmentEditFrame) getAncestorOfClass(EnvironmentEditFrame.class, this);
         parent.updateStagingMonitor();
+    }
+
+    public void onChangeType() {
+        txtValue.unlockSecret();
+        item.setValue(txtValue.getText());
+
+        int index = ComponentUtil.getComponentIndex(this, txtValue);
+        remove(index);
+
+        txtValue = createTxtValue();
+        add(txtValue, "width 150:150:100%", index);
+        revalidate();
+        repaint();
     }
 
     private void btnRemoveAction(){

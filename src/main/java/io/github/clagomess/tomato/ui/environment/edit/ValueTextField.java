@@ -53,10 +53,10 @@ public class ValueTextField extends ListenableTextField {
             );
         }
 
-        btnUnlockSecret.addActionListener(e -> btnEditSecretAction());
+        btnUnlockSecret.addActionListener(e -> unlockSecret());
     }
 
-    public void btnEditSecretAction(){
+    public void unlockSecret(){
         try {
             String text = null;
 
