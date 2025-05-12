@@ -1,20 +1,23 @@
 package io.github.clagomess.tomato.ui.environment.edit;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
+import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
+import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
-import io.github.clagomess.tomato.ui.component.ListenableTextField;
-import io.github.clagomess.tomato.ui.component.StagingMonitor;
-import io.github.clagomess.tomato.ui.component.WaitExecution;
+import io.github.clagomess.tomato.ui.component.*;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
+import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static javax.swing.SwingUtilities.invokeLater;
 
@@ -28,6 +31,7 @@ public class EnvironmentEditFrame extends JFrame {
 
     private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
+    private final EnvironmentKeystore environmentKeystore;
 
     @Getter
     private final EnvironmentDto environment;
@@ -37,6 +41,7 @@ public class EnvironmentEditFrame extends JFrame {
             String environmentId
     ) throws IOException {
         this.environment = environmentRepository.load(environmentId).orElseThrow();
+        this.environmentKeystore = getEnvironmentKeystore(environmentId);
         this.stagingMonitor = new StagingMonitor<>(environment);
         this.title = "Environment - " + environment.getName();
 
@@ -57,18 +62,21 @@ public class EnvironmentEditFrame extends JFrame {
             environment.setProduction(chkProduction.isSelected());
             updateStagingMonitor();
         });
-        keyValue = new KeyValue(environment.getEnvs());
+        keyValue = new KeyValue(
+                environmentKeystore,
+                environment.getEnvs()
+        );
 
         setLayout(new MigLayout(
                 "insets 10",
-                "[grow]"
+                "[][grow, fill]"
         ));
-        add(new JLabel("Name"), "wrap");
-        add(txtName, "width 100%, wrap");
-        add(new JLabel("Production?"), "wrap");
+        add(new JLabel("Name:"));
+        add(txtName, "wrap");
+        add(new JLabel("Production?:"));
         add(chkProduction, "wrap");
-        add(keyValue, "width 100%, height 100%, wrap");
-        add(btnSave, "align right");
+        add(keyValue, "span 2, width 100%, height 100%, wrap");
+        add(btnSave, "span 2, align right");
 
         btnSave.addActionListener(l -> btnSaveAction());
 
@@ -77,6 +85,22 @@ public class EnvironmentEditFrame extends JFrame {
         pack();
         setLocationRelativeTo(parent);
         setVisible(true);
+    }
+
+    private EnvironmentKeystore getEnvironmentKeystore(String environmentId) {
+        try {
+            File workspacePath = new WorkspaceRepository()
+                    .getDataSessionWorkspace()
+                    .getPath();
+
+            var environmentKeystore = new EnvironmentKeystore(workspacePath, environmentId);
+            environmentKeystore.setGetPassword(() -> new PasswordDialog(this).showDialog());
+            environmentKeystore.setGetNewPassword(() -> new NewPasswordDialog(this).showDialog());
+
+            return environmentKeystore;
+        }catch (IOException e){
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     public void updateStagingMonitor(){
@@ -97,6 +121,22 @@ public class EnvironmentEditFrame extends JFrame {
 
     private void btnSaveAction(){
         new WaitExecution(this, btnSave, () -> {
+            List<EnvironmentKeystore.Entry> secretsToSave = environment.getEnvs().stream()
+                    .filter(item -> item.getType().equals(SECRET))
+                    .filter(item -> item.getValue() != null)
+                    .map(EnvironmentKeystore.Entry::new)
+                    .toList();
+
+            environmentKeystore.saveEntries(secretsToSave).forEach(entry ->
+                environment.getEnvs().stream()
+                        .filter(env -> env.getKey().equals(entry.getKey()))
+                        .findFirst()
+                        .ifPresent(env -> {
+                            env.setSecretId(entry.getEntryId());
+                            env.setValue(null);
+                        })
+            );
+
             environmentRepository.save(environment);
 
             resetStagingMonitor();

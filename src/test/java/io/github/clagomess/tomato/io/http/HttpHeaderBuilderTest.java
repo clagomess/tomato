@@ -1,29 +1,41 @@
 package io.github.clagomess.tomato.io.http;
 
-import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
-import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
+import io.github.clagomess.tomato.io.repository.RepositoryStubs;
+import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.util.List;
-import java.util.Optional;
 
-public class HttpHeaderBuilderTest {
+public class HttpHeaderBuilderTest extends RepositoryStubs {
     private HttpRequest.Builder httpRequestBuilder;
 
-    private final EnvironmentDto environment = new EnvironmentDto(){{
-        setEnvs(List.of(new KeyValueItemDto("foo", "bar")));
-    }};
+    @BeforeAll
+    public static void setup(){
+        EnvironmentPublisher.getInstance()
+                .getCurrentEnvs()
+                .addListener(() -> List.of(new EnvironmentItemDto("foo", "bar")));
+    }
+
+    @AfterAll
+    public static void unload(){
+        EnvironmentPublisher.getInstance()
+                .getCurrentEnvs()
+                .getListeners()
+                .remove();
+    }
 
     @BeforeEach
-    public void setup() throws IOException {
+    public void setupHttpRequest() {
         this.httpRequestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost"));
     }
@@ -32,13 +44,11 @@ public class HttpHeaderBuilderTest {
     public void build_expectedDefaultUserAgent() throws IOException {
         var request = new RequestDto();
 
-        try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
-            new HttpHeaderBuilder(httpRequestBuilder, request).build();
-            var result = httpRequestBuilder.build().headers();
+        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        var result = httpRequestBuilder.build().headers();
 
-            Assertions.assertThat(result.firstValue("User-Agent").orElseThrow())
-                    .contains("Tomato/");
-        }
+        Assertions.assertThat(result.firstValue("User-Agent").orElseThrow())
+                .contains("Tomato/");
     }
 
     @Test
@@ -48,13 +58,11 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("User-Agent", "foo")
         ));
 
-        try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
-            new HttpHeaderBuilder(httpRequestBuilder, request).build();
-            var result = httpRequestBuilder.build().headers();
+        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        var result = httpRequestBuilder.build().headers();
 
-            Assertions.assertThat(result.firstValue("User-Agent").orElseThrow())
-                    .contains("foo");
-        }
+        Assertions.assertThat(result.firstValue("User-Agent").orElseThrow())
+                .contains("foo");
     }
 
     @Test
@@ -65,13 +73,11 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("Content-Type", "bar")
         ));
 
-        try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
-            new HttpHeaderBuilder(httpRequestBuilder, request).build();
-            var result = httpRequestBuilder.build().headers();
+        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        var result = httpRequestBuilder.build().headers();
 
-            Assertions.assertThat(result.allValues("Content-Type"))
-                    .hasSize(1);
-        }
+        Assertions.assertThat(result.allValues("Content-Type"))
+                .hasSize(1);
     }
 
     @Test
@@ -82,13 +88,11 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("FOO", "bar")
         ));
 
-        try(var ignored = Mockito.mockConstruction(EnvironmentRepository.class)) {
-            new HttpHeaderBuilder(httpRequestBuilder, request).build();
-            var result = httpRequestBuilder.build().headers();
+        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        var result = httpRequestBuilder.build().headers();
 
-            Assertions.assertThat(result.allValues("Cookie"))
-                    .hasSize(2);
-        }
+        Assertions.assertThat(result.allValues("Cookie"))
+                .hasSize(2);
     }
 
     @Test
@@ -98,18 +102,11 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("Content-Type", "{{foo}}")
         ));
 
-        try(var ignored = Mockito.mockConstruction(
-                EnvironmentRepository.class,
-                (mock, context) -> Mockito.doReturn(Optional.of(environment))
-                    .when(mock)
-                    .getWorkspaceSessionEnvironment()
-        )) {
-            new HttpHeaderBuilder(httpRequestBuilder, request).build();
-            var result = httpRequestBuilder.build().headers();
+        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        var result = httpRequestBuilder.build().headers();
 
-            Assertions.assertThat(result.firstValue("Content-Type").orElseThrow())
-                    .isEqualTo("bar");
-        }
+        Assertions.assertThat(result.firstValue("Content-Type").orElseThrow())
+                .isEqualTo("bar");
     }
 
     @Test
@@ -119,17 +116,10 @@ public class HttpHeaderBuilderTest {
                 new KeyValueItemDto("JSESSIONID", "{{foo}}")
         ));
 
-        try(var ignored = Mockito.mockConstruction(
-                EnvironmentRepository.class,
-                (mock, context) -> Mockito.doReturn(Optional.of(environment))
-                        .when(mock)
-                        .getWorkspaceSessionEnvironment()
-        )) {
-            new HttpHeaderBuilder(httpRequestBuilder, request).build();
-            var result = httpRequestBuilder.build().headers();
+        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        var result = httpRequestBuilder.build().headers();
 
-            Assertions.assertThat(result.firstValue("Cookie").orElseThrow())
-                    .isEqualTo("JSESSIONID=bar");
-        }
+        Assertions.assertThat(result.firstValue("Cookie").orElseThrow())
+                .isEqualTo("JSESSIONID=bar");
     }
 }

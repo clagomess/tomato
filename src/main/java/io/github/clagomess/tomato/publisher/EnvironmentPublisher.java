@@ -1,8 +1,11 @@
 package io.github.clagomess.tomato.publisher;
 
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.publisher.base.NoKeyPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class EnvironmentPublisher {
@@ -11,4 +14,5 @@ public class EnvironmentPublisher {
     private EnvironmentPublisher() {}
 
     private final NoKeyPublisher<PublisherEvent<String>> onChange = new NoKeyPublisher<>();
+    private final NoKeyPublisher<List<EnvironmentItemDto>> currentEnvs = new NoKeyPublisher<>();
 }

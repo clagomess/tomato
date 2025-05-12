@@ -4,6 +4,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
+import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import io.github.clagomess.tomato.ui.component.IconButton;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSortAZIcon;
@@ -16,7 +17,6 @@ import java.util.*;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
-import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 public class KeyValue<T extends KeyValueItemDto> extends JPanel implements DisposableListener {
     private static final Icon SORT_AZ_ICON = new BxSortAZIcon();
@@ -49,7 +49,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
             RequestStagingMonitor requestStagingMonitor,
             KeyValueOptions options
     ){
-        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+        ComponentUtil.checkIsEventDispatchThread();
 
         this.itemClass = itemClass;
         this.listItens = listItens;

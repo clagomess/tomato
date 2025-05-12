@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.ui.main.collection.node;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.key.RequestKey;
+import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import lombok.Getter;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -11,7 +12,6 @@ import javax.swing.tree.MutableTreeNode;
 import java.util.UUID;
 
 import static javax.swing.SwingUtilities.invokeLater;
-import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 @Getter
 public class RequestTreeNode extends DefaultMutableTreeNode {
@@ -54,7 +54,7 @@ public class RequestTreeNode extends DefaultMutableTreeNode {
             RequestTreeNode node,
             RequestHeadDto requestHead
     ) {
-        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+        ComponentUtil.checkIsEventDispatchThread();
 
         int nodeIdx = parentNode.getIndex(node);
         node.removeFromParent();
@@ -71,7 +71,7 @@ public class RequestTreeNode extends DefaultMutableTreeNode {
             CollectionTreeNode parentNode,
             RequestTreeNode node
     ){
-        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+        ComponentUtil.checkIsEventDispatchThread();
 
         node.removeFromParent();
         treeModel.reload(parentNode);

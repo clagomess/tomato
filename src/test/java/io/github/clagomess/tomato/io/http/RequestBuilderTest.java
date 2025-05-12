@@ -1,6 +1,6 @@
 package io.github.clagomess.tomato.io.http;
 
-import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -14,10 +14,12 @@ public class RequestBuilderTest {
             "myvalue,myvalue",
             "{{foo}},bar",
             "a-{{bar}},a-{{bar}}",
+            "a-{{null-env}},a-",
     })
     public void injectEnvironment(String input, String expected){
-        List<KeyValueItemDto> envs = List.of(
-                new KeyValueItemDto("foo", "bar")
+        List<EnvironmentItemDto> envs = List.of(
+                new EnvironmentItemDto("foo", "bar"),
+                new EnvironmentItemDto("null-env", null)
         );
 
         var result = new RequestBuilder(envs)

@@ -1,9 +1,12 @@
 package io.github.clagomess.tomato.controller.environment;
 
+import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
+import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import io.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import io.github.clagomess.tomato.publisher.WorkspacePublisher;
@@ -17,6 +20,7 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
@@ -24,15 +28,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EnvironmentComboBoxControllerTest {
     private final EnvironmentRepository environmentRepositoryMock = Mockito.mock(EnvironmentRepository.class);
+    private final WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
     private final WorkspaceSessionRepository workspaceSessionRepositoryMock = Mockito.mock(WorkspaceSessionRepository.class);
     private final EnvironmentComboBoxController controller = Mockito.spy(new EnvironmentComboBoxController(
             environmentRepositoryMock,
+            workspaceRepositoryMock,
             workspaceSessionRepositoryMock
     ));
 
     @BeforeEach
     public void setup(){
         Mockito.reset(environmentRepositoryMock);
+        Mockito.reset(workspaceRepositoryMock);
         Mockito.reset(workspaceSessionRepositoryMock);
         Mockito.reset(controller);
     }
@@ -51,6 +58,40 @@ public class EnvironmentComboBoxControllerTest {
                 ));
 
         assertTrue(triggered.get());
+    }
+
+    @Test
+    public void refreshEnvironmentCurrentEnvsListener() throws IOException {
+        var wsSession = new WorkspaceSessionDto();
+        wsSession.setEnvironmentId("aaa");
+
+        Mockito.doReturn(wsSession)
+                .when(workspaceSessionRepositoryMock)
+                .load();
+
+        var workspace = new WorkspaceDto();
+        Mockito.doReturn(workspace)
+                .when(workspaceRepositoryMock)
+                .getDataSessionWorkspace();
+
+        var environment = new EnvironmentDto();
+        environment.setEnvs(List.of(
+                new EnvironmentItemDto("foo", "bar")
+        ));
+        Mockito.doReturn(Optional.of(environment))
+                .when(environmentRepositoryMock)
+                .getWorkspaceSessionEnvironment();
+
+        controller.refreshEnvironmentCurrentEnvsListener(
+                () -> "supersecret",
+                () -> "supersecret"
+        );
+
+        var result = EnvironmentPublisher.getInstance()
+                .getCurrentEnvs()
+                .request();
+
+        Assertions.assertThat(result).isNotEmpty();
     }
 
     @Test

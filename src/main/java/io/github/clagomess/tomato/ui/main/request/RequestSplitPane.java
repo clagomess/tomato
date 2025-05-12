@@ -4,10 +4,7 @@ import io.github.clagomess.tomato.controller.main.request.RequestSplitPaneContro
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.key.TabKey;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import io.github.clagomess.tomato.ui.component.ColorConstant;
-import io.github.clagomess.tomato.ui.component.ExceptionDialog;
-import io.github.clagomess.tomato.ui.component.IconButton;
-import io.github.clagomess.tomato.ui.component.WaitExecution;
+import io.github.clagomess.tomato.ui.component.*;
 import io.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
 import io.github.clagomess.tomato.ui.component.envtextfield.EnvTextfieldOptions;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
@@ -30,7 +27,6 @@ import java.util.Arrays;
 
 import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
 import static javax.swing.SwingUtilities.invokeLater;
-import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 @Slf4j
 @Getter
@@ -85,7 +81,7 @@ public class RequestSplitPane extends JPanel {
             @Nullable RequestHeadDto requestHeadDto,
             @NotNull RequestDto requestDto
     ) {
-        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+        ComponentUtil.checkIsEventDispatchThread();
 
         this.key = key;
         this.requestStagingMonitor = requestStagingMonitor;

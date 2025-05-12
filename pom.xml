@@ -112,6 +112,12 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>org.linguafranca.pwdb</groupId>
+            <artifactId>KeePassJava2-jackson</artifactId>
+            <version>2.2.4</version>
+        </dependency>
+
         <!-- ######## SCOPE TEST ######## -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.ui.main.request.left;
 
 import io.github.clagomess.tomato.dto.key.TabKey;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
+import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
@@ -10,7 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 
 import static javax.swing.SwingUtilities.invokeLater;
-import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 @Getter
 public class TabTitle extends JPanel {
@@ -41,7 +41,7 @@ public class TabTitle extends JPanel {
     }
 
     private void refreshTitleIcon(){
-        if(!isEventDispatchThread()) throw new IllegalThreadStateException();
+        ComponentUtil.checkIsEventDispatchThread();
 
         removeAll();
 

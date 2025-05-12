@@ -61,7 +61,7 @@ jobs:
           java-version: 17
 
       - name: Maven
-        run: mvn -B clean compile package -DskipTests
+        run: mvn -B clean compile package -Dmaven.test.skip
 
       - name: Dist
         run: |

@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.environment.edit;
 
-import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 import io.github.clagomess.tomato.ui.component.IconButton;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
@@ -18,7 +19,7 @@ import static javax.swing.SwingUtilities.getAncestorOfClass;
 class KeyValue extends JPanel {
     private static final Icon PLUS_ICON = new BxPlusIcon();
 
-    private final List<KeyValueItemDto> list;
+    private final List<EnvironmentItemDto> list;
     private final IconButton btnAddNew = new IconButton(
             PLUS_ICON,
             "Add a new environment"
@@ -26,7 +27,8 @@ class KeyValue extends JPanel {
     private final JPanel rowsPanel;
 
     public KeyValue(
-            List<KeyValueItemDto> list
+            EnvironmentKeystore environmentKeystore,
+            List<EnvironmentItemDto> list
     ) {
         this.list = list;
 
@@ -37,10 +39,11 @@ class KeyValue extends JPanel {
 
         JPanel header = new JPanel(new MigLayout(
                 "insets 5 0 5 0",
-                "[][][grow, fill][]"
+                "[][][][grow, fill][]"
         ));
         header.setBorder(new MatteBorder(0, 0, 1, 0, ColorConstant.GRAY));
         header.add(new JLabel(), "width 8!");
+        header.add(new JLabel("Type"), "width 80!");
         header.add(new JLabel("Key"), "width 150!");
         header.add(new JLabel("Value"), "width 100%");
         header.add(btnAddNew);
@@ -60,22 +63,26 @@ class KeyValue extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, "width ::100%, height 100%");
         btnAddNew.addActionListener(l -> {
-            addRow(new KeyValueItemDto());
+            addRow(environmentKeystore, new EnvironmentItemDto());
 
             var parent = (EnvironmentEditFrame) getAncestorOfClass(EnvironmentEditFrame.class, this);
             parent.updateStagingMonitor();
         });
 
-        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() ->
             this.list.stream()
                     .sorted()
-                    .forEach(this::addRow);
-        });
+                    .forEach(item -> addRow(environmentKeystore, item))
+        );
     }
 
-    private void addRow(KeyValueItemDto item){
+    private void addRow(
+            EnvironmentKeystore environmentKeystore,
+            EnvironmentItemDto item
+    ){
         var row = new Row(
                 rowsPanel,
+                environmentKeystore,
                 this.list,
                 item
         );

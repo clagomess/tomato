@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.io.http;
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,11 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class UrlBuilderTest {
     private EnvironmentRepository environmentDSMock;
 
-    private final List<KeyValueItemDto> envList = List.of(
-            new KeyValueItemDto("tomatoUri", "http://localhost"),
-            new KeyValueItemDto("foo", "bar"),
-            new KeyValueItemDto("date", "17/01/2025"),
-            new KeyValueItemDto("blank", " ")
+    private final List<EnvironmentItemDto> envList = List.of(
+            new EnvironmentItemDto("tomatoUri", "http://localhost"),
+            new EnvironmentItemDto("foo", "bar"),
+            new EnvironmentItemDto("date", "17/01/2025"),
+            new EnvironmentItemDto("blank", " ")
     );
 
     @BeforeEach

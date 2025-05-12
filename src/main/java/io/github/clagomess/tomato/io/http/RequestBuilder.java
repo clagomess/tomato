@@ -1,26 +1,24 @@
 package io.github.clagomess.tomato.io.http;
 
-import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
-import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
+import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class RequestBuilder {
-    private final List<KeyValueItemDto> envs;
+    private final List<EnvironmentItemDto> envs;
 
-    public RequestBuilder() throws IOException {
-        this.envs = new EnvironmentRepository().getWorkspaceSessionEnvironment()
-                .map(EnvironmentDto::getEnvs)
-                .orElse(Collections.emptyList());
+    public RequestBuilder() {
+        this.envs = EnvironmentPublisher.getInstance()
+                .getCurrentEnvs()
+                .request();
     }
 
     protected String injectEnvironment(
@@ -33,13 +31,14 @@ public class RequestBuilder {
 
         for(var env : envs) {
             int idx = 0;
-            var key = String.format("{{%s}}", env.getKey());
+            var envKey = String.format("{{%s}}", env.getKey());
+            var envValue = env.getValue() != null ? env.getValue() : "";
 
-            while ((idx = valueBuilder.indexOf(key, idx)) != -1){
+            while ((idx = valueBuilder.indexOf(envKey, idx)) != -1){
                 valueBuilder.replace(
                         idx,
-                        idx + key.length(),
-                        env.getValue()
+                        idx + envKey.length(),
+                        envValue
                 );
             }
         }

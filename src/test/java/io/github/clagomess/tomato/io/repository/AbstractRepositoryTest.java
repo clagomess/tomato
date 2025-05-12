@@ -103,6 +103,7 @@ public class AbstractRepositoryTest extends RepositoryStubs {
 
     @Test
     public void getHomeDir(){
+        System.setProperty("user.home", "~");
         assertThrows(AssertionError.class, abstractRepository::getHomeDir);
     }
 

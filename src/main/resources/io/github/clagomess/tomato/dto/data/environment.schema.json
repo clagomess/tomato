@@ -24,6 +24,12 @@
       "items": {
         "type": "object",
         "properties": {
+          "type": {
+            "enum": ["TEXT", "SECRET"]
+          },
+          "secretId": {
+            "type": ["string", "null"]
+          },
           "key": {
             "type": "string"
           },
@@ -32,6 +38,7 @@
           }
         },
         "required": [
+          "type",
           "key",
           "value"
         ]

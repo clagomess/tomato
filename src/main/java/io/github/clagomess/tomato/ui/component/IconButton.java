@@ -12,4 +12,13 @@ public class IconButton extends JButton {
         setFocusable(false);
         setMargin(new Insets(0,0,0,0));
     }
+
+    public IconButton(
+            Icon icon,
+            Icon disabledIcon,
+            String toolTipText
+    ) {
+        this(icon, toolTipText);
+        setDisabledIcon(disabledIcon);
+    }
 }

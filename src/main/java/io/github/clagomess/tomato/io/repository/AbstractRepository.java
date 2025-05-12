@@ -20,8 +20,9 @@ import java.util.stream.Stream;
 abstract class AbstractRepository {
     private void verifyOperationAllowedInTestMode(@Nullable File path) {
         if(path == null) return;
-        assert path.getAbsolutePath().contains("target") :
-                "No allowed outside dir in test mode";
+
+        assert path.getAbsolutePath().contains("target")
+                : "No allowed outside dir in test mode";
     }
 
     protected File createDirectoryIfNotExists(File path){

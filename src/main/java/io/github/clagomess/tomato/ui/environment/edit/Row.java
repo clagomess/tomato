@@ -1,6 +1,8 @@
 package io.github.clagomess.tomato.ui.environment.edit;
 
-import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum;
+import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import io.github.clagomess.tomato.ui.component.IconButton;
 import io.github.clagomess.tomato.ui.component.ListenableTextField;
@@ -10,6 +12,7 @@ import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,13 +29,17 @@ class Row extends JPanel {
     private static final Icon TRASH_ICON = new BxTrashIcon();
 
     private final Container parent;
-    private final List<KeyValueItemDto> list;
-    private final KeyValueItemDto item;
-    private final StagingMonitor<KeyValueItemDto> stagingMonitor;
+    private final List<EnvironmentItemDto> list;
+    private final EnvironmentItemDto item;
+    private final EnvironmentKeystore environmentKeystore;
+    private final StagingMonitor<EnvironmentItemDto> stagingMonitor;
 
     private final JLabel changeIcon = new JLabel(HAS_NOT_CHANGED_ICON);
+    private final JComboBox<EnvironmentItemTypeEnum> cbType = new JComboBox<>(
+            EnvironmentItemTypeEnum.values()
+    );
     private final ListenableTextField txtKey = new ListenableTextField();
-    private final ListenableTextField txtValue = new ListenableTextField();
+    private ValueTextField txtValue;
     private final JButton btnRemove = new IconButton(
             TRASH_ICON,
             "Remove"
@@ -40,47 +47,73 @@ class Row extends JPanel {
 
     public Row(
             Container parent,
-            List<KeyValueItemDto> list,
-            KeyValueItemDto item
+            @NotNull EnvironmentKeystore environmentKeystore,
+            List<EnvironmentItemDto> list,
+            EnvironmentItemDto item
     ){
         this.parent = parent;
         this.list = list;
         this.item = item;
+        this.environmentKeystore = environmentKeystore;
         this.stagingMonitor = new StagingMonitor<>(item);
 
         if(!this.list.contains(this.item)){
             this.list.add(this.item);
         }
 
-        // set values
-        txtKey.setText(item.getKey());
-        txtValue.setText(item.getValue());
+        setLayout(new MigLayout(
+                "insets 2",
+                "[][][][grow, fill][]"
+        ));
 
-        // listeners
+        // set values & add layout
+        add(changeIcon, "width 8!");
+
+        cbType.setSelectedItem(item.getType());
+        cbType.addActionListener(e -> {
+            item.setType((EnvironmentItemTypeEnum) cbType.getSelectedItem());
+            onChangeType();
+            updateStagingMonitor();
+        });
+        add(cbType, "width 80!");
+
+        txtKey.setText(item.getKey());
         txtKey.addOnChange(value -> {
             item.setKey(value);
             updateStagingMonitor();
         });
-        txtValue.addOnChange(value -> {
+        add(txtKey, "width 150!");
+
+        txtValue = createTxtValue();
+        add(txtValue, "width 150:150:100%");
+
+        btnRemove.addActionListener(l -> btnRemoveAction());
+        add(btnRemove);
+    }
+
+    protected ValueTextField createTxtValue(){
+        return new ValueTextField(environmentKeystore, item, value -> {
             item.setValue(value);
             updateStagingMonitor();
         });
-        btnRemove.addActionListener(l -> btnRemoveAction());
-
-        // layout
-        setLayout(new MigLayout(
-                "insets 2",
-                "[][][grow, fill][]"
-        ));
-        add(changeIcon, "width 8!");
-        add(txtKey, "width 150!");
-        add(txtValue, "width 150:150:100%");
-        add(btnRemove);
     }
 
     private void updateParentStagingMonitor(){
         var parent = (EnvironmentEditFrame) getAncestorOfClass(EnvironmentEditFrame.class, this);
         parent.updateStagingMonitor();
+    }
+
+    public void onChangeType() {
+        txtValue.unlockSecret();
+        item.setValue(txtValue.getText());
+
+        int index = ComponentUtil.getComponentIndex(this, txtValue);
+        remove(index);
+
+        txtValue = createTxtValue();
+        add(txtValue, "width 150:150:100%", index);
+        revalidate();
+        repaint();
     }
 
     private void btnRemoveAction(){
