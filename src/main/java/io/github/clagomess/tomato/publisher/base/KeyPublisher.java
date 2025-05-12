@@ -38,6 +38,18 @@ public class KeyPublisher<K, T> extends BasePublisher<K, T> {
                 .anyMatch(listener -> listener.getKey().equals(key));
     }
 
+    public void changeKey(K oldKey, K newKey) {
+        listeners.stream()
+                .filter(item -> item.getKey().equals(oldKey))
+                .forEach(item -> {
+                    if(log.isDebugEnabled()){
+                        log.debug("Changed Key: {} -> {}", oldKey, newKey);
+                    }
+
+                    item.setKey(newKey);
+                });
+    }
+
     public void publish(K key, T event){
         if(log.isDebugEnabled()) log.debug("Publishing: {} - {}", key, event);
 

@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.controller.main.request;
 
+import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.key.TabKey;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.enums.HttpMethodEnum;
@@ -17,15 +18,14 @@ public class TabTitleController {
     private final List<Runnable> dispose = new ArrayList<>(2);
 
     public void addOnChangeListener(
+            @NotNull RequestDto request,
             @Nullable RequestHeadDto requestHead,
             @NotNull UpdateTitleFI title
     ){
-        if(requestHead == null) return;
-
         var uuid = RequestPublisher.getInstance()
                 .getOnChange()
                 .addListener(
-                        new RequestKey(requestHead),
+                        new RequestKey(requestHead, request),
                         event -> title.update(
                             event.getEvent().getMethod(),
                             event.getEvent().getName()

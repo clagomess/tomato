@@ -55,7 +55,7 @@ class TabTitle extends JPanel {
                 HAS_NOT_CHANGED_ICON
         );
 
-        controller.addOnChangeListener(requestHead, (method, name) -> {
+        controller.addOnChangeListener(request, requestHead, (method, name) -> {
             httpMethod.setIcon(method.getIcon());
             title.setText(name);
         });
