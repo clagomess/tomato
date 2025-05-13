@@ -1,7 +1,7 @@
 package io.github.clagomess.tomato.ui.collection;
 
+import io.github.clagomess.tomato.controller.collection.CollectionExportFrameController;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import io.github.clagomess.tomato.io.converter.InterfaceConverter;
 import io.github.clagomess.tomato.ui.component.ConverterComboBox;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -10,16 +10,22 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.util.Optional;
 
-public class CollectionExportFrame extends JFrame {
+public class CollectionExportFrame
+        extends JFrame
+        implements CollectionExportFrameInterface {
     private final JButton btnExport = new JButton("Export");
     private final ConverterComboBox cbConverter = new ConverterComboBox();
     private final CollectionComboBox cbCollection;
+    private final CollectionExportFrameController controller;
 
     public CollectionExportFrame(
             Component parent,
             CollectionTreeDto selected
     ){
+        controller = new CollectionExportFrameController(this);
+
         setTitle("Export Collection");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
@@ -50,30 +56,30 @@ public class CollectionExportFrame extends JFrame {
 
     private void btnExportAction(){
         new WaitExecution(this, btnExport, () -> {
-            CollectionTreeDto selected = cbCollection.getSelectedItem();
-            if(selected == null) throw new Exception("Collection is empty");
+            controller.export(
+                    cbCollection.getSelectedItem(),
+                    cbConverter.getSelectedItem()
+            );
 
-            InterfaceConverter converter = cbConverter.getSelectedItem();
-            if(converter == null) throw new Exception("Type is empty");
-
-            JFileChooser file = new JFileChooser();
-            file.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            file.setSelectedFile(new File(
-                    selected.getName() +
-                    converter.getCollectionDumpFileSuffix()
-            ));
-
-            if(file.showSaveDialog(this) != JFileChooser.APPROVE_OPTION){
-                return;
-            }
-
-            converter.dumpCollection(
-                    file.getSelectedFile(),
-                    selected
+            JOptionPane.showMessageDialog(
+                    this,
+                    "File Saved Successfully"
             );
 
             setVisible(false);
             dispose();
         }).execute();
+    }
+
+    public Optional<File> getExportFile(String name) {
+        JFileChooser file = new JFileChooser();
+        file.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        file.setSelectedFile(new File(name));
+
+        if(file.showSaveDialog(this) != JFileChooser.APPROVE_OPTION){
+            return Optional.empty();
+        }
+
+        return Optional.of(file.getSelectedFile());
     }
 }
