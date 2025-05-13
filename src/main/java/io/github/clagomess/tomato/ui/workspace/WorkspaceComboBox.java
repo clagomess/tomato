@@ -1,25 +1,24 @@
 package io.github.clagomess.tomato.ui.workspace;
 
+import io.github.clagomess.tomato.controller.workspace.WorkspaceComboBoxController;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
-import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import io.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 import io.github.clagomess.tomato.ui.component.ExceptionDialog;
 
 import javax.swing.*;
-import java.util.concurrent.ForkJoinPool;
 
-public class WorkspaceComboBox extends JComboBox<WorkspaceDto> {
-    private final WorkspaceRepository workspaceRepository = new WorkspaceRepository();
+public class WorkspaceComboBox
+        extends JComboBox<WorkspaceDto>
+        implements WorkspaceComboBoxInterface {
 
     public WorkspaceComboBox() {
         setRenderer(new DtoListCellRenderer<>(WorkspaceDto::getName));
-        ForkJoinPool.commonPool().submit(this::addItens);
+        SwingUtilities.invokeLater(this::loadItems);
     }
 
-    private void addItens() {
+    private void loadItems() {
         try {
-            workspaceRepository.list().forEach(this::addItem);
-            setSelectedItem(workspaceRepository.getDataSessionWorkspace());
+            new WorkspaceComboBoxController(this).loadItems();
         } catch (Throwable e){
             new ExceptionDialog(this, e);
         }
