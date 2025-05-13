@@ -1,10 +1,7 @@
 package io.github.clagomess.tomato.ui.collection;
 
+import io.github.clagomess.tomato.controller.collection.CollectionMoveFrameController;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import io.github.clagomess.tomato.io.repository.CollectionRepository;
-import io.github.clagomess.tomato.publisher.CollectionPublisher;
-import io.github.clagomess.tomato.publisher.base.PublisherEvent;
-import io.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -12,29 +9,24 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 
-import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.DELETED;
-import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
-
 public class CollectionMoveFrame extends JFrame {
     private final JButton btnMove = new JButton("Move");
     private final JLabel lblCollectionName = new JLabel();
     private final CollectionComboBox cbCollectionDestination;
-    private final CollectionTreeDto collectionTree;
 
-    private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
-    private final CollectionRepository collectionRepository = new CollectionRepository();
+    private final CollectionMoveFrameController controller;
 
     public CollectionMoveFrame(
             Component parent,
             CollectionTreeDto collectionTree
     ){
+        this.controller = new CollectionMoveFrameController();
+
         setTitle("Move Collection");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
-
-        this.collectionTree = collectionTree;
 
         lblCollectionName.setText(collectionTree.getName());
         cbCollectionDestination = new CollectionComboBox(collectionTree.getParent());
@@ -56,30 +48,16 @@ public class CollectionMoveFrame extends JFrame {
         setVisible(true);
 
         // set data
-        btnMove.addActionListener(l -> btnMoveAction());
+        btnMove.addActionListener(l -> btnMoveAction(collectionTree));
     }
 
-    private void btnMoveAction(){
+    private void btnMoveAction(
+            CollectionTreeDto source
+    ){
         new WaitExecution(this, btnMove, () -> {
-            CollectionTreeDto destination = cbCollectionDestination.getSelectedItem();
-            if(destination == null) throw new Exception("Destination not selected");
-
-            collectionRepository.move(collectionTree, destination);
-
-            // update source collection
-            collectionPublisher.getOnChange().publish(
-                    new ParentCollectionKey(
-                            collectionTree.getParent().getId()
-                    ),
-                    new PublisherEvent<>(DELETED, collectionTree.getId())
-            );
-
-            // update dest collection
-            collectionPublisher.getOnChange().publish(
-                    new ParentCollectionKey(
-                            destination.getId()
-                    ),
-                    new PublisherEvent<>(INSERTED, collectionTree.getId())
+            controller.move(
+                    source,
+                    cbCollectionDestination.getSelectedItem()
             );
 
             setVisible(false);
