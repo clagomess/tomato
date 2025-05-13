@@ -1,11 +1,7 @@
 package io.github.clagomess.tomato.ui.collection;
 
-import io.github.clagomess.tomato.dto.data.CollectionDto;
+import io.github.clagomess.tomato.controller.collection.CollectionNewFrameController;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import io.github.clagomess.tomato.io.repository.CollectionRepository;
-import io.github.clagomess.tomato.publisher.CollectionPublisher;
-import io.github.clagomess.tomato.publisher.base.PublisherEvent;
-import io.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import io.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextField;
@@ -14,20 +10,19 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 
-import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
-
 public class CollectionNewFrame extends JFrame {
     private final JButton btnSave = new JButton("Save");
     private final UndoableTextField txtName = new UndoableTextField();
     private final CollectionComboBox cbCollectionParent;
 
-    private final CollectionRepository collectionRepository = new CollectionRepository();
-    private final CollectionPublisher collectionPublisher = CollectionPublisher.getInstance();
+    private final CollectionNewFrameController controller;
 
     public CollectionNewFrame(
             Component parent,
             CollectionTreeDto selectedCollectionTreeParent
     ){
+        controller = new CollectionNewFrameController();
+
         setTitle("New Collection");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
@@ -58,17 +53,10 @@ public class CollectionNewFrame extends JFrame {
 
     private void btnSaveAction(){
         new WaitExecution(this, btnSave, () -> {
-            CollectionTreeDto parent = cbCollectionParent.getSelectedItem();
-            if(parent == null) throw new Exception("Parent is null");
-
-            CollectionDto dto = new CollectionDto(txtName.getText());
-            collectionRepository.save(
-                    parent.getPath(),
-                    dto
+            controller.save(
+                    cbCollectionParent.getSelectedItem(),
+                    txtName.getText()
             );
-
-            var key = new ParentCollectionKey(parent.getId());
-            collectionPublisher.getOnChange().publish(key, new PublisherEvent<>(INSERTED, dto.getId()));
 
             setVisible(false);
             dispose();
