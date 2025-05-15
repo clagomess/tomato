@@ -1,7 +1,7 @@
 package io.github.clagomess.tomato.io.keystore;
 
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
-import io.github.clagomess.tomato.mapper.EnvironmentItemMapper;
+import io.github.clagomess.tomato.mapper.CloneMapper;
 import io.github.clagomess.tomato.util.CacheManager;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,6 +26,8 @@ import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEn
 public class EnvironmentKeystore {
     private static final String FILE_NAME = "environment-%s.kdbx";
     private static final String MSG_BLANK_PASSWORD = "Password is blank";
+
+    private final CloneMapper cloneMapper = CloneMapper.INSTANCE;
 
     @Getter(AccessLevel.PROTECTED)
     private final File databaseFile;
@@ -178,7 +180,7 @@ public class EnvironmentKeystore {
                 continue;
             }
 
-            var env = EnvironmentItemMapper.INSTANCE.clone(item);
+            var env = cloneMapper.clone(item);
 
             loadSecret(database, item.getSecretId())
                     .ifPresent(env::setValue);

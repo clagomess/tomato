@@ -36,6 +36,4 @@ public interface RequestMapper {
     @Mapping(target = "createTime", ignore = true)
     @Mapping(target = "updateTime", ignore = true)
     RequestDto duplicate(RequestDto source);
-
-    RequestHeadDto clone(RequestHeadDto source);
 }

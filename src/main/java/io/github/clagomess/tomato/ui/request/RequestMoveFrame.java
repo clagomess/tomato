@@ -3,7 +3,7 @@ package io.github.clagomess.tomato.ui.request;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.io.repository.RequestRepository;
-import io.github.clagomess.tomato.mapper.RequestMapper;
+import io.github.clagomess.tomato.mapper.CloneMapper;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.publisher.key.RequestKey;
@@ -25,6 +25,7 @@ public class RequestMoveFrame extends JFrame {
     private final CollectionComboBox cbCollectionDestination;
     private final RequestHeadDto requestHead;
 
+    private final CloneMapper cloneMapper = CloneMapper.INSTANCE;
     private final RequestRepository requestRepository = new RequestRepository();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
@@ -77,7 +78,7 @@ public class RequestMoveFrame extends JFrame {
             );
 
             // update target collection
-            var newRequestHead = RequestMapper.INSTANCE.clone(this.requestHead);
+            var newRequestHead = cloneMapper.clone(this.requestHead);
             newRequestHead.setParent(destination);
             newRequestHead.setPath(new File(
                     destination.getPath(),
