@@ -3,10 +3,7 @@ package io.github.clagomess.tomato.ui.environment.edit;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum;
 import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
-import io.github.clagomess.tomato.ui.component.ComponentUtil;
-import io.github.clagomess.tomato.ui.component.IconButton;
-import io.github.clagomess.tomato.ui.component.ListenableTextField;
-import io.github.clagomess.tomato.ui.component.StagingMonitor;
+import io.github.clagomess.tomato.ui.component.*;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import lombok.Getter;
@@ -104,16 +101,20 @@ class Row extends JPanel {
     }
 
     public void onChangeType() {
-        txtValue.unlockSecret();
-        item.setValue(txtValue.getText());
+        try {
+            txtValue.setOnChangeEnabled(false);
+            item.setValue(txtValue.getSecret());
 
-        int index = ComponentUtil.getComponentIndex(this, txtValue);
-        remove(index);
+            int index = ComponentUtil.getComponentIndex(this, txtValue);
+            remove(index);
 
-        txtValue = createTxtValue();
-        add(txtValue, "width 150:150:100%", index);
-        revalidate();
-        repaint();
+            txtValue = createTxtValue();
+            add(txtValue, "width 150:150:100%", index);
+            revalidate();
+            repaint();
+        } catch (Exception e) {
+            new ExceptionDialog(this, e);
+        }
     }
 
     private void btnRemoveAction(){
