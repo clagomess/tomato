@@ -12,6 +12,8 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class WorkspaceSessionRepository extends AbstractRepository {
+    private static final String WORKSPACE_SESSION_FILENAME = "workspace-session.json";
+
     private final WorkspaceRepository workspaceRepository;
     protected static final CacheManager<File, WorkspaceSessionDto> cache = new CacheManager<>();
 
@@ -21,10 +23,16 @@ public class WorkspaceSessionRepository extends AbstractRepository {
         );
     }
 
-    protected File getWorkspaceSessionFile() throws IOException {
+    public File getWorkspaceDirectory() throws IOException {
         WorkspaceDto workspace = workspaceRepository.getDataSessionWorkspace();
+        return workspace.getPath();
+    }
 
-        return new File(workspace.getPath(), "workspace-session.json");
+    protected File getWorkspaceSessionFile() throws IOException {
+        return new File(
+                getWorkspaceDirectory(),
+                WORKSPACE_SESSION_FILENAME
+        );
     }
 
     public WorkspaceSessionDto load() throws IOException {

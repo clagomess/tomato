@@ -14,6 +14,7 @@ import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -56,8 +57,10 @@ public class RequestTabbedPaneController {
 
     protected void saveRequestsSnapshot(List<RequestTabSnapshotDto> itens) {
         try {
+            var workspaceDir = workspaceSessionRepository.getWorkspaceDirectory();
+
             var requestSessionState = itens.stream()
-                    .map(RequestTabSnapshotDto::toSessionState)
+                    .map(item -> item.toSessionState(workspaceDir))
                     .toList();
 
             var session = workspaceSessionRepository.load();
@@ -72,6 +75,7 @@ public class RequestTabbedPaneController {
             OnLoadFI runnable
     ) throws IOException {
         var session = workspaceSessionRepository.load();
+        var workspaceDir = workspaceSessionRepository.getWorkspaceDirectory();
 
         for(var item : session.getRequests()){
             if(item.getFilepath() == null){
@@ -79,7 +83,7 @@ public class RequestTabbedPaneController {
                 continue;
             }
 
-            var requestHead = treeRepository.loadRequestHead(item.getFilepath())
+            var requestHead = treeRepository.loadRequestHead(new File(workspaceDir, item.getFilepath()))
                     .orElseThrow();
 
             if(item.getStaging() != null){

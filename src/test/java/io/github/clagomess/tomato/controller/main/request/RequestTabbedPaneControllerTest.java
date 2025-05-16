@@ -159,7 +159,7 @@ public class RequestTabbedPaneControllerTest {
 
         @Test
         public void whenModified() throws IOException {
-            var wsRequest = new WorkspaceSessionDto.Request(new File("foo"), new RequestDto());
+            var wsRequest = new WorkspaceSessionDto.Request("foo", new RequestDto());
             var ws = new WorkspaceSessionDto();
             ws.setRequests(List.of(wsRequest));
 
@@ -187,7 +187,7 @@ public class RequestTabbedPaneControllerTest {
 
         @Test
         public void whenOpened() throws IOException {
-            var wsRequest = new WorkspaceSessionDto.Request(new File("foo"), null);
+            var wsRequest = new WorkspaceSessionDto.Request("foo", null);
             var ws = new WorkspaceSessionDto();
             ws.setRequests(List.of(wsRequest));
 

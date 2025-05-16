@@ -2,15 +2,13 @@ package io.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.schema.JsonSchema;
 import io.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
-import com.networknt.schema.JsonSchema;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
 
 import static io.github.clagomess.tomato.enums.TomatoJsonSchemaEnum.WORKSPACE_SESSION;
 
@@ -46,12 +44,11 @@ public class WorkspaceSessionDtoTest {
     class Request {
         @Test
         public void equalsHashCode(){
-            var file = new File("target");
             var dtoA = new WorkspaceSessionDto.Request();
-            dtoA.setFilepath(file);
+            dtoA.setFilepath("target/request-xpt.json");
 
             var dtoB = new WorkspaceSessionDto.Request();
-            dtoB.setFilepath(file);
+            dtoB.setFilepath("target/request-xpt.json");
 
             Assertions.assertThat(dtoA)
                     .isEqualTo(dtoB);
