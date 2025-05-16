@@ -4,7 +4,6 @@ import io.github.clagomess.tomato.controller.request.RequestFrameController;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.key.TabKey;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import io.github.clagomess.tomato.ui.MainFrame;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import io.github.clagomess.tomato.ui.main.request.RequestSplitPane;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
@@ -15,7 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
+
+import static io.github.clagomess.tomato.ui.component.ComponentUtil.getMainWindow;
 
 @Slf4j
 public class RequestFrame extends JFrame {
@@ -67,12 +67,7 @@ public class RequestFrame extends JFrame {
         }
 
         pack();
-        setLocationRelativeTo(
-                Arrays.stream(Window.getWindows())
-                        .filter(item -> item instanceof MainFrame)
-                        .findFirst()
-                        .orElse(null)
-        );
+        setLocationRelativeTo(getMainWindow());
         setVisible(true);
     }
 

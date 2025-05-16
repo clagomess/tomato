@@ -1,10 +1,7 @@
 package io.github.clagomess.tomato.ui.environment;
 
-import io.github.clagomess.tomato.controller.environment.EnvironmentComboBoxController;
-import io.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
-import io.github.clagomess.tomato.io.converter.InterfaceConverter;
+import io.github.clagomess.tomato.controller.environment.EnvironmentExportFrameController;
 import io.github.clagomess.tomato.ui.component.ConverterComboBox;
-import io.github.clagomess.tomato.ui.component.ExceptionDialog;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -12,20 +9,20 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.concurrent.ForkJoinPool;
+import java.util.Optional;
 
-import static javax.swing.SwingUtilities.invokeLater;
-
-public class EnvironmentExportFrame extends JFrame {
+public class EnvironmentExportFrame extends JFrame implements EnvironmentExportFrameInterface {
     private final EnvironmentComboBox cbEnvironment = new EnvironmentComboBox();
     private final JButton btnExport = new JButton("Export");
     private final ConverterComboBox cbConverter = new ConverterComboBox();
 
-    private final EnvironmentComboBoxController controller = new EnvironmentComboBoxController();
+    private final EnvironmentExportFrameController controller;
 
     public EnvironmentExportFrame(
             Component parent
     ){
+        controller = new EnvironmentExportFrameController(this);
+
         setTitle("Export Environment");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
@@ -44,17 +41,6 @@ public class EnvironmentExportFrame extends JFrame {
 
         getRootPane().setDefaultButton(btnExport);
 
-        ForkJoinPool.commonPool().submit(() -> {
-            try {
-                controller.loadItems((selected, item) -> invokeLater(() -> {
-                    cbEnvironment.addItem(item);
-                    if(selected) cbEnvironment.setSelectedItem(item);
-                }), () -> {});
-            } catch (Throwable e){
-                invokeLater(() -> new ExceptionDialog(this, e));
-            }
-        });
-
         pack();
         setLocationRelativeTo(parent);
         setVisible(true);
@@ -65,30 +51,30 @@ public class EnvironmentExportFrame extends JFrame {
 
     private void btnExportAction(){
         new WaitExecution(this, btnExport, () -> {
-            EnvironmentHeadDto selected = cbEnvironment.getSelectedItem();
-            if(selected == null) throw new Exception("Environment is empty");
+            controller.export(
+                    cbEnvironment.getSelectedItem(),
+                    cbConverter.getSelectedItem()
+            );
 
-            InterfaceConverter converter = cbConverter.getSelectedItem();
-            if(converter == null) throw new Exception("Type is empty");
-
-            JFileChooser file = new JFileChooser();
-            file.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            file.setSelectedFile(new File(
-                    selected.getName() +
-                    converter.getEnvironmentDumpFileSuffix()
-            ));
-
-            if(file.showSaveDialog(this) != JFileChooser.APPROVE_OPTION){
-                return;
-            }
-
-            converter.dumpEnvironment(
-                    file.getSelectedFile(),
-                    selected.getId()
+            JOptionPane.showMessageDialog(
+                    this,
+                    "File Saved Successfully"
             );
 
             setVisible(false);
             dispose();
         }).execute();
+    }
+
+    public Optional<File> getExportFile(String name) {
+        JFileChooser file = new JFileChooser();
+        file.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        file.setSelectedFile(new File(name));
+
+        if(file.showSaveDialog(this) != JFileChooser.APPROVE_OPTION){
+            return Optional.empty();
+        }
+
+        return Optional.of(file.getSelectedFile());
     }
 }

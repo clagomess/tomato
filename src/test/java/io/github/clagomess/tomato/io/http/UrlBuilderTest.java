@@ -1,27 +1,26 @@
 package io.github.clagomess.tomato.io.http;
 
-import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
-import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
+import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
+import io.github.clagomess.tomato.publisher.base.NoKeyPublisher;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import static io.github.clagomess.tomato.io.http.MediaType.TEXT_PLAIN_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UrlBuilderTest {
-    private EnvironmentRepository environmentDSMock;
+    private final EnvironmentPublisher environmentPublisherMock = Mockito.mock(EnvironmentPublisher.class);
 
     private final List<EnvironmentItemDto> envList = List.of(
             new EnvironmentItemDto("tomatoUri", "http://localhost"),
@@ -31,58 +30,59 @@ public class UrlBuilderTest {
     );
 
     @BeforeEach
-    public void setup() throws IOException {
-        environmentDSMock = Mockito.mock(
-                EnvironmentRepository.class,
-                Mockito.withSettings().useConstructor()
-        );
+    void setup() {
+        NoKeyPublisher<List<EnvironmentItemDto>> currentEnvs = Mockito.spy(new NoKeyPublisher<>());
+        Mockito.doReturn(envList)
+                .when(currentEnvs)
+                .request();
 
-        EnvironmentDto dto = new EnvironmentDto();
-        dto.setEnvs(envList);
-
-        Mockito.when(environmentDSMock.getWorkspaceSessionEnvironment())
-                .thenReturn(Optional.of(dto));
+        Mockito.doReturn(currentEnvs)
+                .when(environmentPublisherMock)
+                .getCurrentEnvs();
     }
 
-    @Test
-    public void buildUri_whenEmptyEnv_returnsUri() throws IOException {
-        var requestDto = new RequestDto();
-        requestDto.setUrl("http://foo.bar");
+    @Nested
+    class buildUri {
+        @Test
+        void whenEmptyEnv_returnsUri() {
+            var requestDto = new RequestDto();
+            requestDto.setUrl("http://foo.bar");
 
-        var urlBuilder = new UrlBuilder(
-                environmentDSMock,
-                requestDto
-        );
+            var urlBuilder = new UrlBuilder(
+                    environmentPublisherMock,
+                    requestDto
+            );
 
-        var result = urlBuilder.buildUri();
-        assertEquals("http://foo.bar", result.toString());
-    }
+            var result = urlBuilder.buildUri();
+            assertEquals("http://foo.bar", result.toString());
+        }
 
-    @Test
-    public void buildUri_whenNotInjectedEnvAnd_throwsException() throws IOException {
-        var requestDto = new RequestDto();
-        requestDto.setUrl("{{xyz}}");
+        @Test
+        void whenNotInjectedEnvAnd_throwsException() {
+            var requestDto = new RequestDto();
+            requestDto.setUrl("{{xyz}}");
 
-        UrlBuilder urlBuilder = new UrlBuilder(
-                environmentDSMock,
-                requestDto
-        );
+            UrlBuilder urlBuilder = new UrlBuilder(
+                    environmentPublisherMock,
+                    requestDto
+            );
 
-        assertThrows(IllegalArgumentException.class, urlBuilder::buildUri);
-    }
+            assertThrows(IllegalArgumentException.class, urlBuilder::buildUri);
+        }
 
-    @Test
-    public void buildUri_whenInjectedEnv_expectedReplace() throws IOException {
-        var requestDto = new RequestDto();
-        requestDto.setUrl("{{tomatoUri}}/{{foo}}");
+        @Test
+        void whenInjectedEnv_expectedReplace() {
+            var requestDto = new RequestDto();
+            requestDto.setUrl("{{tomatoUri}}/{{foo}}");
 
-        UrlBuilder urlBuilder = new UrlBuilder(
-                environmentDSMock,
-                requestDto
-        );
+            UrlBuilder urlBuilder = new UrlBuilder(
+                    environmentPublisherMock,
+                    requestDto
+            );
 
-        var result = urlBuilder.buildUri();
-        assertEquals("http://localhost/bar", result.toString());
+            var result = urlBuilder.buildUri();
+            assertEquals("http://localhost/bar", result.toString());
+        }
     }
 
     @ParameterizedTest
@@ -94,10 +94,10 @@ public class UrlBuilderTest {
     public void buildUrlEnvironment(
             String input,
             String expected
-    ) throws IOException {
+    ) {
         var urlBuffer = new StringBuilder(input);
 
-        new UrlBuilder(environmentDSMock, new RequestDto())
+        new UrlBuilder(environmentPublisherMock, new RequestDto())
                 .buildUrlEnvironment(urlBuffer);
 
         assertEquals(expected, urlBuffer.toString());
@@ -114,8 +114,8 @@ public class UrlBuilderTest {
     public void buildEncodedParamValue(
             String input,
             String expected
-    ) throws IOException {
-        var result = new UrlBuilder(environmentDSMock, new RequestDto())
+    ) {
+        var result = new UrlBuilder(environmentPublisherMock, new RequestDto())
                 .buildEncodedParamValue(input);
 
         assertEquals(expected, result);
@@ -133,7 +133,7 @@ public class UrlBuilderTest {
     public void buildPathVariables(
             String input,
             String expected
-    ) throws IOException {
+    ) {
         var request =  new RequestDto();
         request.getUrlParam().setPath(List.of(
                 new KeyValueItemDto("foo", "bar"),
@@ -145,7 +145,7 @@ public class UrlBuilderTest {
 
         var urlBuffer = new StringBuilder(input);
 
-        new UrlBuilder(environmentDSMock, request)
+        new UrlBuilder(environmentPublisherMock, request)
                 .buildPathVariables(urlBuffer);
 
         assertEquals(expected, urlBuffer.toString());
@@ -161,7 +161,7 @@ public class UrlBuilderTest {
     public void buildQueryParams(
             String input,
             String expected
-    ) throws IOException {
+    ) {
         var request =  new RequestDto();
         request.getUrlParam().setQuery(List.of(
                 new ContentTypeKeyValueItemDto("foo", "bar"),
@@ -173,7 +173,7 @@ public class UrlBuilderTest {
 
         var urlBuffer = new StringBuilder(input);
 
-        new UrlBuilder(environmentDSMock, request)
+        new UrlBuilder(environmentPublisherMock, request)
                 .buildQueryParams(urlBuffer);
 
         assertEquals(expected, urlBuffer.toString());

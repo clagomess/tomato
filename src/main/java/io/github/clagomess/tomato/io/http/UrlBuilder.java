@@ -1,41 +1,41 @@
 package io.github.clagomess.tomato.io.http;
 
-import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
-import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
+import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class UrlBuilder {
     private final RequestDto request;
     private final Map<String, String> environment;
 
-    public UrlBuilder(EnvironmentRepository environmentRepository, RequestDto request) throws IOException {
+    protected UrlBuilder(
+            EnvironmentPublisher environmentPublisher,
+            RequestDto request
+    ) {
         this.request = request;
 
-        Optional<EnvironmentDto> currentEnv = environmentRepository.getWorkspaceSessionEnvironment();
-        if(currentEnv.isPresent() && !currentEnv.get().getEnvs().isEmpty()){
-            environment = new HashMap<>(currentEnv.get().getEnvs().size());
+        List<EnvironmentItemDto> envs = environmentPublisher.getCurrentEnvs()
+                .request();
 
-            currentEnv.get().getEnvs().forEach(item -> environment.put(
-                    String.format("{{%s}}", item.getKey()),
-                    item.getValue()
-            ));
-        }else{
-            environment = Collections.emptyMap();
-        }
+        environment = new HashMap<>(envs.size());
+
+        envs.forEach(item -> environment.put(
+                String.format("{{%s}}", item.getKey()),
+                item.getValue()
+        ));
     }
 
-    public UrlBuilder(RequestDto request) throws IOException {
-        this(new EnvironmentRepository(), request);
+    public UrlBuilder(RequestDto request){
+        this(EnvironmentPublisher.getInstance(), request);
     }
 
     public URI buildUri() {
