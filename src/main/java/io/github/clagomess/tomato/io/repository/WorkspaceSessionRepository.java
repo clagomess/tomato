@@ -51,7 +51,7 @@ public class WorkspaceSessionRepository extends AbstractRepository {
     public File save(WorkspaceSessionDto dto) throws IOException {
         File filePath = getWorkspaceSessionFile();
 
-        writeFile(filePath, dto);
+        writeFile(filePath, new TypeReference<>(){}, dto);
         cache.evict(filePath);
 
         return filePath;

@@ -57,7 +57,7 @@ public class EnvironmentRepository extends AbstractRepository {
     public File save(EnvironmentDto environmentDto) throws IOException {
         File filePath = getEnvironmentFile(environmentDto.getId());
 
-        writeFile(filePath, environmentDto);
+        writeFile(filePath, new TypeReference<>(){}, environmentDto);
         cache.evict(environmentDto.getId());
 
         return filePath;

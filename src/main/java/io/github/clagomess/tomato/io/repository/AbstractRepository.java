@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.clagomess.tomato.dto.data.MetadataDto;
 import io.github.clagomess.tomato.util.CacheManager;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +18,14 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
+@RequiredArgsConstructor
 abstract class AbstractRepository {
+    private final ObjectMapperUtil objectMapper;
+
+    public AbstractRepository() {
+        this.objectMapper = ObjectMapperUtil.getInstance();
+    }
+
     private void verifyOperationAllowedInTestMode(@Nullable File path) {
         if(path == null) return;
 
@@ -42,32 +50,42 @@ abstract class AbstractRepository {
     }
 
     protected <T> Optional<T> readFile(File filepath, TypeReference<T> type) throws IOException {
-        if(log.isDebugEnabled()) log.debug("READ: {}", filepath);
+        if(log.isDebugEnabled()) log.debug("READING: {}", filepath);
         verifyOperationAllowedInTestMode(filepath);
 
-        if(!filepath.isFile()) return Optional.empty();
+        if(!filepath.isFile()){
+            if(log.isDebugEnabled()) log.debug("- file not exist");
+            return Optional.empty();
+        }
 
         try(BufferedReader br = new BufferedReader(new FileReader(filepath))) {
+            if(log.isDebugEnabled()) log.debug("- readed");
             return Optional.of(
-                    ObjectMapperUtil.getInstance()
-                            .readValue(br, type)
+                    objectMapper.readValue(br, type)
             );
         }
     }
 
-    protected <T extends MetadataDto> void writeFile(
+    protected <T extends MetadataDto> boolean writeFile(
             File filepath,
+            TypeReference<T> type,
             T content
     ) throws IOException {
-        log.info("WRITE: {}", filepath);
+        log.info("WRITING: {}", filepath);
         verifyOperationAllowedInTestMode(filepath);
+
+        if(readFile(filepath, type).filter(content::equals).isPresent()){
+            log.info("- not writed - Same Content");
+            return false;
+        }
 
         content.setUpdateTime(LocalDateTime.now());
 
         try(BufferedWriter bw = new BufferedWriter(new FileWriter(filepath))) {
-            ObjectMapperUtil.getInstance()
-                    .writerWithDefaultPrettyPrinter()
+            objectMapper.writerWithDefaultPrettyPrinter()
                     .writeValue(bw, content);
+            log.info("- writed");
+            return true;
         }
     }
 

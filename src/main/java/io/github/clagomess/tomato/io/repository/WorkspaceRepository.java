@@ -41,7 +41,7 @@ public class WorkspaceRepository extends AbstractRepository {
                         "workspace-%s.json",
                         dto.getId()
                 )
-        ), dto);
+        ), new TypeReference<>(){}, dto);
 
         cacheList.evict();
     }
