@@ -12,8 +12,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
-import static javax.swing.SwingUtilities.invokeAndWait;
-import static javax.swing.SwingUtilities.isEventDispatchThread;
+import static javax.swing.SwingUtilities.*;
 
 public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSwitcherComboBoxInterface {
     private static final Icon EDIT_ICON = new BxEditIcon();
@@ -96,13 +95,15 @@ public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSw
     @Override
     public String getPassword() {
         if(isEventDispatchThread()){
-            return new PasswordDialog(this).showDialog();
+            return new PasswordDialog(getWindowAncestor(this))
+                    .showDialog();
         }
 
         try {
             var result = new AtomicReference<String>();
             invokeAndWait(() -> result.set(
-                    new PasswordDialog(this).showDialog()
+                    new PasswordDialog(getWindowAncestor(this))
+                            .showDialog()
             ));
             return result.get();
         } catch (Exception e) {
@@ -113,13 +114,15 @@ public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSw
     @Override
     public String getNewPassword() {
         if(isEventDispatchThread()){
-            new NewPasswordDialog(this).showDialog();
+            new NewPasswordDialog(getWindowAncestor(this))
+                    .showDialog();
         }
 
         try {
             var result = new AtomicReference<String>();
             invokeAndWait(() -> result.set(
-                    new NewPasswordDialog(this).showDialog()
+                    new NewPasswordDialog(getWindowAncestor(this))
+                            .showDialog()
             ));
             return result.get();
         } catch (Exception e) {

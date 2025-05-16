@@ -1,7 +1,10 @@
 package io.github.clagomess.tomato.ui.component;
 
+import io.github.clagomess.tomato.ui.MainFrame;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static javax.swing.SwingUtilities.isEventDispatchThread;
@@ -26,5 +29,12 @@ public class ComponentUtil {
                     Thread.currentThread().getName()
             );
         }
+    }
+
+    public static Window getMainWindow(){
+        return Arrays.stream(Window.getWindows())
+                .filter(item -> item instanceof MainFrame)
+                .findFirst()
+                .orElse(null);
     }
 }
