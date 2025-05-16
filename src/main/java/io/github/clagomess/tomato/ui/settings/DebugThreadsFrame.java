@@ -60,7 +60,7 @@ public class DebugThreadsFrame extends JFrame {
                                     null
                             );
                         } catch (BadLocationException e) {
-                            throw new RuntimeException(e);
+                            throw new RuntimeException(e.getMessage(), e);
                         }
                     });
         });

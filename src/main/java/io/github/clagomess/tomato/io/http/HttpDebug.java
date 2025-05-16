@@ -149,7 +149,7 @@ public class HttpDebug {
                             result.append("\n\n");
                         }
                     });
-        }catch (Throwable e){
+        }catch (Exception e){
             log.warn(e.getMessage(), e);
         }
 

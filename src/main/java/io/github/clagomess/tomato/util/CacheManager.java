@@ -26,7 +26,7 @@ public class CacheManager<K, V> {
         this.defaultKey = defaultKey;
     }
 
-    public <E extends Throwable> V get(
+    public <E extends Exception> V get(
             K key,
             TaskFI<V, E> doTaskIfAbsent
     ) throws E {
@@ -46,13 +46,13 @@ public class CacheManager<K, V> {
         return result;
     }
 
-    public <E extends Throwable> V get(
+    public <E extends Exception> V get(
             TaskFI<V, E> doTaskIfAbsent
     ) throws E {
         return get(defaultKey, doTaskIfAbsent);
     }
 
-    public synchronized <E extends Throwable> V getSynchronized(
+    public synchronized <E extends Exception> V getSynchronized(
             TaskFI<V, E> doTaskIfAbsent
     ) throws E {
         return get(defaultKey, doTaskIfAbsent);
@@ -109,7 +109,7 @@ public class CacheManager<K, V> {
     }
 
     @FunctionalInterface
-    public interface TaskFI <V, E extends Throwable> {
+    public interface TaskFI <V, E extends Exception> {
         V run() throws E;
     }
 }

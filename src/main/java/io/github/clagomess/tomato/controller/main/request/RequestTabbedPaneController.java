@@ -66,7 +66,7 @@ public class RequestTabbedPaneController {
             var session = workspaceSessionRepository.load();
             session.setRequests(requestSessionState);
             workspaceSessionRepository.save(session);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -108,7 +108,7 @@ public class RequestTabbedPaneController {
                 runnable.load(event.getEvent(), request);
             }
         }catch (Exception e){
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

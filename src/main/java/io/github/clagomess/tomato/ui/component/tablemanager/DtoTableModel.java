@@ -63,7 +63,7 @@ public class DtoTableModel<T> extends AbstractTableModel {
             if (opt.isPresent()) {
                 return opt.get().getReadMethod().invoke(data.get(rowIndex));
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             log.warn(e.getMessage(), e);
         }
 
@@ -78,7 +78,7 @@ public class DtoTableModel<T> extends AbstractTableModel {
             if (opt.isPresent()) {
                 opt.get().getWriteMethod().invoke(data.get(row), aValue);
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             log.warn(e.getMessage(), e);
         }
 

@@ -23,7 +23,7 @@ public class RevisionUtil {
             deployDate = properties.getProperty("git.build.time");
             deployCommit = properties.getProperty("git.commit.id.abbrev");
             deployTag = properties.getProperty("git.closest.tag.name").replace("v", "");
-        }catch (Throwable e){
+        }catch (Exception e){
             log.error(e.getMessage(), e);
         }
     }

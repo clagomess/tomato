@@ -111,7 +111,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
             options.getOnChange().run(item);
             requestStagingMonitor.update();
         }catch (Exception e){
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

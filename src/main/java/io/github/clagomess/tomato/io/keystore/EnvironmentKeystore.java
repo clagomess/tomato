@@ -91,7 +91,7 @@ public class EnvironmentKeystore {
             databaseCache.evict(databaseFile);
             credentialCache.evict(databaseFile);
             throw new IllegalStateException("Invalid password or corrupted keystore", e);
-        } catch (Throwable e){
+        } catch (Exception e){
             databaseCache.evict(databaseFile);
             credentialCache.evict(databaseFile);
             throw e;

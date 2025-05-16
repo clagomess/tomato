@@ -17,7 +17,7 @@ public class RawTextArea extends JTextArea {
         try {
             getDocument().remove(0, getDocument().getLength());
         }catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

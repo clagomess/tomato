@@ -24,7 +24,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
                     "trsyntax-textarea-theme.xml"
             ));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -81,7 +81,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
         try {
             getDocument().remove(0, getDocument().getLength());
         }catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

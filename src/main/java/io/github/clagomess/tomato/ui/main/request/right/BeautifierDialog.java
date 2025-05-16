@@ -108,7 +108,7 @@ public class BeautifierDialog extends JDialog {
                 }
 
                 onComplete.run(newResponseFile);
-            }catch (Throwable e){
+            }catch (Exception e){
                 invokeLater(() -> new ExceptionDialog(parent, e));
             }
 
@@ -140,7 +140,7 @@ public class BeautifierDialog extends JDialog {
                 }
 
                 onComplete.run(strWriter.toString());
-            }catch (Throwable e){
+            }catch (Exception e){
                 invokeLater(() -> new ExceptionDialog(parent, e));
             }
 

@@ -48,7 +48,7 @@ public class RequestNameTextField extends JPanel {
         }else{
             try {
                 parent.setText(workspaceRepository.getDataSessionWorkspace().getName());
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 new ExceptionDialog(this, e);
             }
         }

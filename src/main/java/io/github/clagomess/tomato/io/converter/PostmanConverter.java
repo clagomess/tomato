@@ -147,7 +147,7 @@ public class PostmanConverter extends AbstractConverter {
                     try {
                         return requestRepository.load(requestHead).orElseThrow();
                     } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException(e.getMessage(), e);
                     }
                 })
                 .forEachOrdered(request -> items.add(

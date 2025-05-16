@@ -22,7 +22,7 @@ public class PreventDefaultFrame {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends JFrame, E extends Throwable> void toFrontIfExists(
+    public static <T extends JFrame, E extends Exception> void toFrontIfExists(
             Class<T> frame,
             RunnableFI<E> runnable,
             FilterFI<T> filter
@@ -58,7 +58,7 @@ public class PreventDefaultFrame {
     }
 
     @FunctionalInterface
-    public interface RunnableFI <E extends Throwable> {
+    public interface RunnableFI <E extends Exception> {
         void run() throws E;
     }
 }

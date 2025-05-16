@@ -107,7 +107,7 @@ public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSw
             ));
             return result.get();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -126,7 +126,7 @@ public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSw
             ));
             return result.get();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 }

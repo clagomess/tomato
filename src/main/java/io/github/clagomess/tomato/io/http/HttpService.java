@@ -81,7 +81,7 @@ public class HttpService {
         } catch (ConnectException e){
             result.setRequestMessage("Connection refused");
             log.error(e.getMessage(), e);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             result.setRequestMessage(e.getMessage());
             log.error(e.getMessage(), e);
         } finally {

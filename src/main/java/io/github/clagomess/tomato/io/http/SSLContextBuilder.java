@@ -26,7 +26,7 @@ public class SSLContextBuilder extends X509ExtendedTrustManager {
 
             TrustManager[] defaultTrustManagers = trustManagerFactory.getTrustManagers();
             defaultTrustManager = (X509ExtendedTrustManager) defaultTrustManagers[0];
-        } catch (Throwable e) {
+        } catch (Exception e) {
             log.warn(e.getMessage(), e);
         }
 

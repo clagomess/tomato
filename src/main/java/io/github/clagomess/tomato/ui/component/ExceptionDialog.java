@@ -21,7 +21,7 @@ public class ExceptionDialog extends JDialog {
 
     public ExceptionDialog(
             Component parent,
-            Throwable e
+            Exception e
     ) {
         super(
                 parent != null ? SwingUtilities.getWindowAncestor(parent) : null,

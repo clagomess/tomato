@@ -46,7 +46,7 @@ public class RequestSplitPaneController {
             try {
                 ResponseDto response = httpService.perform();
                 onComplete.update(response);
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 onError.update(e);
                 onComplete.update(null);
             }
@@ -78,6 +78,6 @@ public class RequestSplitPaneController {
 
     @FunctionalInterface
     public interface OnSendRequestErrorFI {
-        void update(Throwable throwable);
+        void update(Exception throwable);
     }
 }

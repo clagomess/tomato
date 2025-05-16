@@ -19,7 +19,7 @@ public class WorkspaceComboBox
     private void loadItems() {
         try {
             new WorkspaceComboBoxController(this).loadItems();
-        } catch (Throwable e){
+        } catch (Exception e){
             new ExceptionDialog(this, e);
         }
     }

@@ -37,7 +37,7 @@ public class ViewRenderedUrlFrame extends JFrame {
             var result = new UrlBuilder(requestDto).buildUri();
             textArea.setText(result.toString());
             setVisible(true);
-        } catch (Throwable e){
+        } catch (Exception e){
             new ExceptionDialog(parent, e);
             dispose();
         }

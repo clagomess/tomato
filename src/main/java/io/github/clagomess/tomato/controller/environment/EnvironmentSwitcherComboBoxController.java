@@ -68,8 +68,8 @@ public class EnvironmentSwitcherComboBoxController {
                                 .orElseThrow();
 
                         return keystore.loadSecret(envs);
-                    } catch (Throwable e) {
-                        throw new RuntimeException(e);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e.getMessage(), e);
                     }
                 });
     }

@@ -44,7 +44,7 @@ public class WaitExecution {
                 setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 setButtonEnabled(false);
                 execute.run();
-            } catch (Throwable e){
+            } catch (Exception e){
                 new ExceptionDialog(component, e);
             } finally {
                 setButtonEnabled(true);
@@ -55,6 +55,6 @@ public class WaitExecution {
 
     @FunctionalInterface
     public interface Task {
-        void run() throws Throwable;
+        void run() throws Exception;
     }
 }
