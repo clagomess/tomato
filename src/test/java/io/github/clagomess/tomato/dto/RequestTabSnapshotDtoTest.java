@@ -2,43 +2,57 @@ package io.github.clagomess.tomato.dto;
 
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RequestTabSnapshotDtoTest {
+    private final File workspaceDir = new File("target");
     private final RequestDto request = new RequestDto();
-    private final RequestHeadDto head;
+    private final RequestHeadDto requestHead;
 
     public RequestTabSnapshotDtoTest() {
-        head = new RequestHeadDto();
-        head.setPath(new File("target"));
+        requestHead = new RequestHeadDto();
+        requestHead.setPath(new File("target/foo/request.json"));
+    }
+
+    @Nested
+    class toSessionState {
+        @Test
+        public void whenNew(){
+            var snapshot = new RequestTabSnapshotDto(true, null, request);
+            var state = snapshot.toSessionState(workspaceDir);
+
+            assertNull(state.getFilepath());
+            assertNotNull(state.getStaging());
+        }
+
+        @Test
+        void whenModified(){
+            var snapshot = new RequestTabSnapshotDto(true, requestHead, request);
+            var state = snapshot.toSessionState(workspaceDir);
+
+            assertEquals("foo/request.json", state.getFilepath());
+            assertNotNull(state.getStaging());
+        }
+
+        @Test
+        void whenOpened(){
+            var snapshot = new RequestTabSnapshotDto(false, requestHead, request);
+            var state = snapshot.toSessionState(workspaceDir);
+
+            assertEquals("foo/request.json", state.getFilepath());
+            assertNull(state.getStaging());
+        }
     }
 
     @Test
-    public void toSessionState_new(){
+    void replaceBasePath(){
         var snapshot = new RequestTabSnapshotDto(true, null, request);
-        var state = snapshot.toSessionState();
-        assertNull(state.getFilepath());
-        assertNotNull(state.getStaging());
-    }
-
-    @Test
-    public void toSessionState_modified(){
-        var snapshot = new RequestTabSnapshotDto(true, head, request);
-        var state = snapshot.toSessionState();
-        assertNotNull(state.getFilepath());
-        assertNotNull(state.getStaging());
-    }
-
-    @Test
-    public void toSessionState_opened(){
-        var snapshot = new RequestTabSnapshotDto(false, head, request);
-        var state = snapshot.toSessionState();
-        assertNotNull(state.getFilepath());
-        assertNull(state.getStaging());
+        var result = snapshot.replaceBasePath(workspaceDir, requestHead.getPath());
+        assertEquals("foo/request.json", result);
     }
 }

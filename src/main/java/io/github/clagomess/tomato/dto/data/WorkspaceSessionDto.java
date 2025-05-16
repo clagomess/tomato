@@ -2,7 +2,6 @@ package io.github.clagomess.tomato.dto.data;
 
 import lombok.*;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class WorkspaceSessionDto extends MetadataDto {
     @NoArgsConstructor
     @EqualsAndHashCode
     public static class Request {
-        private File filepath;
+        private String filepath;
         private RequestDto staging;
     }
 }
