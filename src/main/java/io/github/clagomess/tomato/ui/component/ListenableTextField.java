@@ -35,6 +35,10 @@ public class ListenableTextField extends UndoableTextField {
         onChangeList.add(value);
     }
 
+    public void removeOnChange(OnChangeFI value){
+        onChangeList.remove(value);
+    }
+
     @FunctionalInterface
     public interface OnChangeFI {
         void change(String content);

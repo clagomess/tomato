@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui.environment.edit;
 
+import io.github.clagomess.tomato.controller.environment.edit.ValueTextFieldController;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import io.github.clagomess.tomato.ui.component.ExceptionDialog;
@@ -11,20 +12,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.io.IOException;
 
 import static com.formdev.flatlaf.FlatClientProperties.TEXT_FIELD_TRAILING_COMPONENT;
 import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.TEXT;
 
 @Slf4j
-public class ValueTextField extends ListenableTextField {
+public class ValueTextField
+        extends ListenableTextField
+        implements ValueTextFieldInterface {
     private static final String UNKNOW_SECRET = "***";
     private static final Icon LOCK_ICON = new BxLockIcon();
     private static final Icon LOCK_OPEN_ICON = new BxLockOpenIcon();
 
-    private final EnvironmentItemDto item;
+    private final ValueTextFieldController controller;
     private final OnChangeFI onChangeFI;
-
-    private final EnvironmentKeystore environmentKeystore;
 
     private final IconButton btnUnlockSecret = new IconButton(
             LOCK_ICON,
@@ -37,13 +39,17 @@ public class ValueTextField extends ListenableTextField {
             @NotNull EnvironmentItemDto item,
             OnChangeFI onChangeFI
     ) {
-        this.item = item;
         this.onChangeFI = onChangeFI;
-        this.environmentKeystore = environmentKeystore;
+
+        controller = new ValueTextFieldController(
+                this,
+                environmentKeystore,
+                item
+        );
 
         if(item.getType() == TEXT) {
             setText(item.getValue());
-            addOnChange(onChangeFI);
+            setOnChangeEnabled(true);
         }else{
             setText(UNKNOW_SECRET);
             setEnabled(false);
@@ -53,24 +59,32 @@ public class ValueTextField extends ListenableTextField {
             );
         }
 
-        btnUnlockSecret.addActionListener(e -> unlockSecret());
+        btnUnlockSecret.addActionListener(e -> btnUnlockSecretAction());
     }
 
-    public void unlockSecret(){
-        try {
-            String text = null;
-
-            if(item.getSecretId() != null) {
-                text = environmentKeystore.loadSecret(item.getSecretId())
-                        .orElse(null);
-            }
-
-            btnUnlockSecret.setEnabled(false);
-            setEnabled(true);
-            setText(text);
+    public void setOnChangeEnabled(boolean enabled){
+        if(enabled){
             addOnChange(onChangeFI);
-        } catch (Throwable e) {
+        }else{
+            removeOnChange(onChangeFI);
+        }
+    }
+
+    public void revealSecret(){
+        btnUnlockSecret.setEnabled(false);
+        setEnabled(true);
+        setOnChangeEnabled(false);
+    }
+
+    private void btnUnlockSecretAction(){
+        try {
+            controller.unlockSecret();
+        } catch (Exception e) {
             new ExceptionDialog(this, e);
         }
+    }
+
+    public String getSecret() throws IOException {
+        return controller.unlockSecret();
     }
 }

@@ -1,12 +1,8 @@
 package io.github.clagomess.tomato.ui.environment.edit;
 
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
-import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum;
 import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
-import io.github.clagomess.tomato.ui.component.ComponentUtil;
-import io.github.clagomess.tomato.ui.component.IconButton;
-import io.github.clagomess.tomato.ui.component.ListenableTextField;
-import io.github.clagomess.tomato.ui.component.StagingMonitor;
+import io.github.clagomess.tomato.ui.component.*;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import lombok.Getter;
@@ -35,9 +31,7 @@ class Row extends JPanel {
     private final StagingMonitor<EnvironmentItemDto> stagingMonitor;
 
     private final JLabel changeIcon = new JLabel(HAS_NOT_CHANGED_ICON);
-    private final JComboBox<EnvironmentItemTypeEnum> cbType = new JComboBox<>(
-            EnvironmentItemTypeEnum.values()
-    );
+    private final EnvironmentItemTypeComboBox cbType = new EnvironmentItemTypeComboBox();
     private final ListenableTextField txtKey = new ListenableTextField();
     private ValueTextField txtValue;
     private final JButton btnRemove = new IconButton(
@@ -70,11 +64,7 @@ class Row extends JPanel {
         add(changeIcon, "width 8!");
 
         cbType.setSelectedItem(item.getType());
-        cbType.addActionListener(e -> {
-            item.setType((EnvironmentItemTypeEnum) cbType.getSelectedItem());
-            onChangeType();
-            updateStagingMonitor();
-        });
+        cbType.addActionListener(e -> onChangeTypeAction());
         add(cbType, "width 80!");
 
         txtKey.setText(item.getKey());
@@ -103,17 +93,24 @@ class Row extends JPanel {
         parent.updateStagingMonitor();
     }
 
-    public void onChangeType() {
-        txtValue.unlockSecret();
-        item.setValue(txtValue.getText());
+    private void onChangeTypeAction() {
+        try {
+            txtValue.setOnChangeEnabled(false);
+            item.setValue(txtValue.getSecret());
+            item.setType(cbType.getSelectedItem());
+            updateStagingMonitor();
 
-        int index = ComponentUtil.getComponentIndex(this, txtValue);
-        remove(index);
+            int index = ComponentUtil.getComponentIndex(this, txtValue);
+            remove(index);
 
-        txtValue = createTxtValue();
-        add(txtValue, "width 150:150:100%", index);
-        revalidate();
-        repaint();
+            txtValue = createTxtValue();
+            add(txtValue, "width 150:150:100%", index);
+            revalidate();
+            repaint();
+        } catch (Exception e) {
+            cbType.setSelectedItem(item.getType());
+            new ExceptionDialog(this, e);
+        }
     }
 
     private void btnRemoveAction(){
