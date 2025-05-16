@@ -1,36 +1,34 @@
 package io.github.clagomess.tomato.ui.environment;
 
-import io.github.clagomess.tomato.controller.environment.EnvironmentComboBoxController;
+import io.github.clagomess.tomato.controller.environment.EnvironmentSwitcherComboBoxController;
 import io.github.clagomess.tomato.ui.component.*;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import io.github.clagomess.tomato.ui.environment.edit.EnvironmentEditFrame;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
 
 import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
-import static javax.swing.SwingUtilities.*;
+import static javax.swing.SwingUtilities.invokeAndWait;
+import static javax.swing.SwingUtilities.isEventDispatchThread;
 
-public class EnvironmentSwitcherComboBox extends JPanel {
+public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSwitcherComboBoxInterface {
     private static final Icon EDIT_ICON = new BxEditIcon();
 
-    private final EnvironmentComboBox comboBox = new EnvironmentComboBox();
+    private final EnvironmentComboBox comboBox = new EnvironmentComboBox(true);
     private final JButton btnEdit = new IconButton(
             EDIT_ICON,
             "Edit Environment"
     );
 
-    private final EnvironmentComboBoxController controller = new EnvironmentComboBoxController();
+    private final EnvironmentSwitcherComboBoxController controller;
 
     public EnvironmentSwitcherComboBox(){
         ComponentUtil.checkIsEventDispatchThread();
+        controller = new EnvironmentSwitcherComboBoxController(this);
 
         setLayout(new MigLayout(
                 "insets 2",
@@ -39,115 +37,93 @@ public class EnvironmentSwitcherComboBox extends JPanel {
         add(comboBox, "width ::100% - 32px");
         add(btnEdit);
 
-        refreshItems();
+        controller.addListeners();
+        configureActionListener();
 
-        controller.addEnvironmentOnChangeListener(() -> invokeLater(this::refreshItems));
-        controller.addWorkspaceOnSwitchListener(() -> invokeLater(this::refreshItems));
-
-        btnEdit.addActionListener(event -> {
-            setBtnEditEnabledOrDisabled();
-            if(comboBox.getSelectedItem() == null) return;
-
-            new WaitExecution(this, btnEdit, () -> btnEditAction(
-                    this,
-                    comboBox.getSelectedItem().getId()
-            )).execute();
-        });
-    }
-
-    private void refreshItems() {
-        ComponentUtil.checkIsEventDispatchThread();
-
-        Arrays.stream(comboBox.getActionListeners())
-                .forEach(comboBox::removeActionListener);
-        comboBox.removeAllItems();
-
-        // add empty option
-        comboBox.addItem(null);
-        comboBox.setSelectedItem(null);
-
-        ForkJoinPool.commonPool().submit(() -> {
-            try {
-                controller.loadItems(
-                        (selected, item) -> invokeLater(() -> {
-                            comboBox.addItem(item);
-                            if(selected) comboBox.setSelectedItem(item);
-                        }),
-                        () -> new WaitExecution(this, () -> {
-                            setBtnEditEnabledOrDisabled();
-                            refreshEnvironmentCurrentEnvsListener();
-                            comboBox.addActionListener(event ->
-                                    setWorkspaceSessionSelected());
-                        }).execute()
-                );
-            } catch (Throwable e){
-                invokeLater(() -> new ExceptionDialog(this, e));
-            }
-        });
+        btnEdit.addActionListener(event -> btnEditAction());
     }
 
     private void setBtnEditEnabledOrDisabled(){
         btnEdit.setEnabled(
                 comboBox.getItemCount() > 0 &&
-                comboBox.getSelectedItem() != null
+                        comboBox.getSelectedItem() != null
         );
+    }
+
+    private void btnEditAction(){
+        setBtnEditEnabledOrDisabled();
+        if(comboBox.getSelectedItem() == null) return;
+
+        var id = comboBox.getSelectedItem().getId();
+        var parent = this;
+
+        new WaitExecution(this, btnEdit, () -> toFrontIfExists(
+                EnvironmentEditFrame.class,
+                () -> new EnvironmentEditFrame(parent, id),
+                item -> Objects.equals(id, item.getEnvironment().getId())
+        )).execute();
+    }
+
+    @Override
+    public void refreshItems() {
+        new WaitExecution(this, () -> {
+            Arrays.stream(comboBox.getActionListeners())
+                    .forEach(comboBox::removeActionListener);
+
+            comboBox.loadItems();
+
+            configureActionListener();
+        }).execute();
+    }
+
+    private void configureActionListener() {
+        new WaitExecution(this, () -> {
+            setBtnEditEnabledOrDisabled();
+            controller.refreshEnvironmentCurrentEnvsListener();
+            comboBox.addActionListener(event ->
+                    setWorkspaceSessionSelected());
+        }).execute();
     }
 
     private void setWorkspaceSessionSelected() {
         new WaitExecution(this, () -> {
             controller.setWorkspaceSessionSelected(comboBox.getSelectedItem());
             setBtnEditEnabledOrDisabled();
-            refreshEnvironmentCurrentEnvsListener();
+            controller.refreshEnvironmentCurrentEnvsListener();
         }).execute();
     }
 
-    private void refreshEnvironmentCurrentEnvsListener() throws IOException {
-        Supplier<String> getPassword = () -> {
-            if(isEventDispatchThread()){
-                return new PasswordDialog(this).showDialog();
-            }
+    @Override
+    public String getPassword() {
+        if(isEventDispatchThread()){
+            return new PasswordDialog(this).showDialog();
+        }
 
+        try {
             var result = new AtomicReference<String>();
-            try {
-                invokeAndWait(() -> result.set(
-                        new PasswordDialog(this).showDialog()
-                ));
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
+            invokeAndWait(() -> result.set(
+                    new PasswordDialog(this).showDialog()
+            ));
             return result.get();
-        };
-
-        Supplier<String> getNewPassword = () -> {
-            if(isEventDispatchThread()){
-                return new NewPasswordDialog(this).showDialog();
-            }
-
-            var result = new AtomicReference<String>();
-            try {
-                invokeAndWait(() -> result.set(
-                        new NewPasswordDialog(this).showDialog()
-                ));
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
-            return result.get();
-        };
-
-        controller.refreshEnvironmentCurrentEnvsListener(
-                getPassword,
-                getNewPassword
-        );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void btnEditAction(
-            Container parent,
-            String id
-    ) throws IOException {
-        toFrontIfExists(
-                EnvironmentEditFrame.class,
-                () -> new EnvironmentEditFrame(parent, id),
-                item -> Objects.equals(id, item.getEnvironment().getId())
-        );
+    @Override
+    public String getNewPassword() {
+        if(isEventDispatchThread()){
+            new NewPasswordDialog(this).showDialog();
+        }
+
+        try {
+            var result = new AtomicReference<String>();
+            invokeAndWait(() -> result.set(
+                    new NewPasswordDialog(this).showDialog()
+            ));
+            return result.get();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
