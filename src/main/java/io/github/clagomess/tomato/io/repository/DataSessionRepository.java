@@ -26,7 +26,7 @@ public class DataSessionRepository extends AbstractRepository {
     }
 
     public void save(DataSessionDto dto) throws IOException {
-        writeFile(getDataSessionFile(), dto);
+        writeFile(getDataSessionFile(), new TypeReference<>(){}, dto);
         cache.evict();
     }
 

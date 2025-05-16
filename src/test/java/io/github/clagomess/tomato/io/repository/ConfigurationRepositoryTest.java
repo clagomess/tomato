@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.io.repository;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.clagomess.tomato.dto.data.ConfigurationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +50,7 @@ public class ConfigurationRepositoryTest extends RepositoryStubs {
 
         configurationRepositoryMock.writeFile(new File(
                 mockHomeDir, "configuration.json"
-        ), dto);
+        ), new TypeReference<>(){}, dto);
 
         // test
         var result = configurationRepositoryMock.load();

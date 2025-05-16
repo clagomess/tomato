@@ -37,7 +37,7 @@ public class ConfigurationRepository extends AbstractRepository {
                     "data"
             ));
 
-            writeFile(configurationFile, defaultConfiguration);
+            writeFile(configurationFile, new TypeReference<>(){}, defaultConfiguration);
 
             return defaultConfiguration;
         });
@@ -45,7 +45,7 @@ public class ConfigurationRepository extends AbstractRepository {
 
     public void save(ConfigurationDto configuration) throws IOException {
         File configurationFile = getConfigurationFile();
-        writeFile(configurationFile, configuration);
+        writeFile(configurationFile, new TypeReference<>(){}, configuration);
         cache.evict();
     }
 

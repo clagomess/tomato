@@ -1,13 +1,17 @@
 package io.github.clagomess.tomato.io.repository;
 
 import io.github.clagomess.tomato.dto.data.DataSessionDto;
+import io.github.clagomess.tomato.util.ObjectMapperUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,11 +48,6 @@ public class DataSessionRepositoryTest extends RepositoryStubs {
 
     @Test
     public void save() throws IOException {
-        Mockito.doCallRealMethod()
-                .when(dataSessionRepositoryMock)
-                .save(Mockito.any());
-
-        // test
         var dto = new DataSessionDto();
         dto.setWorkspaceId(RandomStringUtils.secure().nextAlphanumeric(8));
 
@@ -57,36 +56,28 @@ public class DataSessionRepositoryTest extends RepositoryStubs {
         assertTrue(mockDataSessionFile.isFile());
     }
 
-    @Test
-    public void load_whenNotExists_ReturnsAndCreateDefault() throws IOException {
-        Mockito.when(dataSessionRepositoryMock.load())
-                .thenCallRealMethod();
+    @Nested
+    class load {
+        @Test
+        void whenNotExists_ReturnsAndCreateDefault() throws IOException {
+            var result = dataSessionRepositoryMock.load();
+            Assertions.assertThat(mockDataSessionFile).isFile();
+            Assertions.assertThat(result.getWorkspaceId()).isNull();
+        }
 
-        Mockito.doCallRealMethod()
-                .when(dataSessionRepositoryMock)
-                .save(Mockito.any());
+        @Test
+        void whenExists_Returns() throws IOException {
+            var dto = new DataSessionDto();
 
-        // test
-        var result = dataSessionRepositoryMock.load();
-        Assertions.assertThat(mockDataSessionFile).isFile();
-        Assertions.assertThat(result.getWorkspaceId()).isNull();
-    }
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(mockDataSessionFile))) {
+                ObjectMapperUtil.getInstance()
+                        .writerWithDefaultPrettyPrinter()
+                        .writeValue(bw, dto);
+            }
 
-    @Test
-    public void load_whenExists_Returns() throws IOException {
-        Mockito.doCallRealMethod()
-                .when(dataSessionRepositoryMock)
-                .save(Mockito.any());
+            var result = dataSessionRepositoryMock.load();
 
-        Mockito.when(dataSessionRepositoryMock.load())
-                .thenCallRealMethod();
-
-        // teste
-        var dto = new DataSessionDto();
-        dataSessionRepositoryMock.save(dto);
-
-        var result = dataSessionRepositoryMock.load();
-
-        assertEquals(dto.getId(), result.getId());
+            assertEquals(dto.getId(), result.getId());
+        }
     }
 }

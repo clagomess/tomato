@@ -19,23 +19,24 @@ public abstract class RepositoryStubs {
             "home/data"
     )).getFile());
 
+    protected File mockUserHomeDir;
     protected File mockHomeDir;
     protected File mockDataDir;
 
     @BeforeEach
     public void setupDirs() {
-        File userHome = new File(
+        mockUserHomeDir = new File(
                 "target",
                 "home-" + RandomStringUtils.secure().nextAlphanumeric(8)
         );
 
-        mockHomeDir = new File(userHome, ".tomato");
+        mockHomeDir = new File(mockUserHomeDir, ".tomato");
         assertTrue(mockHomeDir.mkdirs());
 
         mockDataDir = new File(mockHomeDir, "data");
         assertTrue(mockDataDir.mkdirs());
 
-        System.setProperty("user.home", userHome.getAbsolutePath());
+        System.setProperty("user.home", mockUserHomeDir.getAbsolutePath());
     }
 
     @BeforeEach
@@ -51,7 +52,7 @@ public abstract class RepositoryStubs {
 
     @AfterEach
     public void deleteDirs() throws IOException {
-        try(Stream<Path> paths = Files.walk(mockHomeDir.toPath())){
+        try(Stream<Path> paths = Files.walk(mockUserHomeDir.toPath())){
             paths.sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
                     .forEach(item -> assertTrue(item.delete()));

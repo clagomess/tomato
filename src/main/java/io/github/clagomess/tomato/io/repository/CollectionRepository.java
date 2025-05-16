@@ -55,7 +55,7 @@ public class CollectionRepository extends AbstractRepository {
                 collection.getId()
         );
 
-        writeFile(collectionFile, collection);
+        writeFile(collectionFile, new TypeReference<>(){}, collection);
 
         return collectionDir;
     }

@@ -39,7 +39,7 @@ public class RequestRepository extends AbstractRepository {
             requestFile = basepath;
         }
 
-        writeFile(requestFile, request);
+        writeFile(requestFile, new TypeReference<>(){}, request);
 
         return requestFile;
     }
