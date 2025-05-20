@@ -52,6 +52,7 @@ public class HttpService {
 
         try {
             HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                    .version(HttpClient.Version.HTTP_1_1)
                     .uri(new UrlBuilder(requestDto).buildUri());
 
             // set headers
