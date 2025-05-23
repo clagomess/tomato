@@ -162,7 +162,7 @@
                     <verbose>false</verbose>
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                     <failOnNoGitDirectory>false</failOnNoGitDirectory>
-                    <dateFormat>yyyy-MM-dd'T'HH:mm</dateFormat>
+                    <dateFormat>yyyy-MM-dd</dateFormat>
                     <gitDescribe>
                         <tags>true</tags>
                         <abbrev>0</abbrev>
