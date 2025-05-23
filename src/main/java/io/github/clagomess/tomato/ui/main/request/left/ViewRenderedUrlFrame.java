@@ -18,7 +18,7 @@ public class ViewRenderedUrlFrame extends JFrame {
         setTitle("View Rendered Url");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(400, 200));
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
                 "insets 10",

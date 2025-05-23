@@ -17,7 +17,7 @@ public class DebugThreadsFrame extends JFrame {
     public DebugThreadsFrame(MainFrame mainFrame) {
         setTitle("Debug -> Threads");
         setIconImages(FaviconImage.getFrameIconImage());
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(600, 400));
 
         setLayout(new MigLayout(

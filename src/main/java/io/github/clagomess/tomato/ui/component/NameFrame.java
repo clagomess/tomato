@@ -17,7 +17,7 @@ public abstract class NameFrame extends JFrame {
         setTitle("Rename");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         setLayout(new MigLayout(

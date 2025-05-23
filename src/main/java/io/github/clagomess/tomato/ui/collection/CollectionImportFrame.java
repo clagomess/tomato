@@ -27,7 +27,7 @@ public class CollectionImportFrame extends JFrame {
         setTitle("Import Collection");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         cbCollectionParent = new CollectionComboBox(selectedCollectionTreeParent);

@@ -1,40 +1,36 @@
 package io.github.clagomess.tomato.util;
 
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.Properties;
 
-@Slf4j
-@Getter
 public class RevisionUtil {
-    private String deployDate = "00/00/0000";
-    private String deployCommit = "0000000";
-    private String deployTag = "0.0.0";
+    public static final String DEPLOY_DATE;
+    public static final String DEPLOY_COMMIT;
+    public static final String DEPLOY_TAG;
+    public static final String REVISION;
 
-    @Getter
-    private static final RevisionUtil instance = new RevisionUtil();
+    private RevisionUtil() {}
 
-    private RevisionUtil(){
+    static {
         try {
             Properties properties = new Properties();
-            properties.load(getClass().getClassLoader().getResourceAsStream("git.properties"));
+            properties.load(
+                    RevisionUtil.class.getClassLoader()
+                            .getResourceAsStream("git.properties")
+            );
 
-            deployDate = properties.getProperty("git.build.time");
-            deployCommit = properties.getProperty("git.commit.id.abbrev");
-            deployTag = properties.getProperty("git.closest.tag.name").replace("v", "");
-        }catch (Exception e){
-            log.error(e.getMessage(), e);
+            DEPLOY_DATE = properties.getProperty("git.build.time");
+            DEPLOY_COMMIT = properties.getProperty("git.commit.id.abbrev");
+            DEPLOY_TAG = properties.getProperty("git.closest.tag.name")
+                    .replace("v", "");
+
+            REVISION = String.format(
+                    "%s - %s - %s",
+                    DEPLOY_TAG,
+                    DEPLOY_COMMIT,
+                    DEPLOY_DATE
+            );
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-                "%s - %s - %s",
-                deployTag,
-                deployCommit,
-                deployDate
-        );
     }
 }

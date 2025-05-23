@@ -17,7 +17,7 @@ class ViewInjectedEnvironmentFrame extends JFrame {
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(500, 200));
         setPreferredSize(new Dimension(500, 200));
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(true);
 
         TableManager<KeyValueTMDto> tableManager = new TableManager<>(
