@@ -144,9 +144,10 @@ public class ResponseDto {
             return "response.bin";
         }
 
-        protected void buildBodyString() {
-            int limit = 131_072; // 128KB
+        private static final int BUFFER_SIZE = 8192;
+        private static final int BODY_STRING_LIMIT = 1048576; // 1MB
 
+        protected void buildBodyString() {
             if(bodySize == 0){
                 renderBodyByContentType = false;
                 return;
@@ -161,10 +162,10 @@ public class ResponseDto {
                 return;
             }
 
-            if(bodySize > limit){
+            if(bodySize > BODY_STRING_LIMIT){
                 renderBodyByContentType = false;
                 bodyAsString = """
-                < Response content size execeds render limit of 128KB.
+                < Response content size execeds render limit of 1024KB.
                 < Download instead
                 """;
                 return;
@@ -174,9 +175,15 @@ public class ResponseDto {
                     body,
                     contentType.getCharsetOrDefault()
             ))){
-                char[] buffer = new char[limit];
-                int n = br.read(buffer);
-                bodyAsString = new String(buffer, 0, n);
+                StringBuilder result = new StringBuilder();
+                char[] buffer = new char[BUFFER_SIZE];
+                int n;
+
+                while ((n = br.read(buffer)) != -1) {
+                    result.append(buffer, 0, n);
+                }
+
+                bodyAsString = result.toString();
             }catch (IOException e){
                 log.error(e.getMessage(), e);
                 renderBodyByContentType = false;
