@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.ui.environment.list;
 
 import io.github.clagomess.tomato.controller.environment.list.EnvironmentListController;
 import io.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
+import io.github.clagomess.tomato.ui.component.EmptyPane;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
@@ -68,6 +69,10 @@ public class EnvironmentListFrame
             for(var item : items){
                 var row = new Row(rowsPanel, item);
                 rowsPanel.add(row, "wrap");
+            }
+
+            if(items.isEmpty()){
+                rowsPanel.add(new EmptyPane(), "wrap");
             }
 
             rowsPanel.revalidate();
