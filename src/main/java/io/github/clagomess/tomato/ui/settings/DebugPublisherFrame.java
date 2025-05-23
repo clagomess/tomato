@@ -17,7 +17,7 @@ public class DebugPublisherFrame extends JFrame {
     public DebugPublisherFrame(MainFrame mainFrame) {
         setTitle("Debug -> Publisher");
         setIconImages(FaviconImage.getFrameIconImage());
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(600, 400));
 
         setLayout(new MigLayout(

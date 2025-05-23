@@ -22,7 +22,7 @@ public class CodeSnippetFrame extends JFrame {
         setTitle("Code Snippet");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(600, 400));
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
                 "insets 10",

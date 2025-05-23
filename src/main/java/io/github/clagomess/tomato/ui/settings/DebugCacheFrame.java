@@ -18,7 +18,7 @@ public class DebugCacheFrame extends JFrame {
     public DebugCacheFrame(MainFrame mainFrame) {
         setTitle("Debug -> Cache");
         setIconImages(FaviconImage.getFrameIconImage());
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(600, 400));
 
         setLayout(new MigLayout(

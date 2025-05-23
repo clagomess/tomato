@@ -30,7 +30,7 @@ public class RequestFrame extends JFrame {
         setTitle(loadedRequest.getName());
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(1000, 600));
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
                 "insets 5",

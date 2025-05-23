@@ -49,7 +49,7 @@ public class EnvironmentEditFrame extends JFrame {
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(600, 500));
         setPreferredSize(new Dimension(600, 500));
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(true);
 
         txtName.setText(environment.getName());

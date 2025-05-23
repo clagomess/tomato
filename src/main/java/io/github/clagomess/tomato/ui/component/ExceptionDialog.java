@@ -32,7 +32,7 @@ public class ExceptionDialog extends JDialog {
         log.error(e.getMessage(), e);
 
         setMinimumSize(new Dimension(350, 130));
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
                 "",

@@ -27,7 +27,7 @@ public class EnvironmentImportFrame extends JFrame {
         setTitle("Import Environment");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         setLayout(new MigLayout(
