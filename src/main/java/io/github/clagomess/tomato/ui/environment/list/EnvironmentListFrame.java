@@ -1,27 +1,29 @@
 package io.github.clagomess.tomato.ui.environment.list;
 
+import io.github.clagomess.tomato.controller.environment.list.EnvironmentListController;
 import io.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
-import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
-import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
+import io.github.clagomess.tomato.ui.component.EmptyPane;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.UUID;
+import java.util.List;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
-public class EnvironmentListFrame extends JFrame {
+public class EnvironmentListFrame
+        extends JFrame
+        implements EnvironmentListInterface {
     private final JPanel rowsPanel;
 
-    private final UUID listenerUuid;
-    private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
-    private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
+    private final EnvironmentListController controller;
 
     public EnvironmentListFrame(Component parent) {
+        controller = new EnvironmentListController(this);
+
         setTitle("Edit Environments");
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 400));
@@ -46,32 +48,41 @@ public class EnvironmentListFrame extends JFrame {
         add(scrollPane, "width ::100%, height 100%");
 
         refresh();
-        listenerUuid = environmentPublisher.getOnChange()
-                .addListener(e -> refresh());
+        controller.addOnChangeListner();
 
         pack();
         setLocationRelativeTo(parent);
         setVisible(true);
     }
 
-    private void addRow(EnvironmentHeadDto item){
-        var row = new Row(rowsPanel, item);
-
-        rowsPanel.add(row, "wrap");
-        rowsPanel.revalidate();
-        rowsPanel.repaint();
+    public void refresh() {
+        new WaitExecution(
+                this,
+                () -> refresh(controller.list())
+        ).execute();
     }
 
-    private void refresh(){
+    private void refresh(List<EnvironmentHeadDto> items){
         new WaitExecution(this, () -> {
             rowsPanel.removeAll();
-            environmentRepository.listHead().forEach(this::addRow);
+
+            for(var item : items){
+                var row = new Row(rowsPanel, item);
+                rowsPanel.add(row, "wrap");
+            }
+
+            if(items.isEmpty()){
+                rowsPanel.add(new EmptyPane(), "wrap");
+            }
+
+            rowsPanel.revalidate();
+            rowsPanel.repaint();
         }).execute();
     }
 
     @Override
     public void dispose(){
-        environmentPublisher.getOnChange().removeListener(listenerUuid);
+        controller.dispose();
         super.dispose();
     }
 }
