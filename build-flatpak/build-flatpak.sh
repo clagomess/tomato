@@ -8,7 +8,7 @@ echo "/app/share/tomato-${GIT_TAG}.jar" >> /opt/build-linux/tomato.sh
 # copy desktop entry
 echo "Version=${GIT_TAG}" >> /opt/build-linux/tomato.desktop
 
-flatpak-builder --install-deps-from=flathub --repo=repo \
+flatpak-builder --repo=repo \
   build-dir io.github.clagomess.Tomato.yml
 
 flatpak build-bundle repo \

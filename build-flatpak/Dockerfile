@@ -21,8 +21,8 @@ RUN flatpak remote-add \
     --if-not-exists \
     flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-RUN flatpak install -y flathub org.freedesktop.Sdk//24.08
-RUN flatpak install -y flathub org.freedesktop.Platform//24.08
+RUN flatpak install -y --no-deps flathub org.freedesktop.Sdk//24.08
+RUN flatpak install -y --no-deps flathub org.freedesktop.Platform//24.08
 
 COPY build-flatpak /opt/build-flatpak
 COPY build-linux /opt/build-linux
