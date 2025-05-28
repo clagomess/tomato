@@ -153,10 +153,10 @@ public class UrlBuilderTest {
 
     @ParameterizedTest
     @CsvSource({
-            "localhost,localhost?blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar",
-            "localhost?,localhost?blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar",
-            "localhost?xpto=aaa,localhost?xpto=aaa&blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar",
-            "localhost?xpto=aaa&ex=a,localhost?xpto=aaa&ex=a&blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar",
+            "localhost,localhost?blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar&foo%5Bbar%5D=",
+            "localhost?,localhost?blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar&foo%5Bbar%5D=",
+            "localhost?xpto=aaa,localhost?xpto=aaa&blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar&foo%5Bbar%5D=",
+            "localhost?xpto=aaa&ex=a,localhost?xpto=aaa&ex=a&blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar&foo%5Bbar%5D=",
     })
     public void buildQueryParams(
             String input,
@@ -168,7 +168,9 @@ public class UrlBuilderTest {
                 new ContentTypeKeyValueItemDto("date", "17/01/2025"),
                 new ContentTypeKeyValueItemDto("date_env", "{{date}}"),
                 new ContentTypeKeyValueItemDto("blank", " "),
-                new ContentTypeKeyValueItemDto("disabled", "disabled", TEXT_PLAIN_TYPE, false)
+                new ContentTypeKeyValueItemDto("disabled", "disabled", TEXT_PLAIN_TYPE, false),
+                new ContentTypeKeyValueItemDto("foo[bar]", null),
+                new ContentTypeKeyValueItemDto(null, null)
         ));
 
         var urlBuffer = new StringBuilder(input);

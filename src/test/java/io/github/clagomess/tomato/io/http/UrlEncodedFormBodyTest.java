@@ -50,14 +50,16 @@ public class UrlEncodedFormBodyTest {
                 new ContentTypeKeyValueItemDto("nullparam", null),
                 new ContentTypeKeyValueItemDto("hidden", "hidden", null, false),
                 new ContentTypeKeyValueItemDto(null, null),
-                new ContentTypeKeyValueItemDto( " ", null)
+                new ContentTypeKeyValueItemDto( " ", null),
+                new ContentTypeKeyValueItemDto("foo[bar]", null),
+                new ContentTypeKeyValueItemDto(null, null)
         ));
 
         var urlencoded = new UrlEncodedFormBody(body);
         var result = urlencoded.build();
 
         assertEquals(
-                "myparam=myvalue&utf8param=A%C3%A7%C3%A3oA%C3%A7ucar&nullparam=",
+                "myparam=myvalue&utf8param=A%C3%A7%C3%A3oA%C3%A7ucar&nullparam=&foo%5Bbar%5D=",
                 result
         );
     }

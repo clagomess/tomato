@@ -66,14 +66,25 @@ public class UrlBuilder {
 
     protected String buildEncodedParamValue(String paramValue){
         if(paramValue == null) return "";
+        StringBuilder encodedParamValue = new StringBuilder(paramValue);
 
         for(var env : environment.entrySet()) {
             if(!paramValue.contains(env.getKey())) continue;
+            int idx = 0;
 
-            paramValue = paramValue.replace(env.getKey(), env.getValue());
+            while ((idx = encodedParamValue.indexOf(env.getKey(), idx)) != -1){
+                encodedParamValue.replace(
+                        idx,
+                        idx + env.getKey().length(),
+                        env.getValue()
+                );
+            }
         }
 
-        return URLEncoder.encode(paramValue, request.getUrlParam().getCharset());
+        return URLEncoder.encode(
+                encodedParamValue.toString(),
+                request.getUrlParam().getCharset()
+        );
     }
 
     protected void buildPathVariables(StringBuilder urlBuilder) {
@@ -120,7 +131,10 @@ public class UrlBuilder {
         for(var param : list) {
             if(!isFirstParam) urlBuilder.append("&");
 
-            urlBuilder.append(param.getKey());
+            urlBuilder.append(URLEncoder.encode(
+                    param.getKey(),
+                    request.getUrlParam().getCharset()
+            ));
             urlBuilder.append("=");
             urlBuilder.append(buildEncodedParamValue(param.getValue()));
 
