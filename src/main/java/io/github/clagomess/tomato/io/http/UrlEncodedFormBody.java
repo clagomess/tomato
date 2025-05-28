@@ -21,7 +21,11 @@ public class UrlEncodedFormBody {
                 .forEach(item -> {
                     if(!first.getAndSet(false)) urlEncoded.append("&");
 
-                    urlEncoded.append(item.getKey()).append("=");
+                    urlEncoded.append(URLEncoder.encode(
+                            item.getKey(),
+                            body.getCharset()
+                    ));
+                    urlEncoded.append("=");
                     urlEncoded.append(URLEncoder.encode(
                             item.getValue(),
                             body.getCharset()
