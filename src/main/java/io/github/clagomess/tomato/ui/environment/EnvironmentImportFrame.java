@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui.environment;
 
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.converter.InterfaceConverter;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
@@ -53,7 +54,7 @@ public class EnvironmentImportFrame extends JFrame {
     private void btnImportAction(){
         new WaitExecution(this, btnImport, () -> {
             InterfaceConverter converter = cbConverter.getSelectedItem();
-            if(converter == null) throw new Exception("Type is empty");
+            if(converter == null) throw new TomatoException("Type is empty");
 
             var id = converter.pumpEnvironment(fileChooser.getValue());
 

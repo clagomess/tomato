@@ -1,6 +1,8 @@
 package io.github.clagomess.tomato.controller.environment;
 
 import io.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
+import io.github.clagomess.tomato.exception.ConverterTypeEmptyException;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.converter.InterfaceConverter;
 import io.github.clagomess.tomato.ui.environment.EnvironmentExportFrameInterface;
 
@@ -20,8 +22,8 @@ public class EnvironmentExportFrameController {
             EnvironmentHeadDto environment,
             InterfaceConverter converter
     ) throws Exception {
-        if(environment == null) throw new Exception("Environment is empty");
-        if(converter == null) throw new Exception("Type is empty");
+        if(environment == null) throw new TomatoException("Environment is empty");
+        if(converter == null) throw new ConverterTypeEmptyException();
 
         String targetFileName = environment.getName() +
                 converter.getEnvironmentDumpFileSuffix();

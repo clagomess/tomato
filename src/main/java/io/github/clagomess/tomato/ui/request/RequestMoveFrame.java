@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.ui.request;
 
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.repository.RequestRepository;
 import io.github.clagomess.tomato.mapper.CloneMapper;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
@@ -67,7 +68,7 @@ public class RequestMoveFrame extends JFrame {
     private void btnMoveAction(){
         new WaitExecution(this, () -> {
             CollectionTreeDto destination = cbCollectionDestination.getSelectedItem();
-            if(destination == null) throw new Exception("Destination not selected");
+            if(destination == null) throw new TomatoException("Destination not selected");
 
             requestRepository.move(requestHead, destination);
 

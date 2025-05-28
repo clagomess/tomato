@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.ui.request;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.repository.RequestRepository;
 import io.github.clagomess.tomato.mapper.RequestMapper;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
@@ -69,7 +70,7 @@ public class RequestSaveFrame extends JFrame {
             this.requestDto.setName(this.txtName.getText());
 
             CollectionTreeDto parent = cbCollection.getSelectedItem();
-            if(parent == null) throw new Exception("Parent is null");
+            if(parent == null) throw new TomatoException("Parent is null");
 
             var filePath = requestRepository.save(
                     parent.getPath(),
