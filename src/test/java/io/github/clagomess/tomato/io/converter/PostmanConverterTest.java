@@ -12,9 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-public class PostmanConverterTest extends RepositoryStubs {
+class PostmanConverterTest extends RepositoryStubs {
     @Test
-    public void pumpCollection() throws IOException {
+    void pumpCollection() throws IOException {
         PostmanConverter postmanConverter = new PostmanConverter();
 
         var postmanCollection = new File(Objects.requireNonNull(getClass()
@@ -28,7 +28,7 @@ public class PostmanConverterTest extends RepositoryStubs {
     }
 
     @Test
-    public void pumpEnvironment() throws IOException {
+    void pumpEnvironment() throws IOException {
         EnvironmentRepository environmentDSMock = Mockito.mock(
                 EnvironmentRepository.class,
                 Mockito.withSettings().useConstructor()
@@ -65,7 +65,7 @@ public class PostmanConverterTest extends RepositoryStubs {
         ));
 
         @BeforeEach
-        public void setup() throws IOException {
+        void setup() throws IOException {
             Mockito.reset(workspaceRepository);
 
             var workspace = new WorkspaceDto();
@@ -78,7 +78,7 @@ public class PostmanConverterTest extends RepositoryStubs {
         }
 
         @Test
-        public void dumpCollection() throws IOException {
+        void dumpCollection() throws IOException {
             var rootTree = treeRepository.getWorkspaceCollectionTree();
 
             var resultCollectionFile = new File(mockHomeDir, "postman.collection.json");
@@ -92,7 +92,7 @@ public class PostmanConverterTest extends RepositoryStubs {
         }
 
         @Test
-        public void dumpEnvironment() throws IOException {
+        void dumpEnvironment() throws IOException {
             var resultFile = new File(mockHomeDir, "postman.environment.json");
             var postmanConverter = new PostmanConverter(
                     collectionRepository,

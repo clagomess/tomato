@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test;
 
 import static io.github.clagomess.tomato.enums.TomatoJsonSchemaEnum.WORKSPACE_SESSION;
 
-public class WorkspaceSessionDtoTest {
+class WorkspaceSessionDtoTest {
     private final JsonSchema jsonSchema = JsonSchemaBuilder.getTomatoJsonSchema(WORKSPACE_SESSION);
     private final ObjectMapper mapper = ObjectMapperUtil.getInstance();
 
     @Test
-    public void toJson() throws JsonProcessingException {
+    void toJson() throws JsonProcessingException {
         WorkspaceSessionDto dto = new WorkspaceSessionDto();
         dto.setEnvironmentId(RandomStringUtils.secure().nextAlphabetic(10));
 
@@ -29,7 +29,7 @@ public class WorkspaceSessionDtoTest {
     }
 
     @Test
-    public void equalsHashCode(){
+    void equalsHashCode(){
         var dtoA = new WorkspaceSessionDto();
         dtoA.setId("aaa");
 
@@ -43,7 +43,7 @@ public class WorkspaceSessionDtoTest {
     @Nested
     class Request {
         @Test
-        public void equalsHashCode(){
+        void equalsHashCode(){
             var dtoA = new WorkspaceSessionDto.Request();
             dtoA.setFilepath("target/request-xpt.json");
 

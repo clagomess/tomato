@@ -21,16 +21,16 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WireMockTest(httpPort = 8500)
-public class HttpDebugTest {
+class HttpDebugTest {
     @Test
-    public void assembly_whenRequestIsNull(){
+    void assembly_whenRequestIsNull(){
         var debug = new HttpDebug();
         var result = debug.assembly();
         Assertions.assertThat(result).isBlank();
     }
 
     @Test
-    public void assembly_whenPOSTString() throws URISyntaxException, IOException, InterruptedException {
+    void assembly_whenPOSTString() throws URISyntaxException, IOException, InterruptedException {
         var bodyString = "hello world";
 
         var debug = new HttpDebug();
@@ -71,7 +71,7 @@ public class HttpDebugTest {
     }
 
     @Test
-    public void assemblyHeader_whenSingle(){
+    void assemblyHeader_whenSingle(){
         var debug = new HttpDebug();
         var headers = Map.of("key", List.of("value"));
         var result = debug.assemblyHeader("> ", headers);
@@ -79,7 +79,7 @@ public class HttpDebugTest {
     }
 
     @Test
-    public void assemblyHeader_whenMutiple(){
+    void assemblyHeader_whenMutiple(){
         var debug = new HttpDebug();
         var headers = Map.of("key", List.of("value1", "value2"));
         var result = debug.assemblyHeader("< ", headers);
@@ -94,7 +94,7 @@ public class HttpDebugTest {
             "helloword,hello[more 4 bytes]",
             "hello,hello"
     })
-    public void assemblyBody_whenConstructString(
+    void assemblyBody_whenConstructString(
             String input,
             String expected
     ){
@@ -105,7 +105,7 @@ public class HttpDebugTest {
     }
 
     @Test
-    public void assemblyBody_whenConstructFileWithSizeLessThan10Bytes(){
+    void assemblyBody_whenConstructFileWithSizeLessThan10Bytes(){
         var debug = new HttpDebug();
         var file = new File(getClass()
                 .getResource("HttpDebugTest/file-less-than-10bytes.txt")
@@ -117,7 +117,7 @@ public class HttpDebugTest {
     }
 
     @Test
-    public void assemblyBody_whenConstructFileWithSizeMoreThan10Bytes(){
+    void assemblyBody_whenConstructFileWithSizeMoreThan10Bytes(){
         var debug = new HttpDebug();
         var file = new File(getClass()
                 .getResource("HttpDebugTest/file-more-than-10bytes.txt")

@@ -1,7 +1,7 @@
 package io.github.clagomess.tomato.dto;
 
-import io.github.clagomess.tomato.io.http.HttpService;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import io.github.clagomess.tomato.io.http.HttpService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -18,13 +18,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WireMockTest(httpPort = 8500)
-public class ResponseDtoTest {
+class ResponseDtoTest {
     @ParameterizedTest
     @CsvSource({
             "PHPSESSID=xyz; path=/,PHPSESSID,xyz",
             "xburger=opt1,xburger,opt1",
     })
-    public void Response_parseSetCookies(
+    void Response_parseSetCookies(
             String input,
             String expectedKey,
             String expectedValue
@@ -54,7 +54,7 @@ public class ResponseDtoTest {
             "/sample-pdf-with-disposition-filename,mypdf.pdf",
             "/octet-stream,response.bin",
     })
-    public void Response_parseBodyDownloadFileName(
+    void Response_parseBodyDownloadFileName(
             String method,
             String expected
     ) throws URISyntaxException, IOException, InterruptedException {

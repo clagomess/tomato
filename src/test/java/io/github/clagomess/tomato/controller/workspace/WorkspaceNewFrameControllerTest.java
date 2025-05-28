@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class WorkspaceNewFrameControllerTest {
+class WorkspaceNewFrameControllerTest {
     private WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
     private final DataSessionRepository dataSessionRepository = Mockito.mock(DataSessionRepository.class);
     private final WorkspaceRepository workspaceRepository = Mockito.mock(WorkspaceRepository.class);
@@ -23,14 +23,14 @@ public class WorkspaceNewFrameControllerTest {
     ));
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         Mockito.reset(dataSessionRepository);
         Mockito.reset(workspaceRepository);
         Mockito.reset(controller);
     }
 
     @Test
-    public void switchWorkspace_trigger() throws IOException {
+    void switchWorkspace_trigger() throws IOException {
         var session = new DataSessionDto();
 
         var triggeredBeforeSwitch = new AtomicBoolean(false);

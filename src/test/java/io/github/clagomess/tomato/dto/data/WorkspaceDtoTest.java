@@ -2,9 +2,9 @@ package io.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.networknt.schema.JsonSchema;
 import io.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
-import com.networknt.schema.JsonSchema;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
@@ -18,12 +18,12 @@ import static io.github.clagomess.tomato.enums.TomatoJsonSchemaEnum.WORKSPACE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class WorkspaceDtoTest {
+class WorkspaceDtoTest {
     private final JsonSchema jsonSchema = JsonSchemaBuilder.getTomatoJsonSchema(WORKSPACE);
     private final ObjectMapper mapper = ObjectMapperUtil.getInstance();
 
     @Test
-    public void toJson() throws JsonProcessingException {
+    void toJson() throws JsonProcessingException {
         WorkspaceDto dto = new WorkspaceDto();
         dto.setName(RandomStringUtils.secure().nextAlphabetic(10));
 
@@ -35,7 +35,7 @@ public class WorkspaceDtoTest {
     }
 
     @Test
-    public void equalsHashCode(){
+    void equalsHashCode(){
         var dtoA = new WorkspaceDto();
         dtoA.setId("aaa");
 
@@ -47,7 +47,7 @@ public class WorkspaceDtoTest {
     }
 
     @Test
-    public void sort(){
+    void sort(){
         var a = new WorkspaceDto();
         a.setName("aaa");
 

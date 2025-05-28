@@ -8,9 +8,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RequestHeadDtoTest {
+class RequestHeadDtoTest {
     @Test
-    public void sort(){
+    void sort(){
         var a = new RequestHeadDto();
         a.setName("aaa");
 

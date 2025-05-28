@@ -17,11 +17,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class PostmanCollectionPumpMapperTest {
+class PostmanCollectionPumpMapperTest {
     private final PostmanCollectionPumpMapper pumpMapper = PostmanCollectionPumpMapper.INSTANCE;
 
     @Test
-    public void urlParam(){
+    void urlParam(){
         var param = new PostmanCollectionV210Dto.Item.Request.Url.Param();
         param.setKey("key");
         param.setValue("value");
@@ -38,7 +38,7 @@ public class PostmanCollectionPumpMapperTest {
     }
 
     @Test
-    public void urlParam_disabled(){
+    void urlParam_disabled(){
         var param = new PostmanCollectionV210Dto.Item.Request.Url.Param();
         param.setKey("seqTransparencia");
         param.setValue("87");
@@ -52,7 +52,7 @@ public class PostmanCollectionPumpMapperTest {
     }
 
     @Test
-    public void body_mode_raw(){
+    void body_mode_raw(){
         var body = new PostmanCollectionV210Dto.Item.Request.Body();
         body.setMode("raw");
         body.setRaw("xxx");
@@ -68,7 +68,7 @@ public class PostmanCollectionPumpMapperTest {
     }
 
     @Test
-    public void formdata_file(){
+    void formdata_file(){
         var item = new PostmanCollectionV210Dto.Item.Request.Body.FormData();
         item.setKey("file");
         item.setType("file");
@@ -81,7 +81,7 @@ public class PostmanCollectionPumpMapperTest {
     }
 
     @Test
-    public void formdata_disabled(){
+    void formdata_disabled(){
         var item = new PostmanCollectionV210Dto.Item.Request.Body.FormData();
         item.setType("text");
         item.setKey("grant_type");
@@ -96,7 +96,7 @@ public class PostmanCollectionPumpMapperTest {
     }
 
     @Test
-    public void urlencoded_disabled(){
+    void urlencoded_disabled(){
         var item = new PostmanCollectionV210Dto.Item.Request.Body.UrlEncoded();
         item.setType("text");
         item.setKey("grant_type");
@@ -110,7 +110,7 @@ public class PostmanCollectionPumpMapperTest {
     }
 
     @Test
-    public void header_disabled(){
+    void header_disabled(){
         var item = new PostmanCollectionV210Dto.Item.Request.Header();
         item.setKey("content-type");
         item.setValue("json");
@@ -123,7 +123,7 @@ public class PostmanCollectionPumpMapperTest {
     }
 
     @Test
-    public void header_whenAuthBearer_appendToHeader(){
+    void header_whenAuthBearer_appendToHeader(){
         var bearer = new PostmanCollectionV210Dto.Item.Request.Auth.Bearer();
         bearer.setKey("token");
         bearer.setValue("{{token}}");

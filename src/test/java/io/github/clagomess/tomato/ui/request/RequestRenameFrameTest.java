@@ -18,19 +18,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RequestRenameFrameTest {
+class RequestRenameFrameTest {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     private final RequestRepository requestRepositoryMock = Mockito.mock(RequestRepository.class);
     private final RequestRenameFrame requestRenameFrame = Mockito.mock(RequestRenameFrame.class);
 
     @BeforeEach
-    public void setup() throws Exception {
+    void setup() throws Exception {
         requestRenameFrame.requestRepository = requestRepositoryMock;
     }
 
     @Test
-    public void save_expected_OnChange() throws IOException {
+    void save_expected_OnChange() throws IOException {
         Mockito.doCallRealMethod()
                 .when(requestRenameFrame)
                 .save(Mockito.any());

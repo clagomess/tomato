@@ -7,13 +7,13 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ResponseTimeBadgeTest {
+class ResponseTimeBadgeTest {
     @ParameterizedTest
     @CsvSource({
             "100,100ms",
             "20000,20s"
     })
-    public void formatTime(
+    void formatTime(
             Long duration,
             String expected
     ){

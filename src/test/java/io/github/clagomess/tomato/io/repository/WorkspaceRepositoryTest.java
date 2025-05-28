@@ -16,7 +16,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WorkspaceRepositoryTest extends RepositoryStubs {
+class WorkspaceRepositoryTest extends RepositoryStubs {
     private final ConfigurationRepository configurationRepositoryMock = Mockito.mock(ConfigurationRepository.class);
     private final DataSessionRepository dataSessionRepositoryMock = Mockito.spy(
             new DataSessionRepository(configurationRepositoryMock)
@@ -27,7 +27,7 @@ public class WorkspaceRepositoryTest extends RepositoryStubs {
     ));
 
     @BeforeEach
-    public void setup() throws IOException {
+    void setup() throws IOException {
         // mock ConfigurationRepository
         Mockito.reset(configurationRepositoryMock);
         Mockito.when(configurationRepositoryMock.getDataDir())
@@ -35,7 +35,7 @@ public class WorkspaceRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getWorkspaceDirectory_whenNotExists_create() throws IOException {
+    void getWorkspaceDirectory_whenNotExists_create() throws IOException {
         var result = workspaceRepository.getWorkspaceDirectory(
                 RandomStringUtils.secure().nextAlphanumeric(8)
         );
@@ -44,7 +44,7 @@ public class WorkspaceRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void save_whenNotExists_CreateAndWriteDto() throws IOException {
+    void save_whenNotExists_CreateAndWriteDto() throws IOException {
         var dto = new WorkspaceDto();
         dto.setName("OPA");
 
@@ -63,7 +63,7 @@ public class WorkspaceRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void list_whenDataDirIsEmpty_ReturnDefault() throws IOException {
+    void list_whenDataDirIsEmpty_ReturnDefault() throws IOException {
         Assertions.assertThat(workspaceRepository.list())
                 .isNotEmpty()
                 .allMatch(item -> item.getPath().isDirectory())
@@ -71,7 +71,7 @@ public class WorkspaceRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void list_assertSorted() throws IOException {
+    void list_assertSorted() throws IOException {
         Mockito.doReturn(List.of(
                 new File("BBB"),
                 new File("AAA")
@@ -90,7 +90,7 @@ public class WorkspaceRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getDataSessionWorkspace_whenNotDefined_thenGetFirst() throws IOException {
+    void getDataSessionWorkspace_whenNotDefined_thenGetFirst() throws IOException {
         var workspace = new WorkspaceDto();
 
         Mockito.when(workspaceRepository.list())
@@ -101,7 +101,7 @@ public class WorkspaceRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getDataSessionWorkspace_whenDefined_thenResult() throws IOException {
+    void getDataSessionWorkspace_whenDefined_thenResult() throws IOException {
         var workspace = new WorkspaceDto();
         var dataSession = new DataSessionDto();
         dataSession.setWorkspaceId(workspace.getId());
@@ -116,7 +116,7 @@ public class WorkspaceRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void delete() throws IOException {
+    void delete() throws IOException {
         var workspace = new WorkspaceDto();
         workspaceRepository.save(workspace);
 

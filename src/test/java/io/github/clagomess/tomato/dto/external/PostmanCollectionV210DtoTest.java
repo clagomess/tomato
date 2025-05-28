@@ -1,9 +1,9 @@
 package io.github.clagomess.tomato.dto.external;
 
-import io.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
-import io.github.clagomess.tomato.util.ObjectMapperUtil;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.ValidationMessage;
+import io.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
+import io.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,7 +15,7 @@ import java.util.Set;
 import static io.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.COLLECTION;
 
 @Slf4j
-public class PostmanCollectionV210DtoTest {
+class PostmanCollectionV210DtoTest {
     private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
     private final JsonSchema jsonSchema = JsonSchemaBuilder.getPostmanJsonSchema(COLLECTION);
 
@@ -27,7 +27,7 @@ public class PostmanCollectionV210DtoTest {
             "formdata-file.postman.collection.v2.1.0.json",
             "queryparam.postman.collection.v2.1.0.json",
     })
-    public void pumpDumpTest(String filename) throws IOException {
+    void pumpDumpTest(String filename) throws IOException {
         var url = getClass().getResourceAsStream(String.format(
                 "PostmanCollectionV210DtoTest/%s",
                 filename

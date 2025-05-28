@@ -11,12 +11,12 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 
-public class RequestRepositoryTest extends RepositoryStubs {
+class RequestRepositoryTest extends RepositoryStubs {
     private final CollectionRepository collectionRepository = Mockito.spy(new CollectionRepository());
     private final RequestRepository requestRepository = Mockito.spy(new RequestRepository());
 
     @Test
-    public void load() throws IOException {
+    void load() throws IOException {
         var request = new RequestHeadDto();
         request.setPath(new File(
                 testData,
@@ -28,13 +28,13 @@ public class RequestRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void save_whenBasePathIsDirectory_createNewFile() throws IOException {
+    void save_whenBasePathIsDirectory_createNewFile() throws IOException {
         var result = requestRepository.save(mockDataDir, new RequestDto());
         Assertions.assertThat(result).isFile();
     }
 
     @Test
-    public void delete() throws IOException {
+    void delete() throws IOException {
         File file = requestRepository.save(mockDataDir, new RequestDto());
         RequestHeadDto head = requestRepository.loadHead(file).orElseThrow();
         head.setPath(file);
@@ -46,7 +46,7 @@ public class RequestRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void move() throws IOException {
+    void move() throws IOException {
         // create source
         File file = requestRepository.save(mockDataDir, new RequestDto());
         RequestHeadDto source = requestRepository.loadHead(file).orElseThrow();

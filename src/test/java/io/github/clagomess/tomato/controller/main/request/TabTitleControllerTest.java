@@ -21,7 +21,7 @@ import static io.github.clagomess.tomato.enums.HttpMethodEnum.POST;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TabTitleControllerTest {
+class TabTitleControllerTest {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     private TabKey tabKey;
@@ -30,7 +30,7 @@ public class TabTitleControllerTest {
     private final TabTitleController controller = Mockito.spy(TabTitleController.class);
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         request = new RequestDto();
 
         requestHead = new RequestHeadDto();
@@ -46,7 +46,7 @@ public class TabTitleControllerTest {
     }
 
     @AfterEach
-    public void dispose(){
+    void dispose(){
         controller.dispose();
 
         assertFalse(requestPublisher.getOnChange()
@@ -57,7 +57,7 @@ public class TabTitleControllerTest {
     }
 
     @Test
-    public void addOnChangeListener_trigger(){
+    void addOnChangeListener_trigger(){
         AtomicReference<HttpMethodEnum> methodResult = new AtomicReference<>();
         AtomicReference<String> nameResult = new AtomicReference<>();
 
@@ -87,7 +87,7 @@ public class TabTitleControllerTest {
     }
 
     @Test
-    public void addOnStagingListener_trigger(){
+    void addOnStagingListener_trigger(){
         AtomicBoolean result = new AtomicBoolean();
         controller.addOnStagingListener(tabKey, result::set);
 

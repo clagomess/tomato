@@ -12,14 +12,14 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WorkspaceSessionRepositoryTest extends RepositoryStubs {
+class WorkspaceSessionRepositoryTest extends RepositoryStubs {
     private final WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
     private final WorkspaceSessionRepository workspaceSessionRepositoryMock = Mockito.spy(
             new WorkspaceSessionRepository(workspaceRepositoryMock)
     );
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         // mock WorkspaceRepository
         Mockito.reset(workspaceRepositoryMock);
 
@@ -28,7 +28,7 @@ public class WorkspaceSessionRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getWorkspaceSessionFile() throws IOException {
+    void getWorkspaceSessionFile() throws IOException {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(mockDataDir);
 
@@ -40,7 +40,7 @@ public class WorkspaceSessionRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void load() throws IOException {
+    void load() throws IOException {
         var envFile = new File(testData, "workspace-nPUaq0TC/workspace-session.json");
 
         Mockito.doReturn(envFile)
@@ -52,7 +52,7 @@ public class WorkspaceSessionRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void save() throws IOException {
+    void save() throws IOException {
         var envFile = new File(mockDataDir, "workspace-session.json");
 
         Mockito.doReturn(envFile)

@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class EnvironmentSwitcherComboBoxControllerTest {
+class EnvironmentSwitcherComboBoxControllerTest {
     private final EnvironmentRepository environmentRepositoryMock = Mockito.mock(EnvironmentRepository.class);
     private final WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
     private final WorkspaceSessionRepository workspaceSessionRepositoryMock = Mockito.mock(WorkspaceSessionRepository.class);

@@ -10,10 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
-public class EnvDocumentListenerTest {
+class EnvDocumentListenerTest {
 
     @Test
-    public void patternEnv(){
+    void patternEnv(){
         Pattern pattern = new EnvDocumentListener(null).patternEnv;
 
         Matcher matcher = pattern.matcher("{{aaa}} {{ }} { asasas {} {{}}{{a}} t {{c}}{{d}}");

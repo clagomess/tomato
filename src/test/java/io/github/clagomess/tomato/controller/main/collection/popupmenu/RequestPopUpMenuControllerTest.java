@@ -16,12 +16,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RequestPopUpMenuControllerTest extends RepositoryStubs {
+class RequestPopUpMenuControllerTest extends RepositoryStubs {
     private final RequestRepository requestRepository = new RequestRepository();
     private final TreeRepository treeRepository = new TreeRepository();
 
     @Test
-    public void duplicate() throws IOException {
+    void duplicate() throws IOException {
         var request = new RequestDto();
         var result = requestRepository.save(mockDataDir, request);
         CollectionTreeDto collectionTree = new CollectionTreeDto();

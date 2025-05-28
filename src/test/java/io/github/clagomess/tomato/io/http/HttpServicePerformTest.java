@@ -28,17 +28,17 @@ import static io.github.clagomess.tomato.io.http.MediaType.APPLICATION_OCTET_STR
 import static org.junit.jupiter.api.Assertions.*;
 
 @WireMockTest(httpPort = 8500)
-public class HttpServicePerformTest extends RepositoryStubs {
+class HttpServicePerformTest extends RepositoryStubs {
 
     @BeforeAll
-    public static void setup(){
+    static void setup(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .addListener(() -> List.of());
     }
 
     @AfterAll
-    public static void unload(){
+    static void unload(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .getListeners()
@@ -46,7 +46,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void get_response_json() {
+    void get_response_json() {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/response-json");
         request.setMethod(HttpMethodEnum.GET);
@@ -63,7 +63,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void get_response_binary() {
+    void get_response_binary() {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/response-binary");
         request.setMethod(HttpMethodEnum.GET);
@@ -81,7 +81,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void get_response_gzip() {
+    void get_response_gzip() {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/response-gzip");
         request.setMethod(HttpMethodEnum.GET);
@@ -96,7 +96,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void set_headers() {
+    void set_headers() {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/set-headers");
         request.setMethod(HttpMethodEnum.GET);
@@ -107,7 +107,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void get_headers() {
+    void get_headers() {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/get-headers");
         request.setMethod(HttpMethodEnum.GET);
@@ -118,7 +118,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void follow_redirect() {
+    void follow_redirect() {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/redirect");
         request.setMethod(HttpMethodEnum.GET);
@@ -129,7 +129,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void conection_error(){
+    void conection_error(){
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8110/");
         request.setMethod(HttpMethodEnum.GET);
@@ -143,7 +143,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void conection_drop(){
+    void conection_drop(){
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/conection-drop");
         request.setMethod(HttpMethodEnum.GET);
@@ -157,7 +157,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void set_cookie() {
+    void set_cookie() {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/set-cookie");
         request.setMethod(HttpMethodEnum.GET);
@@ -168,7 +168,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void get_cookie() {
+    void get_cookie() {
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/get-cookie");
         request.setMethod(HttpMethodEnum.GET);
@@ -179,7 +179,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void post_urlencoded_form(){
+    void post_urlencoded_form(){
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/urlencoded-form");
         request.setMethod(HttpMethodEnum.POST);
@@ -192,7 +192,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void get_with_query_param(){
+    void get_with_query_param(){
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/with-query-param?foo=bar");
         request.setMethod(HttpMethodEnum.GET);
@@ -202,7 +202,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void get_with_response_500(){
+    void get_with_response_500(){
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/response-500");
         request.setMethod(HttpMethodEnum.GET);
@@ -213,7 +213,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void post_multipart_form(){
+    void post_multipart_form(){
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/multipart-form");
         request.setMethod(HttpMethodEnum.POST);
@@ -226,7 +226,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void post_multipart_form_with_file(){
+    void post_multipart_form_with_file(){
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/multipart-form-with-file");
         request.setMethod(HttpMethodEnum.POST);
@@ -250,7 +250,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void post_raw(){
+    void post_raw(){
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/raw");
         request.setMethod(HttpMethodEnum.POST);
@@ -266,7 +266,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void post_binary(){
+    void post_binary(){
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/binary");
         request.setMethod(HttpMethodEnum.POST);
@@ -282,7 +282,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void put_raw(){
+    void put_raw(){
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/raw");
         request.setMethod(HttpMethodEnum.PUT);
@@ -298,7 +298,7 @@ public class HttpServicePerformTest extends RepositoryStubs {
     }
 
     @Test
-    public void delete(){
+    void delete(){
         RequestDto request = new RequestDto();
         request.setUrl("http://localhost:8500/hello");
         request.setMethod(HttpMethodEnum.DELETE);

@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class CollectionTreeNodeTest {
+class CollectionTreeNodeTest {
     private final DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
 
     private final CollectionTreeDto collectionTree = new CollectionTreeDto(){{
@@ -46,7 +46,7 @@ public class CollectionTreeNodeTest {
     }};
 
     @Test
-    public void loadChildren(){
+    void loadChildren(){
         var rootNode = new CollectionTreeNode(treeModel, collectionTree);
         treeModel.setRoot(rootNode);
 
@@ -61,7 +61,7 @@ public class CollectionTreeNodeTest {
     }
 
     @Test
-    public void loadChildren_assertSortedCollections(){
+    void loadChildren_assertSortedCollections(){
         var rootNode = new CollectionTreeNode(treeModel, collectionTree);
         treeModel.setRoot(rootNode);
         try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
@@ -83,7 +83,7 @@ public class CollectionTreeNodeTest {
     }
 
     @Test
-    public void loadChildren_assertSortedRequests(){
+    void loadChildren_assertSortedRequests(){
         var rootNode = new CollectionTreeNode(treeModel, collectionTree);
         treeModel.setRoot(rootNode);
         try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {

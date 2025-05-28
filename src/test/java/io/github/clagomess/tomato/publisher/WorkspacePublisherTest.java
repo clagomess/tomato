@@ -9,11 +9,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WorkspacePublisherTest {
+class WorkspacePublisherTest {
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     @Test
-    public void onChange_hitParent(){
+    void onChange_hitParent(){
         var workspace = new WorkspaceDto();
         var count = new AtomicInteger(0);
 

@@ -9,15 +9,15 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class KeyValueItemDtoTest {
+class KeyValueItemDtoTest {
     @Test
-    public void equalsHashCode(){
+    void equalsHashCode(){
         Assertions.assertThat(new KeyValueItemDto())
                 .isEqualTo(new KeyValueItemDto());
     }
 
     @Test
-    public void sort(){
+    void sort(){
         List<KeyValueItemDto> list = new ArrayList<>(2);
         list.add(new KeyValueItemDto("bbb", "value"));
         list.add(new KeyValueItemDto("aaa", "value"));

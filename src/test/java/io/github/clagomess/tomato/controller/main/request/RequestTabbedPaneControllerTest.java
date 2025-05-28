@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RequestTabbedPaneControllerTest {
+class RequestTabbedPaneControllerTest {
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
     private final RequestRepository requestRepositoryMock = Mockito.mock(RequestRepository.class);
@@ -41,13 +40,13 @@ public class RequestTabbedPaneControllerTest {
     ));
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         Mockito.reset(requestRepositoryMock);
         Mockito.reset(controller);
     }
 
     @Test
-    public void addWorkspaceOnSwitchListener_trigger(){
+    void addWorkspaceOnSwitchListener_trigger(){
         var triggered = new AtomicBoolean(false);
 
         controller.addWorkspaceOnSwitchListener(() -> triggered.set(true));
@@ -58,7 +57,7 @@ public class RequestTabbedPaneControllerTest {
     }
 
     @Test
-    public void addRequestOnLoadListener_trigger(){
+    void addRequestOnLoadListener_trigger(){
         var triggered = new AtomicBoolean(false);
 
         Mockito.doAnswer(answer -> {
@@ -79,7 +78,7 @@ public class RequestTabbedPaneControllerTest {
     }
 
     @Test
-    public void addSaveRequestsSnapshotListener_trigger(){
+    void addSaveRequestsSnapshotListener_trigger(){
         var triggerCount = new AtomicInteger();
 
         Mockito.doAnswer(answer -> {
@@ -102,7 +101,7 @@ public class RequestTabbedPaneControllerTest {
     }
 
     @Test
-    public void saveRequestsSnapshot() throws IOException {
+    void saveRequestsSnapshot() throws IOException {
         var session = new WorkspaceSessionDto();
 
         Mockito.doReturn(session)
@@ -118,7 +117,7 @@ public class RequestTabbedPaneControllerTest {
     }
 
     @Test
-    public void saveRequestsSnapshot_whenEmpty() throws IOException {
+    void saveRequestsSnapshot_whenEmpty() throws IOException {
         var session = new WorkspaceSessionDto();
         session.setRequests(List.of(
                 new WorkspaceSessionDto.Request()
@@ -137,7 +136,7 @@ public class RequestTabbedPaneControllerTest {
     @Nested
     class LoadRequestFromSession {
         @Test
-        public void whenNew() throws IOException {
+        void whenNew() throws IOException {
             var wsRequest = new WorkspaceSessionDto.Request(null, new RequestDto());
             var ws = new WorkspaceSessionDto();
             ws.setRequests(List.of(wsRequest));
@@ -158,7 +157,7 @@ public class RequestTabbedPaneControllerTest {
         }
 
         @Test
-        public void whenModified() throws IOException {
+        void whenModified() throws IOException {
             var wsRequest = new WorkspaceSessionDto.Request("foo", new RequestDto());
             var ws = new WorkspaceSessionDto();
             ws.setRequests(List.of(wsRequest));
@@ -186,7 +185,7 @@ public class RequestTabbedPaneControllerTest {
         }
 
         @Test
-        public void whenOpened() throws IOException {
+        void whenOpened() throws IOException {
             var wsRequest = new WorkspaceSessionDto.Request("foo", null);
             var ws = new WorkspaceSessionDto();
             ws.setRequests(List.of(wsRequest));
@@ -219,7 +218,7 @@ public class RequestTabbedPaneControllerTest {
     }
 
     @Test
-    public void loadRequest_whenNew(){
+    void loadRequest_whenNew(){
         controller.loadRequest(
                 new PublisherEvent<>(EventTypeEnum.NEW, null),
                 (head, request) -> {
@@ -230,7 +229,7 @@ public class RequestTabbedPaneControllerTest {
     }
 
     @Test
-    public void loadRequest_whenExisting() throws IOException {
+    void loadRequest_whenExisting() throws IOException {
         var request = new RequestDto();
         Mockito.doReturn(Optional.of(request))
                 .when(requestRepositoryMock)

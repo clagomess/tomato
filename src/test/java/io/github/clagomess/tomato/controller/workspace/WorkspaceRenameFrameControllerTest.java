@@ -13,7 +13,7 @@ import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WorkspaceRenameFrameControllerTest {
+class WorkspaceRenameFrameControllerTest {
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
     private final WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
     private final WorkspaceRenameFrameController controller = new WorkspaceRenameFrameController(
@@ -22,7 +22,7 @@ public class WorkspaceRenameFrameControllerTest {
     );
 
     @Test
-    public void save_assert_OnChange() throws IOException {
+    void save_assert_OnChange() throws IOException {
         var workspace = new WorkspaceDto();
         var triggered = new AtomicBoolean(false);
 

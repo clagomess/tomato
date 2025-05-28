@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CollectionTreeControllerTest {
+class CollectionTreeControllerTest {
     private final TreeRepository treeRepository = Mockito.mock(TreeRepository.class);
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
@@ -25,13 +25,13 @@ public class CollectionTreeControllerTest {
     ));
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         Mockito.reset(treeRepository);
         Mockito.reset(controller);
     }
 
     @Test
-    public void addOnSwitchListener_trigger(){
+    void addOnSwitchListener_trigger(){
         AtomicInteger result = new AtomicInteger();
 
         controller.addOnSwitchListener(result::incrementAndGet);
@@ -42,7 +42,7 @@ public class CollectionTreeControllerTest {
     }
 
     @Test
-    public void loadCurrentWorkspace_assertRemoveOnChangeListener() throws IOException {
+    void loadCurrentWorkspace_assertRemoveOnChangeListener() throws IOException {
         Mockito.doReturn(new CollectionTreeDto())
                 .when(treeRepository)
                 .getWorkspaceCollectionTree();
@@ -67,7 +67,7 @@ public class CollectionTreeControllerTest {
     }
 
     @Test
-    public void loadCurrentWorkspace_assertAddOnChangeListener() throws IOException {
+    void loadCurrentWorkspace_assertAddOnChangeListener() throws IOException {
         var tree = new CollectionTreeDto();
         tree.setId(RandomStringUtils.secure().nextAlphanumeric(8));
 

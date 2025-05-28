@@ -14,12 +14,12 @@ import org.junit.jupiter.api.Test;
 import static io.github.clagomess.tomato.enums.TomatoJsonSchemaEnum.ENVIRONMENT;
 
 @Slf4j
-public class EnvironmentDtoTest {
+class EnvironmentDtoTest {
     private final JsonSchema jsonSchema = JsonSchemaBuilder.getTomatoJsonSchema(ENVIRONMENT);
     private final ObjectMapper mapper = ObjectMapperUtil.getInstance();
 
     @Test
-    public void toJson() throws JsonProcessingException {
+    void toJson() throws JsonProcessingException {
         EnvironmentDto dto = new EnvironmentDto();
         dto.setName(RandomStringUtils.secure().nextAlphabetic(10));
         dto.getEnvs().add(new EnvironmentItemDto(
@@ -36,7 +36,7 @@ public class EnvironmentDtoTest {
     }
 
     @Test
-    public void equalsHashCode(){
+    void equalsHashCode(){
         var dtoA = new EnvironmentDto();
         dtoA.setId("aaa");
 

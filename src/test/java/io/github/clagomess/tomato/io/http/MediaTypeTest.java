@@ -10,15 +10,15 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MediaTypeTest {
+class MediaTypeTest {
     @Test
-    public void constructor_type_subtype(){
+    void constructor_type_subtype(){
         var media = new MediaType("text", "plain");
         assertNull(media.getCharset());
     }
 
     @Test
-    public void contructor_type_subtype_charset(){
+    void contructor_type_subtype_charset(){
         var media = new MediaType("text", "plain", "utf-8");
         assertEquals(StandardCharsets.UTF_8, media.getCharset());
         Assertions.assertThat(media.getParameters())
@@ -26,7 +26,7 @@ public class MediaTypeTest {
     }
 
     @Test
-    public void constructor_contentType(){
+    void constructor_contentType(){
         var media = new MediaType("application/javascript");
         assertEquals("application", media.getType());
         assertEquals("javascript", media.getSubtype());
@@ -36,7 +36,7 @@ public class MediaTypeTest {
     }
 
     @Test
-    public void constructor_contentType_whenWithCharset(){
+    void constructor_contentType_whenWithCharset(){
         var media = new MediaType("application/javascript;charset=UTF-8");
         assertEquals("application", media.getType());
         assertEquals("javascript", media.getSubtype());
@@ -46,7 +46,7 @@ public class MediaTypeTest {
     }
 
     @Test
-    public void isCompatible(){
+    void isCompatible(){
         var media = new MediaType("text", "html", "utf-8");
         assertTrue(media.isCompatible(MediaType.TEXT_HTML));
     }
@@ -57,7 +57,7 @@ public class MediaTypeTest {
             "text/plain;charset=ISO-8859-1,ISO-8859-1",
             "text/plain,UTF-8",
     })
-    public void getCharsetOrDefault(
+    void getCharsetOrDefault(
             String input,
             Charset expectedCharset
     ){
@@ -68,7 +68,7 @@ public class MediaTypeTest {
     }
 
     @Test
-    public void toString_mediaType(){
+    void toString_mediaType(){
         assertEquals(
                 "application/javascript;charset=utf-8",
                 new MediaType("application", "javascript", "utf-8").toString()
@@ -80,7 +80,7 @@ public class MediaTypeTest {
     }
 
     @Test
-    public void isString(){
+    void isString(){
         assertTrue(MediaType.TEXT_HTML.isString());
         assertFalse(new MediaType(
                 "application",

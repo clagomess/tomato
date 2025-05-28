@@ -14,10 +14,10 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Slf4j
-public class JsonBeautifierTest {
+class JsonBeautifierTest {
     @Test
     @Disabled
-    public void performance() throws IOException {
+    void performance() throws IOException {
         try(
                 var reader = new BufferedReader(new FileReader(
                         Objects.requireNonNull(getClass().getResource("large.json")).getFile()
@@ -50,7 +50,7 @@ public class JsonBeautifierTest {
     }
 
     @Test
-    public void parse_full() throws IOException {
+    void parse_full() throws IOException {
         var input = """
         {
           "name": "foo",
@@ -136,7 +136,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parse_ROOT_array")
-    public void parse_ROOT_array(
+    void parse_ROOT_array(
             String input,
             String expected
     ) throws IOException {
@@ -167,7 +167,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parse_error")
-    public void parse_error(
+    void parse_error(
             String input,
             String expected
     ) throws IOException {
@@ -198,7 +198,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parse_ROOT_object")
-    public void parse_ROOT_object(
+    void parse_ROOT_object(
             String input,
             String expected
     ) throws IOException {
@@ -215,7 +215,7 @@ public class JsonBeautifierTest {
             "{\"a\"\n:\n\"va\",\n\"vl\"\n:\n{ }\n}",
             "{\"a\"\n:\n\"va\",\n\"vl\"\n:\n{\n}\n}",
     })
-    public void parseObject_Empty(
+    void parseObject_Empty(
             String input
     ) throws IOException {
         String expected = """
@@ -236,7 +236,7 @@ public class JsonBeautifierTest {
             "{\"a\" : \"va\", \"vl\" : {\"x\":69} }",
             "{\"a\"\n:\n\"va\",\n\"vl\"\n:\n{\"x\":69}\n}",
     })
-    public void parseObject_SingleValue(
+    void parseObject_SingleValue(
             String input
     ) throws IOException {
         String expected = """
@@ -257,7 +257,7 @@ public class JsonBeautifierTest {
             " {\"a\" : \"va\" , \"vl\" : {\"x\":69,\"y\":00} , \"c\" : \"vc\" } ",
             "\n{\"a\"\n:\n\"va\"\n,\n\"vl\"\n:\n{\"x\":69,\"y\":00}\n,\n\"c\"\n:\n\"vc\"\n}\n",
     })
-    public void parseObject_MutipleValue(
+    void parseObject_MutipleValue(
             String input
     ) throws IOException {
         String expected = """
@@ -323,7 +323,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseObject_Error")
-    public void parseObject_Error(
+    void parseObject_Error(
             String input,
             String expected
     ) throws IOException {
@@ -340,7 +340,7 @@ public class JsonBeautifierTest {
             "{\"a\"\n:\n\"va\",\n\"vl\"\n:\n[ ]\n}",
             "{\"a\"\n:\n\"va\",\n\"vl\"\n:\n[\n]\n}",
     })
-    public void parseArray_Empty(
+    void parseArray_Empty(
             String input
     ) throws IOException {
         String expected = """
@@ -360,7 +360,7 @@ public class JsonBeautifierTest {
             "{\"a\" : \"va\", \"vl\" : [69] }",
             "{\"a\"\n:\n\"va\",\n\"vl\"\n:\n[69]\n}",
     })
-    public void parseArray_SingleValue(
+    void parseArray_SingleValue(
             String input
     ) throws IOException {
         String expected = """
@@ -380,7 +380,7 @@ public class JsonBeautifierTest {
             " {\"a\" : \"va\" , \"vl\" : [69,00] , \"c\" : \"vc\" } ",
             "\n{\"a\"\n:\n\"va\"\n,\n\"vl\"\n:\n[69,00]\n,\n\"c\"\n:\n\"vc\"\n}\n",
     })
-    public void parseArray_MutipleValue(
+    void parseArray_MutipleValue(
             String input
     ) throws IOException {
         String expected = """
@@ -418,7 +418,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseValue_Error")
-    public void parseValue_Error(
+    void parseValue_Error(
             String input,
             String expected
     ) throws IOException {
@@ -523,7 +523,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseString_Values")
-    public void parseString_Values(
+    void parseString_Values(
             String input,
             String expected
     ) throws IOException {
@@ -579,7 +579,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseNumber_Values")
-    public void parseNumber_Values(
+    void parseNumber_Values(
             String input,
             String expected
     ) throws IOException {
@@ -632,7 +632,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseNumber_WS")
-    public void parseNumber_WS(
+    void parseNumber_WS(
             String input,
             String expected
     ) throws IOException {
@@ -685,7 +685,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseBoolean_True")
-    public void parseBoolean_True(
+    void parseBoolean_True(
             String input,
             String expected
     ) throws IOException {
@@ -738,7 +738,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseBoolean_False")
-    public void parseBoolean_False(
+    void parseBoolean_False(
             String input,
             String expected
     ) throws IOException {
@@ -782,7 +782,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseBoolean_Error")
-    public void parseBoolean_Error(
+    void parseBoolean_Error(
             String input,
             String expected
     ) throws IOException {
@@ -835,7 +835,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseNull")
-    public void parseNull(
+    void parseNull(
             String input,
             String expected
     ) throws IOException {
@@ -864,7 +864,7 @@ public class JsonBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseNull_Error")
-    public void parseNull_Error(
+    void parseNull_Error(
             String input,
             String expected
     ) throws IOException {

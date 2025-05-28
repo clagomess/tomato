@@ -18,18 +18,18 @@ import java.util.List;
 import static io.github.clagomess.tomato.enums.BodyTypeEnum.URL_ENCODED_FORM;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UrlEncodedFormBodyTest {
+class UrlEncodedFormBodyTest {
     private BodyDto body;
 
     @BeforeAll
-    public static void setup(){
+    static void setup(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .addListener(() -> List.of(new EnvironmentItemDto("foo", "bar")));
     }
 
     @AfterAll
-    public static void unload(){
+    static void unload(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .getListeners()
@@ -37,13 +37,13 @@ public class UrlEncodedFormBodyTest {
     }
 
     @BeforeEach
-    public void setupBody() {
+    void setupBody() {
         body = new BodyDto();
         body.setType(URL_ENCODED_FORM);
     }
 
     @Test
-    public void build() throws IOException {
+    void build() throws IOException {
         body.setUrlEncodedForm(List.of(
                 new ContentTypeKeyValueItemDto("myparam", "myvalue"),
                 new ContentTypeKeyValueItemDto("utf8param", "AçãoAçucar"),
@@ -65,7 +65,7 @@ public class UrlEncodedFormBodyTest {
     }
 
     @Test
-    public void build_whenEnvDefined_replace() throws IOException {
+    void build_whenEnvDefined_replace() throws IOException {
         body.setUrlEncodedForm(List.of(
                 new ContentTypeKeyValueItemDto("myparam", "{{foo}}")
         ));
@@ -85,7 +85,7 @@ public class UrlEncodedFormBodyTest {
             "{{foo}},bar",
             "a-{{bar}},a-%7B%7Bbar%7D%7D",
     })
-    public void buildValue_assertEnvInject(String input, String expected) throws IOException {
+    void buildValue_assertEnvInject(String input, String expected) throws IOException {
         body.setUrlEncodedForm(List.of(
                 new ContentTypeKeyValueItemDto("myparam", input)
         ));

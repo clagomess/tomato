@@ -17,7 +17,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DataSessionRepositoryTest extends RepositoryStubs {
+class DataSessionRepositoryTest extends RepositoryStubs {
     private final ConfigurationRepository configurationRepositoryMock = Mockito.mock(ConfigurationRepository.class);
     private final DataSessionRepository dataSessionRepositoryMock = Mockito.spy(
             new DataSessionRepository(configurationRepositoryMock)
@@ -26,7 +26,7 @@ public class DataSessionRepositoryTest extends RepositoryStubs {
     private File mockDataSessionFile;
 
     @BeforeEach
-    public void setup() throws IOException {
+    void setup() throws IOException {
         mockDataSessionFile = new File(mockDataDir, "data-session.json");
 
         // mock ConfigurationRepository
@@ -41,13 +41,13 @@ public class DataSessionRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getDataSessionFile() throws IOException {
+    void getDataSessionFile() throws IOException {
         Assertions.assertThat(dataSessionRepositoryMock.getDataSessionFile())
                 .hasFileName("data-session.json");
     }
 
     @Test
-    public void save() throws IOException {
+    void save() throws IOException {
         var dto = new DataSessionDto();
         dto.setWorkspaceId(RandomStringUtils.secure().nextAlphanumeric(8));
 

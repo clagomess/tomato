@@ -1,9 +1,9 @@
 package io.github.clagomess.tomato.dto.external;
 
-import io.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
-import io.github.clagomess.tomato.util.ObjectMapperUtil;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.ValidationMessage;
+import io.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
+import io.github.clagomess.tomato.util.ObjectMapperUtil;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -12,12 +12,12 @@ import java.util.Set;
 
 import static io.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.ENVIRONMENT;
 
-public class PostmanEnvironmentDtoTest {
+class PostmanEnvironmentDtoTest {
     private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
     private final JsonSchema jsonSchema = JsonSchemaBuilder.getPostmanJsonSchema(ENVIRONMENT);
 
     @Test
-    public void schema() throws IOException {
+    void schema() throws IOException {
         var url = getClass().getResourceAsStream(String.format(
                 "PostmanEnvironmentDtoTest/%s",
                 "postman.environment.json"

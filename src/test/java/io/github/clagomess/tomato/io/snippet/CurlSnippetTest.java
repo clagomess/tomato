@@ -27,18 +27,18 @@ import static io.github.clagomess.tomato.io.http.MediaType.APPLICATION_OCTET_STR
 import static io.github.clagomess.tomato.io.snippet.CurlSnippet.Type.BASH;
 
 @Slf4j
-public class CurlSnippetTest extends RepositoryStubs {
+class CurlSnippetTest extends RepositoryStubs {
     private final CurlSnippet curlSnippet = new CurlSnippet(BASH);
 
     @BeforeAll
-    public static void setup(){
+    static void setup(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .addListener(() -> List.of(new EnvironmentItemDto("foo", "bar")));
     }
 
     @AfterAll
-    public static void unload(){
+    static void unload(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .getListeners()
@@ -46,7 +46,7 @@ public class CurlSnippetTest extends RepositoryStubs {
     }
 
     @Test
-    public void queryParam() throws IOException {
+    void queryParam() throws IOException {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000/:foo");
         request.getUrlParam().setQuery(List.of(
@@ -64,7 +64,7 @@ public class CurlSnippetTest extends RepositoryStubs {
     }
 
     @Test
-    public void withCookie() throws IOException {
+    void withCookie() throws IOException {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setCookies(List.of(
@@ -80,7 +80,7 @@ public class CurlSnippetTest extends RepositoryStubs {
     }
 
     @Test
-    public void withHeaders() throws IOException {
+    void withHeaders() throws IOException {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setHeaders(List.of(
@@ -96,7 +96,7 @@ public class CurlSnippetTest extends RepositoryStubs {
     }
 
     @Test
-    public void urlEncodedForm() throws IOException {
+    void urlEncodedForm() throws IOException {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
@@ -114,7 +114,7 @@ public class CurlSnippetTest extends RepositoryStubs {
     }
 
     @Test
-    public void multiPartForm() throws IOException {
+    void multiPartForm() throws IOException {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
@@ -134,7 +134,7 @@ public class CurlSnippetTest extends RepositoryStubs {
     }
 
     @Test
-    public void raw() throws IOException {
+    void raw() throws IOException {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
@@ -154,7 +154,7 @@ public class CurlSnippetTest extends RepositoryStubs {
     }
 
     @Test
-    public void raw_whenRequestWithContentType() throws IOException {
+    void raw_whenRequestWithContentType() throws IOException {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
@@ -177,7 +177,7 @@ public class CurlSnippetTest extends RepositoryStubs {
     }
 
     @Test
-    public void binary() throws IOException {
+    void binary() throws IOException {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);

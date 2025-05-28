@@ -9,15 +9,15 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EnvironmentItemDtoTest {
+class EnvironmentItemDtoTest {
     @Test
-    public void equalsHashCode(){
+    void equalsHashCode(){
         Assertions.assertThat(new EnvironmentItemDto())
                 .isEqualTo(new EnvironmentItemDto());
     }
 
     @Test
-    public void sort(){
+    void sort(){
         List<EnvironmentItemDto> list = new ArrayList<>(2);
         list.add(new EnvironmentItemDto("bbb", "value"));
         list.add(new EnvironmentItemDto("aaa", "value"));

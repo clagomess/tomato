@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class EnvironmentRepositoryTest extends RepositoryStubs {
+class EnvironmentRepositoryTest extends RepositoryStubs {
     private final WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
     private final EnvironmentRepository environmentRepositoryMock = Mockito.spy(new EnvironmentRepository(
             workspaceRepositoryMock,
@@ -21,7 +21,7 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
     ));
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         // mock WorkspaceRepository
         Mockito.reset(workspaceRepositoryMock);
 
@@ -30,7 +30,7 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getEnvironmentFile() throws IOException {
+    void getEnvironmentFile() throws IOException {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(mockDataDir);
 
@@ -43,7 +43,7 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
 
 
     @Test
-    public void load() throws IOException {
+    void load() throws IOException {
         var envFile = new File(testData, "workspace-nPUaq0TC/environment-7rZO7Z1T.json");
 
         Mockito.doReturn(envFile)
@@ -55,7 +55,7 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void load_whenMutipleLoad_waysReturnClone() throws IOException {
+    void load_whenMutipleLoad_waysReturnClone() throws IOException {
         var envFile = new File(testData, "workspace-nPUaq0TC/environment-7rZO7Z1T.json");
 
         Mockito.doReturn(envFile)
@@ -73,7 +73,7 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void loadHead() throws IOException {
+    void loadHead() throws IOException {
         var envFile = new File(testData, "workspace-nPUaq0TC/environment-7rZO7Z1T.json");
 
         Mockito.doReturn(envFile)
@@ -85,7 +85,7 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void save() throws IOException {
+    void save() throws IOException {
         var environment = new EnvironmentDto();
         environment.getEnvs().add(new EnvironmentItemDto("AAA", "BBB"));
         var envFile = new File(mockDataDir, "environment-"+environment.getId()+".json");
@@ -99,7 +99,7 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void delete() throws IOException {
+    void delete() throws IOException {
         var environment = new EnvironmentDto();
         environment.getEnvs().add(new EnvironmentItemDto("AAA", "BBB"));
         var envFile = new File(mockDataDir, "environment-"+environment.getId()+".json");
@@ -116,7 +116,7 @@ public class EnvironmentRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void listHead() throws IOException {
+    void listHead() throws IOException {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setPath(new File(testData, "workspace-nPUaq0TC"));
 

@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-public class BasePublisherTest {
+class BasePublisherTest {
     @Test
-    public void removeListener_concurrent(){
+    void removeListener_concurrent(){
         var publisher = new BasePublisher<String, String>(){};
         List<UUID> uuids = new LinkedList<>();
 

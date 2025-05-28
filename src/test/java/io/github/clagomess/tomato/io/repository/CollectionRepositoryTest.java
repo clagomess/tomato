@@ -13,26 +13,26 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CollectionRepositoryTest extends RepositoryStubs {
+class CollectionRepositoryTest extends RepositoryStubs {
     private final RequestRepository requestRepository = Mockito.mock(RequestRepository.class);
     private final WorkspaceRepository workspaceRepository = Mockito.mock(WorkspaceRepository.class);
     private final CollectionRepository collectionRepositoryMock = Mockito.spy(new CollectionRepository());
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         Mockito.reset(requestRepository);
         Mockito.reset(workspaceRepository);
         Mockito.reset(collectionRepositoryMock);
     }
 
     @Test
-    public void getCollectionFilePath(){
+    void getCollectionFilePath(){
         Assertions.assertThat(collectionRepositoryMock.getCollectionFilePath(testData, "foo"))
                 .hasFileName("collection-foo.json");
     }
 
     @Test
-    public void load() throws IOException {
+    void load() throws IOException {
         var tree = new CollectionTreeDto();
         tree.setPath(new File(testData, "workspace-JNtdCPvw/collection-a70uf9Xv"));
         tree.setId("a70uf9Xv");
@@ -42,7 +42,7 @@ public class CollectionRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void loadTree() throws IOException {
+    void loadTree() throws IOException {
         var collectionDir = new File(testData, "workspace-JNtdCPvw/collection-a70uf9Xv");
 
         var result = collectionRepositoryMock.loadTree(collectionDir);
@@ -50,7 +50,7 @@ public class CollectionRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void save_whenNew_create() throws IOException {
+    void save_whenNew_create() throws IOException {
         var collection = new CollectionDto();
 
         var result = collectionRepositoryMock.save(mockDataDir, collection);
@@ -58,13 +58,13 @@ public class CollectionRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void listCollectionFiles(){
+    void listCollectionFiles(){
         var result = collectionRepositoryMock.listCollectionFiles(new File(testData, "workspace-JNtdCPvw"));
         Assertions.assertThat(result).isNotEmpty();
     }
 
     @Test
-    public void delete() throws IOException {
+    void delete() throws IOException {
         var dir = collectionRepositoryMock.save(mockDataDir, new CollectionDto());
         new RequestRepository().save(dir, new RequestDto());
 
@@ -78,7 +78,7 @@ public class CollectionRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void move() throws IOException {
+    void move() throws IOException {
         // create source
         var sourceDir = collectionRepositoryMock.save(mockDataDir, new CollectionDto());
         new RequestRepository().save(sourceDir, new RequestDto());

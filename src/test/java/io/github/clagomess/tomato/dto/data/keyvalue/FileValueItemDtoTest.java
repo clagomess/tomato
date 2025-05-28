@@ -7,9 +7,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FileValueItemDtoTest {
+class FileValueItemDtoTest {
     @Test
-    public void equalsHashCode(){
+    void equalsHashCode(){
         Assertions.assertThat(new FileKeyValueItemDto())
                 .isEqualTo(new FileKeyValueItemDto());
     }
@@ -20,7 +20,7 @@ public class FileValueItemDtoTest {
             "TEXT,TEXT",
             "FILE,FILE"
     })
-    public void getType(
+    void getType(
             KeyValueTypeEnum inputType,
             KeyValueTypeEnum expectedType
     ){
@@ -38,7 +38,7 @@ public class FileValueItemDtoTest {
             "FILE,text/xml,text/xml",
             "FILE, ,application/octet-stream",
     })
-    public void getValueContentType(
+    void getValueContentType(
             KeyValueTypeEnum type,
             String inputValueContentType,
             String expectedValueContentType

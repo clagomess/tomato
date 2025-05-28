@@ -10,13 +10,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TableManagerTest {
-    public static class FooRenderer extends DefaultTableCellRenderer {}
+class TableManagerTest {
+    static class FooRenderer extends DefaultTableCellRenderer {}
 
     @Getter
     @Setter
     @AllArgsConstructor
-    public static class FooDto {
+    static class FooDto {
         @ModelColumn(name = "A")
         private String a;
 
@@ -30,7 +30,7 @@ public class TableManagerTest {
     }
 
     @Test
-    public void isCellEditable(){
+    void isCellEditable(){
         TableManager<FooDto> tableManager = new TableManager<>(FooDto.class);
         tableManager.getModel().addRow(new FooDto("A", "B", "C", "D"));
 

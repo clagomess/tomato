@@ -13,11 +13,11 @@ import java.util.UUID;
 import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PostmanEnvironmentDumpMapperTest {
+class PostmanEnvironmentDumpMapperTest {
     private final PostmanEnvironmentDumpMapper dumpMapper = PostmanEnvironmentDumpMapper.INSTANCE;
 
     @Test
-    public void toEnvironmentDto(){
+    void toEnvironmentDto(){
         var source = new EnvironmentDto();
         source.setName("foo");
         source.setEnvs(List.of(new EnvironmentItemDto("mKey", "mValue")));
@@ -32,7 +32,7 @@ public class PostmanEnvironmentDumpMapperTest {
     @Nested
     class map {
         @Test
-        public void when_type_TEXT(){
+        void when_type_TEXT(){
             var valueA = new EnvironmentItemDto("mKey", "mValue");
 
             PostmanEnvironmentDto.Value result = dumpMapper.map(valueA);
@@ -41,7 +41,7 @@ public class PostmanEnvironmentDumpMapperTest {
         }
 
         @Test
-        public void when_type_SECRET(){
+        void when_type_SECRET(){
             var valueA = new EnvironmentItemDto(
                     SECRET,
                     UUID.randomUUID(),

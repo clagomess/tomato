@@ -7,9 +7,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ContentTypeKeyValueItemDtoTest {
+class ContentTypeKeyValueItemDtoTest {
     @Test
-    public void equalsHashCode(){
+    void equalsHashCode(){
         Assertions.assertThat(new ContentTypeKeyValueItemDto())
                 .isEqualTo(new ContentTypeKeyValueItemDto());
     }
@@ -20,7 +20,7 @@ public class ContentTypeKeyValueItemDtoTest {
             "text/xml,text/xml",
             " ,text/plain",
     })
-    public void getValueContentType(
+    void getValueContentType(
             String inputValueContentType,
             String expectedValueContentType
     ){

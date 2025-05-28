@@ -12,11 +12,11 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ConfigurationRepositoryTest extends RepositoryStubs {
+class ConfigurationRepositoryTest extends RepositoryStubs {
     private final ConfigurationRepository configurationRepositoryMock = Mockito.spy(new ConfigurationRepository());
 
     @BeforeEach
-    public void setup() throws IOException {
+    void setup() throws IOException {
         // mock ConfigurationRepository
         Mockito.reset(configurationRepositoryMock);
         Mockito.doReturn(mockHomeDir)
@@ -25,7 +25,7 @@ public class ConfigurationRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getConfigurationFile(){
+    void getConfigurationFile(){
         var result = configurationRepositoryMock.getConfigurationFile();
         assertEquals(
                 new File(mockHomeDir, "configuration.json").getAbsolutePath(),
@@ -34,7 +34,7 @@ public class ConfigurationRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void load_whenNotExists_ReturnsAndCreateDefault() throws IOException {
+    void load_whenNotExists_ReturnsAndCreateDefault() throws IOException {
         var result = configurationRepositoryMock.load();
 
         assertEquals(
@@ -44,7 +44,7 @@ public class ConfigurationRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void load_whenExists_Returns() throws IOException {
+    void load_whenExists_Returns() throws IOException {
         var dto = new ConfigurationDto();
         dto.setDataDirectory(mockDataDir);
 
@@ -61,13 +61,13 @@ public class ConfigurationRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void save() throws IOException {
+    void save() throws IOException {
         var dto = new ConfigurationDto();
         configurationRepositoryMock.save(dto);
     }
 
     @Test
-    public void getDataDir_whenNotExists_CreateAndReturnDirectory() throws IOException {
+    void getDataDir_whenNotExists_CreateAndReturnDirectory() throws IOException {
         var dto = new ConfigurationDto();
         dto.setDataDirectory(mockDataDir);
 

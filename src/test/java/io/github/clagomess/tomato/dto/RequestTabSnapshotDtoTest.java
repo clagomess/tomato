@@ -9,12 +9,12 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RequestTabSnapshotDtoTest {
+class RequestTabSnapshotDtoTest {
     private final File workspaceDir = new File("target");
     private final RequestDto request = new RequestDto();
     private final RequestHeadDto requestHead;
 
-    public RequestTabSnapshotDtoTest() {
+    RequestTabSnapshotDtoTest() {
         requestHead = new RequestHeadDto();
         requestHead.setPath(new File("target/foo/request.json"));
     }
@@ -22,7 +22,7 @@ public class RequestTabSnapshotDtoTest {
     @Nested
     class toSessionState {
         @Test
-        public void whenNew(){
+        void whenNew(){
             var snapshot = new RequestTabSnapshotDto(true, null, request);
             var state = snapshot.toSessionState(workspaceDir);
 

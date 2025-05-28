@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class WorkspaceListFrameControllerTest {
+class WorkspaceListFrameControllerTest {
     private final WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
@@ -26,14 +26,14 @@ public class WorkspaceListFrameControllerTest {
     ));
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         Mockito.reset(workspaceRepositoryMock);
         Mockito.reset(controller);
         workspacePublisher.getOnChangeAny().getListeners().clear();
     }
 
     @AfterEach
-    public void dispose(){
+    void dispose(){
         controller.dispose();
 
         Assertions.assertThat(workspacePublisher.getOnChangeAny().getListeners())
@@ -41,7 +41,7 @@ public class WorkspaceListFrameControllerTest {
     }
 
     @Test
-    public void addOnChangeListener_trigger() {
+    void addOnChangeListener_trigger() {
         AtomicInteger result = new AtomicInteger();
 
         controller.addOnChangeListener(e -> result.incrementAndGet());
@@ -53,7 +53,7 @@ public class WorkspaceListFrameControllerTest {
     }
 
     @Test
-    public void refresh() throws IOException {
+    void refresh() throws IOException {
         AtomicInteger result = new AtomicInteger();
         controller.refresh(e -> result.incrementAndGet());
         assertEquals(1, result.get());

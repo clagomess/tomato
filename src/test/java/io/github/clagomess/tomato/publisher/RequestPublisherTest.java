@@ -13,7 +13,7 @@ import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class RequestPublisherTest {
+class RequestPublisherTest {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     private String collectionId;
@@ -26,7 +26,7 @@ public class RequestPublisherTest {
     }
 
     @Test
-    public void onChange_publish(){
+    void onChange_publish(){
         var key = new RequestKey(collectionId, requestId);
         var count = new AtomicInteger(0);
 

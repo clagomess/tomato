@@ -11,12 +11,12 @@ import java.time.temporal.ChronoUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class MetadataDtoTest {
+class MetadataDtoTest {
     private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
     private static class Foo extends MetadataDto {}
 
     @Test
-    public void writeAndReadJson() throws JsonProcessingException {
+    void writeAndReadJson() throws JsonProcessingException {
         var metadata = new Foo();
 
         var json = mapper.writeValueAsString(metadata);
@@ -34,7 +34,7 @@ public class MetadataDtoTest {
     }
 
     @Test
-    public void equalsHashCode(){
+    void equalsHashCode(){
         var dtoA = new MetadataDto(){};
         dtoA.setId("aaa");
 

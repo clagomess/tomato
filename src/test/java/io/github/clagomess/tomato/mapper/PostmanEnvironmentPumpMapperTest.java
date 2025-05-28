@@ -1,7 +1,6 @@
 package io.github.clagomess.tomato.mapper;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
-import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.external.PostmanEnvironmentDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,11 +9,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PostmanEnvironmentPumpMapperTest {
+class PostmanEnvironmentPumpMapperTest {
     private final PostmanEnvironmentPumpMapper pumpMapper = PostmanEnvironmentPumpMapper.INSTANCE;
 
     @Test
-    public void toEnvironmentDto(){
+    void toEnvironmentDto(){
         var valueA = new PostmanEnvironmentDto.Value();
         valueA.setKey("mKey");
         valueA.setValue("mValue");
@@ -31,7 +30,7 @@ public class PostmanEnvironmentPumpMapperTest {
     }
 
     @Test
-    public void map(){
+    void map(){
         var valueA = new PostmanEnvironmentDto.Value();
         valueA.setKey("mKey");
         valueA.setValue("mValue");

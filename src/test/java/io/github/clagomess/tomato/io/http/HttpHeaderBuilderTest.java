@@ -16,18 +16,18 @@ import java.net.URI;
 import java.net.http.HttpRequest;
 import java.util.List;
 
-public class HttpHeaderBuilderTest extends RepositoryStubs {
+class HttpHeaderBuilderTest extends RepositoryStubs {
     private HttpRequest.Builder httpRequestBuilder;
 
     @BeforeAll
-    public static void setup(){
+    static void setup(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .addListener(() -> List.of(new EnvironmentItemDto("foo", "bar")));
     }
 
     @AfterAll
-    public static void unload(){
+    static void unload(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .getListeners()
@@ -35,13 +35,13 @@ public class HttpHeaderBuilderTest extends RepositoryStubs {
     }
 
     @BeforeEach
-    public void setupHttpRequest() {
+    void setupHttpRequest() {
         this.httpRequestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost"));
     }
 
     @Test
-    public void build_expectedDefaultUserAgent() throws IOException {
+    void build_expectedDefaultUserAgent() throws IOException {
         var request = new RequestDto();
 
         new HttpHeaderBuilder(httpRequestBuilder, request).build();
@@ -52,7 +52,7 @@ public class HttpHeaderBuilderTest extends RepositoryStubs {
     }
 
     @Test
-    public void build_whenOverrideUserAgent_replace() throws IOException {
+    void build_whenOverrideUserAgent_replace() throws IOException {
         var request = new RequestDto();
         request.setHeaders(List.of(
                 new KeyValueItemDto("User-Agent", "foo")
@@ -66,7 +66,7 @@ public class HttpHeaderBuilderTest extends RepositoryStubs {
     }
 
     @Test
-    public void build_whenDuplicateHeader_onlyOne() throws IOException {
+    void build_whenDuplicateHeader_onlyOne() throws IOException {
         var request = new RequestDto();
         request.setHeaders(List.of(
                 new KeyValueItemDto("Content-Type", "foo"),
@@ -81,7 +81,7 @@ public class HttpHeaderBuilderTest extends RepositoryStubs {
     }
 
     @Test
-    public void build_whenDupliacateCookie_allowAll() throws IOException {
+    void build_whenDupliacateCookie_allowAll() throws IOException {
         var request = new RequestDto();
         request.setCookies(List.of(
                 new KeyValueItemDto("JSESSIONID", "foo"),
@@ -96,7 +96,7 @@ public class HttpHeaderBuilderTest extends RepositoryStubs {
     }
 
     @Test
-    public void build_whenEnvDefinedHeader_replace() throws IOException {
+    void build_whenEnvDefinedHeader_replace() throws IOException {
         var request = new RequestDto();
         request.setHeaders(List.of(
                 new KeyValueItemDto("Content-Type", "{{foo}}")
@@ -110,7 +110,7 @@ public class HttpHeaderBuilderTest extends RepositoryStubs {
     }
 
     @Test
-    public void build_whenEnvDefinedCookie_replace() throws IOException {
+    void build_whenEnvDefinedCookie_replace() throws IOException {
         var request = new RequestDto();
         request.setCookies(List.of(
                 new KeyValueItemDto("JSESSIONID", "{{foo}}")

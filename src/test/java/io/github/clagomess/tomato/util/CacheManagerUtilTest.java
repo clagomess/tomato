@@ -8,9 +8,9 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class CacheManagerUtilTest {
+class CacheManagerUtilTest {
     @Test
-    public void get(){
+    void get(){
         var cache = new CacheManager<String, String>();
 
         cache.get("foo", () -> "bar");
@@ -20,7 +20,7 @@ public class CacheManagerUtilTest {
     }
 
     @Test
-    public void get_Concurrent(){
+    void get_Concurrent(){
         var cache = new CacheManager<String, Integer>();
 
         IntStream.range(0, 10)
@@ -29,7 +29,7 @@ public class CacheManagerUtilTest {
     }
 
     @Test
-    public void get_KeyLess(){
+    void get_KeyLess(){
         var cache = new CacheManager<String, String>("foo");
 
         cache.get(() -> "bar");
@@ -39,7 +39,7 @@ public class CacheManagerUtilTest {
     }
 
     @Test
-    public void evict(){
+    void evict(){
         var cache = new CacheManager<String, String>();
 
         cache.get("foo", () -> "bar");
@@ -51,7 +51,7 @@ public class CacheManagerUtilTest {
     }
 
     @Test
-    public void evict_KeyLess(){
+    void evict_KeyLess(){
         var cache = new CacheManager<String, String>("foo");
 
         cache.get(() -> "bar");

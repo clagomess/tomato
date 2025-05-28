@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EnvironmentComboBoxControllerTest {
+class EnvironmentComboBoxControllerTest {
     private final EnvironmentRepository environmentRepositoryMock = Mockito.mock(EnvironmentRepository.class);
     private final WorkspaceSessionRepository workspaceSessionRepositoryMock = Mockito.mock(WorkspaceSessionRepository.class);
     private final EnvironmentComboBoxInterface ui = Mockito.mock(EnvironmentComboBoxInterface.class);
@@ -28,7 +28,7 @@ public class EnvironmentComboBoxControllerTest {
     ));
 
     @Test
-    public void loadItems() throws IOException {
+    void loadItems() throws IOException {
         var session = new WorkspaceSessionDto();
         session.setEnvironmentId("aaa");
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RequestBuilderTest {
+class RequestBuilderTest {
     @ParameterizedTest
     @CsvSource({
             "myvalue,myvalue",
@@ -16,7 +16,7 @@ public class RequestBuilderTest {
             "a-{{bar}},a-{{bar}}",
             "a-{{null-env}},a-",
     })
-    public void injectEnvironment(String input, String expected){
+    void injectEnvironment(String input, String expected){
         List<EnvironmentItemDto> envs = List.of(
                 new EnvironmentItemDto("foo", "bar"),
                 new EnvironmentItemDto("null-env", null)

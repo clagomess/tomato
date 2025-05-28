@@ -7,14 +7,14 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ResponseSizeBadgeTest {
+class ResponseSizeBadgeTest {
     @ParameterizedTest
     @CsvSource({
             "100,100B",
             "10240,10.00KB",
             "2048576,1.95MB",
     })
-    public void formatSize(
+    void formatSize(
             Long size,
             String expected
     ){

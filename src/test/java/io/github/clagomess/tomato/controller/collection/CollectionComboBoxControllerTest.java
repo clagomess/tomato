@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CollectionComboBoxControllerTest {
+class CollectionComboBoxControllerTest {
     private final CollectionComboBoxMock ui = new CollectionComboBoxMock();
     private final TreeRepository treeRepositoryMock = Mockito.mock(TreeRepository.class);
     private final CollectionComboBoxController controller = new CollectionComboBoxController(
@@ -19,7 +19,7 @@ public class CollectionComboBoxControllerTest {
     );
 
     @Test
-    public void loadItems_assertSorted() throws IOException {
+    void loadItems_assertSorted() throws IOException {
         var root = new CollectionTreeDto(){{
             setName("ROOT");
             setChildren(parent -> Stream.of(

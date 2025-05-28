@@ -13,11 +13,11 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Slf4j
-public class XmlBeautifierTest {
+class XmlBeautifierTest {
 
     @Test
     @Disabled
-    public void performance() throws IOException {
+    void performance() throws IOException {
         try(
                 var reader = new BufferedReader(new FileReader(
                         Objects.requireNonNull(getClass().getResource("large.xml")).getFile()
@@ -83,7 +83,7 @@ public class XmlBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseBasic")
-    public void parseBasic(
+    void parseBasic(
             String input,
             String expected
     ) throws IOException {
@@ -106,7 +106,7 @@ public class XmlBeautifierTest {
 
     @ParameterizedTest
     @MethodSource("provide_parseBasicError")
-    public void parseBasicError(
+    void parseBasicError(
             String input,
             String expected
     ) throws IOException {

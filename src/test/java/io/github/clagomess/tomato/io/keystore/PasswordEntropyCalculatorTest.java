@@ -5,7 +5,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class PasswordEntropyCalculatorTest {
+class PasswordEntropyCalculatorTest {
     private final PasswordEntropyCalculator calculator = new PasswordEntropyCalculator();
 
     @ParameterizedTest
@@ -19,7 +19,7 @@ public class PasswordEntropyCalculatorTest {
             "ご,UNICODE",
             "😂,UNICODE",
     }, ignoreLeadingAndTrailingWhitespace = false)
-    public void getSymbol(
+    void getSymbol(
             String ch,
             PasswordEntropyCalculator.Symbol expected
     ) {
@@ -38,7 +38,7 @@ public class PasswordEntropyCalculatorTest {
             "ごご,1",
             "😂,2",
     })
-    public void getUniqueSymbols(String password, int expected){
+    void getUniqueSymbols(String password, int expected){
         assertEquals(
                 expected,
                 calculator.getUniqueSymbols(password).size()
@@ -58,7 +58,7 @@ public class PasswordEntropyCalculatorTest {
             "😂y%a#laHgç~,176,HIGH",
             "resuITrecetreprOfolYcefAnCeIStBowkNisTaw,137,HIGH",
     })
-    public void calculateEntropy(
+    void calculateEntropy(
             String password,
             int expectedBits,
             PasswordEntropyCalculator.EntropyStrength expectedStrength

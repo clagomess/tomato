@@ -10,9 +10,9 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CollectionTreeDtoTest {
+class CollectionTreeDtoTest {
     @Test
-    public void flattened() {
+    void flattened() {
         var root = new CollectionTreeDto(){{
             setName("ROOT");
             setChildren(parent -> Stream.of(
@@ -44,7 +44,7 @@ public class CollectionTreeDtoTest {
     }
 
     @Test
-    public void getFlattenedParentString(){
+    void getFlattenedParentString(){
         var root = new CollectionTreeDto(){{setName("MYROOT");}};
         var level1 = new CollectionTreeDto(){{
             setName("LEVEL 1");
@@ -61,7 +61,7 @@ public class CollectionTreeDtoTest {
     }
 
     @Test
-    public void sort(){
+    void sort(){
         var a = new CollectionTreeDto();
         a.setName("aaa");
 

@@ -23,11 +23,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
+class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     private final PostmanCollectionDumpMapper dumpMapper = PostmanCollectionDumpMapper.INSTANCE;
 
     @Test
-    public void toItem_fromCollectionTree(){
+    void toItem_fromCollectionTree(){
         var collectionTree = new CollectionTreeDto();
         collectionTree.setName("foo");
 
@@ -38,7 +38,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     }
 
     @Test
-    public void toItem_Request(){
+    void toItem_Request(){
         var request = new RequestDto();
         request.setName("foo");
         request.setUrl("https://foo");
@@ -53,7 +53,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     }
 
     @Test
-    public void toBody_Request_noBody(){
+    void toBody_Request_noBody(){
         var request = new RequestDto();
 
         var result = dumpMapper.toItem(request);
@@ -63,7 +63,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     }
 
     @Test
-    public void toItem_Request_urlParam_Query(){
+    void toItem_Request_urlParam_Query(){
         var request = new RequestDto();
         request.getUrlParam().setQuery(List.of(
                 new ContentTypeKeyValueItemDto("foo1", "bar"),
@@ -96,7 +96,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     }
 
     @Test
-    public void toItem_Request_urlParam_Variables(){
+    void toItem_Request_urlParam_Variables(){
         var request = new RequestDto();
         request.getUrlParam().setPath(List.of(
                 new KeyValueItemDto("foo1", "bar"),
@@ -129,7 +129,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     }
 
     @Test
-    public void toItem_Request_Headers(){
+    void toItem_Request_Headers(){
         var request = new RequestDto();
         request.setHeaders(List.of(
                 new KeyValueItemDto("foo1", "bar"),
@@ -168,7 +168,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
         "formdata,MULTIPART_FORM",
         "urlencoded,URL_ENCODED_FORM",
     })
-    public void toBody_type(
+    void toBody_type(
             String expected,
             BodyTypeEnum bodyType
     ){
@@ -180,7 +180,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     }
 
     @Test
-    public void toBody_raw(){
+    void toBody_raw(){
         var body =  new BodyDto();
         body.setType(BodyTypeEnum.RAW);
         body.setRaw(new RawBodyDto());
@@ -194,7 +194,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     }
 
     @Test
-    public void toBody_binary(){
+    void toBody_binary(){
         var body =  new BodyDto();
         body.setType(BodyTypeEnum.BINARY);
         body.setBinary(new BinaryBodyDto());
@@ -205,7 +205,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     }
 
     @Test
-    public void toBody_urlEncodedForm(){
+    void toBody_urlEncodedForm(){
         var body =  new BodyDto();
         body.setType(BodyTypeEnum.URL_ENCODED_FORM);
         body.setUrlEncodedForm(List.of(
@@ -238,7 +238,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     }
 
     @Test
-    public void toBody_multiPartForm(){
+    void toBody_multiPartForm(){
         var body =  new BodyDto();
         body.setType(BodyTypeEnum.MULTIPART_FORM);
         body.setMultiPartForm(List.of(
@@ -282,7 +282,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
             "{{url}}/foo,{{url}}",
             "{{url}}/foo/bar,{{url}}",
     })
-    public void parseUrlHost(
+    void parseUrlHost(
             String input,
             String expected
     ){
@@ -305,7 +305,7 @@ public class PostmanCollectionDumpMapperTest extends RepositoryStubs {
             "{{url}}/foo,foo",
             "{{url}}/foo/bar,foo#bar",
     })
-    public void parseUrlPath(
+    void parseUrlPath(
             String input,
             String expected
     ){

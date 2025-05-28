@@ -24,7 +24,7 @@ public abstract class RepositoryStubs {
     protected File mockDataDir;
 
     @BeforeEach
-    public void setupDirs() {
+    void setupDirs() {
         mockUserHomeDir = new File(
                 "target",
                 "home-" + RandomStringUtils.secure().nextAlphanumeric(8)
@@ -40,7 +40,7 @@ public abstract class RepositoryStubs {
     }
 
     @BeforeEach
-    public void cleanCache() {
+    void cleanCache() {
         ConfigurationRepository.cache.evictAll();
         ConfigurationRepository.cacheHomeDir.evictAll();
         ConfigurationRepository.cacheDatadir.evictAll();
@@ -51,7 +51,7 @@ public abstract class RepositoryStubs {
     }
 
     @AfterEach
-    public void deleteDirs() throws IOException {
+    void deleteDirs() throws IOException {
         try(Stream<Path> paths = Files.walk(mockUserHomeDir.toPath())){
             paths.sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
