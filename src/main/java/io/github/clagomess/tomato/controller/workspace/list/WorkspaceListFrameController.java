@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.controller.workspace.list;
 
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import io.github.clagomess.tomato.publisher.WorkspacePublisher;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class WorkspaceListFrameController {
             try {
                 refresh(refreshRows);
             } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
+                throw new TomatoException(e);
             }
         });
     }

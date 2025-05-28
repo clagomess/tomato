@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui.component;
 
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.http.MediaType;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -24,7 +25,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
                     "trsyntax-textarea-theme.xml"
             ));
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new TomatoException(e);
         }
     }
 
@@ -81,7 +82,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
         try {
             getDocument().remove(0, getDocument().getLength());
         }catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new TomatoException(e);
         }
     }
 

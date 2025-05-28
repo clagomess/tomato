@@ -17,9 +17,9 @@ import java.util.List;
 
 import static io.github.clagomess.tomato.io.http.MediaType.TEXT_PLAIN_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
-public class UrlBuilderTest {
+class UrlBuilderTest {
     private final EnvironmentPublisher environmentPublisherMock = Mockito.mock(EnvironmentPublisher.class);
 
     private final List<EnvironmentItemDto> envList = List.of(
@@ -67,7 +67,10 @@ public class UrlBuilderTest {
                     requestDto
             );
 
-            assertThrows(IllegalArgumentException.class, urlBuilder::buildUri);
+            assertThrowsExactly(
+                    IllegalArgumentException.class,
+                    urlBuilder::buildUri
+            );
         }
 
         @Test
@@ -91,7 +94,7 @@ public class UrlBuilderTest {
             "{{tomatoUri}}/{{foo}},http://localhost/bar",
             "{{tomatoUri}}/{{foo}}/{{foo}},http://localhost/bar/bar",
     })
-    public void buildUrlEnvironment(
+    void buildUrlEnvironment(
             String input,
             String expected
     ) {
@@ -111,7 +114,7 @@ public class UrlBuilderTest {
             "17/01/2025,17%2F01%2F2025",
             "{{foo}}/{{foo}},bar%2Fbar",
     })
-    public void buildEncodedParamValue(
+    void buildEncodedParamValue(
             String input,
             String expected
     ) {
@@ -130,7 +133,7 @@ public class UrlBuilderTest {
             ":disabled,:disabled",
             ":notInjected,:notInjected",
     })
-    public void buildPathVariables(
+    void buildPathVariables(
             String input,
             String expected
     ) {
@@ -158,7 +161,7 @@ public class UrlBuilderTest {
             "localhost?xpto=aaa,localhost?xpto=aaa&blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar&foo%5Bbar%5D=",
             "localhost?xpto=aaa&ex=a,localhost?xpto=aaa&ex=a&blank=+&date=17%2F01%2F2025&date_env=17%2F01%2F2025&foo=bar&foo%5Bbar%5D=",
     })
-    public void buildQueryParams(
+    void buildQueryParams(
             String input,
             String expected
     ) {

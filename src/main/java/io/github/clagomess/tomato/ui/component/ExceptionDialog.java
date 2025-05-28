@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.component;
 
 import com.formdev.flatlaf.icons.FlatOptionPaneErrorIcon;
+import io.github.clagomess.tomato.exception.TomatoException;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
@@ -16,7 +17,7 @@ public class ExceptionDialog extends JDialog {
             Component parent,
             String message
     ) {
-        this(parent, new RuntimeException(message));
+        this(parent, new TomatoException(message));
     }
 
     public ExceptionDialog(

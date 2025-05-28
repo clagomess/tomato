@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui.settings;
 
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.ui.MainFrame;
 import io.github.clagomess.tomato.ui.component.RawTextArea;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
@@ -60,7 +61,7 @@ public class DebugThreadsFrame extends JFrame {
                                     null
                             );
                         } catch (BadLocationException e) {
-                            throw new RuntimeException(e.getMessage(), e);
+                            throw new TomatoException(e);
                         }
                     });
         });

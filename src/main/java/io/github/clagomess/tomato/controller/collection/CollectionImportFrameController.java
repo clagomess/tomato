@@ -2,6 +2,8 @@ package io.github.clagomess.tomato.controller.collection;
 
 import io.github.clagomess.tomato.dto.data.CollectionDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import io.github.clagomess.tomato.exception.ConverterTypeEmptyException;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.converter.InterfaceConverter;
 import io.github.clagomess.tomato.publisher.CollectionPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
@@ -24,8 +26,8 @@ public class CollectionImportFrameController {
             InterfaceConverter converter,
             File sourceFile
     ) throws IOException {
-        if(parent == null) throw new RuntimeException("Destination is empty");
-        if(converter == null) throw new RuntimeException("Type is empty");
+        if(parent == null) throw new TomatoException("Destination is empty");
+        if(converter == null) throw new ConverterTypeEmptyException();
 
         CollectionDto dto = converter.pumpCollection(
                 parent.getPath(),

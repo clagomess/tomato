@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.environment;
 
 import io.github.clagomess.tomato.controller.environment.EnvironmentSwitcherComboBoxController;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.ui.component.*;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import io.github.clagomess.tomato.ui.environment.edit.EnvironmentEditFrame;
@@ -107,7 +108,7 @@ public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSw
             ));
             return result.get();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new TomatoException(e);
         }
     }
 
@@ -126,7 +127,7 @@ public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSw
             ));
             return result.get();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new TomatoException(e);
         }
     }
 }

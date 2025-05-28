@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.controller.collection;
 
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.repository.CollectionRepository;
 import io.github.clagomess.tomato.publisher.CollectionPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
@@ -24,7 +25,7 @@ public class CollectionMoveFrameController {
             CollectionTreeDto source,
             CollectionTreeDto target
     ) throws IOException {
-        if(target == null) throw new RuntimeException("Destination not selected");
+        if(target == null) throw new TomatoException("Destination not selected");
 
         collectionRepository.move(source, target);
 

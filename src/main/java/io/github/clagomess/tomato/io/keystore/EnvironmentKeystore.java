@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.io.keystore;
 
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.mapper.CloneMapper;
 import io.github.clagomess.tomato.util.CacheManager;
 import lombok.AccessLevel;
@@ -34,12 +35,12 @@ public class EnvironmentKeystore {
 
     @Setter
     private Supplier<String> getPassword = () -> {
-        throw new RuntimeException("Needs override 'getPassword'");
+        throw new TomatoException("Needs override 'getPassword'");
     };
 
     @Setter
     private Supplier<String> getNewPassword = () -> {
-        throw new RuntimeException("Needs override 'getNewPassword'");
+        throw new TomatoException("Needs override 'getNewPassword'");
     };
 
     public EnvironmentKeystore(

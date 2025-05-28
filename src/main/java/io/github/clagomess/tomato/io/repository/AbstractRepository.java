@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.io.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.clagomess.tomato.dto.data.MetadataDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.util.CacheManager;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.RequiredArgsConstructor;
@@ -127,7 +128,7 @@ abstract class AbstractRepository {
                         try {
                             deleteFile(item);
                         } catch (IOException e) {
-                            throw new RuntimeException(e.getMessage(), e);
+                            throw new TomatoException(e);
                         }
                     });
         }

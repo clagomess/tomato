@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.ui.main.request.keyvalue;
 
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 import io.github.clagomess.tomato.ui.component.ComponentUtil;
@@ -111,7 +112,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
             options.getOnChange().run(item);
             requestStagingMonitor.update();
         }catch (Exception e){
-            throw new RuntimeException(e.getMessage(), e);
+            throw new TomatoException(e);
         }
     }
 

@@ -20,7 +20,7 @@ import java.time.temporal.ChronoUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-public class AbstractRepositoryTest extends RepositoryStubs {
+class AbstractRepositoryTest extends RepositoryStubs {
     private final AbstractRepository abstractRepository = Mockito.spy(new AbstractRepository(){});
 
     @Nested
@@ -73,7 +73,7 @@ public class AbstractRepositoryTest extends RepositoryStubs {
             var source = new File(mockDataDir, "move_whenInvalidTarget.json");
             abstractRepository.writeFile(source, new TypeReference<>(){}, new WorkspaceDto());
 
-            assertThrows(IOException.class, () -> abstractRepository.move(
+            assertThrowsExactly(IOException.class, () -> abstractRepository.move(
                     source,
                     new File(mockDataDir, "invalid-target")
             ));
@@ -85,7 +85,7 @@ public class AbstractRepositoryTest extends RepositoryStubs {
             var target = new File(mockDataDir, "valid-target");
             assertTrue(target.mkdirs());
 
-            assertThrows(IOException.class, () -> abstractRepository.move(
+            assertThrowsExactly(IOException.class, () -> abstractRepository.move(
                     source,
                     target
             ));
@@ -106,7 +106,7 @@ public class AbstractRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void deleteDirectory() throws IOException {
+    void deleteDirectory() throws IOException {
         assertTrue(new File(mockDataDir, "bbb").mkdirs());
         abstractRepository.writeFile(
                 new File(mockDataDir, "bbb/xxx.json"),
@@ -126,13 +126,16 @@ public class AbstractRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getHomeDir(){
+    void getHomeDir(){
         System.setProperty("user.home", "~");
-        assertThrows(AssertionError.class, abstractRepository::getHomeDir);
+        assertThrowsExactly(
+                AssertionError.class,
+                abstractRepository::getHomeDir
+        );
     }
 
     @Test
-    public void listFiles_whenInvalidDirectory_returnEmpty() {
+    void listFiles_whenInvalidDirectory_returnEmpty() {
         Assertions.assertThat(
                 abstractRepository.listFiles(null)
         ).isEmpty();

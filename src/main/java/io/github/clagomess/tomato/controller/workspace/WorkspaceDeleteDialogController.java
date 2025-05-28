@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.controller.workspace;
 
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
+import io.github.clagomess.tomato.exception.DeleteCurrentWorkspaceException;
 import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import io.github.clagomess.tomato.publisher.WorkspacePublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
@@ -23,7 +24,7 @@ public class WorkspaceDeleteDialogController {
         var currentWorkspace = workspaceRepository.getDataSessionWorkspace();
 
         if(Objects.equals(currentWorkspace.getId(), workspace.getId())) {
-            throw new RuntimeException("Is not possible to delete current workspace");
+            throw new DeleteCurrentWorkspaceException();
         }
 
         workspaceRepository.delete(workspace);

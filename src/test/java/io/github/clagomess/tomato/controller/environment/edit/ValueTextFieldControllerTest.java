@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.controller.environment.edit;
 
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import io.github.clagomess.tomato.ui.environment.edit.ValueTextFieldInterface;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@ import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEn
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ValueTextFieldControllerTest {
+class ValueTextFieldControllerTest {
     @Nested
     class unlockSecret {
         final EnvironmentKeystore environmentKeystore = Mockito.mock(EnvironmentKeystore.class);
@@ -38,7 +39,7 @@ public class ValueTextFieldControllerTest {
 
         @Test
         void whenEmptySecret_keepValue() throws IOException {
-            Mockito.doThrow(new RuntimeException("Not: ui.setText"))
+            Mockito.doThrow(new TomatoException("Not: ui.setText"))
                     .when(abstractUi)
                     .setText(Mockito.anyString());
 
@@ -56,7 +57,7 @@ public class ValueTextFieldControllerTest {
 
         @Test
         void whenNotEmptySecretAndNotEmptyValue_keepValue() throws IOException {
-            Mockito.doThrow(new RuntimeException("Not: loadSecret"))
+            Mockito.doThrow(new TomatoException("Not: loadSecret"))
                     .when(environmentKeystore)
                     .loadSecret(Mockito.any(UUID.class));
 

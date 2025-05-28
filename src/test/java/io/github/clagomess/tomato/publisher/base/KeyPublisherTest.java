@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.publisher.base;
 
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.repository.DirectoryCreateException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
@@ -12,33 +13,33 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
-public class KeyPublisherTest {
+class KeyPublisherTest {
     @Test
-    public void addListenerAndPublish(){
+    void addListenerAndPublish(){
         KeyPublisher<Integer, String> doException = new KeyPublisher<>();
         doException.addListener(1, event -> {
             throw new DirectoryCreateException(new File(""));
         });
         doException.addListener(2, event -> {
-            throw new RuntimeException("OK");
+            throw new TomatoException("OK");
         });
 
         assertThrowsExactly(
-                RuntimeException.class,
+                TomatoException.class,
                 () -> doException.publish(2, "opa")
         );
     }
 
     @Test
-    public void removeListener(){
+    void removeListener(){
         KeyPublisher<Integer, String> doException = new KeyPublisher<>();
 
         doException.addListener(1, event -> {
-            throw new RuntimeException("OK");
+            throw new TomatoException("OK");
         });
 
         assertThrowsExactly(
-                RuntimeException.class,
+                TomatoException.class,
                 () -> doException.publish(1, "opa")
         );
 
@@ -47,7 +48,7 @@ public class KeyPublisherTest {
     }
 
     @Test
-    public void publish_concurrent(){
+    void publish_concurrent(){
         KeyPublisher<String, String> publisher = new KeyPublisher<>();
         List<UUID> uuids = new LinkedList<>();
         var key = RandomStringUtils.secure().nextAlphanumeric(8);
@@ -65,10 +66,10 @@ public class KeyPublisherTest {
     }
 
     @Test
-    public void changeKey(){
+    void changeKey(){
         KeyPublisher<Integer, String> doException = new KeyPublisher<>();
         doException.addListener(1, event -> {
-            throw new RuntimeException();
+            throw new TomatoException("");
         });
         doException.addListener(2, event -> {
             throw new IllegalArgumentException();
@@ -81,7 +82,7 @@ public class KeyPublisherTest {
         doException.publish(2, "opa");
 
         assertThrowsExactly(
-                RuntimeException.class,
+                TomatoException.class,
                 () -> doException.publish(3, "opa")
         );
 

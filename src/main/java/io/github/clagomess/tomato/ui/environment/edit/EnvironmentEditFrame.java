@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.environment.edit;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
@@ -99,7 +100,7 @@ public class EnvironmentEditFrame extends JFrame {
 
             return environmentKeystore;
         }catch (IOException e){
-            throw new RuntimeException(e.getMessage(), e);
+            throw new TomatoException(e);
         }
     }
 

@@ -1,5 +1,7 @@
 package io.github.clagomess.tomato.ui.component;
 
+import io.github.clagomess.tomato.exception.TomatoException;
+
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 
@@ -17,7 +19,7 @@ public class RawTextArea extends JTextArea {
         try {
             getDocument().remove(0, getDocument().getLength());
         }catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new TomatoException(e);
         }
     }
 

@@ -23,22 +23,22 @@ import java.util.Objects;
 import static io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.FILE;
 import static io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.TEXT;
 import static io.github.clagomess.tomato.enums.BodyTypeEnum.MULTIPART_FORM;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 @Slf4j
-public class MultipartFormDataBodyTest {
+class MultipartFormDataBodyTest {
     private final String boundary = "tomato-test";
     private BodyDto body;
 
     @BeforeAll
-    public static void setup(){
+    static void setup(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .addListener(() -> List.of(new EnvironmentItemDto("foo", "bar")));
     }
 
     @AfterAll
-    public static void unload(){
+    static void unload(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .getListeners()
@@ -46,13 +46,13 @@ public class MultipartFormDataBodyTest {
     }
 
     @BeforeEach
-    public void setupBody() {
+    void setupBody() {
         body = new BodyDto();
         body.setType(MULTIPART_FORM);
     }
 
     @Test
-    public void build() throws IOException {
+    void build() throws IOException {
         String formFile = Objects.requireNonNull(getClass()
                         .getResource("MultipartFormDataBodyTest/dummy.txt"))
                 .getFile();
@@ -89,7 +89,7 @@ public class MultipartFormDataBodyTest {
     }
 
     @Test
-    public void build_whenNullTextParam_sendEmpty() throws IOException {
+    void build_whenNullTextParam_sendEmpty() throws IOException {
         body.setMultiPartForm(List.of(
                 new FileKeyValueItemDto(TEXT, "myparam", null, null, true)
         ));
@@ -107,18 +107,21 @@ public class MultipartFormDataBodyTest {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = {"foo/bar"})
-    public void build_whenNullOrInvalidFileParam_throws(String fileParam) {
+    void build_whenNullOrInvalidFileParam_throws(String fileParam) {
         body.setMultiPartForm(List.of(
                 new FileKeyValueItemDto(FILE, "myfile", fileParam, null, true)
         ));
 
         var multipart = new MultipartFormDataBody(boundary, body);
 
-        assertThrows(FileNotFoundException.class, multipart::build);
+        assertThrowsExactly(
+                FileNotFoundException.class,
+                multipart::build
+        );
     }
 
     @Test
-    public void build_whenNotSelectedParam_notSend() throws IOException {
+    void build_whenNotSelectedParam_notSend() throws IOException {
         body.setMultiPartForm(List.of(
                 new FileKeyValueItemDto(TEXT, "myparam", "myvalue", null, true),
                 new FileKeyValueItemDto(TEXT, "mysecondparam", "myvalue", null, false)
@@ -136,7 +139,7 @@ public class MultipartFormDataBodyTest {
     }
 
     @Test
-    public void build_whenEnvDefined_replace() throws IOException {
+    void build_whenEnvDefined_replace() throws IOException {
         body.setMultiPartForm(List.of(
                 new FileKeyValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
         ));
@@ -160,7 +163,7 @@ public class MultipartFormDataBodyTest {
             "{{foo}},bar",
             "a-{{bar}},a-{{bar}}",
     })
-    public void writeTextBoundary_assertEnvInject(String input, String expected) throws IOException {
+    void writeTextBoundary_assertEnvInject(String input, String expected) throws IOException {
         body.setMultiPartForm(List.of(
                 new FileKeyValueItemDto("mykey", input)
         ));

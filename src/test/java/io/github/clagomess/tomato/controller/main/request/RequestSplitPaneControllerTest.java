@@ -4,6 +4,7 @@ import io.github.clagomess.tomato.dto.ResponseDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.http.HttpService;
 import io.github.clagomess.tomato.io.repository.RequestRepository;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
@@ -18,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RequestSplitPaneControllerTest {
+class RequestSplitPaneControllerTest {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
     private final RequestRepository requestRepositoryMock = Mockito.mock(RequestRepository.class);
     private final RequestSplitPaneController controller = Mockito.spy(new RequestSplitPaneController(
@@ -26,13 +27,13 @@ public class RequestSplitPaneControllerTest {
     ));
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         Mockito.reset(requestRepositoryMock);
         Mockito.reset(controller);
     }
 
     @Test
-    public void sendRequest_OnComplete() throws InterruptedException {
+    void sendRequest_OnComplete() throws InterruptedException {
         var complete = new AtomicBoolean(false);
         var error = new AtomicBoolean(false);
 
@@ -61,14 +62,14 @@ public class RequestSplitPaneControllerTest {
     }
 
     @Test
-    public void sendRequest_OnError() throws InterruptedException {
+    void sendRequest_OnError() throws InterruptedException {
         var complete = new AtomicBoolean(false);
         var error = new AtomicBoolean(false);
 
         try(var ignored = Mockito.mockConstruction(
                 HttpService.class,
                 (mock, context) -> {
-                    Mockito.doThrow(new RuntimeException())
+                    Mockito.doThrow(new TomatoException(""))
                             .when(mock)
                             .perform();
                 })
@@ -93,7 +94,7 @@ public class RequestSplitPaneControllerTest {
     }
 
     @Test
-    public void save_trigger() throws IOException {
+    void save_trigger() throws IOException {
         var triggered = new AtomicBoolean(false);
         var request = new RequestDto();
         var requestHead = new RequestHeadDto();

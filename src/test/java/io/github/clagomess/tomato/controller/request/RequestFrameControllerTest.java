@@ -24,7 +24,7 @@ import static io.github.clagomess.tomato.enums.HttpMethodEnum.POST;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RequestFrameControllerTest {
+class RequestFrameControllerTest {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     private TabKey tabKey;
@@ -32,7 +32,7 @@ public class RequestFrameControllerTest {
     private final RequestFrameController controller = Mockito.spy(RequestFrameController.class);
 
     @BeforeEach
-    public void setup() throws Exception {
+    void setup() throws Exception {
         requestHead = new RequestHeadDto();
         requestHead.setId(RandomStringUtils.secure().nextAlphanumeric(8));
         requestHead.setName("aaa");
@@ -47,7 +47,7 @@ public class RequestFrameControllerTest {
     }
 
     @AfterEach
-    public void dispose(){
+    void dispose(){
         controller.dispose();
 
         assertFalse(requestPublisher.getOnChange()
@@ -58,15 +58,15 @@ public class RequestFrameControllerTest {
     }
 
     @Test
-    public void load_whenAllNull(){
-        assertThrows(
+    void load_whenAllNull(){
+        assertThrowsExactly(
                 IllegalArgumentException.class,
                 () -> controller.load(null, null)
         );
     }
 
     @Test
-    public void load_whenNewRequest() throws IOException {
+    void load_whenNewRequest() throws IOException {
         var request = new RequestDto();
         var result = controller.load(null, request);
 
@@ -74,7 +74,7 @@ public class RequestFrameControllerTest {
     }
 
     @Test
-    public void load_load() throws IOException {
+    void load_load() throws IOException {
         var requestHead = new RequestHeadDto();
 
         try(var ignored = Mockito.mockConstruction(
@@ -91,7 +91,7 @@ public class RequestFrameControllerTest {
     }
 
     @Test
-    public void addOnStagingListener_trigger(){
+    void addOnStagingListener_trigger(){
         AtomicReference<String> result = new AtomicReference<>();
 
         controller.addOnStagingListener(tabKey, new RequestDto(), result::set);
@@ -103,7 +103,7 @@ public class RequestFrameControllerTest {
     }
 
     @Test
-    public void addOnChangeListener_trigger(){
+    void addOnChangeListener_trigger(){
         AtomicReference<String> result = new AtomicReference<>();
 
         controller.addOnChangeListener(requestHead, result::set);

@@ -6,6 +6,7 @@ import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import io.github.clagomess.tomato.dto.external.PostmanEnvironmentDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.repository.CollectionRepository;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import io.github.clagomess.tomato.io.repository.RequestRepository;
@@ -147,7 +148,7 @@ public class PostmanConverter extends AbstractConverter {
                     try {
                         return requestRepository.load(requestHead).orElseThrow();
                     } catch (IOException e) {
-                        throw new RuntimeException(e.getMessage(), e);
+                        throw new TomatoException(e);
                     }
                 })
                 .forEachOrdered(request -> items.add(

@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.publisher.base;
 
+import io.github.clagomess.tomato.exception.TomatoException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,12 +14,12 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
-public class NoKeyPublisherTest {
+class NoKeyPublisherTest {
     @Test
-    public void addListenerAndPublish(){
+    void addListenerAndPublish(){
         NoKeyPublisher<String> doException = new NoKeyPublisher<>();
         doException.addListener(event -> {
-            throw new RuntimeException("OK");
+            throw new TomatoException("OK");
         });
 
         try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
@@ -29,18 +30,18 @@ public class NoKeyPublisherTest {
                     });
 
             assertThrowsExactly(
-                    RuntimeException.class,
+                    TomatoException.class,
                     () -> doException.publish("opa")
             );
         }
     }
 
     @Test
-    public void removeListener(){
+    void removeListener(){
         NoKeyPublisher<String> doException = new NoKeyPublisher<>();
 
         var uuid = doException.addListener(event -> {
-            throw new RuntimeException("OK");
+            throw new TomatoException("OK");
         });
 
         try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
@@ -51,7 +52,7 @@ public class NoKeyPublisherTest {
                     });
 
             assertThrowsExactly(
-                    RuntimeException.class,
+                    TomatoException.class,
                     () -> doException.publish("opa")
             );
 
@@ -61,7 +62,7 @@ public class NoKeyPublisherTest {
     }
 
     @Test
-    public void publish_concurrent(){
+    void publish_concurrent(){
         NoKeyPublisher<String> publisher = new NoKeyPublisher<>();
         List<UUID> uuids = new LinkedList<>();
 
@@ -78,7 +79,7 @@ public class NoKeyPublisherTest {
     }
 
     @Test
-    public void request(){
+    void request(){
         NoKeyPublisher<String> publisher = new NoKeyPublisher<>();
         publisher.addListener(() -> "opa1");
         publisher.addListener(() -> "opa2");

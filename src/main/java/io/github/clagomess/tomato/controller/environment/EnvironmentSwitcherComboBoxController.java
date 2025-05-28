@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.controller.environment;
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
@@ -69,7 +70,7 @@ public class EnvironmentSwitcherComboBoxController {
 
                         return keystore.loadSecret(envs);
                     } catch (Exception e) {
-                        throw new RuntimeException(e.getMessage(), e);
+                        throw new TomatoException(e);
                     }
                 });
     }

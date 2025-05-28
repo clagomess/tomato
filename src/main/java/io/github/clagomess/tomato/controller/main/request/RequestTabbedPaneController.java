@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.controller.main.request;
 import io.github.clagomess.tomato.dto.RequestTabSnapshotDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.repository.RequestRepository;
 import io.github.clagomess.tomato.io.repository.TreeRepository;
 import io.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
@@ -108,7 +109,7 @@ public class RequestTabbedPaneController {
                 runnable.load(event.getEvent(), request);
             }
         }catch (Exception e){
-            throw new RuntimeException(e.getMessage(), e);
+            throw new TomatoException(e);
         }
     }
 

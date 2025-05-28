@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TreeRepositoryTest extends RepositoryStubs {
+class TreeRepositoryTest extends RepositoryStubs {
     private final ConfigurationRepository configurationRepository = Mockito.mock(ConfigurationRepository.class);
     private final DataSessionRepository dataSessionRepository = Mockito.spy(
             new DataSessionRepository(configurationRepository)
@@ -31,7 +31,7 @@ public class TreeRepositoryTest extends RepositoryStubs {
     ));
 
     @BeforeEach
-    public void setup() throws IOException {
+    void setup() throws IOException {
         Mockito.reset(configurationRepository);
         Mockito.reset(dataSessionRepository);
         Mockito.reset(workspaceRepository);
@@ -46,7 +46,7 @@ public class TreeRepositoryTest extends RepositoryStubs {
     @Nested
     class LoadRequestHead {
         @Test
-        public void loadHeadFull() throws IOException {
+        void loadHeadFull() throws IOException {
             var file = new File(
                     testData,
                     "workspace-nPUaq0TC/collection-us62qhbS/request-xwNJ3kyc.json"
@@ -59,7 +59,7 @@ public class TreeRepositoryTest extends RepositoryStubs {
         }
 
         @Test
-        public void whenInvalid_returnsEmpty() throws IOException {
+        void whenInvalid_returnsEmpty() throws IOException {
             var file = new File(
                     testData,
                     "workspace-nPUaq0TC/xxx.json"
@@ -71,7 +71,7 @@ public class TreeRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getRequestList_whenHasResult_return(){
+    void getRequestList_whenHasResult_return(){
         var collectionParent = new CollectionTreeDto();
         collectionParent.setPath(new File(
                 testData,
@@ -96,7 +96,7 @@ public class TreeRepositoryTest extends RepositoryStubs {
     @Nested
     class GetCollectionParentTree {
         @Test
-        public void getCollectionParentTree() throws IOException {
+        void getCollectionParentTree() throws IOException {
             var workspace = new WorkspaceDto();
             workspace.setId("nPUaq0TC");
             var file = new File(
@@ -118,7 +118,7 @@ public class TreeRepositoryTest extends RepositoryStubs {
         }
 
         @Test
-        public void whenRoot_returnWorkspace() throws IOException {
+        void whenRoot_returnWorkspace() throws IOException {
             var workspace = new WorkspaceDto();
             workspace.setId("nPUaq0TC");
             var file = new File(testData, "workspace-nPUaq0TC");
@@ -132,10 +132,10 @@ public class TreeRepositoryTest extends RepositoryStubs {
         }
 
         @Test
-        public void whenNotDir_throws() {
+        void whenNotDir_throws() {
             var file = new File(testData, "workspace-nPUaq0TC/environment-7rZO7Z1T.json");
 
-            assertThrows(
+            assertThrowsExactly(
                     IOException.class,
                     () -> treeRepository.getCollectionParentTree(file)
             );
@@ -143,7 +143,7 @@ public class TreeRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getCollectionChildrenTree_whenHasResult_return(){
+    void getCollectionChildrenTree_whenHasResult_return(){
         var collectionStart = new CollectionTreeDto();
         collectionStart.setPath(new File(
                 testData,
@@ -173,7 +173,7 @@ public class TreeRepositoryTest extends RepositoryStubs {
     }
 
     @Test
-    public void getWorkspaceCollectionTree() throws IOException {
+    void getWorkspaceCollectionTree() throws IOException {
         WorkspaceDto workspaceDto = new WorkspaceDto();
         workspaceDto.setId("nPUaq0TC");
         workspaceDto.setName("ROOT");

@@ -20,12 +20,12 @@ import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEn
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-public class EnvironmentKeystoreTest extends RepositoryStubs {
+class EnvironmentKeystoreTest extends RepositoryStubs {
     private EnvironmentKeystore environmentKeystoreEmpty;
     private EnvironmentKeystore environmentKeystoreExisting;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         EnvironmentKeystore.databaseCache.evictAll();
         EnvironmentKeystore.credentialCache.evictAll();
 
@@ -47,22 +47,22 @@ public class EnvironmentKeystoreTest extends RepositoryStubs {
     @Nested
     class getDatabase {
         @Test
-        public void whenNewDatabase() throws IOException {
+        void whenNewDatabase() throws IOException {
             var result = environmentKeystoreEmpty.getDatabase();
             assertNotNull(result);
         }
 
         @Test
-        public void whenExistingDatabase() throws IOException {
+        void whenExistingDatabase() throws IOException {
             var result = environmentKeystoreExisting.getDatabase();
             assertNotNull(result);
         }
 
         @Test
-        public void whenExistingDatabaseAndWrongPassword() {
+        void whenExistingDatabaseAndWrongPassword() {
             environmentKeystoreExisting.setGetPassword(() -> "wrongpassword");
 
-            assertThrows(
+            assertThrowsExactly(
                     IllegalStateException.class,
                     environmentKeystoreExisting::getDatabase
             );
@@ -72,7 +72,7 @@ public class EnvironmentKeystoreTest extends RepositoryStubs {
     @Nested
     class saveDatabase {
         @Test
-        public void whenNewDatabase() throws IOException {
+        void whenNewDatabase() throws IOException {
             environmentKeystoreEmpty.saveDatabase(
                     new JacksonDatabase(),
                     new KdbxCreds("supersecret".getBytes())
@@ -83,7 +83,7 @@ public class EnvironmentKeystoreTest extends RepositoryStubs {
         }
 
         @Test
-        public void whenExistingDatabase() throws IOException {
+        void whenExistingDatabase() throws IOException {
             for(int i = 0; i <= 2; i++) {
                 environmentKeystoreEmpty.saveDatabase(
                         new JacksonDatabase(),
@@ -106,7 +106,7 @@ public class EnvironmentKeystoreTest extends RepositoryStubs {
     @Nested
     class saveEntry {
         @Test
-        public void whenNewEntry() throws IOException {
+        void whenNewEntry() throws IOException {
             var entries = environmentKeystoreEmpty.saveEntries(List.of(new EnvironmentKeystore.Entry(
                     null,
                     "token",
@@ -125,7 +125,7 @@ public class EnvironmentKeystoreTest extends RepositoryStubs {
         }
 
         @Test
-        public void whenExistingEntry() throws IOException {
+        void whenExistingEntry() throws IOException {
             var entryId = UUID.randomUUID();
 
             for(int i = 0; i <= 2; i++) {
@@ -148,7 +148,7 @@ public class EnvironmentKeystoreTest extends RepositoryStubs {
     @Nested
     class loadSecret {
         @Test
-        public void loadSecret_byUUID() throws IOException {
+        void loadSecret_byUUID() throws IOException {
             var secret = environmentKeystoreExisting.loadSecret(
                     UUID.fromString("28780cff-2570-415f-8e9d-b91d891beb25")
             );
@@ -157,7 +157,7 @@ public class EnvironmentKeystoreTest extends RepositoryStubs {
         }
 
         @Test
-        public void loadSecret_ByItensWithoutSecretType() throws IOException {
+        void loadSecret_ByItensWithoutSecretType() throws IOException {
             var input = List.of(new EnvironmentItemDto("key", "value"));
             var result = environmentKeystoreExisting.loadSecret(input);
             Assertions.assertThat(result)
@@ -165,7 +165,7 @@ public class EnvironmentKeystoreTest extends RepositoryStubs {
         }
 
         @Test
-        public void loadSecret_ByItensWithSecretType() throws IOException {
+        void loadSecret_ByItensWithSecretType() throws IOException {
             var optA = new EnvironmentItemDto("key", "value");
             var optB = new EnvironmentItemDto(
                     SECRET,
@@ -191,7 +191,7 @@ public class EnvironmentKeystoreTest extends RepositoryStubs {
     }
 
     @Test
-    public void changeDatabasePassword() throws IOException {
+    void changeDatabasePassword() throws IOException {
         environmentKeystoreEmpty.setGetNewPassword(() -> "new-supersecret");
         environmentKeystoreEmpty.changeDatabasePassword();
 
