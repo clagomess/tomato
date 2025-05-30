@@ -153,59 +153,28 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: tomato-${{env.GIT_TAG}}
-          path: ./target/dist
+          path: ./target/release
 
-      - name: Prepare
-        run: |
-          mkdir -p tomato/DEBIAN
-          mkdir -p tomato/usr/share/doc/tomato
-          mkdir -p tomato/usr/share/tomato
-          mkdir -p tomato/usr/bin
-
-      - name: Copy Release
-        run: |
-          cp -R ./target/dist/tomato-${GIT_TAG}/** ./tomato/usr/share/tomato
-
-      - name: Copy executable
-        run: |
-          cp ./build-linux/tomato.sh ./tomato/usr/bin/tomato
-          echo "/usr/share/tomato/tomato-${GIT_TAG}.jar" >> ./tomato/usr/bin/tomato
-          chmod +x ./tomato/usr/bin/tomato
-          
-      - name: Copy icons
-        run: |
-          mkdir -p ./tomato/usr/share/icons/hicolor/64x64/apps
-          mkdir -p ./tomato/usr/share/icons/hicolor/128x128/apps
-          cp ./build-linux/icon-64x64.png ./tomato/usr/share/icons/hicolor/64x64/apps/tomato.png
-          cp ./build-linux/icon-128x128.png ./tomato/usr/share/icons/hicolor/128x128/apps/tomato.png
-
-      - name: Copy desktop entry
-        run: |
-          mkdir -p ./tomato/usr/share/applications
-          cp ./build-linux/tomato.desktop ./tomato/usr/share/applications/tomato.desktop
-          echo "Version=${GIT_TAG}" >> ./tomato/usr/share/applications/tomato.desktop
-
-      - name: Copy control
-        run: |
-          cp ./build-debian/control ./tomato/DEBIAN/
-          echo "Version: ${GIT_TAG}" >> ./tomato/DEBIAN/control
-          chmod -R 755 ./tomato/DEBIAN
-
-      - name: Copy copyright
-        run: |
-          cp ./build-debian/copyright ./tomato/usr/share/doc/tomato/
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         run: |
-          dpkg-deb --build ./tomato
-          mv ./tomato.deb ./tomato-${GIT_TAG}-all.deb
+          docker run --rm \
+          -v "./build-debian:/opt/result" \
+          -v "./target/release:/opt/release" \
+          -e GIT_TAG=${{env.GIT_TAG}} \
+          ghcr.io/clagomess/tomato-build-debian
           
       - uses: actions/upload-artifact@v4
         with:
           name: tomato-${{env.GIT_TAG}}-all.deb
           compression-level: 0
           retention-days: 5
-          path: ./tomato-${{env.GIT_TAG}}-all.deb
+          path: ./build-debian/tomato-*.deb
 
   release-fedora:
     needs: [ version, build ]
@@ -221,47 +190,28 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: tomato-${{env.GIT_TAG}}
-          path: ./target/dist
+          path: ./target/release
 
-      - name: Prepare
-        run: |
-          mkdir -p ${{env.TOMATO_TARBALL}}/release
-          mkdir -p ${{env.TOMATO_TARBALL}}/desktop
-
-      - name: Copy Release
-        run: |
-          cp -R ./target/dist/tomato-${GIT_TAG}/** ${{env.TOMATO_TARBALL}}/release
-          cp -R ./build-linux/tomato.sh ${{env.TOMATO_TARBALL}}/desktop
-
-      - name: Copy Desktop Assets
-        run: |
-          cp ./build-linux/icon-64x64.png ${{env.TOMATO_TARBALL}}/desktop
-          cp ./build-linux/icon-128x128.png ${{env.TOMATO_TARBALL}}/desktop
-          cp ./build-linux/tomato.desktop ${{env.TOMATO_TARBALL}}/desktop
-
-      - name: Tar
-        run: |
-          tar -cvf ~/rpmbuild/SOURCES/tomato-${{env.GIT_TAG}}.tar.gz -C ~/rpmbuild/SOURCES .
-          rm -rf "${{env.TOMATO_TARBALL}}"
-
-      - name: Copy Spec
-        run: |
-          mkdir -p ~/rpmbuild/SPECS
-          cp ./build-fedora/tomato.spec ~/rpmbuild/SPECS/
-          sed -i "s/0.0.0/${{env.GIT_TAG}}/" ~/rpmbuild/SPECS/tomato.spec
-          echo "* $(date '+%a %b %d %Y') Cláudio Gomes <cla.gomess@gmail.com>" >> ~/rpmbuild/SPECS/tomato.spec
-          echo "- ${{env.GIT_TAG}}" >> ~/rpmbuild/SPECS/tomato.spec
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         run: |
-          rpmbuild -bb ~/rpmbuild/SPECS/tomato.spec
+          docker run --rm \
+          -v "./build-fedora:/opt/result" \
+          -v "./target/release:/opt/release" \
+          -e GIT_TAG=${{env.GIT_TAG}} \
+          ghcr.io/clagomess/tomato-build-fedora
 
       - uses: actions/upload-artifact@v4
         with:
           name: tomato-${{env.GIT_TAG}}-noarch.rpm
           compression-level: 0
           retention-days: 5
-          path: ~/rpmbuild/RPMS/noarch/tomato-*.rpm
+          path: ./build-fedora/tomato-*.rpm
 
   release-flatpak:
     needs: [ version, build ]
@@ -278,8 +228,7 @@ jobs:
           name: tomato-${{env.GIT_TAG}}
           path: ./target/release
 
-      - name: Log in
-        uses: docker/login-action@v3
+      - uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
