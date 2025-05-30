@@ -171,13 +171,13 @@ jobs:
       - name: Build
         run: |
           docker run --rm --privileged \
-          -v "./build-${{matrix.module}}:/opt/result" \
+          -v "./build-${{matrix.dist}}:/opt/result" \
           -v "./target/release:/opt/release" \
           -e GIT_TAG=${{env.GIT_TAG}} \
-          ghcr.io/clagomess/tomato-build-${{matrix.module}}
+          ghcr.io/clagomess/tomato-build-${{matrix.dist}}
           
       - uses: actions/upload-artifact@v4
         with:
-          name: tomato-linux-${{env.GIT_TAG}}-${{matrix.module}}
+          name: tomato-linux-${{env.GIT_TAG}}-${{matrix.dist}}
           retention-days: 5
-          path: ./build-${{matrix.module}}/tomato-${{env.GIT_TAG}}*
+          path: ./build-${{matrix.dist}}/tomato-${{env.GIT_TAG}}*
