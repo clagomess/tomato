@@ -7,6 +7,7 @@ command: tomato
 finish-args:
   - --socket=x11
   - --share=network
+  - --device=dri
   - --filesystem=home
   - --env=PATH=/app/bin:/usr/bin:/app/lib/temurin-17-jre/bin
   - --env=JAVA_HOME=/app/lib/temurin-17-jre
@@ -16,13 +17,15 @@ modules:
     buildsystem: simple
     build-commands:
       - install -v -Dm755 build-linux/tomato.sh ${FLATPAK_DEST}/bin/tomato
-      - install -v -D build-linux/tomato.desktop ${FLATPAK_DEST}/share/applications/tomato.desktop
-      - install -v -D build-linux/icon-64x64.png ${FLATPAK_DEST}/share/icons/hicolor/64x64/apps/tomato.png
-      - install -v -D build-linux/icon-128x128.png ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps/tomato.png
+      - install -v -Dm644 build-linux/icons/64x64.png ${FLATPAK_DEST}/share/icons/hicolor/64x64/apps/${FLATPAK_ID}.png
+      - install -v -Dm644 build-linux/icons/128x128.png ${FLATPAK_DEST}/share/icons/hicolor/128x128/apps/${FLATPAK_ID}.png
+      - install -v -Dm644 build-linux/icons/256x256.png ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/${FLATPAK_ID}.png
+      - install -v -Dm644 build-linux/icons/scalable.svg ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.svg
+      - install -v -Dm644 build-linux/${FLATPAK_ID}.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop
       - cp -R release/** ${FLATPAK_DEST}/share/
       - mkdir -p ${FLATPAK_DEST}/lib
       - tar -xvf temurin-17-jre.tar.gz --one-top-level=temurin-17-jre --strip-components=1 -C ${FLATPAK_DEST}/lib
-      
+
     sources:
       - type: dir
         path: /opt/release

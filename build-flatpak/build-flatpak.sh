@@ -1,14 +1,9 @@
 #!/bin/bash
 
-mkdir -p /opt/tomato
-
 # copy executable
 echo "/app/share/tomato-${GIT_TAG}.jar" >> /opt/build-linux/tomato.sh
 
-# copy desktop entry
-echo "Version=${GIT_TAG}" >> /opt/build-linux/tomato.desktop
-
-flatpak-builder --repo=repo \
+flatpak-builder --ccache --force-clean --repo=repo \
   build-dir io.github.clagomess.Tomato.yml
 
 flatpak build-bundle repo \
