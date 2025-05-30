@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# copy executable
-echo "/app/share/tomato-${GIT_TAG}.jar" >> /opt/build-linux/tomato.sh
+# config executable
+sed -i "s/\${TOMATO_HOME}/\/app\/share/" /opt/build-linux/tomato.sh
+sed -i "s/\${TOMATO_TAG}/${GIT_TAG}/" /opt/build-linux/tomato.sh
 
 flatpak-builder --ccache --force-clean --repo=repo \
   build-dir io.github.clagomess.Tomato.yml

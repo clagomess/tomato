@@ -5,10 +5,11 @@ DEBIAN_TARGET="/opt/build-debian/tomato"
 # copy release
 cp -R /opt/release/** "${DEBIAN_TARGET}/usr/share/tomato/"
 
-# copy executable
-echo "/usr/share/tomato/tomato-${GIT_TAG}.jar" >> "${DEBIAN_TARGET}/usr/bin/tomato"
+# config executable
+sed -i "s/\${TOMATO_HOME}/\/usr\/share\/tomato/" "${DEBIAN_TARGET}/usr/bin/tomato"
+sed -i "s/\${TOMATO_TAG}/${GIT_TAG}/" "${DEBIAN_TARGET}/usr/bin/tomato"
 
-# copy control
+# config control
 echo "Version: ${GIT_TAG}" >> "${DEBIAN_TARGET}/DEBIAN/control"
 
 # build
