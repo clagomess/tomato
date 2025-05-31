@@ -6,7 +6,7 @@
 
     <groupId>io.github.clagomess</groupId>
     <artifactId>tomato</artifactId>
-    <version>0.3.4</version>
+    <version>0.3.5</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
