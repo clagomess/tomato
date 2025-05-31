@@ -20,35 +20,33 @@ Requires:       java-21-openjdk
 
 %check
 
+%global APP_ID io.github.clagomess.Tomato
+
 %install
-rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/%{_bindir}
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/tomato
 
 # copy release
 cp -R release/** $RPM_BUILD_ROOT/%{_datadir}/tomato
 
-# copy executable
-cp desktop/tomato.sh $RPM_BUILD_ROOT/%{_bindir}/tomato
-echo "%{_datadir}/tomato/tomato-%{version}.jar" >> $RPM_BUILD_ROOT/%{_bindir}/tomato
-chmod +x $RPM_BUILD_ROOT/%{_bindir}/tomato
+# config executable
+install -v -Dm755 build-linux/tomato.sh $RPM_BUILD_ROOT/%{_bindir}/tomato
+sed -i "s/\${TOMATO_HOME}/\/usr\/share\/tomato/" $RPM_BUILD_ROOT/%{_bindir}/tomato
+sed -i "s/\${TOMATO_TAG}/${GIT_TAG}/" $RPM_BUILD_ROOT/%{_bindir}/tomato
 
 # copy icons
-mkdir -p $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/64x64/apps
-mkdir -p $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/128x128/apps
-cp desktop/icon-64x64.png $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/64x64/apps/tomato.png
-cp desktop/icon-128x128.png $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/128x128/apps/tomato.png
+install -v -Dm644 build-linux/icons/64x64.png $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/64x64/apps/%{APP_ID}.png
+install -v -Dm644 build-linux/icons/128x128.png $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/128x128/apps/%{APP_ID}.png
+install -v -Dm644 build-linux/icons/256x256.png $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/256x256/apps/%{APP_ID}.png
+install -v -Dm644 build-linux/icons/scalable.svg $RPM_BUILD_ROOT/%{_datadir}/icons/hicolor/scalable/apps/%{APP_ID}.svg
 
 # copy desktop entry
-mkdir -p $RPM_BUILD_ROOT/%{_datadir}/applications
-cp desktop/tomato.desktop $RPM_BUILD_ROOT/%{_datadir}/applications/tomato.desktop
-echo "Version=%{version}" >> $RPM_BUILD_ROOT/%{_datadir}/applications/tomato.desktop
+install -v -Dm644 build-linux/%{APP_ID}.desktop $RPM_BUILD_ROOT/%{_datadir}/applications/%{APP_ID}.desktop
 
 %files
 %{_bindir}/tomato
 %{_datadir}/tomato
-%{_datadir}/icons/hicolor/64x64/apps/tomato.png
-%{_datadir}/icons/hicolor/128x128/apps/tomato.png
-%{_datadir}/applications/tomato.desktop
+%{_datadir}/icons/hicolor/*/apps/%{APP_ID}.png
+%{_datadir}/icons/hicolor/*/apps/%{APP_ID}.svg
+%{_datadir}/applications/%{APP_ID}.desktop
 
 %changelog

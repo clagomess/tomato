@@ -74,13 +74,3 @@ JVM properties:
 
 - Enable debug Log: `TOMATO_LOG_LEVEL=DEBUG`
 - Aways point to test data: `TOMATO_AWAYS_USE_TEST_DATA=true`
-
-Docker Builder - `build-flatpak`:
-
-```bash
-docker build --progress=plain \
--t ghcr.io/clagomess/tomato-build-flatpak \
--f build-flatpak/Dockerfile .
-
-docker push ghcr.io/clagomess/tomato-build-flatpak:latest
-```

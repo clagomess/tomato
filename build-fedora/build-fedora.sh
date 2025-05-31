@@ -1,40 +1,29 @@
 #!/bin/bash
 
-# sudo apt install rpm rpmlint
-
-GIT_TAG=$(git describe --tags --abbrev=0 | sed 's/v//')
-
-rm -rf ~/rpmbuild
-
 # define tarball content
-TOMATO_TARBALL="${HOME}/rpmbuild/SOURCES/tomato-${GIT_TAG}"
-mkdir -p "${TOMATO_TARBALL}/release"
-mkdir -p "${TOMATO_TARBALL}/desktop"
+TOMATO_TARBALL="${RPMBUILD_HOME}/SOURCES/tomato-${GIT_TAG}"
+rpmdev-setuptree && \
+mkdir -pv "${TOMATO_TARBALL}/release"
+
+cp -R /opt/build-linux ${TOMATO_TARBALL}/build-linux
 
 # copy release
-cp -R ../target/release/** "${TOMATO_TARBALL}/release"
-cp ../build-linux/tomato.sh "${TOMATO_TARBALL}/desktop"
-
-# copy desktop assets
-cp ../build-linux/icon-64x64.png "${TOMATO_TARBALL}/desktop"
-cp ../build-linux/icon-128x128.png "${TOMATO_TARBALL}/desktop"
-cp ../build-linux/tomato.desktop "${TOMATO_TARBALL}/desktop"
+cp -R /opt/release/** "${TOMATO_TARBALL}/release"
 
 # tar
-tar -cvf "${HOME}/rpmbuild/SOURCES/tomato-${GIT_TAG}.tar.gz" -C ~/rpmbuild/SOURCES .
+tar -cvf "${TOMATO_TARBALL}.tar.gz" -C ${RPMBUILD_HOME}/SOURCES .
 rm -rf "${TOMATO_TARBALL}"
 
 # copy spec
-mkdir -p ~/rpmbuild/SPECS
-cp tomato.spec ~/rpmbuild/SPECS/
-sed -i "s/0.0.0/${GIT_TAG}/" ~/rpmbuild/SPECS/tomato.spec
-echo "* $(date '+%a %b %d %Y') Cláudio Gomes <cla.gomess@gmail.com>" >> ~/rpmbuild/SPECS/tomato.spec
-echo "- ${GIT_TAG}" >> ~/rpmbuild/SPECS/tomato.spec
+cp /opt/build-fedora/tomato.spec ${RPMBUILD_HOME}/SPECS/
+sed -i "s/0.0.0/${GIT_TAG}/" ${RPMBUILD_HOME}/SPECS/tomato.spec
+echo "* $(date '+%a %b %d %Y') Cláudio Gomes <cla.gomess@gmail.com>" >> ${RPMBUILD_HOME}/SPECS/tomato.spec
+echo "- ${GIT_TAG}" >> ${RPMBUILD_HOME}/SPECS/tomato.spec
 
 # build
-rpmlint ~/rpmbuild/SPECS/tomato.spec
-rpmbuild -bb ~/rpmbuild/SPECS/tomato.spec
-cp ~/rpmbuild/RPMS/noarch/tomato-*.rpm .
+rpmlint ${RPMBUILD_HOME}/SPECS/tomato.spec
+rpmbuild -bb ${RPMBUILD_HOME}/SPECS/tomato.spec
+cp ${RPMBUILD_HOME}/RPMS/noarch/tomato-*.rpm /opt/result/
 
 # install (Test Only)
-# sudo dnf install ~/rpmbuild/RPMS/noarch/tomato-*.rpm
+# sudo dnf install ${RPMBUILD_HOME}/RPMS/noarch/tomato-*.rpm

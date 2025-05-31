@@ -2,7 +2,7 @@
 Type=Application
 Name=Tomato
 Exec=tomato
-Icon=tomato
+Icon=io.github.clagomess.Tomato
 Terminal=false
-Categories=Development;Utility;
+Categories=Development;
 StartupWMClass=com-github-clagomess-tomato-Main
