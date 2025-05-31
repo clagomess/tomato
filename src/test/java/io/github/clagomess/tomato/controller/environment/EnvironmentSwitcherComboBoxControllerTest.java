@@ -89,35 +89,56 @@ class EnvironmentSwitcherComboBoxControllerTest {
         }
     }
 
-    @Test
-    void refreshEnvironmentCurrentEnvsListener() throws IOException {
-        var wsSession = new WorkspaceSessionDto();
-        wsSession.setEnvironmentId("aaa");
+    @Nested
+    class refreshEnvironmentCurrentEnvsListener {
+        @BeforeEach
+        void setup() throws IOException {
+            var wsSession = new WorkspaceSessionDto();
+            wsSession.setEnvironmentId("aaa");
 
-        Mockito.doReturn(wsSession)
-                .when(workspaceSessionRepositoryMock)
-                .load();
+            Mockito.doReturn(wsSession)
+                    .when(workspaceSessionRepositoryMock)
+                    .load();
 
-        var workspace = new WorkspaceDto();
-        Mockito.doReturn(workspace)
-                .when(workspaceRepositoryMock)
-                .getDataSessionWorkspace();
+            var workspace = new WorkspaceDto();
+            Mockito.doReturn(workspace)
+                    .when(workspaceRepositoryMock)
+                    .getDataSessionWorkspace();
+        }
 
-        var environment = new EnvironmentDto();
-        environment.setEnvs(List.of(
-                new EnvironmentItemDto("foo", "bar")
-        ));
-        Mockito.doReturn(Optional.of(environment))
-                .when(environmentRepositoryMock)
-                .getWorkspaceSessionEnvironment();
+        @Test
+        void whenHasEnvironment() throws IOException {
+            var environment = new EnvironmentDto();
+            environment.setEnvs(List.of(
+                    new EnvironmentItemDto("foo", "bar")
+            ));
+            Mockito.doReturn(Optional.of(environment))
+                    .when(environmentRepositoryMock)
+                    .getWorkspaceSessionEnvironment();
 
-        controller.refreshEnvironmentCurrentEnvsListener();
+            controller.refreshEnvironmentCurrentEnvsListener();
 
-        var result = EnvironmentPublisher.getInstance()
-                .getCurrentEnvs()
-                .request();
+            var result = EnvironmentPublisher.getInstance()
+                    .getCurrentEnvs()
+                    .request();
 
-        Assertions.assertThat(result).isNotEmpty();
+            Assertions.assertThat(result).isNotEmpty();
+        }
+
+        @Test
+        void whenNoEnvironment() throws IOException {
+            Mockito.doReturn(Optional.empty())
+                    .when(environmentRepositoryMock)
+                    .getWorkspaceSessionEnvironment();
+
+            controller.refreshEnvironmentCurrentEnvsListener();
+
+            var result = EnvironmentPublisher.getInstance()
+                    .getCurrentEnvs()
+                    .request();
+
+            Assertions.assertThat(result).isEmpty();
+        }
     }
 
     @Nested
