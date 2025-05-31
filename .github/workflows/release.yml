@@ -161,7 +161,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: tomato-${{env.GIT_TAG}}
-          path: ./target/release
+          path: ./target/dist
 
       - uses: docker/login-action@v3
         with:
@@ -173,7 +173,7 @@ jobs:
         run: |
           docker run --rm --privileged \
           -v "./build-${{matrix.dist}}:/opt/result" \
-          -v "./target/release:/opt/release" \
+          -v "./target/dist/tomato-${{env.GIT_TAG}}:/opt/release" \
           -e GIT_TAG=${{env.GIT_TAG}} \
           ghcr.io/clagomess/tomato-build-${{matrix.dist}}
           
