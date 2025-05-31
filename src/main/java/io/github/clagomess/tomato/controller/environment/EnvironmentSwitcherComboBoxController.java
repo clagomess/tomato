@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class EnvironmentSwitcherComboBoxController {
@@ -64,11 +65,14 @@ public class EnvironmentSwitcherComboBoxController {
         environmentPublisher.getCurrentEnvs()
                 .addListener(() -> {
                     try {
-                        List<EnvironmentItemDto> envs = environmentRepository.getWorkspaceSessionEnvironment()
-                                .map(EnvironmentDto::getEnvs)
-                                .orElseThrow();
+                        Optional<List<EnvironmentItemDto>> envs = environmentRepository.getWorkspaceSessionEnvironment()
+                                .map(EnvironmentDto::getEnvs);
 
-                        return keystore.loadSecret(envs);
+                        if(envs.isPresent()) {
+                            return keystore.loadSecret(envs.get());
+                        }else{
+                            return List.of();
+                        }
                     } catch (Exception e) {
                         throw new TomatoException(e);
                     }
