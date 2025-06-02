@@ -19,13 +19,11 @@ import static javax.swing.SwingUtilities.invokeLater;
 public class EnvironmentEditFrame
         extends JFrame
         implements EnvironmentEditFrameInterface {
-
     private final JButton btnSave = new JButton("Save");
     private final ListenableTextField txtName = new ListenableTextField();
     private final JCheckBox chkProduction = new JCheckBox();
     private final KeyValue keyValue;
     private final StagingMonitor<EnvironmentDto> stagingMonitor;
-    private final String title;
 
     @Getter
     private final String environmentId;
@@ -38,11 +36,9 @@ public class EnvironmentEditFrame
     ) throws IOException {
         this.environmentId = environmentId;
         this.controller = new EnvironmentEditFrameController(environmentId, this);
-
         this.stagingMonitor = new StagingMonitor<>(controller.getEnvironment());
-        this.title = "Environment - " + controller.getEnvironment().getName();
 
-        setTitle(title);
+        setTitle(buildTitle(false));
         setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(600, 500));
         setPreferredSize(new Dimension(600, 500));
@@ -94,20 +90,30 @@ public class EnvironmentEditFrame
         return PasswordDialog.showInputNewPassword(this);
     }
 
+    private static final String TITLE_PREFIX = "Environment - ";
+    private static final String TITLE_CHANGING_PREFIX = "[*] Environment - ";
+    private String buildTitle(boolean isChanging){
+        if(isChanging){
+            return TITLE_CHANGING_PREFIX + controller.getEnvironment().getName();
+        }
+
+        return TITLE_PREFIX + controller.getEnvironment().getName();
+    }
+
     public void updateStagingMonitor(){
         stagingMonitor.update();
 
-        if(stagingMonitor.isDiferent()){
-            invokeLater(() -> setTitle("[*] " + title));
-        }else{
-            invokeLater(() -> setTitle(title));
-        }
+        invokeLater(() -> setTitle(
+                buildTitle(stagingMonitor.isDiferent())
+        ));
     }
 
     public void resetStagingMonitor(){
         keyValue.resetStagingMonitor();
         stagingMonitor.reset();
-        invokeLater(() -> setTitle(title));
+        invokeLater(() -> setTitle(
+                buildTitle(false)
+        ));
     }
 
     private void btnSaveAction(){
