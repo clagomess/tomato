@@ -61,7 +61,7 @@ public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSw
         new WaitExecution(this, btnEdit, () -> toFrontIfExists(
                 EnvironmentEditFrame.class,
                 () -> new EnvironmentEditFrame(parent, id),
-                item -> Objects.equals(id, item.getEnvironment().getId())
+                item -> Objects.equals(id, item.getEnvironmentId())
         )).execute();
     }
 

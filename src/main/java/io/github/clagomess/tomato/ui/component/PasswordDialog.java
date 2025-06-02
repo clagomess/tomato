@@ -79,7 +79,7 @@ public class PasswordDialog extends JDialog {
             @Nullable Component parent
     ) {
         if(isEventDispatchThread()){
-            new NewPasswordDialog(parent)
+            return new NewPasswordDialog(parent)
                     .showDialog();
         }
 

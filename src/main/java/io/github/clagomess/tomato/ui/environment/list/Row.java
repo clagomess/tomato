@@ -78,7 +78,7 @@ class Row extends JPanel {
         toFrontIfExists(
                 EnvironmentEditFrame.class,
                 () -> new EnvironmentEditFrame(parent, id),
-                item -> Objects.equals(id, item.getEnvironment().getId())
+                item -> Objects.equals(id, item.getEnvironmentId())
         );
     }
 }
