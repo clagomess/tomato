@@ -1,8 +1,10 @@
 package io.github.clagomess.tomato.ui.environment;
 
 import io.github.clagomess.tomato.controller.environment.EnvironmentSwitcherComboBoxController;
-import io.github.clagomess.tomato.exception.TomatoException;
-import io.github.clagomess.tomato.ui.component.*;
+import io.github.clagomess.tomato.ui.component.ComponentUtil;
+import io.github.clagomess.tomato.ui.component.IconButton;
+import io.github.clagomess.tomato.ui.component.PasswordDialog;
+import io.github.clagomess.tomato.ui.component.WaitExecution;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import io.github.clagomess.tomato.ui.environment.edit.EnvironmentEditFrame;
 import net.miginfocom.swing.MigLayout;
@@ -10,10 +12,9 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
-import static javax.swing.SwingUtilities.*;
+import static javax.swing.SwingUtilities.getWindowAncestor;
 
 public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSwitcherComboBoxInterface {
     private static final Icon EDIT_ICON = new BxEditIcon();
@@ -95,39 +96,11 @@ public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSw
 
     @Override
     public String getPassword() {
-        if(isEventDispatchThread()){
-            return new PasswordDialog(getWindowAncestor(this))
-                    .showDialog();
-        }
-
-        try {
-            var result = new AtomicReference<String>();
-            invokeAndWait(() -> result.set(
-                    new PasswordDialog(getWindowAncestor(this))
-                            .showDialog()
-            ));
-            return result.get();
-        } catch (Exception e) {
-            throw new TomatoException(e);
-        }
+        return PasswordDialog.showInputPassword(getWindowAncestor(this));
     }
 
     @Override
     public String getNewPassword() {
-        if(isEventDispatchThread()){
-            new NewPasswordDialog(getWindowAncestor(this))
-                    .showDialog();
-        }
-
-        try {
-            var result = new AtomicReference<String>();
-            invokeAndWait(() -> result.set(
-                    new NewPasswordDialog(getWindowAncestor(this))
-                            .showDialog()
-            ));
-            return result.get();
-        } catch (Exception e) {
-            throw new TomatoException(e);
-        }
+        return PasswordDialog.showInputNewPassword(getWindowAncestor(this));
     }
 }
