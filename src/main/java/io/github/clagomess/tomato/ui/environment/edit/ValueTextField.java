@@ -73,7 +73,7 @@ public class ValueTextField
     public void revealSecret(){
         btnUnlockSecret.setEnabled(false);
         setEnabled(true);
-        setOnChangeEnabled(false);
+        setOnChangeEnabled(true);
     }
 
     private void btnUnlockSecretAction(){
