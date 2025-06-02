@@ -9,14 +9,18 @@ import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.ui.environment.edit.EnvironmentEditFrameInterface;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.SECRET;
+import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEnum.TEXT;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 
+@RequiredArgsConstructor
 public class EnvironmentEditFrameController {
     private final EnvironmentRepository environmentRepository;
     private final WorkspaceRepository workspaceRepository;
@@ -57,6 +61,9 @@ public class EnvironmentEditFrameController {
     }
 
     public void save() throws IOException {
+        environment.getEnvs()
+                .removeIf(item -> StringUtils.isBlank(item.getKey()));
+
         List<EnvironmentKeystore.Entry> secretsToSave = environment.getEnvs().stream()
                 .filter(item -> item.getType().equals(SECRET))
                 .filter(item -> item.getValue() != null)
@@ -72,6 +79,11 @@ public class EnvironmentEditFrameController {
                             env.setValue(null);
                         })
         );
+
+        environment.getEnvs().stream()
+                .filter(item -> item.getType().equals(SECRET))
+                .filter(item -> item.getSecretId() == null)
+                .forEach(item -> item.setType(TEXT));
 
         environmentRepository.save(environment);
 
