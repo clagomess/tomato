@@ -9,6 +9,7 @@ import io.github.clagomess.tomato.ui.component.ListenableTextField;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLockIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLockOpenIcon;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -70,10 +71,18 @@ public class ValueTextField
         }
     }
 
+    public void setText(String text){
+        super.setText(
+                StringUtils.isBlank(text) ?
+                        null :
+                        text
+        );
+    }
+
     public void revealSecret(){
         btnUnlockSecret.setEnabled(false);
         setEnabled(true);
-        setOnChangeEnabled(false);
+        setOnChangeEnabled(true);
     }
 
     private void btnUnlockSecretAction(){
