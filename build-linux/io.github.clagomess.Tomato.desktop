@@ -5,4 +5,4 @@ Exec=tomato
 Icon=io.github.clagomess.Tomato
 Terminal=false
 Categories=Development;
-StartupWMClass=com-github-clagomess-tomato-Main
+StartupWMClass=io-github-clagomess-tomato-Main
