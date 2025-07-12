@@ -3,13 +3,13 @@ package io.github.clagomess.tomato.ui.component;
 import io.github.clagomess.tomato.io.keystore.PasswordEntropyCalculator;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.util.Objects;
 
 import static com.formdev.flatlaf.FlatClientProperties.STYLE;
 import static io.github.clagomess.tomato.ui.component.ColorConstant.*;
@@ -117,7 +117,7 @@ public class NewPasswordDialog extends JDialog {
         var password = new String(txtPassword.getPassword());
         var confirmPassword = new String(txtConfirmPassword.getPassword());
 
-        if (StringUtils.equals(password, confirmPassword)) {
+        if (Objects.equals(password, confirmPassword)) {
             txtConfirmPassword.putClientProperty(STYLE, DEFAULT_STYLE);
             btnSubmit.setEnabled(true);
         }else{

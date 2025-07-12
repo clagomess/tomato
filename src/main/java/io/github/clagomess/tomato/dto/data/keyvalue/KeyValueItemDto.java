@@ -22,6 +22,6 @@ public class KeyValueItemDto implements Comparable<KeyValueItemDto> {
 
     @Override
     public int compareTo(KeyValueItemDto o) {
-        return StringUtils.compare(this.getKey(), o.getKey());
+        return StringUtils.compare(this.getKey(), o.getKey(), true);
     }
 }
