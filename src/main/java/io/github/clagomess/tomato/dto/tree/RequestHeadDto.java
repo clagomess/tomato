@@ -20,6 +20,6 @@ public class RequestHeadDto implements Comparable<RequestHeadDto> {
 
     @Override
     public int compareTo(RequestHeadDto o) {
-        return StringUtils.compareIgnoreCase(this.getName(), o.getName());
+        return StringUtils.compareIgnoreCase(this.getName(), o.getName(), true);
     }
 }
