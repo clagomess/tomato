@@ -1,0 +1,104 @@
+name: images
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/main/resources/**'
+      - 'build-**/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-linux:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Image
+        run: |
+          docker build \
+          -t ghcr.io/clagomess/tomato-build-linux \
+          -t ghcr.io/clagomess/tomato-build-linux:${{github.run_number}} \
+          -f build-linux/Dockerfile .
+          docker push ghcr.io/clagomess/tomato-build-linux --all-tags
+
+  build-debian:
+    needs: [build-linux]
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Image
+        run: |
+          docker build \
+          -t ghcr.io/clagomess/tomato-build-debian \
+          -t ghcr.io/clagomess/tomato-build-debian:${{github.run_number}} \
+          -f build-debian/Dockerfile .
+          docker push ghcr.io/clagomess/tomato-build-debian --all-tags
+
+  build-fedora:
+    needs: [build-linux]
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Image
+        run: |
+          docker build \
+          -t ghcr.io/clagomess/tomato-build-fedora \
+          -t ghcr.io/clagomess/tomato-build-fedora:${{github.run_number}} \
+          -f build-fedora/Dockerfile .
+          docker push ghcr.io/clagomess/tomato-build-fedora --all-tags
+
+  build-flatpak:
+    needs: [build-linux]
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Image
+        run: |
+          docker build \
+          -t ghcr.io/clagomess/tomato-build-flatpak \
+          -t ghcr.io/clagomess/tomato-build-flatpak:${{github.run_number}} \
+          -f build-flatpak/Dockerfile .
+          docker push ghcr.io/clagomess/tomato-build-flatpak --all-tags
