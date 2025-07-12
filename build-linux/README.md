@@ -2,7 +2,6 @@
 
 Build image `ghcr.io/clagomess/tomato-build-linux`:
 
-
 ```bash
 docker build --progress=plain \
 -t ghcr.io/clagomess/tomato-build-linux \

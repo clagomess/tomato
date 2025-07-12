@@ -5,6 +5,8 @@ on:
       - '**'
     tags-ignore:
       - '*'
+    paths:
+      - 'src/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
