@@ -20,6 +20,6 @@ public class WorkspaceDto extends MetadataDto implements Comparable<WorkspaceDto
 
     @Override
     public int compareTo(@NotNull WorkspaceDto o) {
-        return StringUtils.compareIgnoreCase(this.getName(), o.getName());
+        return StringUtils.compareIgnoreCase(this.getName(), o.getName(), true);
     }
 }

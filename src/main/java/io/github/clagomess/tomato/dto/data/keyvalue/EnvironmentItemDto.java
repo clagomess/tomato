@@ -32,6 +32,6 @@ public class EnvironmentItemDto implements Comparable<EnvironmentItemDto> {
 
     @Override
     public int compareTo(EnvironmentItemDto o) {
-        return StringUtils.compareIgnoreCase(this.getKey(), o.getKey());
+        return StringUtils.compareIgnoreCase(this.getKey(), o.getKey(), true);
     }
 }
