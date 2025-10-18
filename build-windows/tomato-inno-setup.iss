@@ -10,10 +10,10 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={A6F3D5F2-AD83-4FC7-97CE-6444C991E2FE}
+AppId=A6F3D5F2-AD83-4FC7-97CE-6444C991E2FE
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-AppVerName={#MyAppName} - {#MyAppVersion}
+AppVerName={#MyAppName}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
@@ -32,9 +32,9 @@ DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users).
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=C:\Users\claudio\_projetos\tomato\build-windows
+OutputDir=.
 OutputBaseFilename=tomato-{#MyAppVersion}-x64
-SetupIconFile=C:\Users\claudio\_projetos\tomato\build-windows\favicon.ico
+SetupIconFile=favicon.ico
 SolidCompression=yes
 WizardStyle=modern
 
@@ -45,10 +45,10 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\claudio\_projetos\tomato\target\dist\Tomato\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\claudio\_projetos\tomato\target\dist\Tomato\app\*"; DestDir: "{app}\app"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\claudio\_projetos\tomato\target\dist\Tomato\runtime\*"; DestDir: "{app}\runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\claudio\_projetos\tomato\target\dist\Tomato\Tomato.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "tomato-{#MyAppVersion}-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "tomato-{#MyAppVersion}-x64\app\*"; DestDir: "{app}\app"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "tomato-{#MyAppVersion}-x64\runtime\*"; DestDir: "{app}\runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "tomato-{#MyAppVersion}-x64\Tomato.ico"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

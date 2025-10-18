@@ -26,20 +26,22 @@ winget install --id JRSoftware.InnoSetup -e -s winget -i
 --app-version $git_tag `
 --vendor Tomato `
 --icon favicon.ico `
---input ../target/release `
+--input ../target/tomato-$git_tag `
 --main-jar tomato-$git_tag.jar `
 --main-class io.github.clagomess.tomato.Main `
 --java-options "-splash:`$APPDIR/splash.png -Dfile.encoding=UTF-8" `
 --verbose
+mv ./Tomato ./tomato-$git_tag-x64
 
 # sign app-image exe
+# @TODO: "Access denied - check jdk version"
 & $SignToolPath sign /v `
 /td SHA256 `
 /tr http://timestamp.digicert.com `
 /f "code-sign-ks.pfx" `
 /p "password" `
 /fd SHA256 `
-"./Tomato/Tomato.exe"
+"./tomato-$git_tag-x64/Tomato.exe"
 
 #  Run InnoSetup script
 & "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe" `
