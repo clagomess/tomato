@@ -27,13 +27,14 @@ Check: [Latest Release](https://github.com/clagomess/tomato/releases/latest)
 
 Avaiable binaries:
 
-| Platform                                  | Arch | Filename                      |
-|-------------------------------------------|------|-------------------------------|
-| Windows                                   | x64  | Tomato-[version]-x64.msi      |
-| Debian and derivatives                    | all  | tomato-[version]-all.deb      |
-| Fedora/RHEL                               | all  | tomato-[version]-1.noarch.rpm |
-| Flatpak                                   | x64  | tomato-[version]-x64.flatpak  |
-| Zip without JRE (Required Java JRE >= 17) | all  | tomato-[version].zip          |
+| Platform                                  | Arch | Filename                              |
+|-------------------------------------------|------|---------------------------------------|
+| Windows                                   | x64  | tomato-[version]-x64.exe              |
+| Windows - Portable                        | x64  | tomato-[version]-x64-win-portable.zip |
+| Debian and derivatives                    | all  | tomato-[version]-all.deb              |
+| Fedora/RHEL                               | all  | tomato-[version]-1.noarch.rpm         |
+| Flatpak                                   | x64  | tomato-[version]-x64.flatpak          |
+| Zip without JRE (Required Java JRE >= 17) | all  | tomato-[version].zip                  |
 
 ## Screenshot
 
