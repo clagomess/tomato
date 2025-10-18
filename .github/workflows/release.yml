@@ -28,12 +28,9 @@ jobs:
           echo "git_tag=${git_tag#v}" >> $GITHUB_OUTPUT
           echo "Tag: ${git_tag#v}"
 
-      - name: Set Project Version
-        run: mvn versions:set -DnewVersion=${{env.GIT_TAG}}
-
       - name: Maven Build
         run: |
-          mvn -B clean compile package -Dmaven.test.skip
+          mvn -B -Drevision=${{env.GIT_TAG}} compile package -Dmaven.test.skip
           mkdir ./target/dist
           mv ./target/tomato-${{env.GIT_TAG}} ./target/dist/
 
