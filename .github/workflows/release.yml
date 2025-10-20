@@ -9,13 +9,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  version:
+  build:
     timeout-minutes: 10
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -29,44 +28,11 @@ jobs:
           echo "git_tag=${git_tag#v}" >> $GITHUB_OUTPUT
           echo "Tag: ${git_tag#v}"
 
-      - name: Get Maven Project Version
+      - name: Maven Build
         run: |
-          version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`
-          echo "PROJECT_VERSION=$version" >> $GITHUB_ENV
-          echo "Version: $version"
-
-      - name: Validate Maven version against Git tag
-        run: |
-          if [ "$PROJECT_VERSION" != "$GIT_TAG" ]; then
-            echo "Version mismatch: pom.xml version ($PROJECT_VERSION) does not match Git tag ($GIT_TAG)."
-            exit 1
-          fi
-
-    outputs:
-      git_tag: ${{ steps.extract_git_tag.outputs.git_tag }}
-
-  build:
-    needs: version
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-
-    env:
-      GIT_TAG: ${{ needs.version.outputs.git_tag }}
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: 17
-
-      - name: Maven
-        run: mvn -B clean compile package -Dmaven.test.skip
-
-      - name: Dist
-        run: |
-          mkdir -p ./target/dist/tomato-$GIT_TAG
-          cp -R ./target/release/** ./target/dist/tomato-$GIT_TAG
+          mvn -B -Drevision=${{env.GIT_TAG}} compile package -Dmaven.test.skip
+          mkdir ./target/dist
+          mv ./target/tomato-${{env.GIT_TAG}} ./target/dist/
 
       - uses: actions/upload-artifact@v4
         with:
@@ -74,19 +40,19 @@ jobs:
           retention-days: 5
           path: ./target/dist
 
+    outputs:
+      git_tag: ${{ steps.extract_git_tag.outputs.git_tag }}
+
   release-windows:
-    needs: [version, build]
+    needs: [build]
     timeout-minutes: 10
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     env:
-      GIT_TAG: ${{ needs.version.outputs.git_tag }}
+      GIT_TAG: ${{ needs.build.outputs.git_tag }}
 
     steps:
       - uses: microsoft/setup-msbuild@v2
-
-      - name: Install WiX
-        run: dotnet tool install --global wix
 
       - uses: actions/setup-java@v4
         with:
@@ -97,51 +63,68 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: tomato-${{env.GIT_TAG}}
-          path: ./target/dist
+          path: ./target
 
-      - name: Build MSI
+      - name: Build AppImage
         run: |
           jpackage `
-          --type msi `
+          --type app-image `
           --name Tomato `
           --app-version $env:GIT_TAG `
           --vendor Tomato `
           --icon ./build-windows/favicon.ico `
-          --input ./target/dist/tomato-$env:GIT_TAG `
+          --input ./target/tomato-$env:GIT_TAG `
           --main-jar tomato-$env:GIT_TAG.jar `
           --main-class io.github.clagomess.tomato.Main `
           --java-options "-splash:`$APPDIR/splash.png -Dfile.encoding=UTF-8" `
-          --win-upgrade-uuid "a6f3d5f2-ad83-4fc7-97ce-6444c991e2fe" `
-          --win-per-user-install `
-          --win-menu `
-          --win-shortcut `
-          --dest ./target/dist `
+          --dest ./build-windows `
           --verbose
-          mv ./target/dist/Tomato-$env:GIT_TAG.msi ./target/dist/tomato-$env:GIT_TAG-x64.msi
+          mv ./build-windows/Tomato ./build-windows/tomato-$env:GIT_TAG-x64
+          mkdir ./build-windows/dist
+          cp -R ./build-windows/tomato-$env:GIT_TAG-x64 ./build-windows/dist/
 
-      - name: Sign MSI
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tomato-${{env.GIT_TAG}}-x64-win-portable
+          retention-days: 5
+          path: ./build-windows/dist
+
+      - name: Find SignToolPath
         run: |
           $SignToolPath = Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin\**\x64" `
           -Recurse -Filter "signtool.exe" | Select-Object -ExpandProperty FullName -First 1
           echo "SignTool Path: $SignToolPath"
-          [System.Convert]::FromBase64String("${{ secrets.CODE_SIGN_CERT_PFX }}") | Set-Content -Path ./target/dist/code-sign-ks.pfx -AsByteStream
-          & $SignToolPath sign /v `
+          echo "SIGNTOOL_PATH=$SignToolPath" >> $env:GITHUB_ENV
+
+      - name: Get Cert
+        run: |
+          [System.Convert]::FromBase64String("${{ secrets.CODE_SIGN_CERT_PFX }}") | Set-Content -Path ./build-windows/code-sign-ks.pfx -AsByteStream
+
+      - name: InnoSetup Build
+        run: |
+          ISCC.exe `
+          /DMyAppVersion=${{env.GIT_TAG}} `
+          ./build-windows/tomato-inno-setup.iss
+          
+      - name: Sign Setup
+        run: |
+          & "${{env.SIGNTOOL_PATH}}" sign /v `
           /td SHA256 `
           /tr http://timestamp.digicert.com `
-          /f "./target/dist/code-sign-ks.pfx" `
+          /f "./build-windows/code-sign-ks.pfx" `
           /p "${{ secrets.CODE_SIGN_CERT_PASS }}" `
           /fd SHA256 `
-          "./target/dist/tomato-$env:GIT_TAG-x64.msi"
+          "./build-windows/tomato-$env:GIT_TAG-x64.exe"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: tomato-${{env.GIT_TAG}}-x64.msi
+          name: tomato-${{env.GIT_TAG}}-x64.exe
           compression-level: 0
           retention-days: 5
-          path: ./target/dist/Tomato-${{env.GIT_TAG}}-x64.msi
+          path: ./build-windows/tomato-${{env.GIT_TAG}}-x64.exe
 
   release-linux:
-    needs: [version, build]
+    needs: [build]
     timeout-minutes: 10
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -154,7 +137,7 @@ jobs:
         ]
 
     env:
-      GIT_TAG: ${{ needs.version.outputs.git_tag }}
+      GIT_TAG: ${{ needs.build.outputs.git_tag }}
 
     steps:
       - uses: actions/checkout@v4
