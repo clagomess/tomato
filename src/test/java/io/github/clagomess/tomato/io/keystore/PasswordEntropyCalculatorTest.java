@@ -1,24 +1,33 @@
 package io.github.clagomess.tomato.io.keystore;
 
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.stream.Stream;
+
+import static io.github.clagomess.tomato.io.keystore.PasswordEntropyCalculator.Symbol.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PasswordEntropyCalculatorTest {
     private final PasswordEntropyCalculator calculator = new PasswordEntropyCalculator();
 
+    private static Stream<Arguments> provideSymbols(){
+        return Stream.of(
+                Arguments.of("\r", CONTROL),
+                Arguments.of("1", DIGIT),
+                Arguments.of("a", LOWERCASE),
+                Arguments.of("A", UPPERCASE),
+                Arguments.of("@", SPECIAL),
+                Arguments.of("ç", EXTENDED),
+                Arguments.of("ご", UNICODE),
+                Arguments.of("😂", UNICODE)
+        );
+    }
+
     @ParameterizedTest
-    @CsvSource(value = {
-            "\r,CONTROL",
-            "1,DIGIT",
-            "a,LOWERCASE",
-            "A,UPPERCASE",
-            "@,SPECIAL",
-            "ç,EXTENDED",
-            "ご,UNICODE",
-            "😂,UNICODE",
-    }, ignoreLeadingAndTrailingWhitespace = false)
+    @MethodSource("provideSymbols")
     void getSymbol(
             String ch,
             PasswordEntropyCalculator.Symbol expected
