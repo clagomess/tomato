@@ -61,7 +61,7 @@ public class RequestSplitPane extends JPanel {
     );
 
     private final HttpMethodComboBox cbHttpMethod = new HttpMethodComboBox();
-    private final EnvTextField txtRequestUrl = new EnvTextField(EnvTextfieldOptions.builder().build());
+    private final EnvTextField txtRequestUrl;
     private final JButton btnSendRequest = new JButton("Send", SEND_ICON);
     private final JButton btnCancelRequest = new JButton(BLOCK_ICON){{
         setToolTipText("Cancel");
@@ -87,6 +87,12 @@ public class RequestSplitPane extends JPanel {
         this.requestStagingMonitor = requestStagingMonitor;
         this.requestHeadDto = requestHeadDto;
         this.requestDto = requestDto;
+        this.txtRequestUrl = new EnvTextField(EnvTextfieldOptions.builder()
+                .pathVar(new EnvTextfieldOptions.PathVar(
+                        key,
+                        requestDto.getUrlParam().getPath()
+                ))
+                .build());
 
         setLayout(new MigLayout(
                 "insets 5",

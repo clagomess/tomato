@@ -38,7 +38,10 @@ public class EnvTextField extends JPanel {
 
         this.textPane = new UndoableTextPane();
 
-        this.envDocumentListener = new EnvDocumentListener(this.textPane.getStyledDocument());
+        this.envDocumentListener = new EnvDocumentListener(
+                this.textPane.getStyledDocument(),
+                options.getPathVar()
+        );
         this.textPane.getStyledDocument().addDocumentListener(this.envDocumentListener);
         this.envDocumentListener.getOnChangeList().add(content -> setBtnEnvViewEnabledOrDisabled());
 

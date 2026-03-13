@@ -1,11 +1,13 @@
 package io.github.clagomess.tomato.ui.component.envtextfield;
 
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
+import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -30,46 +32,61 @@ class EnvDocumentListener implements DocumentListener {
     private final List<UUID> listenerUuid = new ArrayList<>(2);
     private final WorkspaceSessionPublisher workspaceSessionPublisher = WorkspaceSessionPublisher.getInstance();
     private final EnvironmentPublisher environmentPublisher = EnvironmentPublisher.getInstance();
+    private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
     private final StyledDocument document;
     private final SimpleAttributeSet defaultStyle = new SimpleAttributeSet();
     private final SimpleAttributeSet envFilledStyle = new SimpleAttributeSet();
     private final SimpleAttributeSet envNotFilledStyle = new SimpleAttributeSet();
-    protected final Pattern patternEnv = Pattern.compile("(\\{\\{.+?\\}\\}?)");
 
     @Getter
     private final EnvMap envMap = new EnvMap();
 
-    public EnvDocumentListener(StyledDocument document) {
+    @Getter
+    private final PathVarMap pathVarMap;
+
+    public EnvDocumentListener(
+            StyledDocument document,
+            @Nullable EnvTextfieldOptions.PathVar pathVar
+    ) {
         this.document = document;
+        this.pathVarMap = new PathVarMap(pathVar);
 
         StyleConstants.setForeground(envFilledStyle, ColorConstant.GREEN);
         StyleConstants.setForeground(envNotFilledStyle, ColorConstant.RED);
 
         listenerUuid.add(workspaceSessionPublisher.getOnChange().addListener(event ->
-            ForkJoinPool.commonPool().submit(this::updateEnvStyle)
+            ForkJoinPool.commonPool().submit(this::updateStyle)
         ));
 
         listenerUuid.add(environmentPublisher.getOnChange().addListener(e ->
-            ForkJoinPool.commonPool().submit(this::updateEnvStyle)
+            ForkJoinPool.commonPool().submit(this::updateStyle)
         ));
+
+        if(pathVar != null){
+            listenerUuid.add(requestPublisher.getOnPathVarChange().addListener(pathVar.tabKey(), e -> {
+                pathVarMap.setUrlPathParam(e);
+                ForkJoinPool.commonPool().submit(this::updateStyle);
+            }));
+        }
     }
 
     public void dispose() {
         listenerUuid.forEach(uuid -> {
             workspaceSessionPublisher.getOnChange().removeListener(uuid);
             environmentPublisher.getOnChange().removeListener(uuid);
+            requestPublisher.getOnPathVarChange().removeListener(uuid);
         });
     }
 
     @Override
     public void insertUpdate(DocumentEvent e) {
-        ForkJoinPool.commonPool().submit(this::updateEnvStyle);
+        ForkJoinPool.commonPool().submit(this::updateStyle);
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        ForkJoinPool.commonPool().submit(this::updateEnvStyle);
+        ForkJoinPool.commonPool().submit(this::updateStyle);
     }
 
     @Override
@@ -86,9 +103,42 @@ class EnvDocumentListener implements DocumentListener {
         return null;
     }
 
-    protected synchronized void updateEnvStyle(){
+    protected static final Pattern patternEnv = Pattern.compile("(\\{\\{.+?}}?)");
+    protected void updateEnvStyle(String text) throws IOException {
+        Matcher matcher = patternEnv.matcher(text);
+        while (matcher.find()) {
+            String token = matcher.group();
+            if(log.isDebugEnabled()) log.debug("Env-Token found: {}", token);
+
+            document.setCharacterAttributes(
+                    matcher.start(),
+                    token.length(),
+                    envMap.containsKey(token) ? envFilledStyle : envNotFilledStyle,
+                    true
+            );
+        }
+    }
+
+    protected static final Pattern patternPathVar = Pattern.compile("(:\\w+)");
+    protected void updatePathVarStyle(String text) throws IOException {
+        Matcher matcher = patternPathVar.matcher(text);
+        while (matcher.find()) {
+            String token = matcher.group();
+            if(log.isDebugEnabled()) log.debug("PathVar-Token found: {}", token);
+
+            document.setCharacterAttributes(
+                    matcher.start(),
+                    token.length(),
+                    pathVarMap.containsKey(token) ? envFilledStyle : envNotFilledStyle,
+                    true
+            );
+        }
+    }
+
+    protected synchronized void updateStyle(){
         try {
             envMap.getInjected().clear();
+            pathVarMap.getInjected().clear();
             String text = getText();
             if(StringUtils.isBlank(text)) return;
 
@@ -99,18 +149,8 @@ class EnvDocumentListener implements DocumentListener {
                     true
             );
 
-            Matcher matcher = patternEnv.matcher(text);
-            while (matcher.find()) {
-                String token = matcher.group();
-                if(log.isDebugEnabled()) log.debug("Token found: {}", token);
-
-                document.setCharacterAttributes(
-                        matcher.start(),
-                        token.length(),
-                        envMap.containsKey(token) ? envFilledStyle : envNotFilledStyle,
-                        true
-                );
-            }
+            updateEnvStyle(text);
+            updatePathVarStyle(text);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         } finally {
