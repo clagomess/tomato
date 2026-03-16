@@ -48,7 +48,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "tomato-{#MyAppVersion}-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "tomato-{#MyAppVersion}-x64\app\*"; DestDir: "{app}\app"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "tomato-{#MyAppVersion}-x64\runtime\*"; DestDir: "{app}\runtime"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "tomato-{#MyAppVersion}-x64\Tomato.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "favicon.ico"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
