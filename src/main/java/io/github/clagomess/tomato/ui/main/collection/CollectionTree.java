@@ -24,7 +24,6 @@ public class CollectionTree extends JPanel {
     private static final Icon HOME_ICON = new BxHomeIcon();
 
     private DefaultTreeModel treeModel;
-    private JTree tree;
     private final JLabel lblCurrentWorkspace = new JLabel(HOME_ICON);
 
     private final CollectionTreeController controller = new CollectionTreeController();
@@ -54,7 +53,7 @@ public class CollectionTree extends JPanel {
 
     private JScrollPane createCollectionTree() {
         treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
-        tree = new JTree(treeModel);
+        var tree = new JTree(treeModel);
         tree.setRootVisible(false);
         tree.setShowsRootHandles(true);
         tree.setCellRenderer(new CollectionTreeCellRender());
@@ -66,6 +65,7 @@ public class CollectionTree extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
         ForkJoinPool.commonPool().submit(this::loadCurrentWorkspace);
+        controller.addSaveTreeExpandedStateListener(tree);
 
         return scrollPane;
     }

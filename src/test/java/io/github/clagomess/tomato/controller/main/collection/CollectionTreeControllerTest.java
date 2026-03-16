@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.controller.main.collection;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.io.repository.TreeRepository;
+import io.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import io.github.clagomess.tomato.publisher.WorkspacePublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -18,10 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CollectionTreeControllerTest {
     private final TreeRepository treeRepository = Mockito.mock(TreeRepository.class);
+    private final WorkspaceSessionRepository workspaceSessionRepository = Mockito.mock(WorkspaceSessionRepository.class);
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
 
     private final CollectionTreeController controller = Mockito.spy(new CollectionTreeController(
-            treeRepository
+            treeRepository,
+            workspaceSessionRepository
     ));
 
     @BeforeEach
