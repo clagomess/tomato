@@ -62,7 +62,7 @@ public class CollectionTreeController {
                 TreePath path = expanded.nextElement();
 
                 if(path.getLastPathComponent() instanceof CollectionTreeNode treeNode){
-                    expandedCollectionsIds.add(treeNode.getTree().getId());
+                    expandedCollectionsIds.add(treeNode.getCollection().getId());
                 }
             }
 

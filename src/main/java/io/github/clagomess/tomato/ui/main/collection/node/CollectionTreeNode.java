@@ -26,17 +26,17 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
     private final List<UUID> listenerUuid = new ArrayList<>(0);
 
     private final DefaultTreeModel treeModel;
-    private final CollectionTreeDto tree;
+    private final CollectionTreeDto collection;
 
     public CollectionTreeNode(
             DefaultTreeModel treeModel,
-            CollectionTreeDto tree
+            CollectionTreeDto collection
     ) {
-        super(tree, true);
+        super(collection, true);
         add(new DefaultMutableTreeNode("loading"));
 
         this.treeModel = treeModel;
-        this.tree = tree;
+        this.collection = collection;
 
         addOnChangeListener();
     }
@@ -67,8 +67,8 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
     public void loadChildren() {
         ComponentUtil.checkIsEventDispatchThread();
 
-        var collectionList = tree.getChildren().toList();
-        var requestList = tree.getRequests().toList();
+        var collectionList = collection.getChildren().toList();
+        var requestList = collection.getRequests().toList();
 
         this.removeAllChildren();
 
@@ -86,14 +86,14 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
     }
 
     private void addOnChangeListener(){
-        var key = new ParentCollectionKey(tree.getId());
+        var key = new ParentCollectionKey(collection.getId());
         var uuid = collectionPublisher.getOnChange()
                 .addListener(key, event -> invokeLater(this::loadChildren));
         listenerUuid.add(uuid);
     }
 
     private void addRequestOnParentCollectionChangeListener(){
-        var key = new ParentCollectionKey(tree.getId());
+        var key = new ParentCollectionKey(collection.getId());
 
         var uuid = requestPublisher.getOnParentCollectionChange()
                 .addListener(key, event -> {

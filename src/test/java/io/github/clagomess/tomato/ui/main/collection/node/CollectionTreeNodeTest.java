@@ -75,7 +75,7 @@ class CollectionTreeNodeTest {
                 .mapToObj(rootNode::getChildAt)
                 .filter(item -> item instanceof CollectionTreeNode)
                 .map(item -> (CollectionTreeNode) item)
-                .map(item -> item.getTree().getName())
+                .map(item -> item.getCollection().getName())
                 .toList();
 
         assertEquals("LEVEL 1 - A", result.get(0));
