@@ -14,6 +14,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 import static javax.swing.SwingUtilities.invokeLater;
@@ -23,7 +24,8 @@ import static javax.swing.SwingUtilities.invokeLater;
 public class CollectionTree extends JPanel {
     private static final Icon HOME_ICON = new BxHomeIcon();
 
-    private DefaultTreeModel treeModel;
+    private final DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
+    private final JTree tree = new JTree(treeModel);
     private final JLabel lblCurrentWorkspace = new JLabel(HOME_ICON);
 
     private final CollectionTreeController controller = new CollectionTreeController();
@@ -52,8 +54,6 @@ public class CollectionTree extends JPanel {
     }
 
     private JScrollPane createCollectionTree() {
-        treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
-        var tree = new JTree(treeModel);
         tree.setRootVisible(false);
         tree.setShowsRootHandles(true);
         tree.setCellRenderer(new CollectionTreeCellRender());
@@ -76,6 +76,9 @@ public class CollectionTree extends JPanel {
                 invokeLater(() -> lblCurrentWorkspace.setText(workspace.getName()))
             );
 
+            List<String> expandedCollectionsIds = controller.loadWorkspaceSession()
+                    .getExpandedCollectionsIds();
+
             invokeLater(() -> {
                 lblCurrentWorkspace.setText(rootCollection.getName());
 
@@ -83,7 +86,12 @@ public class CollectionTree extends JPanel {
                     rootNode.setParent(null);
                 }
 
-                var rootNode = new CollectionTreeNode(treeModel, rootCollection);
+                var rootNode = new CollectionTreeNode(
+                        tree,
+                        treeModel,
+                        rootCollection,
+                        expandedCollectionsIds
+                );
                 treeModel.setRoot(rootNode);
                 rootNode.loadChildren();
             });

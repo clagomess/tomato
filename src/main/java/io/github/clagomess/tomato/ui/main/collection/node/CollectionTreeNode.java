@@ -8,9 +8,11 @@ import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,18 +27,24 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
     private final List<UUID> listenerUuid = new ArrayList<>(0);
 
+    private final JTree tree;
     private final DefaultTreeModel treeModel;
     private final CollectionTreeDto collection;
+    private final List<String> expandedCollectionsIds;
 
     public CollectionTreeNode(
+            JTree tree,
             DefaultTreeModel treeModel,
-            CollectionTreeDto collection
+            CollectionTreeDto collection,
+            List<String> expandedCollectionsIds
     ) {
         super(collection, true);
         add(new DefaultMutableTreeNode("loading"));
 
+        this.tree = tree;
         this.treeModel = treeModel;
         this.collection = collection;
+        this.expandedCollectionsIds = expandedCollectionsIds;
 
         addOnChangeListener();
     }
@@ -72,8 +80,14 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
 
         this.removeAllChildren();
 
+        List<TreePath> nodePaths = new ArrayList<>(expandedCollectionsIds.size());
         for(var collection : collectionList){
-            this.add(new CollectionTreeNode(treeModel, collection));
+            var node = new CollectionTreeNode(tree, treeModel, collection, expandedCollectionsIds);
+            this.add(node);
+
+            if(expandedCollectionsIds.contains(collection.getId())) {
+                nodePaths.add(new TreePath(node.getPath()));
+            }
         }
 
         for(var request : requestList){
@@ -81,6 +95,10 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
         }
 
         treeModel.reload(this);
+
+        for(var path : nodePaths){
+            tree.expandPath(path);
+        }
 
         addRequestOnParentCollectionChangeListener();
     }

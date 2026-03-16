@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.controller.main.collection;
 
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
+import io.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.io.repository.TreeRepository;
 import io.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
@@ -28,6 +29,10 @@ public class CollectionTreeController {
     public CollectionTreeController() {
         treeRepository = new TreeRepository();
         this.workspaceSessionRepository = new WorkspaceSessionRepository();
+    }
+
+    public WorkspaceSessionDto loadWorkspaceSession() throws IOException {
+        return workspaceSessionRepository.load();
     }
 
     public void addOnSwitchListener(Runnable loadCurrentWorkspace) {
