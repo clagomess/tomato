@@ -20,6 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Slf4j
 @RequiredArgsConstructor
 abstract class AbstractRepository {
@@ -52,6 +54,8 @@ abstract class AbstractRepository {
         return path;
     }
 
+    private final ConcurrentHashMap<File, ReentrantLock> fileLock = new ConcurrentHashMap<>();
+
     protected <T> Optional<T> readFile(File filepath, TypeReference<T> type) throws IOException {
         if(log.isDebugEnabled()) log.debug("READING: {}", filepath);
         verifyOperationAllowedInTestMode(filepath);
@@ -61,15 +65,19 @@ abstract class AbstractRepository {
             return Optional.empty();
         }
 
+        ReentrantLock lock = fileLock.computeIfAbsent(filepath, f -> new ReentrantLock());
+        lock.lock();
+
         try(BufferedReader br = new BufferedReader(new FileReader(filepath))) {
             if(log.isDebugEnabled()) log.debug("- readed");
             return Optional.of(
                     objectMapper.readValue(br, type)
             );
+        } finally {
+            lock.unlock();
         }
     }
 
-    private final ConcurrentHashMap<File, ReentrantLock> writeLock = new ConcurrentHashMap<>();
     protected <T extends MetadataDto> boolean writeFile(
             File filepath,
             TypeReference<T> type,
@@ -78,23 +86,21 @@ abstract class AbstractRepository {
         log.info("WRITING: {}", filepath);
         verifyOperationAllowedInTestMode(filepath);
 
-        ReentrantLock lock = writeLock.computeIfAbsent(filepath, f -> new ReentrantLock());
+        if(readFile(filepath, type).filter(content::equals).isPresent()){
+            log.info("- not writed - Same Content");
+            return false;
+        }
+
+        content.setUpdateTime(LocalDateTime.now());
+
+        ReentrantLock lock = fileLock.computeIfAbsent(filepath, f -> new ReentrantLock());
         lock.lock();
 
-        try {
-            if(readFile(filepath, type).filter(content::equals).isPresent()){
-                log.info("- not writed - Same Content");
-                return false;
-            }
-
-            content.setUpdateTime(LocalDateTime.now());
-
-            try(BufferedWriter bw = new BufferedWriter(new FileWriter(filepath))) {
-                objectMapper.writerWithDefaultPrettyPrinter()
-                        .writeValue(bw, content);
-                log.info("- writed");
-                return true;
-            }
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(filepath, UTF_8))) {
+            objectMapper.writerWithDefaultPrettyPrinter()
+                    .writeValue(bw, content);
+            log.info("- writed");
+            return true;
         } finally {
             lock.unlock();
         }

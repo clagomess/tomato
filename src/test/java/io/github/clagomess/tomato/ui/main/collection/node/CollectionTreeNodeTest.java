@@ -3,12 +3,14 @@ package io.github.clagomess.tomato.ui.main.collection.node;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -16,18 +18,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 class CollectionTreeNodeTest {
+    private final JTree tree = Mockito.mock(JTree.class);
     private final DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
 
     private final CollectionTreeDto collectionTree = new CollectionTreeDto(){{
+        setId(RandomStringUtils.secure().nextAlphanumeric(8));
         setName("ROOT");
         setChildren(parent -> Stream.of(
                 new CollectionTreeDto(){{
+                    setId(RandomStringUtils.secure().nextAlphanumeric(8));
                     setName("LEVEL 1 - B");
                 }},
                 new CollectionTreeDto(){{
+                    setId(RandomStringUtils.secure().nextAlphanumeric(8));
                     setName("LEVEL 1 - A");
                     setChildren(parent -> Stream.of(
                             new CollectionTreeDto(){{
+                                setId(RandomStringUtils.secure().nextAlphanumeric(8));
                                 setName("LEVEL 2 - A");
                             }}
                     ));
@@ -35,10 +42,12 @@ class CollectionTreeNodeTest {
         ).sorted());
         setRequests(parent -> Stream.of(
                 new RequestHeadDto(){{
+                    setId(RandomStringUtils.secure().nextAlphanumeric(8));
                     setName("LEVEL 1 - D");
                     setParent(parent);
                 }},
                 new RequestHeadDto(){{
+                    setId(RandomStringUtils.secure().nextAlphanumeric(8));
                     setName("LEVEL 1 - C");
                     setParent(parent);
                 }}
@@ -47,7 +56,7 @@ class CollectionTreeNodeTest {
 
     @Test
     void loadChildren(){
-        var rootNode = new CollectionTreeNode(treeModel, collectionTree);
+        var rootNode = new CollectionTreeNode(tree, treeModel, collectionTree, List.of());
         treeModel.setRoot(rootNode);
 
         try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
@@ -62,7 +71,7 @@ class CollectionTreeNodeTest {
 
     @Test
     void loadChildren_assertSortedCollections(){
-        var rootNode = new CollectionTreeNode(treeModel, collectionTree);
+        var rootNode = new CollectionTreeNode(tree, treeModel, collectionTree, List.of());
         treeModel.setRoot(rootNode);
         try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
             msSwing.when(SwingUtilities::isEventDispatchThread)
@@ -84,7 +93,7 @@ class CollectionTreeNodeTest {
 
     @Test
     void loadChildren_assertSortedRequests(){
-        var rootNode = new CollectionTreeNode(treeModel, collectionTree);
+        var rootNode = new CollectionTreeNode(tree, treeModel, collectionTree, List.of());
         treeModel.setRoot(rootNode);
         try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
             msSwing.when(SwingUtilities::isEventDispatchThread)

@@ -14,9 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 @Slf4j
@@ -57,7 +57,7 @@ public class CollectionTreeController {
     // @TODO: impl. junit
     protected void saveTreeExpandedState(JTree tree){
         try {
-            List<String> expandedCollectionsIds = new ArrayList<>();
+            Set<String> expandedCollectionsIds = new TreeSet<>();
 
             Enumeration<TreePath> expanded = tree.getExpandedDescendants(
                     new TreePath(tree.getModel().getRoot())
@@ -72,7 +72,7 @@ public class CollectionTreeController {
             }
 
             var session = workspaceSessionRepository.load();
-            session.setExpandedCollectionsIds(expandedCollectionsIds);
+            session.setExpandedCollectionsIds(expandedCollectionsIds.stream().toList());
             workspaceSessionRepository.save(session);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
