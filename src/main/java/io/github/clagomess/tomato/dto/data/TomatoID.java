@@ -13,10 +13,10 @@ import java.util.regex.Pattern;
 @JsonSerialize(converter = TomatoID.Serializer.class)
 @JsonDeserialize(converter = TomatoID.Deserializer.class)
 public record TomatoID(String id) implements Serializable, Comparable<TomatoID> {
-    public TomatoID(@NotNull String id) {
+    public TomatoID {
+        if (id == null) throw new NullPointerException("id cannot be null");
         var pattern = Pattern.compile("^[a-zA-Z0-9]{8}$");
         if (!pattern.matcher(id).find()) throw new IllegalArgumentException("Invalid id: " + id);
-        this.id = id;
     }
 
     public TomatoID() {

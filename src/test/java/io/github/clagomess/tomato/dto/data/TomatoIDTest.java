@@ -29,7 +29,7 @@ class TomatoIDTest {
         @Test
         void whenNull_throws(){
             assertThrowsExactly(
-                    IllegalArgumentException.class,
+                    NullPointerException.class,
                     () -> new TomatoID(null)
             );
         }
