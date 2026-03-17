@@ -38,10 +38,10 @@ class EnvironmentDtoTest {
     @Test
     void equalsHashCode(){
         var dtoA = new EnvironmentDto();
-        dtoA.setId("aaa");
+        dtoA.setId(new TomatoID("aaaaaaaa"));
 
         var dtoB = new EnvironmentDto();
-        dtoB.setId("aaa");
+        dtoB.setId(new TomatoID("aaaaaaaa"));
 
         Assertions.assertThat(dtoA)
                 .isEqualTo(dtoB);

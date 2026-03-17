@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui.main.collection.node;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.publisher.CollectionPublisher;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
@@ -8,9 +9,11 @@ import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,18 +28,24 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
     private final List<UUID> listenerUuid = new ArrayList<>(0);
 
+    private final JTree tree;
     private final DefaultTreeModel treeModel;
-    private final CollectionTreeDto tree;
+    private final CollectionTreeDto collection;
+    private final List<TomatoID> expandedCollectionsIds;
 
     public CollectionTreeNode(
+            JTree tree,
             DefaultTreeModel treeModel,
-            CollectionTreeDto tree
+            CollectionTreeDto collection,
+            List<TomatoID> expandedCollectionsIds
     ) {
-        super(tree, true);
+        super(collection, true);
         add(new DefaultMutableTreeNode("loading"));
 
-        this.treeModel = treeModel;
         this.tree = tree;
+        this.treeModel = treeModel;
+        this.collection = collection;
+        this.expandedCollectionsIds = expandedCollectionsIds;
 
         addOnChangeListener();
     }
@@ -67,13 +76,19 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
     public void loadChildren() {
         ComponentUtil.checkIsEventDispatchThread();
 
-        var collectionList = tree.getChildren().toList();
-        var requestList = tree.getRequests().toList();
+        var collectionList = collection.getChildren().toList();
+        var requestList = collection.getRequests().toList();
 
         this.removeAllChildren();
 
+        List<TreePath> nodePaths = new ArrayList<>(expandedCollectionsIds.size());
         for(var collection : collectionList){
-            this.add(new CollectionTreeNode(treeModel, collection));
+            var node = new CollectionTreeNode(tree, treeModel, collection, expandedCollectionsIds);
+            this.add(node);
+
+            if(expandedCollectionsIds.contains(collection.getId())) {
+                nodePaths.add(new TreePath(node.getPath()));
+            }
         }
 
         for(var request : requestList){
@@ -82,18 +97,22 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
 
         treeModel.reload(this);
 
+        for(var path : nodePaths){
+            tree.expandPath(path);
+        }
+
         addRequestOnParentCollectionChangeListener();
     }
 
     private void addOnChangeListener(){
-        var key = new ParentCollectionKey(tree.getId());
+        var key = new ParentCollectionKey(collection.getId());
         var uuid = collectionPublisher.getOnChange()
                 .addListener(key, event -> invokeLater(this::loadChildren));
         listenerUuid.add(uuid);
     }
 
     private void addRequestOnParentCollectionChangeListener(){
-        var key = new ParentCollectionKey(tree.getId());
+        var key = new ParentCollectionKey(collection.getId());
 
         var uuid = requestPublisher.getOnParentCollectionChange()
                 .addListener(key, event -> {

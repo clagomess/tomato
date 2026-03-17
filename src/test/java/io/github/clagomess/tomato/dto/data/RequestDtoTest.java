@@ -151,10 +151,10 @@ class RequestDtoTest {
     @Test
     void equalsHashCode(){
         var dtoA = new RequestDto();
-        dtoA.setId("aaa");
+        dtoA.setId(new TomatoID("aaaaaaaa"));
 
         var dtoB = new RequestDto();
-        dtoB.setId("aaa");
+        dtoB.setId(new TomatoID("aaaaaaaa"));
 
         Assertions.assertThat(dtoA)
                 .isEqualTo(dtoB);

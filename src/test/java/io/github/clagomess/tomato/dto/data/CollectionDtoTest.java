@@ -32,10 +32,10 @@ class CollectionDtoTest {
     @Test
     void equalsHashCode(){
         var dtoA = new CollectionDto();
-        dtoA.setId("aaa");
+        dtoA.setId(new TomatoID("aaaaaaaa"));
 
         var dtoB = new CollectionDto();
-        dtoB.setId("aaa");
+        dtoB.setId(new TomatoID("aaaaaaaa"));
 
         Assertions.assertThat(dtoA)
                 .isEqualTo(dtoB);

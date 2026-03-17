@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.dto.tree;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CollectionTreeDto implements Comparable<CollectionTreeDto> {
-    private String id;
+    private TomatoID id;
     private String name;
     private File path;
     private CollectionTreeDto parent;

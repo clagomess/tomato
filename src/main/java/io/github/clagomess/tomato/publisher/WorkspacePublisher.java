@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.publisher;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.publisher.base.KeyPublisher;
 import io.github.clagomess.tomato.publisher.base.NoKeyPublisher;
@@ -16,9 +17,9 @@ public class WorkspacePublisher {
     private final NoKeyPublisher<WorkspaceDto> onSwitch = new NoKeyPublisher<>();
 
     private final NoKeyPublisher<PublisherEvent<WorkspaceDto>> onChangeAny = new NoKeyPublisher<>();
-    private final KeyPublisher<String, PublisherEvent<WorkspaceDto>> onChange = new KeyPublisher<>(){
+    private final KeyPublisher<TomatoID, PublisherEvent<WorkspaceDto>> onChange = new KeyPublisher<>(){
         @Override
-        public void publish(String key, PublisherEvent<WorkspaceDto> event) {
+        public void publish(TomatoID key, PublisherEvent<WorkspaceDto> event) {
             super.publish(key, event);
             onChangeAny.publish(event);
         }

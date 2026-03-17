@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.io.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.clagomess.tomato.dto.data.DataSessionDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.util.CacheManager;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class WorkspaceRepository extends AbstractRepository {
         this.dataSessionRepository = new DataSessionRepository();
     }
 
-    protected File getWorkspaceDirectory(String id) throws IOException {
+    protected File getWorkspaceDirectory(TomatoID id) throws IOException {
         return createDirectoryIfNotExists(new File(
                 configurationRepository.getDataDir(),
                 String.format("workspace-%s", id)

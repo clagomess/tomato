@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui.environment.list;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 import io.github.clagomess.tomato.ui.component.IconButton;
@@ -73,7 +74,7 @@ class Row extends JPanel {
 
     private void btnEditAction(
             Container parent,
-            String id
+            TomatoID id
     ) throws IOException {
         toFrontIfExists(
                 EnvironmentEditFrame.class,

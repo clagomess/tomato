@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.io.converter;
 import io.github.clagomess.tomato.dto.data.CollectionDto;
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import io.github.clagomess.tomato.dto.external.PostmanEnvironmentDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
@@ -92,7 +93,7 @@ public class PostmanConverter extends AbstractConverter {
     }
 
     @Override
-    public String pumpEnvironment(
+    public TomatoID pumpEnvironment(
             File postmanEnvironment
     ) throws IOException {
         validate(
@@ -166,7 +167,7 @@ public class PostmanConverter extends AbstractConverter {
     @Override
     public void dumpEnvironment(
             File destination,
-            String environmentId
+            TomatoID environmentId
     ) throws IOException {
         EnvironmentDto environment = environmentRepository.load(environmentId).orElseThrow();
         PostmanEnvironmentDto postmanEnvironmentDto = PostmanEnvironmentDumpMapper.INSTANCE.toEnvironmentDto(environment);

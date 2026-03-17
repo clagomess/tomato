@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.io.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
 import io.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
@@ -22,7 +23,7 @@ import java.util.Optional;
 public class EnvironmentRepository extends AbstractRepository {
     private final WorkspaceRepository workspaceRepository;
     private final WorkspaceSessionRepository workspaceSessionRepository;
-    protected static final CacheManager<String, Optional<EnvironmentDto>> cache = new CacheManager<>();
+    protected static final CacheManager<TomatoID, Optional<EnvironmentDto>> cache = new CacheManager<>();
 
     public EnvironmentRepository() {
         this(
@@ -31,7 +32,7 @@ public class EnvironmentRepository extends AbstractRepository {
         );
     }
 
-    protected File getEnvironmentFile(String id) throws IOException {
+    protected File getEnvironmentFile(TomatoID id) throws IOException {
         WorkspaceDto workspace = workspaceRepository.getDataSessionWorkspace();
 
         return new File(workspace.getPath(), String.format(
@@ -40,14 +41,14 @@ public class EnvironmentRepository extends AbstractRepository {
         ));
     }
 
-    public Optional<EnvironmentDto> load(String id) throws IOException {
+    public Optional<EnvironmentDto> load(TomatoID id) throws IOException {
         return cache.get(id, () -> readFile(
                 getEnvironmentFile(id),
                 new TypeReference<>(){}
         )).map(CloneMapper.INSTANCE::clone);
     }
 
-    protected Optional<EnvironmentHeadDto> loadHead(String id) throws IOException {
+    protected Optional<EnvironmentHeadDto> loadHead(TomatoID id) throws IOException {
         return readFile(
                 getEnvironmentFile(id),
                 new TypeReference<>(){}
@@ -75,11 +76,13 @@ public class EnvironmentRepository extends AbstractRepository {
         return Arrays.stream(listFiles(workspace.getPath())).parallel()
                 .filter(File::isFile)
                 .filter(item -> item.getName().startsWith("environment"))
+                .filter(item -> item.getName().endsWith(".json"))
                 .map(item -> {
-                    String id = item.getName()
-                            .replace("environment-", "")
-                            .replace(".json", "");
                     try {
+                        TomatoID id = new TomatoID(item.getName()
+                                .replace("environment-", "")
+                                .replace(".json", ""));
+
                         Optional<EnvironmentHeadDto> optResult = loadHead(id);
                         return optResult.orElse(null);
                     } catch (IOException e) {

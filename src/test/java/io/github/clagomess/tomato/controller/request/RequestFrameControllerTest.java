@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.controller.request;
 
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.key.TabKey;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
@@ -8,7 +9,6 @@ import io.github.clagomess.tomato.io.repository.RequestRepository;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.publisher.key.RequestKey;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,13 +32,13 @@ class RequestFrameControllerTest {
     private final RequestFrameController controller = Mockito.spy(RequestFrameController.class);
 
     @BeforeEach
-    void setup() throws Exception {
+    void setup() {
         requestHead = new RequestHeadDto();
-        requestHead.setId(RandomStringUtils.secure().nextAlphanumeric(8));
+        requestHead.setId(new TomatoID());
         requestHead.setName("aaa");
         requestHead.setMethod(GET);
         requestHead.setParent(new CollectionTreeDto());
-        requestHead.getParent().setId(RandomStringUtils.secure().nextAlphanumeric(8));
+        requestHead.getParent().setId(new TomatoID());
 
         tabKey = new TabKey(requestHead.getId());
 

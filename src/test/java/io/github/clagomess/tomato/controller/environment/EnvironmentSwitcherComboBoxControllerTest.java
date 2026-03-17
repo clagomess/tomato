@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.controller.environment;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
@@ -73,7 +74,7 @@ class EnvironmentSwitcherComboBoxControllerTest {
                     .getOnChange()
                     .publish(new PublisherEvent<>(
                             UPDATED,
-                            "foo"
+                            new TomatoID("aaaaaaaa")
                     ));
 
             assertTrue(triggered.get());
@@ -94,7 +95,7 @@ class EnvironmentSwitcherComboBoxControllerTest {
         @BeforeEach
         void setup() throws IOException {
             var wsSession = new WorkspaceSessionDto();
-            wsSession.setEnvironmentId("aaa");
+            wsSession.setEnvironmentId(new TomatoID("aaaaaaaa"));
 
             Mockito.doReturn(wsSession)
                     .when(workspaceSessionRepositoryMock)
@@ -172,7 +173,7 @@ class EnvironmentSwitcherComboBoxControllerTest {
                     .addListener(event -> triggered.set(true));
 
             var itemSelected = new EnvironmentHeadDto();
-            itemSelected.setId("aaa");
+            itemSelected.setId(new TomatoID("aaaaaaaa"));
             controller.setWorkspaceSessionSelected(itemSelected);
 
             assertTrue(triggered.get());

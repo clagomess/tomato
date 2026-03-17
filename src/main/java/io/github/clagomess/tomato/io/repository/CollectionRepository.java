@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.io.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.clagomess.tomato.dto.data.CollectionDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,7 +14,7 @@ import java.util.stream.Stream;
 
 @Slf4j
 public class CollectionRepository extends AbstractRepository {
-    protected File getCollectionFilePath(File collectionDir, String id){
+    protected File getCollectionFilePath(File collectionDir, TomatoID id){
         return new File(collectionDir, String.format(
                 "collection-%s.json",
                 id
@@ -28,7 +29,8 @@ public class CollectionRepository extends AbstractRepository {
     }
 
     protected Optional<CollectionTreeDto> loadTree(File collectionDir) throws IOException {
-        String id = collectionDir.getName().replace("collection-", "");
+        var id = new TomatoID(collectionDir.getName()
+                .replace("collection-", ""));
 
         return readFile(
                 getCollectionFilePath(collectionDir, id),

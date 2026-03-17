@@ -37,10 +37,10 @@ class WorkspaceDtoTest {
     @Test
     void equalsHashCode(){
         var dtoA = new WorkspaceDto();
-        dtoA.setId("aaa");
+        dtoA.setId(new TomatoID("aaaaaaaa"));
 
         var dtoB = new WorkspaceDto();
-        dtoB.setId("aaa");
+        dtoB.setId(new TomatoID("aaaaaaaa"));
 
         Assertions.assertThat(dtoA)
                 .isEqualTo(dtoB);

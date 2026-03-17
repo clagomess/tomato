@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.main.collection;
 
 import io.github.clagomess.tomato.controller.main.collection.CollectionTreeController;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.ui.component.ExceptionDialog;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxHomeIcon;
@@ -14,6 +15,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 import static javax.swing.SwingUtilities.invokeLater;
@@ -23,8 +25,8 @@ import static javax.swing.SwingUtilities.invokeLater;
 public class CollectionTree extends JPanel {
     private static final Icon HOME_ICON = new BxHomeIcon();
 
-    private DefaultTreeModel treeModel;
-    private JTree tree;
+    private final DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
+    private final JTree tree = new JTree(treeModel);
     private final JLabel lblCurrentWorkspace = new JLabel(HOME_ICON);
 
     private final CollectionTreeController controller = new CollectionTreeController();
@@ -53,8 +55,6 @@ public class CollectionTree extends JPanel {
     }
 
     private JScrollPane createCollectionTree() {
-        treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
-        tree = new JTree(treeModel);
         tree.setRootVisible(false);
         tree.setShowsRootHandles(true);
         tree.setCellRenderer(new CollectionTreeCellRender());
@@ -66,6 +66,7 @@ public class CollectionTree extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
         ForkJoinPool.commonPool().submit(this::loadCurrentWorkspace);
+        controller.addSaveTreeExpandedStateListener(tree);
 
         return scrollPane;
     }
@@ -76,6 +77,9 @@ public class CollectionTree extends JPanel {
                 invokeLater(() -> lblCurrentWorkspace.setText(workspace.getName()))
             );
 
+            List<TomatoID> expandedCollectionsIds = controller.loadWorkspaceSession()
+                    .getExpandedCollectionsIds();
+
             invokeLater(() -> {
                 lblCurrentWorkspace.setText(rootCollection.getName());
 
@@ -83,7 +87,12 @@ public class CollectionTree extends JPanel {
                     rootNode.setParent(null);
                 }
 
-                var rootNode = new CollectionTreeNode(treeModel, rootCollection);
+                var rootNode = new CollectionTreeNode(
+                        tree,
+                        treeModel,
+                        rootCollection,
+                        expandedCollectionsIds
+                );
                 treeModel.setRoot(rootNode);
                 rootNode.loadChildren();
             });

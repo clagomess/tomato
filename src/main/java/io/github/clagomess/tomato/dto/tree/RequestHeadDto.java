@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.dto.tree;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.enums.HttpMethodEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +13,7 @@ import java.io.File;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RequestHeadDto implements Comparable<RequestHeadDto> {
-    private String id;
+    private TomatoID id;
     private HttpMethodEnum method;
     private String name;
     private File path;

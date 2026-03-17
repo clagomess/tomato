@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.controller.main.collection.popupmenu;
 
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.io.repository.RepositoryStubs;
 import io.github.clagomess.tomato.io.repository.RequestRepository;
@@ -25,7 +26,7 @@ class RequestPopUpMenuControllerTest extends RepositoryStubs {
         var request = new RequestDto();
         var result = requestRepository.save(mockDataDir, request);
         CollectionTreeDto collectionTree = new CollectionTreeDto();
-        collectionTree.setId("c_a");
+        collectionTree.setId(new TomatoID("aaaaaaaa"));
         collectionTree.setPath(result.getParentFile());
         var head = treeRepository.getRequestList(collectionTree)
                 .filter(item -> item.getId().equals(request.getId()))
@@ -35,7 +36,7 @@ class RequestPopUpMenuControllerTest extends RepositoryStubs {
         var hasPublished = new AtomicBoolean(false);
 
         RequestPublisher.getInstance().getOnParentCollectionChange()
-                .addListener(new ParentCollectionKey("c_a"), event -> {
+                .addListener(new ParentCollectionKey(new TomatoID("aaaaaaaa")), event -> {
                     hasPublished.set(true);
 
                     assertEquals(INSERTED, event.getType());

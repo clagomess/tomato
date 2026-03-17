@@ -10,5 +10,5 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DataSessionDto extends MetadataDto {
-    private String workspaceId;
+    private TomatoID workspaceId;
 }

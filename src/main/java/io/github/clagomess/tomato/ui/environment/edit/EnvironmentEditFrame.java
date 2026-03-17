@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.ui.environment.edit;
 
 import io.github.clagomess.tomato.controller.environment.edit.EnvironmentEditFrameController;
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.ui.component.ListenableTextField;
 import io.github.clagomess.tomato.ui.component.PasswordDialog;
 import io.github.clagomess.tomato.ui.component.StagingMonitor;
@@ -26,13 +27,13 @@ public class EnvironmentEditFrame
     private final StagingMonitor<EnvironmentDto> stagingMonitor;
 
     @Getter
-    private final String environmentId;
+    private final TomatoID environmentId;
 
     private final EnvironmentEditFrameController controller;
 
     public EnvironmentEditFrame(
             Component parent,
-            String environmentId
+            TomatoID environmentId
     ) throws IOException {
         this.environmentId = environmentId;
         this.controller = new EnvironmentEditFrameController(environmentId, this);

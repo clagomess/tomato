@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +13,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of = {"id"})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class MetadataDto {
-    private String id = RandomStringUtils.secure().nextAlphanumeric(8);
+    private TomatoID id = new TomatoID();
 
     @JsonFormat(pattern = "uuuu-MM-dd'T'HH:mm:ss")
     private LocalDateTime createTime = LocalDateTime.now();

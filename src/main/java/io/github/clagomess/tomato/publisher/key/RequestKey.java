@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.publisher.key;
 
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,8 @@ import org.jetbrains.annotations.Nullable;
 @Data
 @RequiredArgsConstructor
 public class RequestKey {
-    private final String parentCollectionId;
-    private final String requestId;
+    private final TomatoID parentCollectionId;
+    private final TomatoID requestId;
 
     public RequestKey(@NotNull RequestHeadDto requestHead) {
         this.parentCollectionId = requestHead.getParent().getId();

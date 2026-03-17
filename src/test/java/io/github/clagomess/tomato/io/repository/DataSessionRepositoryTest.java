@@ -1,8 +1,8 @@
 package io.github.clagomess.tomato.io.repository;
 
 import io.github.clagomess.tomato.dto.data.DataSessionDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -49,7 +49,7 @@ class DataSessionRepositoryTest extends RepositoryStubs {
     @Test
     void save() throws IOException {
         var dto = new DataSessionDto();
-        dto.setWorkspaceId(RandomStringUtils.secure().nextAlphanumeric(8));
+        dto.setWorkspaceId(new TomatoID());
 
         dataSessionRepositoryMock.save(dto);
 

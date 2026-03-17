@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.io.converter;
 
 import io.github.clagomess.tomato.dto.data.CollectionDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 
 import java.io.File;
@@ -14,7 +15,7 @@ public interface InterfaceConverter {
             File source
     ) throws IOException;
 
-    String pumpEnvironment(
+    TomatoID pumpEnvironment(
             File source
     ) throws IOException;
 
@@ -27,7 +28,7 @@ public interface InterfaceConverter {
 
     void dumpEnvironment(
             File target,
-            String environmentId
+            TomatoID environmentId
     ) throws IOException;
 
     String getEnvironmentDumpFileSuffix();

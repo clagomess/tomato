@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.controller.main.request;
 
 import io.github.clagomess.tomato.dto.ResponseDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.exception.TomatoException;
@@ -40,7 +41,7 @@ class RequestSplitPaneControllerTest {
         try(var ignored = Mockito.mockConstruction(
                 HttpService.class,
                 (mock, context) -> {
-                    Mockito.doReturn(new ResponseDto("foo"))
+                    Mockito.doReturn(new ResponseDto(new TomatoID("aaaaaaaa")))
                             .when(mock)
                             .perform();
                 })

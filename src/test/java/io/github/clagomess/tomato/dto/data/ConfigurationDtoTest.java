@@ -33,10 +33,10 @@ class ConfigurationDtoTest {
     @Test
     void equalsHashCode(){
         var dtoA = new ConfigurationDto();
-        dtoA.setId("aaa");
+        dtoA.setId(new TomatoID("aaaaaaaa"));
 
         var dtoB = new ConfigurationDto();
-        dtoB.setId("aaa");
+        dtoB.setId(new TomatoID("aaaaaaaa"));
 
         Assertions.assertThat(dtoA)
                 .isEqualTo(dtoB);

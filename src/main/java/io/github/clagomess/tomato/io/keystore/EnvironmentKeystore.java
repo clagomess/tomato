@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.io.keystore;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.mapper.CloneMapper;
@@ -45,7 +46,7 @@ public class EnvironmentKeystore {
 
     public EnvironmentKeystore(
             File workspacePath,
-            String environmentId
+            TomatoID environmentId
     ) {
         this.databaseFile = new File(
                 workspacePath,
