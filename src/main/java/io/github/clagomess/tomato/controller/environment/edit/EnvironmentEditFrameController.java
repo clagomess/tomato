@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.controller.environment.edit;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
@@ -34,7 +35,7 @@ public class EnvironmentEditFrameController {
     private final EnvironmentDto environment;
 
     public EnvironmentEditFrameController(
-            String environmentId,
+            TomatoID environmentId,
             EnvironmentEditFrameInterface ui
     ) throws IOException {
         this.ui = ui;
@@ -45,7 +46,7 @@ public class EnvironmentEditFrameController {
         this.environmentKeystore = getEnvironmentKeystore(environmentId);
     }
 
-    private EnvironmentKeystore getEnvironmentKeystore(String environmentId) {
+    private EnvironmentKeystore getEnvironmentKeystore(TomatoID environmentId) {
         try {
             File workspacePath = workspaceRepository.getDataSessionWorkspace()
                     .getPath();

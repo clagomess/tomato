@@ -6,7 +6,6 @@ import com.networknt.schema.JsonSchema;
 import io.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +19,7 @@ class DataSessionDtoTest {
     @Test
     void toJson() throws JsonProcessingException {
         var dto = new DataSessionDto();
-        dto.setWorkspaceId(RandomStringUtils.secure().nextAlphabetic(10));
+        dto.setWorkspaceId(new TomatoID());
 
         var json = mapper.writeValueAsString(dto);
 
@@ -32,10 +31,10 @@ class DataSessionDtoTest {
     @Test
     void equalsHashCode(){
         var dtoA = new DataSessionDto();
-        dtoA.setId("aaa");
+        dtoA.setId(new TomatoID("aaaaaaaa"));
 
         var dtoB = new DataSessionDto();
-        dtoB.setId("aaa");
+        dtoB.setId(new TomatoID("aaaaaaaa"));
 
         Assertions.assertThat(dtoA)
                 .isEqualTo(dtoB);

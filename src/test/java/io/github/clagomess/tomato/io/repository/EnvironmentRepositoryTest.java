@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.io.repository;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import org.assertj.core.api.Assertions;
@@ -37,8 +38,8 @@ class EnvironmentRepositoryTest extends RepositoryStubs {
         Mockito.when(workspaceRepositoryMock.getDataSessionWorkspace())
                 .thenReturn(workspaceDto);
 
-        var result = environmentRepositoryMock.getEnvironmentFile("AAA");
-        Assertions.assertThat(result).hasFileName("environment-AAA.json");
+        var result = environmentRepositoryMock.getEnvironmentFile(new TomatoID("aaaaaaaa"));
+        Assertions.assertThat(result).hasFileName("environment-aaaaaaaa.json");
     }
 
 
@@ -48,9 +49,9 @@ class EnvironmentRepositoryTest extends RepositoryStubs {
 
         Mockito.doReturn(envFile)
                 .when(environmentRepositoryMock)
-                .getEnvironmentFile(Mockito.anyString());
+                .getEnvironmentFile(Mockito.any(TomatoID.class));
 
-        var result = environmentRepositoryMock.load("7rZO7Z1T");
+        var result = environmentRepositoryMock.load(new TomatoID("7rZO7Z1T"));
         Assertions.assertThat(result).isNotEmpty();
     }
 
@@ -60,11 +61,11 @@ class EnvironmentRepositoryTest extends RepositoryStubs {
 
         Mockito.doReturn(envFile)
                 .when(environmentRepositoryMock)
-                .getEnvironmentFile(Mockito.anyString());
+                .getEnvironmentFile(Mockito.any(TomatoID.class));
 
-        var resultA = environmentRepositoryMock.load("7rZO7Z1T");
+        var resultA = environmentRepositoryMock.load(new TomatoID("7rZO7Z1T"));
         resultA.ifPresent(item -> item.setName("FOO_BAR_ENV"));
-        var resultB = environmentRepositoryMock.load("7rZO7Z1T");
+        var resultB = environmentRepositoryMock.load(new TomatoID("7rZO7Z1T"));
 
         assertNotEquals(
                 resultA.get().getName(),
@@ -78,9 +79,9 @@ class EnvironmentRepositoryTest extends RepositoryStubs {
 
         Mockito.doReturn(envFile)
                 .when(environmentRepositoryMock)
-                .getEnvironmentFile(Mockito.anyString());
+                .getEnvironmentFile(Mockito.any(TomatoID.class));
 
-        var result = environmentRepositoryMock.loadHead("7rZO7Z1T");
+        var result = environmentRepositoryMock.loadHead(new TomatoID("7rZO7Z1T"));
         Assertions.assertThat(result).isNotEmpty();
     }
 
@@ -92,7 +93,7 @@ class EnvironmentRepositoryTest extends RepositoryStubs {
 
         Mockito.doReturn(envFile)
                 .when(environmentRepositoryMock)
-                .getEnvironmentFile(Mockito.anyString());
+                .getEnvironmentFile(Mockito.any(TomatoID.class));
 
         var result = environmentRepositoryMock.save(environment);
         Assertions.assertThat(result).isFile();
@@ -106,7 +107,7 @@ class EnvironmentRepositoryTest extends RepositoryStubs {
 
         Mockito.doReturn(envFile)
                 .when(environmentRepositoryMock)
-                .getEnvironmentFile(Mockito.anyString());
+                .getEnvironmentFile(Mockito.any(TomatoID.class));
 
         var result = environmentRepositoryMock.save(environment);
         Assertions.assertThat(result).isFile();

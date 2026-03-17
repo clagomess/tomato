@@ -15,6 +15,7 @@ import static io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemTypeEn
 public interface PostmanEnvironmentDumpMapper {
     PostmanEnvironmentDumpMapper INSTANCE = Mappers.getMapper(PostmanEnvironmentDumpMapper.class);
 
+    @Mapping(target = "id", source = "id.id")
     @Mapping(target = "values", source = "envs")
     PostmanEnvironmentDto toEnvironmentDto(EnvironmentDto source);
 

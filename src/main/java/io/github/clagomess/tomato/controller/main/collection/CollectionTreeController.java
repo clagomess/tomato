@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.controller.main.collection;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
@@ -57,7 +58,7 @@ public class CollectionTreeController {
     // @TODO: impl. junit
     protected void saveTreeExpandedState(JTree tree){
         try {
-            Set<String> expandedCollectionsIds = new TreeSet<>();
+            Set<TomatoID> expandedCollectionsIds = new TreeSet<>();
 
             Enumeration<TreePath> expanded = tree.getExpandedDescendants(
                     new TreePath(tree.getModel().getRoot())

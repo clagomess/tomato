@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.io.repository;
 
 import io.github.clagomess.tomato.dto.data.CollectionDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,15 +28,15 @@ class CollectionRepositoryTest extends RepositoryStubs {
 
     @Test
     void getCollectionFilePath(){
-        Assertions.assertThat(collectionRepositoryMock.getCollectionFilePath(testData, "foo"))
-                .hasFileName("collection-foo.json");
+        Assertions.assertThat(collectionRepositoryMock.getCollectionFilePath(testData, new TomatoID("aaaaaaaa")))
+                .hasFileName("collection-aaaaaaaa.json");
     }
 
     @Test
     void load() throws IOException {
         var tree = new CollectionTreeDto();
         tree.setPath(new File(testData, "workspace-JNtdCPvw/collection-a70uf9Xv"));
-        tree.setId("a70uf9Xv");
+        tree.setId(new TomatoID("a70uf9Xv"));
 
         var result = collectionRepositoryMock.load(tree);
         assertEquals(tree.getId(), result.orElseThrow().getId());
@@ -46,7 +47,7 @@ class CollectionRepositoryTest extends RepositoryStubs {
         var collectionDir = new File(testData, "workspace-JNtdCPvw/collection-a70uf9Xv");
 
         var result = collectionRepositoryMock.loadTree(collectionDir);
-        assertEquals("a70uf9Xv", result.orElseThrow().getId());
+        assertEquals(new TomatoID("a70uf9Xv"), result.orElseThrow().getId());
     }
 
     @Test

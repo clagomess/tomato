@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.publisher;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.publisher.base.NoKeyPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
@@ -13,6 +14,6 @@ public class EnvironmentPublisher {
     private static final EnvironmentPublisher instance = new EnvironmentPublisher();
     private EnvironmentPublisher() {}
 
-    private final NoKeyPublisher<PublisherEvent<String>> onChange = new NoKeyPublisher<>();
+    private final NoKeyPublisher<PublisherEvent<TomatoID>> onChange = new NoKeyPublisher<>();
     private final NoKeyPublisher<List<EnvironmentItemDto>> currentEnvs = new NoKeyPublisher<>();
 }

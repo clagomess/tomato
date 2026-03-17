@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.io.repository;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import org.assertj.core.api.Assertions;
@@ -85,7 +86,7 @@ class TreeRepositoryTest extends RepositoryStubs {
                 .allMatch(item -> item.getPath() != null)
                 .allMatch(item -> item.getPath().isFile())
                 .anyMatch(item -> item.getId().equals(
-                        "G4A3BCPq"
+                                new TomatoID("G4A3BCPq")
                 ))
                 .anyMatch(item -> item.getName().equals(
                         "/sample-root"
@@ -98,7 +99,7 @@ class TreeRepositoryTest extends RepositoryStubs {
         @Test
         void getCollectionParentTree() throws IOException {
             var workspace = new WorkspaceDto();
-            workspace.setId("nPUaq0TC");
+            workspace.setId(new TomatoID("nPUaq0TC"));
             var file = new File(
                     testData,
                     "workspace-nPUaq0TC/collection-us62qhbS/collection-s8tPaxvJ"
@@ -112,15 +113,15 @@ class TreeRepositoryTest extends RepositoryStubs {
             assertNotNull(result.getPath());
             assertNotNull(result.getChildren());
             assertNotNull(result.getRequests());
-            assertEquals("s8tPaxvJ", result.getId());
-            assertEquals("us62qhbS", result.getParent().getId());
-            assertEquals("nPUaq0TC", result.getParent().getParent().getId());
+            assertEquals(new TomatoID("s8tPaxvJ"), result.getId());
+            assertEquals(new TomatoID("us62qhbS"), result.getParent().getId());
+            assertEquals(new TomatoID("nPUaq0TC"), result.getParent().getParent().getId());
         }
 
         @Test
         void whenRoot_returnWorkspace() throws IOException {
             var workspace = new WorkspaceDto();
-            workspace.setId("nPUaq0TC");
+            workspace.setId(new TomatoID("nPUaq0TC"));
             var file = new File(testData, "workspace-nPUaq0TC");
 
             Mockito.doReturn(workspace)
@@ -128,7 +129,7 @@ class TreeRepositoryTest extends RepositoryStubs {
                     .getDataSessionWorkspace();
 
             var result = treeRepository.getCollectionParentTree(file);
-            assertEquals("nPUaq0TC", result.getId());
+            assertEquals(new TomatoID("nPUaq0TC"), result.getId());
         }
 
         @Test
@@ -155,7 +156,7 @@ class TreeRepositoryTest extends RepositoryStubs {
         Assertions.assertThat(result)
                 .hasSize(1)
                 .anyMatch(item -> item.getId().equals(
-                        "us62qhbS"
+                        new TomatoID("us62qhbS")
                 ))
                 .anyMatch(item -> item.getName().equals(
                         "Collection-lvl1"
@@ -175,7 +176,7 @@ class TreeRepositoryTest extends RepositoryStubs {
     @Test
     void getWorkspaceCollectionTree() throws IOException {
         WorkspaceDto workspaceDto = new WorkspaceDto();
-        workspaceDto.setId("nPUaq0TC");
+        workspaceDto.setId(new TomatoID("nPUaq0TC"));
         workspaceDto.setName("ROOT");
         workspaceDto.setPath(mockDataDir);
 
@@ -184,7 +185,7 @@ class TreeRepositoryTest extends RepositoryStubs {
 
         var result = treeRepository.getWorkspaceCollectionTree();
 
-        assertEquals("nPUaq0TC", result.getId());
+        assertEquals(new TomatoID("nPUaq0TC"), result.getId());
         assertEquals("ROOT", result.getName());
         Assertions.assertThat(result.getPath()).isDirectory();
     }

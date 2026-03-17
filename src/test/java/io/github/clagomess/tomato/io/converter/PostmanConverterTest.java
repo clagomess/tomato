@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.io.converter;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.io.repository.*;
 import org.assertj.core.api.Assertions;
@@ -101,7 +102,7 @@ class PostmanConverterTest extends RepositoryStubs {
             );
             postmanConverter.dumpEnvironment(
                     resultFile,
-                    "KmZxncfJ"
+                    new TomatoID("KmZxncfJ")
             );
 
             Assertions.assertThat(resultFile).exists();

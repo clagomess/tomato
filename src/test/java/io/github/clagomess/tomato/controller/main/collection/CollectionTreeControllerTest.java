@@ -1,12 +1,12 @@
 package io.github.clagomess.tomato.controller.main.collection;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.io.repository.TreeRepository;
 import io.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import io.github.clagomess.tomato.publisher.WorkspacePublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -50,7 +50,7 @@ class CollectionTreeControllerTest {
                 .when(treeRepository)
                 .getWorkspaceCollectionTree();
 
-        var key = RandomStringUtils.secure().nextAlphanumeric(8);
+        var key = new TomatoID();
         AtomicInteger result = new AtomicInteger();
 
         controller.listenerUuid = workspacePublisher.getOnChange()
@@ -72,7 +72,7 @@ class CollectionTreeControllerTest {
     @Test
     void loadCurrentWorkspace_assertAddOnChangeListener() throws IOException {
         var tree = new CollectionTreeDto();
-        tree.setId(RandomStringUtils.secure().nextAlphanumeric(8));
+        tree.setId(new TomatoID());
 
         Mockito.doReturn(tree)
                 .when(treeRepository)

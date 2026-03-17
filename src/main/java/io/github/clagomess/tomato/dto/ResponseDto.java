@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.dto;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.enums.HttpStatusEnum;
 import io.github.clagomess.tomato.io.http.HttpService;
 import io.github.clagomess.tomato.io.http.MediaType;
@@ -22,7 +23,7 @@ import java.util.zip.GZIPInputStream;
 @Setter
 @ToString(of = {"requestId"})
 public class ResponseDto {
-    private String requestId;
+    private TomatoID requestId;
     private LocalDateTime createTime = LocalDateTime.now();
 
     private boolean requestStatus = false;
@@ -31,7 +32,7 @@ public class ResponseDto {
     private String requestCertIssue;
     private Response httpResponse;
 
-    public ResponseDto(String requestId) {
+    public ResponseDto(TomatoID requestId) {
         this.requestId = requestId;
     }
 

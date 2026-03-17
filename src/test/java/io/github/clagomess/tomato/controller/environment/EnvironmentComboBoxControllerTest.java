@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.controller.environment;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
 import io.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
@@ -30,13 +31,13 @@ class EnvironmentComboBoxControllerTest {
     @Test
     void loadItems() throws IOException {
         var session = new WorkspaceSessionDto();
-        session.setEnvironmentId("aaa");
+        session.setEnvironmentId(new TomatoID("aaaaaaaa"));
 
         var itemSelected = new EnvironmentHeadDto();
-        itemSelected.setId("aaa");
+        itemSelected.setId(new TomatoID("aaaaaaaa"));
 
         var itemNonSelected = new EnvironmentHeadDto();
-        itemNonSelected.setId("bbb");
+        itemNonSelected.setId(new TomatoID("bbbbbbbb"));
 
         // ---
         Mockito.doReturn(session)

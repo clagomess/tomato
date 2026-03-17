@@ -48,7 +48,7 @@ class WorkspaceSessionRepositoryTest extends RepositoryStubs {
                 .getWorkspaceSessionFile();
 
         var result = workspaceSessionRepositoryMock.load();
-        assertEquals("ELQkYBrD", result.getId());
+        assertEquals("ELQkYBrD", result.getId().toString());
     }
 
     @Test

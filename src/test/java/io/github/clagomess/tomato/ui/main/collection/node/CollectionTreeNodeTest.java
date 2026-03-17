@@ -1,9 +1,9 @@
 package io.github.clagomess.tomato.ui.main.collection.node;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -22,19 +22,19 @@ class CollectionTreeNodeTest {
     private final DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
 
     private final CollectionTreeDto collectionTree = new CollectionTreeDto(){{
-        setId(RandomStringUtils.secure().nextAlphanumeric(8));
+        setId(new TomatoID());
         setName("ROOT");
         setChildren(parent -> Stream.of(
                 new CollectionTreeDto(){{
-                    setId(RandomStringUtils.secure().nextAlphanumeric(8));
+                    setId(new TomatoID());
                     setName("LEVEL 1 - B");
                 }},
                 new CollectionTreeDto(){{
-                    setId(RandomStringUtils.secure().nextAlphanumeric(8));
+                    setId(new TomatoID());
                     setName("LEVEL 1 - A");
                     setChildren(parent -> Stream.of(
                             new CollectionTreeDto(){{
-                                setId(RandomStringUtils.secure().nextAlphanumeric(8));
+                                setId(new TomatoID());
                                 setName("LEVEL 2 - A");
                             }}
                     ));
@@ -42,12 +42,12 @@ class CollectionTreeNodeTest {
         ).sorted());
         setRequests(parent -> Stream.of(
                 new RequestHeadDto(){{
-                    setId(RandomStringUtils.secure().nextAlphanumeric(8));
+                    setId(new TomatoID());
                     setName("LEVEL 1 - D");
                     setParent(parent);
                 }},
                 new RequestHeadDto(){{
-                    setId(RandomStringUtils.secure().nextAlphanumeric(8));
+                    setId(new TomatoID());
                     setName("LEVEL 1 - C");
                     setParent(parent);
                 }}

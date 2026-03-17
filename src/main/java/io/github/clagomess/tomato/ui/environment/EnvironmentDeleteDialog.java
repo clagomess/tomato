@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.environment;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
@@ -21,7 +22,7 @@ public class EnvironmentDeleteDialog {
 
     public EnvironmentDeleteDialog(
             Component parent,
-            String environmentId
+            TomatoID environmentId
     ) throws IOException {
         this.parent = parent;
         this.environment = environmentRepository.load(environmentId).orElseThrow();

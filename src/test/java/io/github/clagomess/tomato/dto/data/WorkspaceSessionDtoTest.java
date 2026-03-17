@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.JsonSchema;
 import io.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ class WorkspaceSessionDtoTest {
     @Test
     void toJson() throws JsonProcessingException {
         WorkspaceSessionDto dto = new WorkspaceSessionDto();
-        dto.setEnvironmentId(RandomStringUtils.secure().nextAlphabetic(10));
+        dto.setEnvironmentId(new TomatoID());
 
         var json = mapper.writeValueAsString(dto);
 
@@ -31,10 +30,10 @@ class WorkspaceSessionDtoTest {
     @Test
     void equalsHashCode(){
         var dtoA = new WorkspaceSessionDto();
-        dtoA.setId("aaa");
+        dtoA.setId(new TomatoID("aaaaaaaa"));
 
         var dtoB = new WorkspaceSessionDto();
-        dtoB.setId("aaa");
+        dtoB.setId(new TomatoID("aaaaaaaa"));
 
         Assertions.assertThat(dtoA)
                 .isEqualTo(dtoB);

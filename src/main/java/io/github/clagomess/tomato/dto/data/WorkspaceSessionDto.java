@@ -10,9 +10,9 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 public class WorkspaceSessionDto extends MetadataDto {
-    private String environmentId;
+    private TomatoID environmentId;
     private List<Request> requests = new LinkedList<>();
-    private List<String> expandedCollectionsIds = new ArrayList<>();
+    private List<TomatoID> expandedCollectionsIds = new ArrayList<>();
 
     public List<Request> getRequests() {
         if(requests == null) requests = new LinkedList<>();

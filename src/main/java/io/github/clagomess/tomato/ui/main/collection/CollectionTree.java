@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.main.collection;
 
 import io.github.clagomess.tomato.controller.main.collection.CollectionTreeController;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.ui.component.ExceptionDialog;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxHomeIcon;
@@ -76,7 +77,7 @@ public class CollectionTree extends JPanel {
                 invokeLater(() -> lblCurrentWorkspace.setText(workspace.getName()))
             );
 
-            List<String> expandedCollectionsIds = controller.loadWorkspaceSession()
+            List<TomatoID> expandedCollectionsIds = controller.loadWorkspaceSession()
                     .getExpandedCollectionsIds();
 
             invokeLater(() -> {

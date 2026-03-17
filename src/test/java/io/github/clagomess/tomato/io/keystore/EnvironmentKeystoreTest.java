@@ -1,9 +1,9 @@
 package io.github.clagomess.tomato.io.keystore;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.io.repository.RepositoryStubs;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +31,7 @@ class EnvironmentKeystoreTest extends RepositoryStubs {
 
         environmentKeystoreEmpty = new EnvironmentKeystore(
                 mockDataDir,
-                RandomStringUtils.secure().nextAlphanumeric(8)
+                new TomatoID()
         );
 
         environmentKeystoreEmpty.setGetPassword(() -> "supersecret");
@@ -39,7 +39,7 @@ class EnvironmentKeystoreTest extends RepositoryStubs {
 
         environmentKeystoreExisting = new EnvironmentKeystore(
                 new File(testData, "workspace-nPUaq0TC"),
-                "7rZO7Z1T"
+                new TomatoID("7rZO7Z1T")
         );
         environmentKeystoreExisting.setGetPassword(() -> "supersecret");
     }

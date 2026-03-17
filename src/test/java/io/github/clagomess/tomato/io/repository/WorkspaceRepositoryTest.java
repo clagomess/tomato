@@ -1,8 +1,8 @@
 package io.github.clagomess.tomato.io.repository;
 
 import io.github.clagomess.tomato.dto.data.DataSessionDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class WorkspaceRepositoryTest extends RepositoryStubs {
     @Test
     void getWorkspaceDirectory_whenNotExists_create() throws IOException {
         var result = workspaceRepository.getWorkspaceDirectory(
-                RandomStringUtils.secure().nextAlphanumeric(8)
+                new TomatoID()
         );
 
         Assertions.assertThat(result).isDirectory();

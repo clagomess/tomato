@@ -1,9 +1,9 @@
 package io.github.clagomess.tomato.publisher;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.publisher.key.RequestKey;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RequestPublisherTest {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
 
-    private String collectionId;
-    private String requestId;
+    private TomatoID collectionId;
+    private TomatoID requestId;
 
     @BeforeEach
     void setUp() {
-        collectionId = RandomStringUtils.secure().nextAlphanumeric(8);
-        requestId = RandomStringUtils.secure().nextAlphanumeric(8);
+        collectionId = new TomatoID();
+        requestId = new TomatoID();
     }
 
     @Test

@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui.main.collection.node;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.publisher.CollectionPublisher;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
@@ -30,13 +31,13 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
     private final JTree tree;
     private final DefaultTreeModel treeModel;
     private final CollectionTreeDto collection;
-    private final List<String> expandedCollectionsIds;
+    private final List<TomatoID> expandedCollectionsIds;
 
     public CollectionTreeNode(
             JTree tree,
             DefaultTreeModel treeModel,
             CollectionTreeDto collection,
-            List<String> expandedCollectionsIds
+            List<TomatoID> expandedCollectionsIds
     ) {
         super(collection, true);
         add(new DefaultMutableTreeNode("loading"));
