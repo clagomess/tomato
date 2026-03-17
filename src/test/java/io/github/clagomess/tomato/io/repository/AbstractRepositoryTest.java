@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.io.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.clagomess.tomato.dto.data.ConfigurationDto;
+import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -63,6 +66,27 @@ class AbstractRepositoryTest extends RepositoryStubs {
             // ----
             boolean result = abstractRepository.writeFile(file, new TypeReference<>(){}, dto);
             assertFalse(result);
+        }
+
+        @Test
+        void whenConcurrentWriteOnSameFile_doFifo() throws IOException {
+            var dto = new RequestDto();
+            var file = new File(mockDataDir, "whenConcurrentWriteOnSameFile_doFifo.json");
+            var hasError = new AtomicBoolean(false);
+
+            abstractRepository.writeFile(file, new TypeReference<>(){}, dto);
+
+            IntStream.range(0, 100).parallel().forEach(i -> {
+                try {
+                    dto.setName("pos[%s]".formatted(i));
+                    abstractRepository.writeFile(file, new TypeReference<>(){}, dto);
+                } catch (Exception e){
+                    log.error(e.getMessage());
+                    hasError.set(true);
+                }
+            });
+
+            assertFalse(hasError.get());
         }
     }
 

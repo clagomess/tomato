@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -67,6 +69,7 @@ abstract class AbstractRepository {
         }
     }
 
+    private final ConcurrentHashMap<File, ReentrantLock> writeLock = new ConcurrentHashMap<>();
     protected <T extends MetadataDto> boolean writeFile(
             File filepath,
             TypeReference<T> type,
@@ -75,18 +78,25 @@ abstract class AbstractRepository {
         log.info("WRITING: {}", filepath);
         verifyOperationAllowedInTestMode(filepath);
 
-        if(readFile(filepath, type).filter(content::equals).isPresent()){
-            log.info("- not writed - Same Content");
-            return false;
-        }
+        ReentrantLock lock = writeLock.computeIfAbsent(filepath, f -> new ReentrantLock());
+        lock.lock();
 
-        content.setUpdateTime(LocalDateTime.now());
+        try {
+            if(readFile(filepath, type).filter(content::equals).isPresent()){
+                log.info("- not writed - Same Content");
+                return false;
+            }
 
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(filepath))) {
-            objectMapper.writerWithDefaultPrettyPrinter()
-                    .writeValue(bw, content);
-            log.info("- writed");
-            return true;
+            content.setUpdateTime(LocalDateTime.now());
+
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(filepath))) {
+                objectMapper.writerWithDefaultPrettyPrinter()
+                        .writeValue(bw, content);
+                log.info("- writed");
+                return true;
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
