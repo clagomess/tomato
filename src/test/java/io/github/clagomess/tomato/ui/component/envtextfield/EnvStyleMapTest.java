@@ -7,16 +7,13 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Slf4j
-class EnvDocumentListenerTest {
+class EnvStyleMapTest {
 
     @Test
-    void patternEnv(){
-        Pattern pattern = new EnvDocumentListener(null).patternEnv;
-
-        Matcher matcher = pattern.matcher("{{aaa}} {{ }} { asasas {} {{}}{{a}} t {{c}}{{d}}");
+    void pattern(){
+        Matcher matcher = EnvStyleMap.pattern.matcher("{{aaa}} {{ }} { asasas {} {{}}{{a}} t {{c}}{{d}}");
 
         List<String> found = new ArrayList<>();
 

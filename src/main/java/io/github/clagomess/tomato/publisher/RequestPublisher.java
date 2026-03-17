@@ -10,6 +10,8 @@ import io.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import io.github.clagomess.tomato.publisher.key.RequestKey;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public class RequestPublisher {
     @Getter
@@ -33,4 +35,5 @@ public class RequestPublisher {
     };
 
     private final KeyPublisher<TabKey, KeyValueItemDto> onCookieSet = new KeyPublisher<>();
+    private final KeyPublisher<TabKey, List<KeyValueItemDto>> onPathVarChange = new KeyPublisher<>();
 }

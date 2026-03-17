@@ -38,7 +38,10 @@ public class EnvTextField extends JPanel {
 
         this.textPane = new UndoableTextPane();
 
-        this.envDocumentListener = new EnvDocumentListener(this.textPane.getStyledDocument());
+        this.envDocumentListener = new EnvDocumentListener(
+                this.textPane.getStyledDocument(),
+                options.getPathVar()
+        );
         this.textPane.getStyledDocument().addDocumentListener(this.envDocumentListener);
         this.envDocumentListener.getOnChangeList().add(content -> setBtnEnvViewEnabledOrDisabled());
 
@@ -69,8 +72,7 @@ public class EnvTextField extends JPanel {
     private void setBtnEnvViewEnabledOrDisabled(){
         btnEnvView.setEnabled(
                 textPane.isEnabled() &&
-                !envDocumentListener.getEnvMap()
-                        .getInjected()
+                !envDocumentListener.getInjected()
                         .isEmpty()
         );
     }
@@ -80,7 +82,7 @@ public class EnvTextField extends JPanel {
                 ViewInjectedEnvironmentFrame.class,
                 () -> new ViewInjectedEnvironmentFrame(
                         this,
-                        envDocumentListener.getEnvMap()
+                        envDocumentListener.getInjected()
                 )
         );
     }

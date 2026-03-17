@@ -125,6 +125,9 @@ public class RequestTabContent extends JPanel {
                                 requestDto.getUrlParam(),
                                 requestStagingMonitor
                         ))
+                        .onChange(e -> RequestPublisher.getInstance()
+                                    .getOnPathVarChange()
+                                    .publish(tabKey, requestDto.getUrlParam().getPath()))
                         .build()
         );
 

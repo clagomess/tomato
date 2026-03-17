@@ -7,11 +7,12 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 class ViewInjectedEnvironmentFrame extends JFrame {
     public ViewInjectedEnvironmentFrame(
             Component parent,
-            EnvMap envMap
+            Map<String, String> injected
     ) {
         setTitle("View Injected Environment");
         setIconImages(FaviconImage.getFrameIconImage());
@@ -24,7 +25,7 @@ class ViewInjectedEnvironmentFrame extends JFrame {
                 KeyValueTMDto.class
         );
 
-        envMap.getInjected().forEach((key, value) -> {
+        injected.forEach((key, value) -> {
             tableManager.getModel().addRow(new KeyValueTMDto(key, value));
         });
 
