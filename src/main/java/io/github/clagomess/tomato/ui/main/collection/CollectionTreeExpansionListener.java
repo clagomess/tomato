@@ -31,6 +31,7 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
     public void treeCollapsed(TreeExpansionEvent event) {
         CollectionTreeNode node = (CollectionTreeNode) event.getPath().getLastPathComponent();
         node.removeAllChildren();
+        node.removeExpandedCollectionsIds(node.getCollection().getId());
         node.add(new DefaultMutableTreeNode("loading"));
     }
 }
