@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.io.http;
 
+import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import org.assertj.core.api.Assertions;
@@ -99,6 +100,47 @@ class RequestBuilderTest {
 
             var result = new RequestBuilder(List.of())
                     .buildCookies(List.of(item))
+                    .toList()
+                    .get(0);
+
+            assertSame(item, result);
+        }
+    }
+
+    @Nested
+    class buildUrlEncodedForm {
+        @ParameterizedTest
+        @NullAndEmptySource
+        void whenNullKey_dontAdd(String key){
+            var input = List.of(new ContentTypeKeyValueItemDto(key, null));
+
+            var result = new RequestBuilder(List.of())
+                    .buildUrlEncodedForm(input);
+
+            Assertions.assertThat(result).isEmpty();
+        }
+
+        @Test
+        void whenNotSelected_dontAdd(){
+            var input = List.of(new ContentTypeKeyValueItemDto(
+                    "a",
+                    "a",
+                    "text/plain",
+                    false
+            ));
+
+            var result = new RequestBuilder(List.of())
+                    .buildUrlEncodedForm(input);
+
+            Assertions.assertThat(result).isEmpty();
+        }
+
+        @Test
+        void whenEquals_dontDuplicateObject(){
+            var item = new ContentTypeKeyValueItemDto("a", "a");
+
+            var result = new RequestBuilder(List.of())
+                    .buildUrlEncodedForm(List.of(item))
                     .toList()
                     .get(0);
 

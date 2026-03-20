@@ -79,10 +79,16 @@ public class RequestBuilder {
         return form.stream()
                 .filter(KeyValueItemDto::isSelected)
                 .filter(item -> StringUtils.isNotBlank(item.getKey()))
-                .map(item -> new ContentTypeKeyValueItemDto(
-                        item.getKey(),
-                        injectEnvironment(item.getValue())
-                ));
+                .map(item -> {
+                    var value = injectEnvironment(item.getValue());
+                    if(Objects.equals(value, item.getValue())) return item;
+                    return new ContentTypeKeyValueItemDto(
+                            item.getKey(),
+                            value,
+                            item.getValueContentType(),
+                            item.isSelected()
+                    );
+                });
     }
 
     public Stream<FileKeyValueItemDto> buildMultipartFormData(
