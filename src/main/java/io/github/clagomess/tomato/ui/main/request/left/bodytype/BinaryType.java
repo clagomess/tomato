@@ -9,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -34,11 +35,11 @@ public class BinaryType extends JPanel {
 
         fileChooser.setValue(binaryBody.getFile());
         fileChooser.addOnChange(value -> {
-            binaryBody.setFile(value != null ? value.getAbsolutePath() : null);
+            binaryBody.setFile(value);
 
             try {
                 var result = value != null ?
-                        Files.probeContentType(value.toPath()) :
+                        Files.probeContentType(new File(value).toPath()) :
                         null;
 
                 binaryBody.setContentType(result);

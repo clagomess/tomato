@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Objects;
@@ -55,14 +56,14 @@ class ValueComponent<T extends KeyValueItemDto> {
         fileChooser.addOnChange(file -> {
             try {
                 fvItem.setValueContentType(file != null ?
-                        Files.probeContentType(file.toPath()) :
+                        Files.probeContentType(new File(file).toPath()) :
                         null
                 );
             }catch(IOException e){
                 log.warn(e.getMessage());
             }
 
-            valueOnChange(file != null ? file.getAbsolutePath() : null);
+            valueOnChange(file);
         });
         return fileChooser;
     }
