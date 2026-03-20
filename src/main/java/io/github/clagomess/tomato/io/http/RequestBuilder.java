@@ -65,10 +65,12 @@ public class RequestBuilder {
     ){
         return cookies.stream()
                 .filter(KeyValueItemDto::isSelected)
-                .map(cookie -> new KeyValueItemDto(
-                        cookie.getKey(),
-                        injectEnvironment(cookie.getValue())
-                ));
+                .filter(item -> StringUtils.isNotBlank(item.getKey()))
+                .map(cookie -> {
+                    var value = injectEnvironment(cookie.getValue());
+                    if(Objects.equals(value, cookie.getValue())) return cookie;
+                    return new KeyValueItemDto(cookie.getKey(), value);
+                });
     }
 
     public Stream<ContentTypeKeyValueItemDto> buildUrlEncodedForm(

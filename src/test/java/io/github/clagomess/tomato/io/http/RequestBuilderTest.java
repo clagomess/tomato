@@ -69,4 +69,40 @@ class RequestBuilderTest {
             assertSame(item, result);
         }
     }
+
+    @Nested
+    class buildCookies {
+        @ParameterizedTest
+        @NullAndEmptySource
+        void whenNullKey_dontAdd(String key){
+            var input = List.of(new KeyValueItemDto(key, null));
+
+            var result = new RequestBuilder(List.of())
+                    .buildCookies(input);
+
+            Assertions.assertThat(result).isEmpty();
+        }
+
+        @Test
+        void whenNotSelected_dontAdd(){
+            var input = List.of(new KeyValueItemDto("a", "a", false));
+
+            var result = new RequestBuilder(List.of())
+                    .buildCookies(input);
+
+            Assertions.assertThat(result).isEmpty();
+        }
+
+        @Test
+        void whenEquals_dontDuplicateObject(){
+            var item = new KeyValueItemDto("a", "a");
+
+            var result = new RequestBuilder(List.of())
+                    .buildCookies(List.of(item))
+                    .toList()
+                    .get(0);
+
+            assertSame(item, result);
+        }
+    }
 }
