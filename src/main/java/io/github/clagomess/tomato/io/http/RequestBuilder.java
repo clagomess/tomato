@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -51,10 +52,12 @@ public class RequestBuilder {
     ){
         return headers.stream()
                 .filter(KeyValueItemDto::isSelected)
-                .map(header -> new KeyValueItemDto(
-                        header.getKey(),
-                        injectEnvironment(header.getValue())
-                ));
+                .filter(item -> StringUtils.isNotBlank(item.getKey()))
+                .map(header -> {
+                    var value = injectEnvironment(header.getValue());
+                    if(Objects.equals(value, header.getValue())) return header;
+                    return new KeyValueItemDto(header.getKey(), value);
+                });
     }
 
     public Stream<KeyValueItemDto> buildCookies(
@@ -62,10 +65,12 @@ public class RequestBuilder {
     ){
         return cookies.stream()
                 .filter(KeyValueItemDto::isSelected)
-                .map(cookie -> new KeyValueItemDto(
-                        cookie.getKey(),
-                        injectEnvironment(cookie.getValue())
-                ));
+                .filter(item -> StringUtils.isNotBlank(item.getKey()))
+                .map(cookie -> {
+                    var value = injectEnvironment(cookie.getValue());
+                    if(Objects.equals(value, cookie.getValue())) return cookie;
+                    return new KeyValueItemDto(cookie.getKey(), value);
+                });
     }
 
     public Stream<ContentTypeKeyValueItemDto> buildUrlEncodedForm(
@@ -74,10 +79,16 @@ public class RequestBuilder {
         return form.stream()
                 .filter(KeyValueItemDto::isSelected)
                 .filter(item -> StringUtils.isNotBlank(item.getKey()))
-                .map(item -> new ContentTypeKeyValueItemDto(
-                        item.getKey(),
-                        injectEnvironment(item.getValue())
-                ));
+                .map(item -> {
+                    var value = injectEnvironment(item.getValue());
+                    if(Objects.equals(value, item.getValue())) return item;
+                    return new ContentTypeKeyValueItemDto(
+                            item.getKey(),
+                            value,
+                            item.getValueContentType(),
+                            item.isSelected()
+                    );
+                });
     }
 
     public Stream<FileKeyValueItemDto> buildMultipartFormData(
@@ -86,12 +97,16 @@ public class RequestBuilder {
         return form.stream()
                 .filter(FileKeyValueItemDto::isSelected)
                 .filter(item -> StringUtils.isNotBlank(item.getKey()))
-                .map(item -> new FileKeyValueItemDto(
-                        item.getType(),
-                        item.getKey(),
-                        injectEnvironment(item.getValue()),
-                        item.getValueContentType(),
-                        item.isSelected()
-                ));
+                .map(item -> {
+                    var value = injectEnvironment(item.getValue());
+                    if (Objects.equals(value, item.getValue())) return item;
+                    return new FileKeyValueItemDto(
+                            item.getType(),
+                            item.getKey(),
+                            injectEnvironment(item.getValue()),
+                            item.getValueContentType(),
+                            item.isSelected()
+                    );
+                });
     }
 }
