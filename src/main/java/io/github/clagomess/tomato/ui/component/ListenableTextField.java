@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ListenableTextField extends UndoableTextField {
-    private final List<OnChangeFI> onChangeList = new LinkedList<>();
+    protected final List<OnChangeFI> onChangeList = new LinkedList<>();
 
     public ListenableTextField() {
         getDocument().addDocumentListener(new DocumentListener() {
