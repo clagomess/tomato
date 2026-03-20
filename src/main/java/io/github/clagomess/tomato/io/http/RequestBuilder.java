@@ -97,12 +97,16 @@ public class RequestBuilder {
         return form.stream()
                 .filter(FileKeyValueItemDto::isSelected)
                 .filter(item -> StringUtils.isNotBlank(item.getKey()))
-                .map(item -> new FileKeyValueItemDto(
-                        item.getType(),
-                        item.getKey(),
-                        injectEnvironment(item.getValue()),
-                        item.getValueContentType(),
-                        item.isSelected()
-                ));
+                .map(item -> {
+                    var value = injectEnvironment(item.getValue());
+                    if (Objects.equals(value, item.getValue())) return item;
+                    return new FileKeyValueItemDto(
+                            item.getType(),
+                            item.getKey(),
+                            injectEnvironment(item.getValue()),
+                            item.getValueContentType(),
+                            item.isSelected()
+                    );
+                });
     }
 }
