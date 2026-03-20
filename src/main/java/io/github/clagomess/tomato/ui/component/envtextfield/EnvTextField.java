@@ -50,7 +50,7 @@ public class EnvTextField extends JPanel {
         spTextPane.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
 
         setLayout(new MigLayout(
-                "insets 2",
+                "insets 0",
                 "0[]0[]2[grow, fill]"
         ));
         add(btnEnvView);
