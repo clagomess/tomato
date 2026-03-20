@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -51,10 +52,12 @@ public class RequestBuilder {
     ){
         return headers.stream()
                 .filter(KeyValueItemDto::isSelected)
-                .map(header -> new KeyValueItemDto(
-                        header.getKey(),
-                        injectEnvironment(header.getValue())
-                ));
+                .filter(item -> StringUtils.isNotBlank(item.getKey()))
+                .map(header -> {
+                    var value = injectEnvironment(header.getValue());
+                    if(Objects.equals(value, header.getValue())) return header;
+                    return new KeyValueItemDto(header.getKey(), value);
+                });
     }
 
     public Stream<KeyValueItemDto> buildCookies(
