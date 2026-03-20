@@ -73,6 +73,10 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
         });
     }
 
+    public void removeExpandedCollectionsIds(TomatoID collectionId) {
+        expandedCollectionsIds.remove(collectionId);
+    }
+
     public void loadChildren() {
         ComponentUtil.checkIsEventDispatchThread();
 
