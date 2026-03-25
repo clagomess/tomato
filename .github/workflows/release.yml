@@ -197,7 +197,7 @@ jobs:
           --input ./target/tomato-${{env.GIT_TAG}} \
           --main-jar tomato-${{env.GIT_TAG}}.jar \
           --main-class io.github.clagomess.tomato.Main \
-          --java-options "-splash:$APPDIR/splash.png -Dfile.encoding=UTF-8" \
+          --java-options "-splash:\$APPDIR/splash.png -Dfile.encoding=UTF-8" \
           --dest ./build-macos \
           --verbose
           mv ./build-macos/Tomato-${{env.GIT_TAG}}.dmg ./build-macos/tomato-${{env.GIT_TAG}}-arm64.dmg

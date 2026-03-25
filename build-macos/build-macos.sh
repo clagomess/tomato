@@ -7,5 +7,5 @@ jpackage \
 --input ../target/tomato-1.0.0 \
 --main-jar tomato-1.0.0.jar \
 --main-class io.github.clagomess.tomato.Main \
---java-options "-splash:$APPDIR/splash.png -Dfile.encoding=UTF-8" \
+--java-options "-splash:\$APPDIR/splash.png -Dfile.encoding=UTF-8" \
 --verbose
