@@ -165,3 +165,46 @@ jobs:
           name: tomato-linux-${{env.GIT_TAG}}-${{matrix.dist}}
           retention-days: 5
           path: ./build-${{matrix.dist}}/tomato-${{env.GIT_TAG}}*
+
+  release-macos:
+    needs: [build]
+    timeout-minutes: 10
+    runs-on: macos-latest
+
+    env:
+      GIT_TAG: ${{ needs.build.outputs.git_tag }}
+
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          name: tomato-${{env.GIT_TAG}}
+          path: ./target
+
+      - name: Build Dmg
+        run: |
+          jpackage \
+          --type dmg \
+          --name Tomato \
+          --app-version ${{env.GIT_TAG}} \
+          --vendor Tomato \
+          --icon ./build-macos/favicon.icns \
+          --input ./target/tomato-${{env.GIT_TAG}} \
+          --main-jar tomato-${{env.GIT_TAG}}.jar \
+          --main-class io.github.clagomess.tomato.Main \
+          --java-options "-splash:$APPDIR/splash.png -Dfile.encoding=UTF-8" \
+          --dest ./build-macos \
+          --verbose
+          mv ./build-macos/Tomato-${{env.GIT_TAG}}.dmg ./build-macos/tomato-${{env.GIT_TAG}}-arm64.dmg
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: tomato-${{env.GIT_TAG}}-arm64.dmg
+          compression-level: 0
+          retention-days: 5
+          path: ./build-macos/tomato-${{env.GIT_TAG}}-x64.exe
