@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui.menu;
 
+import com.formdev.flatlaf.util.SystemInfo;
 import io.github.clagomess.tomato.ui.MainFrame;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxExportIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxImportIcon;
@@ -13,8 +14,8 @@ import javax.swing.*;
 import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 
 public class EnvironmentMenu extends JMenu {
-    private static final Icon IMPORT_ICON = new BxImportIcon();
-    private static final Icon EXPORT_ICON = new BxExportIcon();
+    private static final Icon IMPORT_ICON = !SystemInfo.isMacOS ? new BxImportIcon() : null;
+    private static final Icon EXPORT_ICON = !SystemInfo.isMacOS ? new BxExportIcon() : null;
 
     public EnvironmentMenu(MainFrame mainFrame) {
         super("Environment");
