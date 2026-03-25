@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui.menu;
 
+import com.formdev.flatlaf.util.SystemInfo;
 import io.github.clagomess.tomato.ui.MainFrame;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTransferAltIcon;
 import io.github.clagomess.tomato.ui.workspace.WorkspaceNewFrame;
@@ -11,7 +12,7 @@ import javax.swing.*;
 import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 
 public class WorkspaceMenu extends JMenu {
-    private static final Icon TRANSFER_ALT_ICON = new BxTransferAltIcon();
+    private static final Icon TRANSFER_ALT_ICON = !SystemInfo.isMacOS ? new BxTransferAltIcon() : null;
 
     public WorkspaceMenu(MainFrame mainFrame) {
         super("Workspace");

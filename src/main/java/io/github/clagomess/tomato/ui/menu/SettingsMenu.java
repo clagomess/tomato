@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui.menu;
 
+import com.formdev.flatlaf.util.SystemInfo;
 import io.github.clagomess.tomato.ui.MainFrame;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxBugIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxInfoCircleIcon;
@@ -11,9 +12,9 @@ import javax.swing.*;
 import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 
 public class SettingsMenu extends JMenu {
-    private static final Icon SLIDER_ALT_ICON = new BxSliderAltIcon();
-    private static final Icon INFO_CIRCLE_ICON = new BxInfoCircleIcon();
-    private static final Icon BUG_ICON = new BxBugIcon();
+    private static final Icon SLIDER_ALT_ICON = !SystemInfo.isMacOS ? new BxSliderAltIcon() : null;
+    private static final Icon INFO_CIRCLE_ICON = !SystemInfo.isMacOS ? new BxInfoCircleIcon() : null;
+    private static final Icon BUG_ICON = !SystemInfo.isMacOS ? new BxBugIcon() : null;
 
     public SettingsMenu(MainFrame mainFrame) {
         super("Settings");

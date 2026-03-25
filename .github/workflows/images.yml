@@ -102,3 +102,25 @@ jobs:
           -t ghcr.io/clagomess/tomato-build-flatpak:${{github.run_number}} \
           -f build-flatpak/Dockerfile .
           docker push ghcr.io/clagomess/tomato-build-flatpak --all-tags
+
+  build-macos:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Log in
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Image
+        run: |
+          docker build \
+          -t ghcr.io/clagomess/tomato-build-macos \
+          -t ghcr.io/clagomess/tomato-build-macos:${{github.run_number}} \
+          -f build-macos/Dockerfile .
+          docker push ghcr.io/clagomess/tomato-build-macos --all-tags
