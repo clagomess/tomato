@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui.main.collection;
 
+import com.formdev.flatlaf.util.SystemInfo;
 import io.github.clagomess.tomato.controller.main.collection.CollectionTreeController;
 import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
@@ -27,7 +28,7 @@ public class CollectionTree extends JPanel {
 
     private final DefaultTreeModel treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("ROOT"));
     private final JTree tree = new JTree(treeModel);
-    private final JLabel lblCurrentWorkspace = new JLabel(HOME_ICON);
+    private final JLabel lblCurrentWorkspace = new JLabel(HOME_ICON, SwingConstants.LEFT);
 
     private final CollectionTreeController controller = new CollectionTreeController();
 
@@ -37,7 +38,11 @@ public class CollectionTree extends JPanel {
                 "[grow, fill]"
         ));
 
-        add(lblCurrentWorkspace, "width 100:200:100% - 14px");
+        add(
+                lblCurrentWorkspace,
+                "width 100:200:100% - 14px" +
+                (SystemInfo.isMacFullWindowContentSupported ? ", gaptop 20px" : null)
+        );
 
         invokeLater(() -> {
             add(new EnvironmentSwitcherComboBox(), "cell 0 1, width 100:200:100% - 14px");

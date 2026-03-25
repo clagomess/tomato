@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.ui;
 
+import com.formdev.flatlaf.util.SystemInfo;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import io.github.clagomess.tomato.ui.main.collection.CollectionTree;
 import io.github.clagomess.tomato.ui.main.request.RequestTabbedPane;
@@ -23,6 +24,12 @@ public class MainFrame extends JFrame {
         setJMenuBar(getMenu());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new MainWindowAdapter(this));
+
+        if (SystemInfo.isMacFullWindowContentSupported) {
+            getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
+            getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
+            getRootPane().putClientProperty("apple.awt.windowTitleVisible", false);
+        }
 
         setLayout(new MigLayout("insets 5", "[grow, fill]"));
 
