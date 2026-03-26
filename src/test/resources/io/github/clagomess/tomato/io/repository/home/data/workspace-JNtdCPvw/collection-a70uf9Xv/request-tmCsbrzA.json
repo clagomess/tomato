@@ -1,7 +1,7 @@
 {
   "id" : "tmCsbrzA",
   "createTime" : "2024-12-18T23:26:19",
-  "updateTime" : "2025-03-08T00:27:29",
+  "updateTime" : "2026-03-26T14:42:02",
   "name" : "Multipart Form",
   "method" : "POST",
   "url" : "{{echoServer}}/echo.php",
@@ -23,7 +23,7 @@
       "type" : "TEXT"
     }, {
       "key" : "myfile",
-      "value" : "C:\\Users\\claudio\\OneDrive\\Portada.jpg",
+      "value" : "/Users/claudio/OneDrive/Imagens/Portada.jpg",
       "selected" : true,
       "valueContentType" : "image/jpeg",
       "type" : "FILE"
@@ -41,9 +41,9 @@
       "type" : "TEXT"
     }, {
       "key" : "disabled2",
-      "value" : "C:\\Users\\claudio\\OneDrive\\Documentos\\aaa.csv",
+      "value" : "/Users/claudio/OneDrive/Imagens/WAF.png",
       "selected" : false,
-      "valueContentType" : "text/plain",
+      "valueContentType" : "image/png",
       "type" : "FILE"
     }, {
       "key" : "disabled3",
