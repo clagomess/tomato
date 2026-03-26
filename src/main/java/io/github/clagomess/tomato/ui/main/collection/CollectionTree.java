@@ -41,7 +41,7 @@ public class CollectionTree extends JPanel {
         add(
                 lblCurrentWorkspace,
                 "width 100:200:100% - 14px" +
-                (SystemInfo.isMacFullWindowContentSupported ? ", gaptop 20px" : null)
+                (SystemInfo.isMacFullWindowContentSupported ? ", gaptop 20px" : "")
         );
 
         invokeLater(() -> {
