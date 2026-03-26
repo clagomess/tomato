@@ -2,16 +2,16 @@ package io.github.clagomess.tomato.ui.collection;
 
 import io.github.clagomess.tomato.controller.collection.CollectionImportFrameController;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ConverterComboBox;
 import io.github.clagomess.tomato.ui.component.FileChooser;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CollectionImportFrame extends JFrame {
+public class CollectionImportFrame extends BaseFrame {
     private final JButton btnImport = new JButton("Import");
     private final FileChooser fileChooser = new FileChooser();
     private final ConverterComboBox cbConverter = new ConverterComboBox();
@@ -25,9 +25,7 @@ public class CollectionImportFrame extends JFrame {
         controller = new CollectionImportFrameController();
 
         setTitle("Import Collection");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         cbCollectionParent = new CollectionComboBox(selectedCollectionTreeParent);

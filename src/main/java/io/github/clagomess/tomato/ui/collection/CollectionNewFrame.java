@@ -2,15 +2,15 @@ package io.github.clagomess.tomato.ui.collection;
 
 import io.github.clagomess.tomato.controller.collection.CollectionNewFrameController;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import io.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextField;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CollectionNewFrame extends JFrame {
+public class CollectionNewFrame extends BaseFrame {
     private final JButton btnSave = new JButton("Save");
     private final UndoableTextField txtName = new UndoableTextField();
     private final CollectionComboBox cbCollectionParent;
@@ -24,9 +24,7 @@ public class CollectionNewFrame extends JFrame {
         controller = new CollectionNewFrameController();
 
         setTitle("New Collection");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         cbCollectionParent = new CollectionComboBox(selectedCollectionTreeParent);

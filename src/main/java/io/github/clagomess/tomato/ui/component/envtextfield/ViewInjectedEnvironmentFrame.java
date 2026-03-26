@@ -1,7 +1,7 @@
 package io.github.clagomess.tomato.ui.component.envtextfield;
 
 import io.github.clagomess.tomato.dto.table.KeyValueTMDto;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.tablemanager.TableManager;
 import net.miginfocom.swing.MigLayout;
 
@@ -9,16 +9,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
-class ViewInjectedEnvironmentFrame extends JFrame {
+class ViewInjectedEnvironmentFrame extends BaseFrame {
     public ViewInjectedEnvironmentFrame(
             Component parent,
             Map<String, String> injected
     ) {
         setTitle("View Injected Environment");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(500, 200));
         setPreferredSize(new Dimension(500, 200));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(true);
 
         TableManager<KeyValueTMDto> tableManager = new TableManager<>(

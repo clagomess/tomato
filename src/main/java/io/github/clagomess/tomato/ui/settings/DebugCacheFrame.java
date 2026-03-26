@@ -1,24 +1,22 @@
 package io.github.clagomess.tomato.ui.settings;
 
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.MainFrame;
 import io.github.clagomess.tomato.ui.component.RawTextArea;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import io.github.clagomess.tomato.util.CacheManager;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class DebugCacheFrame extends JFrame {
+public class DebugCacheFrame extends BaseFrame {
     private final RawTextArea console = new RawTextArea();
     private final JButton btnRefresh = new JButton("Refresh");
     private final JButton btnReset = new JButton("Reset");
 
     public DebugCacheFrame(MainFrame mainFrame) {
         setTitle("Debug -> Cache");
-        setIconImages(FaviconImage.getFrameIconImage());
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(600, 400));
 
         setLayout(new MigLayout(

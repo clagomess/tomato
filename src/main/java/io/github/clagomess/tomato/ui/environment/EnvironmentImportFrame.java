@@ -4,10 +4,10 @@ import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.converter.InterfaceConverter;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ConverterComboBox;
 import io.github.clagomess.tomato.ui.component.FileChooser;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ import java.awt.*;
 
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
-public class EnvironmentImportFrame extends JFrame {
+public class EnvironmentImportFrame extends BaseFrame {
     private final JButton btnImport = new JButton("Import");
     private final FileChooser fileChooser = new FileChooser();
     private final ConverterComboBox cbConverter = new ConverterComboBox();
@@ -26,9 +26,7 @@ public class EnvironmentImportFrame extends JFrame {
             Component parent
     ){
         setTitle("Import Environment");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         setLayout(new MigLayout(

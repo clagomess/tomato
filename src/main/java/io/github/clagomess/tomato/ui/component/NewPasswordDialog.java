@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.component;
 
 import io.github.clagomess.tomato.io.keystore.PasswordEntropyCalculator;
+import io.github.clagomess.tomato.ui.BaseDialog;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,7 @@ import java.util.Objects;
 import static com.formdev.flatlaf.FlatClientProperties.STYLE;
 import static io.github.clagomess.tomato.ui.component.ColorConstant.*;
 
-public class NewPasswordDialog extends JDialog {
+public class NewPasswordDialog extends BaseDialog {
     private static final String DEFAULT_STYLE = "showRevealButton: true";
     private static final String ERROR_STYLE = "outline: error; showRevealButton: true";
 
@@ -28,18 +29,11 @@ public class NewPasswordDialog extends JDialog {
     public NewPasswordDialog(
             @Nullable Component parent
     ) {
-        super(
-                parent != null ? SwingUtilities.getWindowAncestor(parent) : null,
-                "New Password",
-                Dialog.DEFAULT_MODALITY_TYPE
-        );
+        super(parent, "New Password");
 
         ComponentUtil.checkIsEventDispatchThread();
 
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(350, 100));
-        setResizable(false);
-        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setLayout(new MigLayout(
                 "insets 10",
                 "[][grow, fill]"

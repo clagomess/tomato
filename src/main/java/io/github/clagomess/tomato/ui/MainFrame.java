@@ -1,7 +1,6 @@
 package io.github.clagomess.tomato.ui;
 
 import com.formdev.flatlaf.util.SystemInfo;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import io.github.clagomess.tomato.ui.main.collection.CollectionTree;
 import io.github.clagomess.tomato.ui.main.request.RequestTabbedPane;
 import io.github.clagomess.tomato.ui.menu.CollectionMenu;
@@ -18,10 +17,9 @@ import java.awt.*;
 import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 import static javax.swing.SwingUtilities.invokeLater;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends BaseFrame {
     public MainFrame(){
         setTitle("Tomato");
-        setIconImages(FaviconImage.getFrameIconImage());
         setVisible(true);
         setMinimumSize(new Dimension(1200, 650));
         setJMenuBar(getMenu());
@@ -30,7 +28,6 @@ public class MainFrame extends JFrame {
 
         if(SystemInfo.isMacOS) {
             if (SystemInfo.isMacFullWindowContentSupported) {
-                getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
                 getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
                 getRootPane().putClientProperty("apple.awt.windowTitleVisible", false);
             }

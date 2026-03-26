@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.ui.component;
 
 import com.formdev.flatlaf.icons.FlatOptionPaneErrorIcon;
 import io.github.clagomess.tomato.exception.TomatoException;
+import io.github.clagomess.tomato.ui.BaseDialog;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
@@ -12,7 +13,7 @@ import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 @Slf4j
-public class ExceptionDialog extends JDialog {
+public class ExceptionDialog extends BaseDialog {
     public ExceptionDialog(
             Component parent,
             String message
@@ -24,15 +25,12 @@ public class ExceptionDialog extends JDialog {
             Component parent,
             Exception e
     ) {
-        super(
-                parent != null ? SwingUtilities.getWindowAncestor(parent) : null,
-                "Error",
-                Dialog.DEFAULT_MODALITY_TYPE
-        );
+        super(parent, "Error");
 
         log.error(e.getMessage(), e);
 
         setMinimumSize(new Dimension(350, 130));
+        setResizable(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(

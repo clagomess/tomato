@@ -4,21 +4,20 @@ import io.github.clagomess.tomato.controller.request.RequestFrameController;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.key.TabKey;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.main.request.RequestSplitPane;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
 import static io.github.clagomess.tomato.ui.component.ComponentUtil.getMainWindow;
 
 @Slf4j
-public class RequestFrame extends JFrame {
+public class RequestFrame extends BaseFrame {
     private final RequestFrameController controller = new RequestFrameController();
 
     public RequestFrame(
@@ -28,9 +27,7 @@ public class RequestFrame extends JFrame {
         RequestDto loadedRequest = controller.load(requestHead, request);
 
         setTitle(loadedRequest.getName());
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(1000, 600));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
                 "insets 5",

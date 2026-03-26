@@ -1,8 +1,8 @@
 package io.github.clagomess.tomato.ui.settings;
 
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.MainFrame;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconIcon;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -11,12 +11,10 @@ import java.awt.*;
 import static com.formdev.flatlaf.FlatClientProperties.STYLE_CLASS;
 import static io.github.clagomess.tomato.util.RevisionUtil.REVISION;
 
-public class AboutFrame extends JFrame {
+public class AboutFrame extends BaseFrame {
     public AboutFrame(MainFrame mainFrame) {
         setTitle("About");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         setLayout(new MigLayout(

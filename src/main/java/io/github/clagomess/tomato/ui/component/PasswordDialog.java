@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.component;
 
 import io.github.clagomess.tomato.exception.TomatoException;
+import io.github.clagomess.tomato.ui.BaseDialog;
 import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Nullable;
@@ -12,25 +13,18 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.formdev.flatlaf.FlatClientProperties.STYLE;
 import static javax.swing.SwingUtilities.*;
 
-public class PasswordDialog extends JDialog {
+public class PasswordDialog extends BaseDialog {
     private final JPasswordField txtPassword = new JPasswordField();
     private final JButton btnSubmit = new JButton("Submit");
 
     public PasswordDialog(
             @Nullable Component parent
     ) {
-        super(
-                parent != null ? getWindowAncestor(parent) : null,
-                "Enter Password",
-                Dialog.DEFAULT_MODALITY_TYPE
-        );
+        super(parent, "Enter Password");
 
         ComponentUtil.checkIsEventDispatchThread();
 
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(350, 100));
-        setResizable(false);
-        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setLayout(new MigLayout(
                 "insets 10",
                 "[][grow, fill]"

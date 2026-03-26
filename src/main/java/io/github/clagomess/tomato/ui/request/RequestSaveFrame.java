@@ -9,9 +9,9 @@ import io.github.clagomess.tomato.mapper.RequestMapper;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.publisher.key.RequestKey;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.collection.CollectionComboBox;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import io.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextField;
 import net.miginfocom.swing.MigLayout;
 
@@ -20,7 +20,7 @@ import java.awt.*;
 
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
-public class RequestSaveFrame extends JFrame {
+public class RequestSaveFrame extends BaseFrame {
     private final RequestDto requestDto;
     private final OnSaveFI onSaveListener;
     private final JButton btnSave = new JButton("Save");
@@ -39,9 +39,7 @@ public class RequestSaveFrame extends JFrame {
         this.onSaveListener = onSaveListener;
 
         setTitle("Save Request");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         setLayout(new MigLayout(

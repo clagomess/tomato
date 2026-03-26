@@ -2,9 +2,9 @@ package io.github.clagomess.tomato.ui.collection;
 
 import io.github.clagomess.tomato.controller.collection.CollectionExportFrameController;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ConverterComboBox;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.Optional;
 
 public class CollectionExportFrame
-        extends JFrame
+        extends BaseFrame
         implements CollectionExportFrameInterface {
     private final JButton btnExport = new JButton("Export");
     private final ConverterComboBox cbConverter = new ConverterComboBox();
@@ -27,9 +27,7 @@ public class CollectionExportFrame
         controller = new CollectionExportFrameController(this);
 
         setTitle("Export Collection");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         cbCollection = new CollectionComboBox(selected);

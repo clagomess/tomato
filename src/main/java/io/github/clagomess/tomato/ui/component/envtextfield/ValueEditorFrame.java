@@ -1,9 +1,9 @@
 package io.github.clagomess.tomato.ui.component.envtextfield;
 
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 import io.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
 import io.github.clagomess.tomato.ui.main.request.right.BeautifierDialog;
 import net.miginfocom.swing.MigLayout;
@@ -13,7 +13,7 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.Objects;
 
-class ValueEditorFrame extends JFrame {
+class ValueEditorFrame extends BaseFrame {
     private static final Icon MAGIC_WAND_ICON = new BxsMagicWandIcon();
 
     private final EnvTextField parent;
@@ -37,9 +37,7 @@ class ValueEditorFrame extends JFrame {
         this.options = options;
 
         setTitle("Value Editor");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(600, 400));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
                 "insets 10",

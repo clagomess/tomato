@@ -2,9 +2,9 @@ package io.github.clagomess.tomato.ui.environment.list;
 
 import io.github.clagomess.tomato.controller.environment.list.EnvironmentListController;
 import io.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.EmptyPane;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 public class EnvironmentListFrame
-        extends JFrame
+        extends BaseFrame
         implements EnvironmentListInterface {
     private final JPanel rowsPanel;
 
@@ -25,9 +25,7 @@ public class EnvironmentListFrame
         controller = new EnvironmentListController(this);
 
         setTitle("Edit Environments");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 400));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
                 "insets 10",

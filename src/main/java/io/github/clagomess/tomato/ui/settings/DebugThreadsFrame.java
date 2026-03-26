@@ -1,9 +1,9 @@
 package io.github.clagomess.tomato.ui.settings;
 
 import io.github.clagomess.tomato.exception.TomatoException;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.MainFrame;
 import io.github.clagomess.tomato.ui.component.RawTextArea;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -11,14 +11,12 @@ import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.util.Comparator;
 
-public class DebugThreadsFrame extends JFrame {
+public class DebugThreadsFrame extends BaseFrame {
     private final RawTextArea console = new RawTextArea();
     private final Timer checkTimer;
 
     public DebugThreadsFrame(MainFrame mainFrame) {
         setTitle("Debug -> Threads");
-        setIconImages(FaviconImage.getFrameIconImage());
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setMinimumSize(new Dimension(600, 400));
 
         setLayout(new MigLayout(

@@ -3,11 +3,11 @@ package io.github.clagomess.tomato.ui.environment.edit;
 import io.github.clagomess.tomato.controller.environment.edit.EnvironmentEditFrameController;
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.TomatoID;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ListenableTextField;
 import io.github.clagomess.tomato.ui.component.PasswordDialog;
 import io.github.clagomess.tomato.ui.component.StagingMonitor;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
@@ -18,7 +18,7 @@ import java.io.IOException;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class EnvironmentEditFrame
-        extends JFrame
+        extends BaseFrame
         implements EnvironmentEditFrameInterface {
     private final JButton btnSave = new JButton("Save");
     private final ListenableTextField txtName = new ListenableTextField();
@@ -40,10 +40,8 @@ public class EnvironmentEditFrame
         this.stagingMonitor = new StagingMonitor<>(controller.getEnvironment());
 
         setTitle(buildTitle(false));
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(600, 500));
         setPreferredSize(new Dimension(600, 500));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(true);
 
         txtName.setText(controller.getEnvironment().getName());

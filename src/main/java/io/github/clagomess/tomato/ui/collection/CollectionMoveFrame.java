@@ -2,14 +2,14 @@ package io.github.clagomess.tomato.ui.collection;
 
 import io.github.clagomess.tomato.controller.collection.CollectionMoveFrameController;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CollectionMoveFrame extends JFrame {
+public class CollectionMoveFrame extends BaseFrame {
     private final JButton btnMove = new JButton("Move");
     private final JLabel lblCollectionName = new JLabel();
     private final CollectionComboBox cbCollectionDestination;
@@ -23,9 +23,7 @@ public class CollectionMoveFrame extends JFrame {
         this.controller = new CollectionMoveFrameController();
 
         setTitle("Move Collection");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         lblCollectionName.setText(collectionTree.getName());

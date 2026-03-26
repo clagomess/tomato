@@ -2,8 +2,8 @@ package io.github.clagomess.tomato.ui.workspace.list;
 
 import io.github.clagomess.tomato.controller.workspace.list.WorkspaceListFrameController;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -14,15 +14,13 @@ import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 import static javax.swing.SwingUtilities.invokeLater;
 
-public class WorkspaceListFrame extends JFrame {
+public class WorkspaceListFrame extends BaseFrame {
     private final JPanel rowsPanel;
     private final WorkspaceListFrameController controller = new WorkspaceListFrameController();
 
     public WorkspaceListFrame(Component parent){
         setTitle("Edit Workspaces");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 400));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
                 "insets 10",

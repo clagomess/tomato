@@ -1,17 +1,16 @@
 package io.github.clagomess.tomato.ui.main.request.codesnippet;
 
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 import io.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
-public class CodeSnippetFrame extends JFrame {
+public class CodeSnippetFrame extends BaseFrame {
     private final CodeSnippetComboBox codeSnippetComboBox = new CodeSnippetComboBox();
     private final TRSyntaxTextArea textArea = new TRSyntaxTextArea();
 
@@ -20,9 +19,7 @@ public class CodeSnippetFrame extends JFrame {
             RequestDto request
     ) {
         setTitle("Code Snippet");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(600, 400));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         setLayout(new MigLayout(
                 "insets 10",

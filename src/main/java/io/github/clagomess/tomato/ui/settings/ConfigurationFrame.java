@@ -2,11 +2,11 @@ package io.github.clagomess.tomato.ui.settings;
 
 import io.github.clagomess.tomato.dto.data.ConfigurationDto;
 import io.github.clagomess.tomato.io.repository.ConfigurationRepository;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.MainFrame;
 import io.github.clagomess.tomato.ui.component.ExceptionDialog;
 import io.github.clagomess.tomato.ui.component.FileChooser;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -17,7 +17,7 @@ import java.util.concurrent.ForkJoinPool;
 import static javax.swing.JFileChooser.DIRECTORIES_ONLY;
 import static javax.swing.SwingUtilities.invokeLater;
 
-public class ConfigurationFrame extends JFrame {
+public class ConfigurationFrame extends BaseFrame {
     private final ConfigurationRepository configurationRepository = new ConfigurationRepository();
 
     protected final JButton btnSave = new JButton("Save");
@@ -25,9 +25,7 @@ public class ConfigurationFrame extends JFrame {
 
     public ConfigurationFrame(MainFrame mainFrame) {
         setTitle("Configuration");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         setLayout(new MigLayout(

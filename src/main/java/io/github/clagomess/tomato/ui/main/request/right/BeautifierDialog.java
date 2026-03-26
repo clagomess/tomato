@@ -5,6 +5,7 @@ import io.github.clagomess.tomato.io.beautifier.JsonBeautifier;
 import io.github.clagomess.tomato.io.beautifier.XmlBeautifier;
 import io.github.clagomess.tomato.io.http.HttpService;
 import io.github.clagomess.tomato.io.http.MediaType;
+import io.github.clagomess.tomato.ui.BaseDialog;
 import io.github.clagomess.tomato.ui.component.ExceptionDialog;
 import net.miginfocom.swing.MigLayout;
 
@@ -15,7 +16,7 @@ import java.util.concurrent.ForkJoinPool;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
-public class BeautifierDialog extends JDialog {
+public class BeautifierDialog extends BaseDialog {
     private final Component parent;
     private final MediaType contentType;
     private final Beautifier beautifier;
@@ -23,12 +24,7 @@ public class BeautifierDialog extends JDialog {
     private final JProgressBar progress = new JProgressBar();
 
     public BeautifierDialog(Component parent, MediaType contentType) {
-        super(
-                SwingUtilities.getWindowAncestor(parent),
-                "Beautifier",
-                Dialog.DEFAULT_MODALITY_TYPE
-        );
-
+        super(parent, "Beautifier");
         this.parent = parent;
         this.contentType = contentType;
 
@@ -42,8 +38,6 @@ public class BeautifierDialog extends JDialog {
         }
 
         setMinimumSize(new Dimension(350, 100));
-        setResizable(false);
-        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setLayout(new MigLayout(
                 "",
                 "[grow, fill]"

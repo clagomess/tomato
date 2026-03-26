@@ -4,8 +4,8 @@ import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import io.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextField;
 import net.miginfocom.swing.MigLayout;
 
@@ -14,7 +14,7 @@ import java.awt.*;
 
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
-public class EnvironmentNewFrame extends JFrame {
+public class EnvironmentNewFrame extends BaseFrame {
     private final JButton btnSave = new JButton("Save");
     private final UndoableTextField txtName = new UndoableTextField();
     private final JCheckBox chkProduction = new JCheckBox();
@@ -24,9 +24,7 @@ public class EnvironmentNewFrame extends JFrame {
 
     public EnvironmentNewFrame(Component parent){
         setTitle("New Environment");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         setLayout(new MigLayout(

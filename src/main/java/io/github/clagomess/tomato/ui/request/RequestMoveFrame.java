@@ -8,9 +8,9 @@ import io.github.clagomess.tomato.mapper.CloneMapper;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.publisher.key.RequestKey;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.collection.CollectionComboBox;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -20,7 +20,7 @@ import java.io.File;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.DELETED;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
-public class RequestMoveFrame extends JFrame {
+public class RequestMoveFrame extends BaseFrame {
     private final JButton btnMove = new JButton("Move");
     private final JLabel lblRequestName = new JLabel();
     private final CollectionComboBox cbCollectionDestination;
@@ -35,9 +35,7 @@ public class RequestMoveFrame extends JFrame {
             RequestHeadDto requestHead
     ){
         setTitle("Move Request");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         this.requestHead = requestHead;

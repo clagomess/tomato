@@ -1,6 +1,6 @@
 package io.github.clagomess.tomato.ui.component;
 
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextField;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
@@ -9,15 +9,13 @@ import javax.swing.*;
 import java.awt.*;
 
 @Getter
-public abstract class NameFrame extends JFrame {
+public abstract class NameFrame extends BaseFrame {
     protected final JButton btnSave = new JButton("Save");
     protected final UndoableTextField txtName = new UndoableTextField();
 
     public NameFrame(Component parent){
         setTitle("Rename");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         setLayout(new MigLayout(

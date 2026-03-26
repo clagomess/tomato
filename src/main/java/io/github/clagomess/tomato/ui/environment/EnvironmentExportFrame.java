@@ -1,9 +1,9 @@
 package io.github.clagomess.tomato.ui.environment;
 
 import io.github.clagomess.tomato.controller.environment.EnvironmentExportFrameController;
+import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ConverterComboBox;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -11,7 +11,9 @@ import java.awt.*;
 import java.io.File;
 import java.util.Optional;
 
-public class EnvironmentExportFrame extends JFrame implements EnvironmentExportFrameInterface {
+public class EnvironmentExportFrame
+        extends BaseFrame
+        implements EnvironmentExportFrameInterface {
     private final EnvironmentComboBox cbEnvironment = new EnvironmentComboBox();
     private final JButton btnExport = new JButton("Export");
     private final ConverterComboBox cbConverter = new ConverterComboBox();
@@ -24,9 +26,7 @@ public class EnvironmentExportFrame extends JFrame implements EnvironmentExportF
         controller = new EnvironmentExportFrameController(this);
 
         setTitle("Export Environment");
-        setIconImages(FaviconImage.getFrameIconImage());
         setMinimumSize(new Dimension(300, 100));
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         setLayout(new MigLayout(
