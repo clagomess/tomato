@@ -15,7 +15,7 @@ Build:
 ```bash
 docker run --rm --privileged \
 -v "./build-flatpak:/opt/result" \
--v "./target/release:/opt/release" \
--e GIT_TAG=0.0.0 \
+-v "./target/tomato-1.0.0:/opt/release" \
+-e GIT_TAG=1.0.0 \
 ghcr.io/clagomess/tomato-build-flatpak
 ```

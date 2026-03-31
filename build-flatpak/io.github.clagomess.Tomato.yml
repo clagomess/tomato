@@ -36,7 +36,15 @@ modules:
         dest: build-linux
 
       - type: file 
-        dest-filename: "temurin-17-jre.tar.gz"
-        path: "/opt/temurin-17-jre.tar.gz"
+        url: https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.18%2B8/OpenJDK17U-jre_x64_linux_hotspot_17.0.18_8.tar.gz
+        sha256: 8b418e38cca87945858ae911988401720095eb671357d47437b4adb49c28dcab
+        dest-filename: temurin-17-jre.tar.gz
         only-arches:
           - "x86_64"
+
+      - type: file
+        url: https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.18%2B8/OpenJDK17U-jre_aarch64_linux_hotspot_17.0.18_8.tar.gz
+        sha256: 88727c16610d118c0e739f62e6c99dc1cb5a7b4a93a27054fe2a3aa7150e7b5d
+        dest-filename: temurin-17-jre.tar.gz
+        only-arches:
+          - "aarch64"
