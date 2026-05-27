@@ -5,8 +5,8 @@ import io.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 
@@ -18,7 +18,7 @@ public class RequestTabSnapshotDto {
     @Nullable
     private RequestHeadDto requestHead;
 
-    @NotNull
+    @NonNull
     private RequestDto request;
 
     public WorkspaceSessionDto.Request toSessionState(

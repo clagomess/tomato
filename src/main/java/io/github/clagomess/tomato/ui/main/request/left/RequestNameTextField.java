@@ -8,8 +8,8 @@ import io.github.clagomess.tomato.publisher.key.RequestKey;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 import io.github.clagomess.tomato.ui.component.ExceptionDialog;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.UUID;
@@ -39,7 +39,7 @@ public class RequestNameTextField extends JPanel {
 
     public void setText(
             @Nullable RequestHeadDto requestHead,
-            @NotNull RequestDto request
+            @NonNull RequestDto request
     ){
         lblRequestName.setText(request.getName());
 

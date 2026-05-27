@@ -16,8 +16,8 @@ import io.github.clagomess.tomato.ui.request.RequestSaveFrame;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -76,10 +76,10 @@ public class RequestSplitPane extends JPanel {
 
 
     public RequestSplitPane(
-            @NotNull TabKey key,
-            @NotNull RequestStagingMonitor requestStagingMonitor,
+            @NonNull TabKey key,
+            @NonNull RequestStagingMonitor requestStagingMonitor,
             @Nullable RequestHeadDto requestHeadDto,
-            @NotNull RequestDto requestDto
+            @NonNull RequestDto requestDto
     ) {
         ComponentUtil.checkIsEventDispatchThread();
 

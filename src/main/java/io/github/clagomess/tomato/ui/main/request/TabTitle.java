@@ -9,8 +9,8 @@ import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxXIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,11 +30,11 @@ class TabTitle extends JPanel {
 
     public TabTitle(
             @Nullable RequestTabbedPane parent,
-            @NotNull TabKey key,
-            @NotNull RequestStagingMonitor requestStagingMonitor,
+            @NonNull TabKey key,
+            @NonNull RequestStagingMonitor requestStagingMonitor,
             @Nullable RequestHeadDto requestHead,
-            @NotNull RequestDto request,
-            @NotNull ActionListener onClose
+            @NonNull RequestDto request,
+            @NonNull ActionListener onClose
     ){
         setLayout(new MigLayout("insets 0 0 0 0"));
         setOpaque(false);

@@ -16,7 +16,6 @@ import io.github.clagomess.tomato.mapper.PostmanCollectionPumpMapper;
 import io.github.clagomess.tomato.mapper.PostmanEnvironmentDumpMapper;
 import io.github.clagomess.tomato.mapper.PostmanEnvironmentPumpMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +31,6 @@ import static io.github.clagomess.tomato.io.converter.JsonSchemaBuilder.getPostm
 public class PostmanConverter extends AbstractConverter {
     public PostmanConverter() {}
 
-    @TestOnly
     public PostmanConverter(
             CollectionRepository collectionRepository,
             RequestRepository requestRepository,

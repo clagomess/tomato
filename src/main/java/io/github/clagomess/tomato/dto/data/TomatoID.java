@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.util.StdConverter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serializable;
 import java.util.regex.Pattern;
@@ -24,12 +24,12 @@ public record TomatoID(String id) implements Serializable, Comparable<TomatoID> 
     }
 
     @Override
-    public @NotNull String toString() {
+    public @NonNull String toString() {
         return id;
     }
 
     @Override
-    public int compareTo(@NotNull TomatoID o) {
+    public int compareTo(@NonNull TomatoID o) {
         return StringUtils.compareIgnoreCase(this.id, o.id, true);
     }
 

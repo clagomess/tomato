@@ -11,8 +11,8 @@ import io.github.clagomess.tomato.ui.component.LoadingPane;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,7 +90,7 @@ public class RequestTabbedPane extends JTabbedPane {
 
     protected void addNewTab(
             @Nullable RequestHeadDto requestHead,
-            @NotNull RequestDto request
+            @NonNull RequestDto request
     ){
         ComponentUtil.checkIsEventDispatchThread();
 

@@ -13,7 +13,7 @@ import io.github.clagomess.tomato.publisher.WorkspacePublisher;
 import io.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
 import io.github.clagomess.tomato.ui.environment.EnvironmentSwitcherComboBoxInterface;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.List;

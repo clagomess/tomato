@@ -8,7 +8,7 @@ import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +41,7 @@ class Row extends JPanel {
 
     public Row(
             Container parent,
-            @NotNull EnvironmentKeystore environmentKeystore,
+            @NonNull EnvironmentKeystore environmentKeystore,
             List<EnvironmentItemDto> list,
             EnvironmentItemDto item
     ){

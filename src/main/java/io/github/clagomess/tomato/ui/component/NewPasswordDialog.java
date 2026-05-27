@@ -2,9 +2,8 @@ package io.github.clagomess.tomato.ui.component;
 
 import io.github.clagomess.tomato.io.keystore.PasswordEntropyCalculator;
 import io.github.clagomess.tomato.ui.BaseDialog;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

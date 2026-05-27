@@ -8,7 +8,7 @@ import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.publisher.key.RequestKey;
 import io.github.clagomess.tomato.ui.component.NameFrame;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.awt.*;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class RequestRenameFrame extends NameFrame {
 
     public RequestRenameFrame(
             Component parent,
-            @NotNull RequestHeadDto requestHead
+            @NonNull RequestHeadDto requestHead
     ) {
         super(parent);
         this.requestRepository = new RequestRepository();

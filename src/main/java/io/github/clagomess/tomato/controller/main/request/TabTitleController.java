@@ -7,8 +7,8 @@ import io.github.clagomess.tomato.enums.HttpMethodEnum;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.key.RequestKey;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +18,9 @@ public class TabTitleController {
     private final List<Runnable> dispose = new ArrayList<>(2);
 
     public void addOnChangeListener(
-            @NotNull RequestDto request,
+            @NonNull RequestDto request,
             @Nullable RequestHeadDto requestHead,
-            @NotNull UpdateTitleFI title
+            @NonNull UpdateTitleFI title
     ){
         var uuid = RequestPublisher.getInstance()
                 .getOnChange()
@@ -38,8 +38,8 @@ public class TabTitleController {
     }
 
     public void addOnStagingListener(
-            @NotNull TabKey tabKey,
-            @NotNull UpdateIconChangeFI icon
+            @NonNull TabKey tabKey,
+            @NonNull UpdateIconChangeFI icon
     ){
         RequestPublisher.getInstance()
                 .getOnStaging()

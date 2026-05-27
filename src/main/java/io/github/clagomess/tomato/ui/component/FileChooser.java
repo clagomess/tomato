@@ -2,7 +2,7 @@ package io.github.clagomess.tomato.ui.component;
 
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxFolderOpenIcon;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;

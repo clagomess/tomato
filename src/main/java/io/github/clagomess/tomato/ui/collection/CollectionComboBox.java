@@ -4,7 +4,7 @@ import io.github.clagomess.tomato.controller.collection.CollectionComboBoxContro
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.ui.component.DtoListCellRenderer;
 import io.github.clagomess.tomato.ui.component.ExceptionDialog;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.IOException;

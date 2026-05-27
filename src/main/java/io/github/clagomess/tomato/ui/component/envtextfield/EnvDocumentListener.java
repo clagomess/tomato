@@ -6,8 +6,8 @@ import io.github.clagomess.tomato.publisher.WorkspaceSessionPublisher;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -34,8 +34,8 @@ class EnvDocumentListener implements DocumentListener {
     private final List<StyleMap> styleMapList = new ArrayList<>(2);
 
     public EnvDocumentListener(
-            @NotNull StyledDocument document,
-            @Nullable EnvTextfieldOptions.PathVar pathVar
+            @NonNull StyledDocument document,
+            EnvTextfieldOptions.@Nullable PathVar pathVar
     ) {
         this.document = document;
         this.styleMapList.add(new EnvStyleMap());

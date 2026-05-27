@@ -4,7 +4,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -24,7 +24,7 @@ public class PathVarStyleMap implements StyleMap {
     @Setter
     private List<KeyValueItemDto> urlPathParam;
 
-    public PathVarStyleMap(@NotNull EnvTextfieldOptions.PathVar pathVar) {
+    public PathVarStyleMap(EnvTextfieldOptions.@NonNull PathVar pathVar) {
         StyleConstants.setForeground(filledStyle, ColorConstant.BLUE);
         StyleConstants.setForeground(notFilledStyle, ColorConstant.RED);
 

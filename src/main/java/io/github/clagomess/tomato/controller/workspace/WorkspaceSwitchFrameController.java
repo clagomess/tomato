@@ -4,7 +4,7 @@ import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.io.repository.DataSessionRepository;
 import io.github.clagomess.tomato.publisher.WorkspacePublisher;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ public class WorkspaceSwitchFrameController {
     }
 
     public void switchWorkspace(
-            @NotNull WorkspaceDto selected
+            @NonNull WorkspaceDto selected
     ) throws IOException {
         WorkspacePublisher.getInstance()
                 .getOnBeforeSwitch()

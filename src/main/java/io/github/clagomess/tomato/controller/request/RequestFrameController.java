@@ -7,8 +7,8 @@ import io.github.clagomess.tomato.io.repository.RequestRepository;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.key.RequestKey;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,8 +34,8 @@ public class RequestFrameController {
 
     public void addOnStagingListener(
             TabKey tabKey,
-            @NotNull RequestDto request,
-            @NotNull UpdateFI title
+            @NonNull RequestDto request,
+            @NonNull UpdateFI title
     ){
         RequestPublisher.getInstance()
                 .getOnStaging()
@@ -54,7 +54,7 @@ public class RequestFrameController {
 
     public void addOnChangeListener(
             @Nullable RequestHeadDto requestHead,
-            @NotNull UpdateFI title
+            @NonNull UpdateFI title
     ){
         if(requestHead == null) return;
 

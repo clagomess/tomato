@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.File;
 
@@ -19,7 +19,7 @@ public class WorkspaceDto extends MetadataDto implements Comparable<WorkspaceDto
     private File path;
 
     @Override
-    public int compareTo(@NotNull WorkspaceDto o) {
+    public int compareTo(@NonNull WorkspaceDto o) {
         return StringUtils.compareIgnoreCase(this.getName(), o.getName(), true);
     }
 }

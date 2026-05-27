@@ -2,16 +2,16 @@ package io.github.clagomess.tomato.ui.component;
 
 import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.ui.BaseDialog;
-import io.github.clagomess.tomato.ui.component.favicon.FaviconImage;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.formdev.flatlaf.FlatClientProperties.STYLE;
-import static javax.swing.SwingUtilities.*;
+import static javax.swing.SwingUtilities.invokeAndWait;
+import static javax.swing.SwingUtilities.isEventDispatchThread;
 
 public class PasswordDialog extends BaseDialog {
     private final JPasswordField txtPassword = new JPasswordField();

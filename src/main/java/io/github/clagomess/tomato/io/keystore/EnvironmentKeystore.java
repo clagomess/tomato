@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.linguafranca.pwdb.base.AbstractEntry;
 import org.linguafranca.pwdb.kdbx.KdbxCreds;
 import org.linguafranca.pwdb.kdbx.jackson.JacksonDatabase;
@@ -137,7 +137,7 @@ public class EnvironmentKeystore {
     }
 
     public List<Entry> saveEntries(
-            @NotNull List<Entry> entries
+            @NonNull List<Entry> entries
     ) throws IOException {
         if(entries.isEmpty()) return entries;
 
@@ -167,7 +167,7 @@ public class EnvironmentKeystore {
     }
 
     public List<EnvironmentItemDto> loadSecret(
-            @NotNull List<EnvironmentItemDto> itens
+            @NonNull List<EnvironmentItemDto> itens
     ) throws IOException {
         boolean containsSecret = itens.stream()
                 .anyMatch(item -> item.getType() == SECRET);
@@ -194,15 +194,15 @@ public class EnvironmentKeystore {
     }
 
     public Optional<String> loadSecret(
-            @NotNull UUID entryId
+            @NonNull UUID entryId
     ) throws IOException {
         var database = getDatabase();
         return loadSecret(database, entryId);
     }
 
     private Optional<String> loadSecret(
-            @NotNull JacksonDatabase database,
-            @NotNull UUID entryId
+            @NonNull JacksonDatabase database,
+            @NonNull UUID entryId
     ) {
         return database.getRootGroup()
                 .findEntries(item -> Objects.equals(

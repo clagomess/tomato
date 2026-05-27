@@ -7,7 +7,7 @@ import io.github.clagomess.tomato.util.CacheManager;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 import java.nio.file.Files;

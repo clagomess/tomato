@@ -9,7 +9,7 @@ import io.github.clagomess.tomato.ui.main.request.RequestSplitPane;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
 import java.io.IOException;

@@ -13,7 +13,7 @@ import io.github.clagomess.tomato.ui.main.request.right.cookie.CookieTable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -114,7 +114,7 @@ public class ResponseTabContent extends JPanel {
         statusResponse.reset();
     }
 
-    public void update(@NotNull ResponseDto responseDto){
+    public void update(@NonNull ResponseDto responseDto){
         this.responseDto = responseDto;
         txtHTTPDebug.setText(responseDto.getRequestDebug());
 
