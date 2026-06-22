@@ -1,20 +1,20 @@
 package io.github.clagomess.tomato.dto.external;
 
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.ValidationMessage;
+import com.networknt.schema.Schema;
+import com.networknt.schema.Error;
 import io.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 import static io.github.clagomess.tomato.enums.PostmanJsonSchemaEnum.ENVIRONMENT;
 
 class PostmanEnvironmentDtoTest {
     private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
-    private final JsonSchema jsonSchema = JsonSchemaBuilder.getPostmanJsonSchema(ENVIRONMENT);
+    private final Schema jsonSchema = JsonSchemaBuilder.getPostmanJsonSchema(ENVIRONMENT);
 
     @Test
     void schema() throws IOException {
@@ -27,7 +27,7 @@ class PostmanEnvironmentDtoTest {
         // dump validate
         var resultDump = mapper.writeValueAsString(result);
 
-        Set<ValidationMessage> validations = jsonSchema.validate(
+        List<Error> validations = jsonSchema.validate(
                 mapper.readTree(resultDump)
         );
 
