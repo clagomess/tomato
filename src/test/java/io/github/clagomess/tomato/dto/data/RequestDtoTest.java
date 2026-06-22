@@ -2,7 +2,7 @@ package io.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.schema.JsonSchema;
+import com.networknt.schema.Schema;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
@@ -21,7 +21,7 @@ import static io.github.clagomess.tomato.io.http.MediaType.TEXT_PLAIN_TYPE;
 
 @Slf4j
 class RequestDtoTest {
-    private final JsonSchema jsonSchema = JsonSchemaBuilder.getTomatoJsonSchema(REQUEST);
+    private final Schema jsonSchema = JsonSchemaBuilder.getTomatoJsonSchema(REQUEST);
     private final ObjectMapper mapper = ObjectMapperUtil.getInstance();
 
     @Test

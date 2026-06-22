@@ -2,7 +2,7 @@ package io.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.networknt.schema.JsonSchema;
+import com.networknt.schema.Schema;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
@@ -15,7 +15,7 @@ import static io.github.clagomess.tomato.enums.TomatoJsonSchemaEnum.ENVIRONMENT;
 
 @Slf4j
 class EnvironmentDtoTest {
-    private final JsonSchema jsonSchema = JsonSchemaBuilder.getTomatoJsonSchema(ENVIRONMENT);
+    private final Schema jsonSchema = JsonSchemaBuilder.getTomatoJsonSchema(ENVIRONMENT);
     private final ObjectMapper mapper = ObjectMapperUtil.getInstance();
 
     @Test

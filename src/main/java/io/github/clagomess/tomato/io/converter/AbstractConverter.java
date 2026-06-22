@@ -4,15 +4,15 @@ import io.github.clagomess.tomato.io.repository.CollectionRepository;
 import io.github.clagomess.tomato.io.repository.EnvironmentRepository;
 import io.github.clagomess.tomato.io.repository.RequestRepository;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
-import com.networknt.schema.JsonSchema;
-import com.networknt.schema.ValidationMessage;
+import com.networknt.schema.Error;
+import com.networknt.schema.Schema;
 import lombok.RequiredArgsConstructor;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 @RequiredArgsConstructor
 public abstract class AbstractConverter implements InterfaceConverter {
@@ -38,10 +38,10 @@ public abstract class AbstractConverter implements InterfaceConverter {
     }
 
     protected void validate(
-            JsonSchema schema,
+            Schema schema,
             File target
     ) throws IOException {
-        Set<ValidationMessage> validations  = schema.validate(
+        List<Error> validations  = schema.validate(
                 mapper.readTree(target)
         );
 
