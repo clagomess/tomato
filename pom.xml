@@ -153,6 +153,7 @@
                 <version>9.0.2</version>
                 <executions>
                     <execution>
+                        <phase>process-resources</phase>
                         <goals>
                             <goal>revision</goal>
                         </goals>
