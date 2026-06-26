@@ -80,14 +80,6 @@ jobs:
           --dest ./build-windows `
           --verbose
           mv ./build-windows/Tomato ./build-windows/tomato-$env:GIT_TAG-x64
-          mkdir ./build-windows/dist
-          cp -R ./build-windows/tomato-$env:GIT_TAG-x64 ./build-windows/dist/
-
-      - uses: actions/upload-artifact@v6
-        with:
-          name: tomato-${{env.GIT_TAG}}-x64-win-portable
-          retention-days: 5
-          path: ./build-windows/dist
 
       - name: Find SignToolPath
         run: |
@@ -100,13 +92,32 @@ jobs:
         run: |
           [System.Convert]::FromBase64String("${{ secrets.CODE_SIGN_CERT_PFX }}") | Set-Content -Path ./build-windows/code-sign-ks.pfx -AsByteStream
 
+      - name: Sign App
+        run: |
+          # jpackage marks the launcher exe read-only, which makes signtool
+          # fail with "Access is denied" since it can't write the signature.
+          Set-ItemProperty -Path "./build-windows/tomato-${{env.GIT_TAG}}-x64/Tomato.exe" -Name IsReadOnly -Value $false
+          & "${{env.SIGNTOOL_PATH}}" sign /v `
+          /td SHA256 `
+          /tr http://timestamp.digicert.com `
+          /f "./build-windows/code-sign-ks.pfx" `
+          /p "${{ secrets.CODE_SIGN_CERT_PASS }}" `
+          /fd SHA256 `
+          "./build-windows/tomato-${{env.GIT_TAG}}-x64/Tomato.exe"
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: tomato-${{env.GIT_TAG}}-x64-win-portable
+          retention-days: 5
+          path: ./build-windows/tomato-${{env.GIT_TAG}}-x64
+
       - name: InnoSetup Build
         run: |
           ISCC.exe `
           /DMyAppVersion=${{env.GIT_TAG}} `
           ./build-windows/tomato-inno-setup.iss
           
-      - name: Sign Setup
+      - name: Sign App Setup
         run: |
           & "${{env.SIGNTOOL_PATH}}" sign /v `
           /td SHA256 `

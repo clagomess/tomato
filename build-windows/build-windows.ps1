@@ -34,7 +34,9 @@ winget install --id JRSoftware.InnoSetup -e -s winget -i
 mv ./Tomato ./tomato-$git_tag-x64
 
 # sign app-image exe
-# @TODO: "Access denied - check jdk version"
+# jpackage marks the launcher exe read-only, which makes signtool fail
+# with "Access is denied" because it cannot write the signature back.
+Set-ItemProperty -Path "./tomato-$git_tag-x64/Tomato.exe" -Name IsReadOnly -Value $false
 & $SignToolPath sign /v `
 /td SHA256 `
 /tr http://timestamp.digicert.com `
