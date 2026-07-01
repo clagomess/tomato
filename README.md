@@ -76,3 +76,18 @@ JVM properties:
 
 - Enable debug Log: `TOMATO_LOG_LEVEL=DEBUG`
 - Aways point to test data: `TOMATO_AWAYS_USE_TEST_DATA=true`
+
+## Release
+
+The Windows executables are code signed in the release workflow (`.github/workflows/release.yml`)
+using [SSL.com eSigner](https://www.ssl.com/esigner/) via the
+[`sslcom/esigner-codesign`](https://github.com/SSLcom/esigner-codesign) action.
+
+The following repository secrets must be configured (*Settings → Secrets and variables → Actions*):
+
+| Secret             | Description                                        |
+|--------------------|----------------------------------------------------|
+| `ES_USERNAME`      | SSL.com account username                           |
+| `ES_PASSWORD`      | SSL.com account password                           |
+| `ES_CREDENTIAL_ID` | Signing certificate credential ID                  |
+| `ES_TOTP_SECRET`   | TOTP secret used for automated (OAuth) signing     |

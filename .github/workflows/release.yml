@@ -81,29 +81,34 @@ jobs:
           --verbose
           mv ./build-windows/Tomato ./build-windows/tomato-$env:GIT_TAG-x64
 
-      - name: Find SignToolPath
+      - name: Prepare App exe for signing
         run: |
-          $SignToolPath = Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin\**\x64" `
-          -Recurse -Filter "signtool.exe" | Select-Object -ExpandProperty FullName -First 1
-          echo "SignTool Path: $SignToolPath"
-          echo "SIGNTOOL_PATH=$SignToolPath" >> $env:GITHUB_ENV
-
-      - name: Get Cert
-        run: |
-          [System.Convert]::FromBase64String("${{ secrets.CODE_SIGN_CERT_PFX }}") | Set-Content -Path ./build-windows/code-sign-ks.pfx -AsByteStream
+          # jpackage marks the launcher exe read-only, which prevents the
+          # signed file from being written back in place.
+          Set-ItemProperty -Path "./build-windows/tomato-${{env.GIT_TAG}}-x64/Tomato.exe" -Name IsReadOnly -Value $false
 
       - name: Sign App
+        uses: sslcom/esigner-codesign@v1.3.2
+        with:
+          command: sign
+          username: ${{ secrets.ES_USERNAME }}
+          password: ${{ secrets.ES_PASSWORD }}
+          credential_id: ${{ secrets.ES_CREDENTIAL_ID }}
+          totp_secret: ${{ secrets.ES_TOTP_SECRET }}
+          file_path: ${{ github.workspace }}/build-windows/tomato-${{ env.GIT_TAG }}-x64/Tomato.exe
+          output_path: ${{ github.workspace }}/build-windows/signed
+          malware_block: false
+          override: true
+          environment_name: PROD
+          clean_logs: true
+
+      - name: Move signed App exe back
         run: |
-          # jpackage marks the launcher exe read-only, which makes signtool
-          # fail with "Access is denied" since it can't write the signature.
-          Set-ItemProperty -Path "./build-windows/tomato-${{env.GIT_TAG}}-x64/Tomato.exe" -Name IsReadOnly -Value $false
-          & "${{env.SIGNTOOL_PATH}}" sign /v `
-          /td SHA256 `
-          /tr http://timestamp.digicert.com `
-          /f "./build-windows/code-sign-ks.pfx" `
-          /p "${{ secrets.CODE_SIGN_CERT_PASS }}" `
-          /fd SHA256 `
-          "./build-windows/tomato-${{env.GIT_TAG}}-x64/Tomato.exe"
+          # eSigner writes the signed file to output_path; move it back over
+          # the original so the portable folder ships the signed launcher.
+          Move-Item -Force `
+            "./build-windows/signed/Tomato.exe" `
+            "./build-windows/tomato-${{env.GIT_TAG}}-x64/Tomato.exe"
 
       - uses: actions/upload-artifact@v6
         with:
@@ -118,14 +123,25 @@ jobs:
           ./build-windows/tomato-inno-setup.iss
           
       - name: Sign App Setup
+        uses: sslcom/esigner-codesign@v1.3.2
+        with:
+          command: sign
+          username: ${{ secrets.ES_USERNAME }}
+          password: ${{ secrets.ES_PASSWORD }}
+          credential_id: ${{ secrets.ES_CREDENTIAL_ID }}
+          totp_secret: ${{ secrets.ES_TOTP_SECRET }}
+          file_path: ${{ github.workspace }}/build-windows/tomato-${{ env.GIT_TAG }}-x64.exe
+          output_path: ${{ github.workspace }}/build-windows/signed
+          malware_block: false
+          override: true
+          environment_name: PROD
+          clean_logs: true
+
+      - name: Move signed Setup exe back
         run: |
-          & "${{env.SIGNTOOL_PATH}}" sign /v `
-          /td SHA256 `
-          /tr http://timestamp.digicert.com `
-          /f "./build-windows/code-sign-ks.pfx" `
-          /p "${{ secrets.CODE_SIGN_CERT_PASS }}" `
-          /fd SHA256 `
-          "./build-windows/tomato-$env:GIT_TAG-x64.exe"
+          Move-Item -Force `
+            "./build-windows/signed/tomato-${{env.GIT_TAG}}-x64.exe" `
+            "./build-windows/tomato-${{env.GIT_TAG}}-x64.exe"
 
       - uses: actions/upload-artifact@v6
         with:
