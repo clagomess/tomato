@@ -39,7 +39,7 @@ Avaiable binaries:
 
 ## Screenshot
 
-![Screenshot of Main UI](https://github.com/clagomess/tomato/blob/master/screenshots/screenshot-001.png)
+![Screenshot of Main UI](https://github.com/clagomess/tomato/blob/master/build-website/img/screenshot.png)
 
 ## Data structure
 

@@ -126,32 +126,14 @@ a:hover {
     margin: 0 auto 2rem;
 }
 
-/* Screenshot placeholder */
-.shot-placeholder {
-    border: 1px dashed var(--border);
-    border-radius: 10px;
-    background:
-        repeating-linear-gradient(
-            45deg,
-            var(--bg-alt),
-            var(--bg-alt) 12px,
-            var(--bg-elev) 12px,
-            var(--bg-elev) 24px
-        );
-    color: var(--text-muted);
-    aspect-ratio: 16 / 9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 8px;
+/* Application screenshot */
+.hero-shot {
+    display: block;
+    width: 100%;
     max-width: 880px;
+    height: auto;
     margin: 0 auto;
-}
-
-.shot-placeholder i {
-    font-size: 2rem;
-    opacity: 0.6;
+    border-radius: 10px;
 }
 
 /* --- Download buttons --------------------------------------------------- */
