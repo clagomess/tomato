@@ -1,0 +1,266 @@
+/* ==========================================================================
+   Tomato — static landing page
+   Palette derived from the app's Darcula theme + tomato logo
+   ========================================================================== */
+
+:root {
+    --bg:          #1e1f22;
+    --bg-alt:      #26282b;
+    --bg-elev:     #2b2d31;
+    --border:      #3a3d42;
+    --text:        #d6d6d6;
+    --text-muted:  #9a9da3;
+    --tomato:      #d91c00;
+    --tomato-soft: #eb5637;
+    --leaf:        #71ba38;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: auto; /* no animations */
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+}
+
+a {
+    color: var(--tomato-soft);
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ff7a5c;
+    text-decoration: underline;
+}
+
+.text-muted-soft {
+    color: var(--text-muted) !important;
+}
+
+.text-leaf {
+    color: var(--leaf);
+}
+
+/* --- Top bar / discrete fork -------------------------------------------- */
+
+.topbar {
+    border-bottom: 1px solid var(--border);
+    background-color: rgba(30, 31, 34, 0.9);
+}
+
+.topbar .brand {
+    font-weight: 700;
+    color: #fff;
+    font-size: 1.05rem;
+}
+
+.topbar .brand img {
+    width: 26px;
+    height: 26px;
+    vertical-align: -6px;
+    margin-right: 8px;
+}
+
+.fork-btn {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 12px;
+    background: transparent;
+}
+
+.fork-btn:hover {
+    color: #fff;
+    border-color: var(--text-muted);
+    text-decoration: none;
+    background: var(--bg-elev);
+}
+
+/* --- Hero --------------------------------------------------------------- */
+
+.hero {
+    padding: 72px 0 48px;
+    border-bottom: 1px solid var(--border);
+    background:
+        radial-gradient(900px 420px at 50% -10%, rgba(217, 28, 0, 0.12), transparent 70%),
+        var(--bg);
+}
+
+.hero-logo {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 0.4rem;
+}
+
+.hero .tagline {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.hero .subline {
+    color: var(--text-muted);
+    max-width: 640px;
+    margin: 0 auto 2rem;
+}
+
+/* Screenshot placeholder */
+.shot-placeholder {
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    background:
+        repeating-linear-gradient(
+            45deg,
+            var(--bg-alt),
+            var(--bg-alt) 12px,
+            var(--bg-elev) 12px,
+            var(--bg-elev) 24px
+        );
+    color: var(--text-muted);
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 880px;
+    margin: 0 auto;
+}
+
+.shot-placeholder i {
+    font-size: 2rem;
+    opacity: 0.6;
+}
+
+/* --- Download buttons --------------------------------------------------- */
+
+.btn-tomato {
+    background-color: var(--tomato);
+    border-color: var(--tomato);
+    color: #fff;
+    font-weight: 700;
+}
+
+.btn-tomato:hover {
+    background-color: #b81700;
+    border-color: #b81700;
+    color: #fff;
+}
+
+.btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-weight: 500;
+    text-align: left;
+}
+
+.btn-ghost:hover {
+    border-color: var(--tomato-soft);
+    color: #fff;
+    background: var(--bg-elev);
+}
+
+.btn-ghost i {
+    width: 20px;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.download-note {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* --- Features ----------------------------------------------------------- */
+
+.features {
+    padding: 64px 0;
+}
+
+.section-title {
+    font-size: 1.9rem;
+    margin-bottom: 8px;
+}
+
+.feature-row {
+    padding: 28px 0;
+    border-top: 1px solid var(--border);
+}
+
+.feature-row h3 {
+    font-size: 1.35rem;
+    margin-bottom: 0.6rem;
+}
+
+.feature-row h3 .fa-solid,
+.feature-row h3 .fa-brands {
+    color: var(--tomato-soft);
+    margin-right: 10px;
+}
+
+.feature-row p {
+    color: var(--text-muted);
+    margin-bottom: 0;
+}
+
+.img-placeholder {
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    background: var(--bg-alt);
+    color: var(--text-muted);
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.8rem;
+}
+
+.img-placeholder i {
+    font-size: 1.8rem;
+    opacity: 0.5;
+}
+
+/* --- Footer ------------------------------------------------------------- */
+
+.site-footer {
+    border-top: 1px solid var(--border);
+    padding: 36px 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    background: var(--bg-alt);
+}
+
+.badge-beta {
+    background: var(--leaf);
+    color: #10250a;
+    font-weight: 700;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    vertical-align: middle;
+}
