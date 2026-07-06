@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomato — The offline, git-friendly REST client</title>
+    <meta name="description" content="Tomato is an open source, 100% offline REST client. Your data lives as plain files on your own machine — git-friendly, no account, no subscription.">
+
+    <link rel="icon" type="image/svg+xml" href="img/tomato.svg">
+
+    <!-- Bootstrap (vendored locally) -->
+    <link href="vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome (vendored locally) -->
+    <link href="vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <!-- Programming font (vendored locally) -->
+    <link href="vendor/jetbrains-mono/fonts.css" rel="stylesheet">
+
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ===================== TOP BAR ===================== -->
+<header class="topbar sticky-top">
+    <div class="container d-flex align-items-center justify-content-between py-2">
+        <span class="brand">
+            <img src="img/tomato.svg" alt="Tomato logo">Tomato
+        </span>
+        <a class="fork-btn" href="https://github.com/clagomess/tomato" target="_blank" rel="noopener">
+            <i class="fa-brands fa-github me-1"></i>Fork on GitHub
+        </a>
+    </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero text-center">
+    <div class="container">
+        <img class="hero-logo" src="img/tomato.svg" alt="Tomato">
+        <h1>Tomato <span class="badge-beta">BETA</span></h1>
+        <p class="tagline">The open source, 100% offline REST client.</p>
+        <p class="subline">
+            Fire requests, organize collections, and manage environments — all as plain files
+            on your own machine. No cloud, no account, no strings attached.
+        </p>
+
+        <!-- Download options -->
+        <div class="row justify-content-center g-2 mb-3">
+            <div class="col-12 col-sm-auto">
+                <a class="btn btn-tomato btn-lg w-100 px-4"
+                   href="https://github.com/clagomess/tomato/releases/latest" target="_blank" rel="noopener">
+                    <i class="fa-solid fa-download me-2"></i>Download latest
+                    <span class="text-muted-soft ms-1">v1.0.8</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center g-2 mb-3" style="max-width: 720px; margin: 0 auto;">
+            <div class="col-6 col-md-4">
+                <a class="btn btn-ghost w-100 btn-sm py-2"
+                   href="https://github.com/clagomess/tomato/releases/download/v1.0.8/tomato-1.0.8-x64.exe" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-windows"></i> Windows <span class="text-muted-soft">.exe</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-4">
+                <a class="btn btn-ghost w-100 btn-sm py-2"
+                   href="https://github.com/clagomess/tomato/releases/download/v1.0.8/tomato-1.0.8-x64-win-portable.zip" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-windows"></i> Portable <span class="text-muted-soft">.zip</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-4">
+                <a class="btn btn-ghost w-100 btn-sm py-2"
+                   href="https://github.com/clagomess/tomato/releases/download/v1.0.8/tomato-1.0.8-arm64.dmg" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-apple"></i> macOS <span class="text-muted-soft">.dmg</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-4">
+                <a class="btn btn-ghost w-100 btn-sm py-2"
+                   href="https://github.com/clagomess/tomato/releases/download/v1.0.8/tomato-1.0.8-all.deb" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-debian"></i> Debian <span class="text-muted-soft">.deb</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-4">
+                <a class="btn btn-ghost w-100 btn-sm py-2"
+                   href="https://github.com/clagomess/tomato/releases/download/v1.0.8/tomato-1.0.8-1.fc42.noarch.rpm" target="_blank" rel="noopener">
+                    <i class="fa-brands fa-fedora"></i> Fedora <span class="text-muted-soft">.rpm</span>
+                </a>
+            </div>
+            <div class="col-6 col-md-4">
+                <a class="btn btn-ghost w-100 btn-sm py-2"
+                   href="https://github.com/clagomess/tomato/releases/download/v1.0.8/tomato-1.0.8-x86_64.flatpak" target="_blank" rel="noopener">
+                    <i class="fa-solid fa-box"></i> Flatpak
+                </a>
+            </div>
+        </div>
+
+        <p class="download-note mb-5">
+            Also available as a JRE-less <code>.zip</code> (requires Java 17+).
+            Windows &amp; Portable are x64 · macOS is arm64.
+        </p>
+
+        <!-- Application screenshot -->
+        <img class="hero-shot" src="img/screenshot.png" alt="Tomato application screenshot">
+
+    </div>
+</section>
+
+<!-- ===================== FEATURES ===================== -->
+<section class="features">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title">Why Tomato?</h2>
+            <p class="text-muted-soft">A focused tool that keeps your work yours.</p>
+        </div>
+
+        <!-- Feature 1 -->
+        <div class="row feature-row g-4">
+            <div class="col-12">
+                <h3><i class="fa-solid fa-hard-drive"></i>Your Data, Your Machine</h3>
+                <p>Every request, collection, and environment lives as plain files on your own disk — nothing is uploaded, synced, or held on someone else's servers. Where the popular alternative pushes your work into a cloud workspace by default, here your data never leaves your computer unless you decide to move it.</p>
+            </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="row feature-row g-4">
+            <div class="col-12">
+                <h3><i class="fa-solid fa-plane"></i>Works Fully Offline</h3>
+                <p>Open the app, fire requests, and organize collections with no internet connection and no login screen in the way. There's no forced sign-up, no session that expires, and no "you're offline" wall between you and your work — just launch and go.</p>
+            </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="row feature-row g-4">
+            <div class="col-12">
+                <h3><i class="fa-solid fa-unlock"></i>No Account, No Subscription</h3>
+                <p>Start working the moment you install. There are no seat licenses, no paywalled features quietly gating what you already built, and no monthly plan creeping up in price — the tool is free and open source, and it stays that way.</p>
+            </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="row feature-row g-4">
+            <div class="col-12">
+                <h3><i class="fa-solid fa-code-branch"></i>Git-Friendly by Design</h3>
+                <p>Collections and environments are stored as clean, readable JSON, one entity per file. That means you can version them in git, review changes in a real diff, and merge a teammate's work through the workflow you already trust — instead of being locked into a proprietary sync you can't inspect.</p>
+            </div>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="row feature-row g-4">
+            <div class="col-12">
+                <h3><i class="fa-solid fa-share-nodes"></i>Share on Your Terms</h3>
+                <p>Point your data folder at a shared drive, a cloud-storage folder, or a git repository — whatever your team already uses. Collaboration doesn't require paying for a team tier; you choose the backup and sharing strategy, not the vendor.</p>
+            </div>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="row feature-row g-4">
+            <div class="col-12">
+                <h3><i class="fa-solid fa-key"></i>Secrets Kept Secret</h3>
+                <p>Environment secrets are stored in encrypted KeePass vaults rather than sitting in plaintext alongside the rest of your config. Tokens and passwords stay protected on disk, so you can commit and share your environments without leaking credentials.</p>
+            </div>
+        </div>
+
+        <!-- Feature 7 -->
+        <div class="row feature-row g-4">
+            <div class="col-12">
+                <h3><i class="fa-solid fa-right-left"></i>Bring Your Existing Collections</h3>
+                <p>Import what you already have from other clients, and export back out when you need to. You're never trapped: your work moves in and out freely, so switching tools is a copy, not a migration project.</p>
+            </div>
+        </div>
+
+        <!-- Feature 8 -->
+        <div class="row feature-row g-4">
+            <div class="col-12">
+                <h3><i class="fa-solid fa-database"></i>Built for Big Responses</h3>
+                <p>Large response bodies stream straight to disk instead of piling up in memory, so a massive payload won't freeze or crash the app. You stay in control — preview what you need, and save the full response only when you actually want it.</p>
+            </div>
+        </div>
+
+        <!-- Feature 9 -->
+        <div class="row feature-row g-4">
+            <div class="col-12">
+                <h3><i class="fa-solid fa-terminal"></i>Instant Code Snippets</h3>
+                <p>Turn any request into ready-to-paste code, like a curl command, in a click. Move seamlessly from clicking around the UI to scripting in your terminal or dropping a working example into your docs.</p>
+            </div>
+        </div>
+
+        <!-- Feature 10 -->
+        <div class="row feature-row g-4">
+            <div class="col-12">
+                <h3><i class="fa-solid fa-bolt"></i>Native Desktop Speed</h3>
+                <p>A lightweight desktop app that launches fast and stays responsive, with a clean dark interface. No heavy embedded browser, no bloated startup — just a focused tool that respects your machine's resources.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== BOTTOM CTA ===================== -->
+<section class="text-center py-5" style="border-top: 1px solid var(--border);">
+    <div class="container">
+        <h2 class="section-title mb-3">Ready to try it?</h2>
+        <a class="btn btn-tomato btn-lg px-4"
+           href="https://github.com/clagomess/tomato/releases/latest" target="_blank" rel="noopener">
+            <i class="fa-solid fa-download me-2"></i>Download Tomato
+        </a>
+    </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <span>
+            <i class="fa-solid fa-heart text-leaf me-1"></i>
+            Free &amp; open source — MIT licensed.
+        </span>
+        <span>
+            <a href="https://github.com/clagomess/tomato" target="_blank" rel="noopener">
+                <i class="fa-brands fa-github me-1"></i>github.com/clagomess/tomato
+            </a>
+        </span>
+    </div>
+</footer>
+
+</body>
+</html>
