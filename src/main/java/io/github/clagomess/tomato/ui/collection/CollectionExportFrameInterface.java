@@ -1,8 +1,12 @@
 package io.github.clagomess.tomato.ui.collection;
 
-import java.io.File;
-import java.util.Optional;
+import io.github.clagomess.tomato.ui.component.FileExport;
+
+import java.io.IOException;
 
 public interface CollectionExportFrameInterface {
-    Optional<File> getExportFile(String name);
+    void exportFile(
+            String name,
+            FileExport.Consumer consumer
+    ) throws IOException;
 }

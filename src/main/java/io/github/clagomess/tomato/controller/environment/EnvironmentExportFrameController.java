@@ -6,9 +6,6 @@ import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.converter.InterfaceConverter;
 import io.github.clagomess.tomato.ui.environment.EnvironmentExportFrameInterface;
 
-import java.io.File;
-import java.util.Optional;
-
 public class EnvironmentExportFrameController {
     private final EnvironmentExportFrameInterface ui;
 
@@ -28,12 +25,9 @@ public class EnvironmentExportFrameController {
         String targetFileName = environment.getName() +
                 converter.getEnvironmentDumpFileSuffix();
 
-        Optional<File> targetFile = ui.getExportFile(targetFileName);
-        if (targetFile.isEmpty()) return;
-
-        converter.dumpEnvironment(
-                targetFile.get(),
+        ui.exportFile(targetFileName, file -> converter.dumpEnvironment(
+                file,
                 environment.getId()
-        );
+        ));
     }
 }

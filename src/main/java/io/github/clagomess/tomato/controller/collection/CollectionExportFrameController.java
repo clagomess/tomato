@@ -6,9 +6,7 @@ import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.converter.InterfaceConverter;
 import io.github.clagomess.tomato.ui.collection.CollectionExportFrameInterface;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 public class CollectionExportFrameController {
     private final CollectionExportFrameInterface ui;
@@ -29,9 +27,9 @@ public class CollectionExportFrameController {
         String targetFileName = collection.getName() +
                 converter.getCollectionDumpFileSuffix();
 
-        Optional<File> targetFile = ui.getExportFile(targetFileName);
-        if (targetFile.isEmpty()) return;
-
-        converter.dumpCollection(targetFile.get(), collection);
+        ui.exportFile(targetFileName, file -> converter.dumpCollection(
+                file,
+                collection
+        ));
     }
 }
