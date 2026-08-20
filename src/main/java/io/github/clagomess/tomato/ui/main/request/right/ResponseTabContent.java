@@ -18,7 +18,6 @@ import org.jspecify.annotations.NonNull;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.io.File;
-import java.nio.file.Files;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
@@ -159,22 +158,10 @@ public class ResponseTabContent extends JPanel {
     }
 
     protected void btnSaveResponseAction(){
-        JFileChooser file = new JFileChooser();
-        file.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        file.setSelectedFile(new File(responseDto.getHttpResponse().getBodyDownloadFileName()));
-
-        if(file.showSaveDialog(this) != JFileChooser.APPROVE_OPTION){
-            return;
-        }
-
         new WaitExecution(this, btnSaveResponse, () -> {
-            File bodyFile = responseDto.getHttpResponse().getBody();
-            Files.copy(bodyFile.toPath(), file.getSelectedFile().toPath());
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "File Saved Successfully"
-            );
+            var file = new FileExport(this);
+            file.setSelectedFile(new File(responseDto.getHttpResponse().getBodyDownloadFileName()));
+            file.save(responseDto.getHttpResponse().getBody());
         }).execute();
     }
 }

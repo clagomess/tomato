@@ -1,0 +1,93 @@
+package io.github.clagomess.tomato.ui.component;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.Optional;
+
+public class FileExport extends JFileChooser {
+    private final Component parentComponent;
+
+    private static final String OVERRIDE_TITLE = "Replace File";
+    private static final String OVERRIDE_MESSAGE = "A file named \"%s\" already exists in \"%s\".\nDo you want to replace it?";
+    private static final String SUCCESS_TITLE = "File Saved";
+    private static final String SUCCESS_MESSAGE = "File saved successfully to:\n%s";
+
+    public FileExport(Component parentComponent){
+        super();
+        this.parentComponent = parentComponent;
+        setFileSelectionMode(JFileChooser.FILES_ONLY);
+    }
+
+    public Optional<File> save(File source) throws IOException {
+        Optional<File> target = getTargetFile();
+
+        if(target.isPresent()){
+            Files.copy(
+                    source.toPath(),
+                    target.get().toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+            showSuccessMessage(target.get());
+        }
+
+        return target;
+    }
+
+    public void save(Consumer consumer) throws IOException {
+        Optional<File> target = getTargetFile();
+
+        if(target.isPresent()){
+            consumer.accept(target.get());
+            showSuccessMessage(target.get());
+        }
+    }
+
+    protected Optional<File> getTargetFile() {
+        if(showSaveDialog(parentComponent) != JFileChooser.APPROVE_OPTION){
+            return Optional.empty();
+        }
+
+        if(getSelectedFile().exists() && !canOverrideFile(getSelectedFile())){
+            return Optional.empty();
+        }
+
+        return Optional.of(getSelectedFile());
+    }
+
+    protected boolean canOverrideFile(File target){
+        int ret = JOptionPane.showConfirmDialog(
+                parentComponent,
+                String.format(
+                        OVERRIDE_MESSAGE,
+                        target.getName(),
+                        target.getAbsoluteFile().getParent()
+                ),
+                OVERRIDE_TITLE,
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        return ret == JOptionPane.OK_OPTION;
+    }
+
+    protected void showSuccessMessage(File target){
+        JOptionPane.showMessageDialog(
+                parentComponent,
+                String.format(
+                        SUCCESS_MESSAGE,
+                        target.getAbsolutePath()
+                ),
+                SUCCESS_TITLE,
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    @FunctionalInterface
+    public interface Consumer {
+        void accept(File file) throws IOException;
+    }
+}

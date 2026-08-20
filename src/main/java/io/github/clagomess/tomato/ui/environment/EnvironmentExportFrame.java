@@ -3,12 +3,14 @@ package io.github.clagomess.tomato.ui.environment;
 import io.github.clagomess.tomato.controller.environment.EnvironmentExportFrameController;
 import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ConverterComboBox;
+import io.github.clagomess.tomato.ui.component.FileExport;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 public class EnvironmentExportFrame
@@ -56,25 +58,17 @@ public class EnvironmentExportFrame
                     cbConverter.getSelectedItem()
             );
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "File Saved Successfully"
-            );
-
             setVisible(false);
             dispose();
         }).execute();
     }
 
-    public Optional<File> getExportFile(String name) {
-        JFileChooser file = new JFileChooser();
-        file.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    public void exportFile(
+            String name,
+            FileExport.Consumer consumer
+    ) throws IOException {
+        var file = new FileExport(this);
         file.setSelectedFile(new File(name));
-
-        if(file.showSaveDialog(this) != JFileChooser.APPROVE_OPTION){
-            return Optional.empty();
-        }
-
-        return Optional.of(file.getSelectedFile());
+        file.save(consumer);
     }
 }
