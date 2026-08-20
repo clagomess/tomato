@@ -1,5 +1,7 @@
 package io.github.clagomess.tomato.ui.component;
 
+import io.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -10,15 +12,19 @@ import java.util.Optional;
 
 public class FileExport extends JFileChooser {
     private final Component parentComponent;
+    private final WorkspaceSessionRepository workspaceSessionRepository;
 
     private static final String OVERRIDE_TITLE = "Replace File";
     private static final String OVERRIDE_MESSAGE = "A file named \"%s\" already exists in \"%s\".\nDo you want to replace it?";
     private static final String SUCCESS_TITLE = "File Saved";
     private static final String SUCCESS_MESSAGE = "File saved successfully to:\n%s";
 
-    public FileExport(Component parentComponent){
+    public FileExport(Component parentComponent) throws IOException {
         super();
         this.parentComponent = parentComponent;
+        this.workspaceSessionRepository = new WorkspaceSessionRepository();
+
+        setCurrentDirectory(workspaceSessionRepository.load().getLastOpenedDirectory());
         setFileSelectionMode(JFileChooser.FILES_ONLY);
     }
 
@@ -46,7 +52,7 @@ public class FileExport extends JFileChooser {
         }
     }
 
-    protected Optional<File> getTargetFile() {
+    protected Optional<File> getTargetFile() throws IOException {
         if(showSaveDialog(parentComponent) != JFileChooser.APPROVE_OPTION){
             return Optional.empty();
         }
@@ -54,6 +60,10 @@ public class FileExport extends JFileChooser {
         if(getSelectedFile().exists() && !canOverrideFile(getSelectedFile())){
             return Optional.empty();
         }
+
+        var session = workspaceSessionRepository.load();
+        session.setLastOpenedDirectory(getCurrentDirectory());
+        workspaceSessionRepository.save(session);
 
         return Optional.of(getSelectedFile());
     }
