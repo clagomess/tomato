@@ -4,6 +4,7 @@ import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.ui.collection.*;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxExportIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxImportIcon;
+import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxInfoCircleIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSortAlt2Icon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 
@@ -17,6 +18,7 @@ public class CollectionPopUpMenu extends JPopupMenu {
     private static final Icon IMPORT_ICON = new BxImportIcon();
     private static final Icon EXPORT_ICON = new BxExportIcon();
     private static final Icon TRASH_ICON = new BxTrashIcon();
+    private static final Icon INFO_CIRCLE_ICON = new BxInfoCircleIcon();
 
     public CollectionPopUpMenu(
             Component parent,
@@ -64,5 +66,14 @@ public class CollectionPopUpMenu extends JPopupMenu {
         var mDelete = new JMenuItem("Delete", TRASH_ICON);
         mDelete.addActionListener(ae -> new CollectionDeleteDialog(parent, collectionTree).showConfirmDialog());
         add(mDelete);
+
+        addSeparator();
+
+        var mProperties = new JMenuItem("Properties", INFO_CIRCLE_ICON);
+        mProperties.addActionListener(ae -> disposeIfExists(
+                CollectionPropertiesFrame.class,
+                () -> new CollectionPropertiesFrame(parent, collectionTree)
+        ));
+        add(mProperties);
     }
 }
