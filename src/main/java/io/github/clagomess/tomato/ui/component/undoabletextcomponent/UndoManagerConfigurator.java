@@ -7,15 +7,15 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.JTextComponent;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
-import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import static java.awt.event.KeyEvent.VK_Z;
 import static javax.swing.event.DocumentEvent.EventType.CHANGE;
 
 @Slf4j
 final class UndoManagerConfigurator {
-    private static final KeyStroke UNDO_KEY_STROKE = KeyStroke.getKeyStroke(VK_Z, CTRL_DOWN_MASK);
+    private static final KeyStroke UNDO_KEY_STROKE = KeyStroke.getKeyStroke(VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
     private static final String MAP_KEY_UNDO_KEY_STROKE = "undoKeyStroke";
 
     static void configure(JTextComponent textComponent) {

@@ -16,6 +16,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -69,7 +70,7 @@ public class CollectionTree extends JPanel {
         tree.addTreeExpansionListener(new CollectionTreeExpansionListener());
         tree.registerKeyboardAction(
                 new CollectionKeyboardAction(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK),
+                KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()),
                 JComponent.WHEN_FOCUSED
         );
 
