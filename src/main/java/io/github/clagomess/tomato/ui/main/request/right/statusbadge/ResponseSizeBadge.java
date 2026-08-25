@@ -4,15 +4,15 @@ import io.github.clagomess.tomato.dto.ResponseDto;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 
 import javax.swing.*;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+
+import static io.github.clagomess.tomato.util.FileUtils.humanReadableByteCountBinary;
 
 public class ResponseSizeBadge extends JPanel {
     public ResponseSizeBadge(ResponseDto.Response response) {
         var color = getColor(response.getBodySize());
         setBackground(color.background());
 
-        var label = new JLabel(formatSize(response.getBodySize()));
+        var label = new JLabel(humanReadableByteCountBinary(response.getBodySize()));
         label.setForeground(color.foreground());
         add(label);
     }
@@ -23,17 +23,5 @@ public class ResponseSizeBadge extends JPanel {
         }else{
             return ColorConstant.GRAY_MATCH;
         }
-    }
-
-    protected String formatSize(long size){
-        if(size <= 1024) return size + "B";
-
-        if(size <= Math.pow(1024, 2)){
-            return new BigDecimal(size / 1024)
-                    .setScale(2, RoundingMode.HALF_UP) + "KB";
-        }
-
-        return new BigDecimal(size / Math.pow(1024, 2))
-                .setScale(2, RoundingMode.HALF_UP) + "MB";
     }
 }

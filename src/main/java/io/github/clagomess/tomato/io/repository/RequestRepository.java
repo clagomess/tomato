@@ -1,9 +1,12 @@
 package io.github.clagomess.tomato.io.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.clagomess.tomato.dto.RequestPropertiesDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import io.github.clagomess.tomato.util.DateUtils;
+import io.github.clagomess.tomato.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -14,6 +17,8 @@ import java.util.stream.Stream;
 
 @Slf4j
 public class RequestRepository extends AbstractRepository {
+
+
     public Optional<RequestDto> load(
             RequestHeadDto request
     ) throws IOException {
@@ -59,5 +64,17 @@ public class RequestRepository extends AbstractRepository {
             CollectionTreeDto target
     ) throws IOException {
         move(source.getPath(), target.getPath());
+    }
+
+    public RequestPropertiesDto properties(
+            RequestHeadDto request
+    ){
+        return new RequestPropertiesDto(
+                request.getId().toString(),
+                request.getName(),
+                request.getPath().getAbsolutePath(),
+                FileUtils.humanReadableByteCountBinary(request.getPath().length()),
+                DateUtils.epochMilliToISO(request.getPath().lastModified())
+        );
     }
 }
