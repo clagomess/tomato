@@ -16,6 +16,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
@@ -66,6 +67,11 @@ public class CollectionTree extends JPanel {
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addMouseListener(new CollectionTreeMouseListener(tree));
         tree.addTreeExpansionListener(new CollectionTreeExpansionListener());
+        tree.registerKeyboardAction(
+                new CollectionKeyboardAction(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK),
+                JComponent.WHEN_FOCUSED
+        );
 
         JScrollPane scrollPane = new JScrollPane(tree);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
