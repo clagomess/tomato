@@ -1,9 +1,12 @@
 package io.github.clagomess.tomato.io.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.github.clagomess.tomato.dto.CollectionPropertiesDto;
 import io.github.clagomess.tomato.dto.data.CollectionDto;
 import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import io.github.clagomess.tomato.util.DateUtils;
+import io.github.clagomess.tomato.util.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -77,5 +80,20 @@ public class CollectionRepository extends AbstractRepository {
 
     public void delete(CollectionTreeDto tree) throws IOException {
         deleteDirectory(tree.getPath());
+    }
+
+    public CollectionPropertiesDto properties(
+            CollectionTreeDto tree
+    ){
+        return new CollectionPropertiesDto(
+                tree.getId().toString(),
+                tree.getName(),
+                tree.getPath().getAbsolutePath(),
+                FileUtils.humanReadableByteCountBinary(
+                        FileUtils.dirSize(tree.getPath())
+                ),
+                String.valueOf(FileUtils.dirFileCount(tree.getPath())),
+                DateUtils.epochMilliToISO(tree.getPath().lastModified())
+        );
     }
 }

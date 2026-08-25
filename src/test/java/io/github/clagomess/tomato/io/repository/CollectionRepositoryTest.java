@@ -6,13 +6,18 @@ import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CollectionRepositoryTest extends RepositoryStubs {
     private final RequestRepository requestRepository = Mockito.mock(RequestRepository.class);
@@ -99,5 +104,74 @@ class CollectionRepositoryTest extends RepositoryStubs {
 
         Assertions.assertThat(new File(targetDir, sourceDir.getName()))
                 .isDirectory();
+    }
+
+    @Nested
+    class properties {
+        private static final LocalDateTime LAST_MODIFIED = LocalDateTime.of(
+                2025, 1, 2, 3, 4, 5
+        );
+
+        private CollectionTreeDto createCollectionTree(File collectionDir){
+            assertTrue(collectionDir.setLastModified(LAST_MODIFIED
+                    .atZone(ZoneId.systemDefault())
+                    .toInstant()
+                    .toEpochMilli()
+            ));
+
+            var tree = new CollectionTreeDto();
+            tree.setId(new TomatoID("AAAAAAAA"));
+            tree.setName("my-collection");
+            tree.setPath(collectionDir);
+
+            return tree;
+        }
+
+        @Test
+        void whenHasNestedCollection_sumAllFiles() throws IOException {
+            var collectionDir = new File(mockDataDir, "collection-AAAAAAAA");
+            assertTrue(collectionDir.mkdirs());
+            Files.write(
+                    new File(collectionDir, "collection-AAAAAAAA.json").toPath(),
+                    new byte[100]
+            );
+            Files.write(
+                    new File(collectionDir, "request-BBBBBBBB.json").toPath(),
+                    new byte[200]
+            );
+
+            var nestedDir = new File(collectionDir, "collection-CCCCCCCC");
+            assertTrue(nestedDir.mkdirs());
+            Files.write(
+                    new File(nestedDir, "collection-CCCCCCCC.json").toPath(),
+                    new byte[212]
+            );
+
+            var tree = createCollectionTree(collectionDir);
+
+            var result = collectionRepositoryMock.properties(tree);
+
+            Assertions.assertThat(result.id()).isEqualTo("AAAAAAAA");
+            Assertions.assertThat(result.name()).isEqualTo("my-collection");
+            Assertions.assertThat(result.fileName())
+                    .isEqualTo(collectionDir.getAbsolutePath());
+            Assertions.assertThat(result.fileSize()).isEqualTo("512B");
+            Assertions.assertThat(result.fileCount()).isEqualTo("3");
+            Assertions.assertThat(result.fileLastModified())
+                    .isEqualTo("2025-01-02 03:04:05");
+        }
+
+        @Test
+        void whenCollectionIsEmpty_returnZeroedSizeAndCount() {
+            var collectionDir = new File(mockDataDir, "collection-AAAAAAAA");
+            assertTrue(collectionDir.mkdirs());
+
+            var tree = createCollectionTree(collectionDir);
+
+            var result = collectionRepositoryMock.properties(tree);
+
+            Assertions.assertThat(result.fileSize()).isEqualTo("0B");
+            Assertions.assertThat(result.fileCount()).isEqualTo("0");
+        }
     }
 }
