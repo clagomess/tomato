@@ -6,6 +6,7 @@ import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxCodeAltIcon;
+import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxInfoCircleIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLinkExternalIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSortAlt2Icon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
@@ -13,6 +14,7 @@ import io.github.clagomess.tomato.ui.main.request.codesnippet.CodeSnippetFrame;
 import io.github.clagomess.tomato.ui.request.RequestDeleteFrame;
 import io.github.clagomess.tomato.ui.request.RequestFrame;
 import io.github.clagomess.tomato.ui.request.RequestMoveFrame;
+import io.github.clagomess.tomato.ui.request.RequestPropertiesFrame;
 import io.github.clagomess.tomato.ui.request.RequestRenameFrame;
 
 import javax.swing.*;
@@ -26,6 +28,7 @@ public class RequestPopUpMenu extends JPopupMenu {
     private static final Icon CODE_ALT_ICON = new BxCodeAltIcon();
     private static final Icon SORT_ALT_2_ICON = new BxSortAlt2Icon();
     private static final Icon TRASH_ICON = new BxTrashIcon();
+    private static final Icon INFO_CIRCLE_ICON = new BxInfoCircleIcon();
 
     private final RequestPopUpMenuController controller = new RequestPopUpMenuController();
 
@@ -65,6 +68,12 @@ public class RequestPopUpMenu extends JPopupMenu {
         var mDelete = new JMenuItem("Delete", TRASH_ICON);
         mDelete.addActionListener(e -> delete(parent, requestHead));
         add(mDelete);
+
+        addSeparator();
+
+        var mProperties = new JMenuItem("Properties", INFO_CIRCLE_ICON);
+        mProperties.addActionListener(e -> properties(parent, requestHead));
+        add(mProperties);
     }
 
     protected void open(
@@ -128,5 +137,15 @@ public class RequestPopUpMenu extends JPopupMenu {
     ){
         new RequestDeleteFrame(parent, requestHead)
                 .showConfirmDialog();
+    }
+
+    protected void properties(
+            Component parent,
+            RequestHeadDto requestHead
+    ){
+        disposeIfExists(
+                RequestPropertiesFrame.class,
+                () -> new RequestPropertiesFrame(parent, requestHead)
+        );
     }
 }
