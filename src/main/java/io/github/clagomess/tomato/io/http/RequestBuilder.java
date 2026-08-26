@@ -16,14 +16,12 @@ import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class RequestBuilder {
-    private final RequestHeadDto requestHead;
     private final List<EnvironmentItemDto> envs;
 
     public RequestBuilder(@Nullable RequestHeadDto requestHead) {
-        this.requestHead = requestHead;
         this.envs = EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
-                .request();
+                .request(requestHead != null ? requestHead.getParent() : null);
     }
 
     protected String injectEnvironment(

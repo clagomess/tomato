@@ -51,23 +51,25 @@ Why these approch? This evicts application crash when some api response with a b
 The `~/.tomato/data` can be changed to be in another location like One Drive, Dropbox, mounted drive, etc. The data follow this structure:
 
 ```
-~/.tomato/
-├── data/
-│   └── data-session.json
-│   └── workspace-{ID}/
-│       └── workspace-{ID}.json
-│       └── environment-{ID}.json
-│       └── environment-{ID}.kdbx
-│       └── environment-{ID}.kdbx.bkp
-│       └── workspace-session.json
-│       └── collection-{ID}/
-│           └── collection-{ID}.json
-│           └── request-{ID}.json
-│           └── collection-{ID}/
-│               └── collection-{ID}.json
-│               └── request-{ID}.json
-│       └── request-{ID}.json
-└── configuration.json
+📂 ~/.tomato
+├─ 📂 data
+│   ├─ 📄 data-session.json
+│   ├─ 📂 workspace-{ID}
+│   │   ├─ 📂 __collection_files
+│   │   ├─ 📄 workspace-{ID}.json
+│   │   ├─ 📄 environment-{ID}.json
+│   │   ├─ 📄 environment-{ID}.kdbx
+│   │   ├─ 📄 environment-{ID}.kdbx.bkp
+│   │   ├─ 📄 workspace-session.json
+│   │   ├─ 📂 collection-{ID}
+│   │   │   ├─  📂 __collection_files
+│   │   │   ├─ 📄 collection-{ID}.json
+│   │   │   ├─ 📄 request-{ID}.json
+│   │   │   ├─ 📂 collection-{ID}
+│   │   │   │   ├─ 📄 collection-{ID}.json
+│   │   │   │   └─ 📄 request-{ID}.json
+│   │   └─ 📄 request-{ID}.json
+└─ 📄 configuration.json
 ```
 
 ## Development

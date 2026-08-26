@@ -1,14 +1,19 @@
 package io.github.clagomess.tomato.dto.tree;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static io.github.clagomess.tomato.util.FileUtils.COLLECTION_FILES_DIR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class CollectionTreeDtoTest {
     @Test
@@ -76,5 +81,35 @@ class CollectionTreeDtoTest {
         Collections.sort(list);
 
         assertEquals("aaa", list.get(0).getName());
+    }
+
+    @Nested
+    class getCollectionFileDir {
+        @Test
+        void whenPathIsNull_returnNull(){
+            assertNull(new CollectionTreeDto().getCollectionFileDir());
+        }
+
+        @Test
+        void whenPathIsSet_returnSiblingCollectionFilesDir(@TempDir File tempDir){
+            var dto = new CollectionTreeDto();
+            dto.setPath(new File(tempDir, "collection-8a1c"));
+
+            assertEquals(
+                    new File(tempDir, COLLECTION_FILES_DIR).getAbsolutePath(),
+                    dto.getCollectionFileDir()
+            );
+        }
+
+        @Test
+        void whenPathHasNoParent_returnCollectionFilesDirOnWorkingDir(){
+            var dto = new CollectionTreeDto();
+            dto.setPath(new File("collection-8a1c"));
+
+            assertEquals(
+                    new File(COLLECTION_FILES_DIR).getAbsolutePath(),
+                    dto.getCollectionFileDir()
+            );
+        }
     }
 }
