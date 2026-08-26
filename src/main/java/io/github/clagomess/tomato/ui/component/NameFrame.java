@@ -9,7 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 
 @Getter
-public abstract class NameFrame extends BaseFrame {
+public abstract class NameFrame
+        extends BaseFrame
+        implements NameInterface {
     protected final JButton btnSave = new JButton("Save");
     protected final UndoableTextField txtName = new UndoableTextField();
 
@@ -31,5 +33,9 @@ public abstract class NameFrame extends BaseFrame {
         pack();
         setLocationRelativeTo(parent);
         setVisible(true);
+    }
+
+    public String getTxtNameValue(){
+        return txtName.getText();
     }
 }
