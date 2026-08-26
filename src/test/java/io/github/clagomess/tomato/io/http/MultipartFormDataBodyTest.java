@@ -64,7 +64,7 @@ class MultipartFormDataBodyTest {
                 new FileKeyValueItemDto(FILE, "myfile", formFile, null, true)
         ));
 
-        var multipart = new MultipartFormDataBody(boundary, body);
+        var multipart = new MultipartFormDataBody(null, boundary, body);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -94,7 +94,7 @@ class MultipartFormDataBodyTest {
                 new FileKeyValueItemDto(TEXT, "myparam", null, null, true)
         ));
 
-        var multipart = new MultipartFormDataBody(boundary, body);
+        var multipart = new MultipartFormDataBody(null, boundary, body);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -112,7 +112,7 @@ class MultipartFormDataBodyTest {
                 new FileKeyValueItemDto(FILE, "myfile", fileParam, null, true)
         ));
 
-        var multipart = new MultipartFormDataBody(boundary, body);
+        var multipart = new MultipartFormDataBody(null, boundary, body);
 
         assertThrowsExactly(
                 FileNotFoundException.class,
@@ -127,7 +127,7 @@ class MultipartFormDataBodyTest {
                 new FileKeyValueItemDto(TEXT, "mysecondparam", "myvalue", null, false)
         ));
 
-        var multipart = new MultipartFormDataBody(boundary, body);
+        var multipart = new MultipartFormDataBody(null, boundary, body);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -145,6 +145,7 @@ class MultipartFormDataBodyTest {
         ));
 
         var multipart = new MultipartFormDataBody(
+                null,
                 "tomato-1",
                 body
         );
@@ -168,7 +169,7 @@ class MultipartFormDataBodyTest {
                 new FileKeyValueItemDto("mykey", input)
         ));
 
-        var form = new MultipartFormDataBody(body);
+        var form = new MultipartFormDataBody(null, body);
         var tmpFile = form.build();
 
         Assertions.assertThat(tmpFile)

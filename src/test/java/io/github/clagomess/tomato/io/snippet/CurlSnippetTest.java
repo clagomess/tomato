@@ -28,7 +28,7 @@ import static io.github.clagomess.tomato.io.snippet.CurlSnippet.Type.BASH;
 
 @Slf4j
 class CurlSnippetTest extends RepositoryStubs {
-    private final CurlSnippet curlSnippet = new CurlSnippet(BASH);
+    private final CurlSnippet curlSnippet = new CurlSnippet(null, BASH);
 
     @BeforeAll
     static void setup(){

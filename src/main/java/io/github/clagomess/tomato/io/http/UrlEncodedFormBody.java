@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.io.http;
 
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
@@ -9,10 +10,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @RequiredArgsConstructor
 public class UrlEncodedFormBody {
+    private final RequestHeadDto requestHead;
     private final BodyDto body;
 
     public String build() throws IOException {
-        var requestBuilder = new RequestBuilder();
+        var requestBuilder = new RequestBuilder(requestHead);
 
         StringBuilder urlEncoded = new StringBuilder();
         AtomicBoolean first = new AtomicBoolean(true);

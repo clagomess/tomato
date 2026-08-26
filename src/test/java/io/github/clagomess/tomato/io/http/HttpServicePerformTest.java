@@ -51,7 +51,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/response-json");
         request.setMethod(HttpMethodEnum.GET);
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
 
         assertTrue(response.isRequestStatus());
         assertNull(response.getRequestMessage());
@@ -68,7 +68,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/response-binary");
         request.setMethod(HttpMethodEnum.GET);
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
 
         assertTrue(response.isRequestStatus());
         assertNull(response.getRequestMessage());
@@ -86,7 +86,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/response-gzip");
         request.setMethod(HttpMethodEnum.GET);
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
 
         assertTrue(response.isRequestStatus());
         assertNull(response.getRequestMessage());
@@ -102,7 +102,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setMethod(HttpMethodEnum.GET);
         request.setHeaders(Collections.singletonList(new KeyValueItemDto("foo", "bar")));
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
     }
 
@@ -112,7 +112,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/get-headers");
         request.setMethod(HttpMethodEnum.GET);
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
         assertTrue(response.getHttpResponse().getHeaders().keySet().stream().anyMatch("foo"::equals));
     }
@@ -123,7 +123,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/redirect");
         request.setMethod(HttpMethodEnum.GET);
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(301, response.getHttpResponse().getStatus());
         assertEquals("< Empty Body", response.getHttpResponse().getBodyAsString());
     }
@@ -134,7 +134,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8110/");
         request.setMethod(HttpMethodEnum.GET);
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
 
         assertNull(response.getHttpResponse());
         assertNotNull(response.getRequestDebug());
@@ -148,7 +148,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/conection-drop");
         request.setMethod(HttpMethodEnum.GET);
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
 
         assertNull(response.getHttpResponse());
         assertNotNull(response.getRequestDebug());
@@ -163,7 +163,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setMethod(HttpMethodEnum.GET);
         request.getCookies().add(new KeyValueItemDto("foo", "bar"));
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
     }
 
@@ -173,7 +173,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/get-cookie");
         request.setMethod(HttpMethodEnum.GET);
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
         assertEquals("bar", response.getHttpResponse().getCookies().get("foo"));
     }
@@ -187,7 +187,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
         request.getBody().setUrlEncodedForm(Collections.singletonList(new ContentTypeKeyValueItemDto("foo", "bar")));
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
     }
 
@@ -197,7 +197,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/with-query-param?foo=bar");
         request.setMethod(HttpMethodEnum.GET);
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
     }
 
@@ -207,7 +207,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/response-500");
         request.setMethod(HttpMethodEnum.GET);
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(500, response.getHttpResponse().getStatus());
         assertEquals("hello", response.getHttpResponse().getBodyAsString());
     }
@@ -221,7 +221,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
         request.getBody().getMultiPartForm().add(new FileKeyValueItemDto("foo", "bar"));
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
     }
 
@@ -245,7 +245,7 @@ class HttpServicePerformTest extends RepositoryStubs {
                 true
         ));
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
     }
 
@@ -261,7 +261,7 @@ class HttpServicePerformTest extends RepositoryStubs {
                 "{\"foo\": \"bar\"}"
         ));
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
     }
 
@@ -277,7 +277,7 @@ class HttpServicePerformTest extends RepositoryStubs {
                 ".gitignore"
         ));
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
     }
 
@@ -293,7 +293,7 @@ class HttpServicePerformTest extends RepositoryStubs {
                 "{\"foo\": \"bar\"}"
         ));
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
     }
 
@@ -303,7 +303,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/hello");
         request.setMethod(HttpMethodEnum.DELETE);
 
-        ResponseDto response = new HttpService(request).perform();
+        ResponseDto response = new HttpService(null, request).perform();
         assertEquals(200, response.getHttpResponse().getStatus());
     }
 }
