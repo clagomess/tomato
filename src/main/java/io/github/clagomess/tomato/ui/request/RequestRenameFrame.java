@@ -1,29 +1,21 @@
 package io.github.clagomess.tomato.ui.request;
 
-import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.controller.request.RequestRenameFrameController;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import io.github.clagomess.tomato.io.repository.RequestRepository;
-import io.github.clagomess.tomato.publisher.RequestPublisher;
-import io.github.clagomess.tomato.publisher.base.PublisherEvent;
-import io.github.clagomess.tomato.publisher.key.RequestKey;
 import io.github.clagomess.tomato.ui.component.NameFrame;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import org.jspecify.annotations.NonNull;
 
 import java.awt.*;
-import java.io.IOException;
-
-import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 
 public class RequestRenameFrame extends NameFrame {
-    protected RequestRepository requestRepository;
+    private final RequestRenameFrameController controller = new RequestRenameFrameController(this);
 
     public RequestRenameFrame(
             Component parent,
             @NonNull RequestHeadDto requestHead
     ) {
         super(parent);
-        this.requestRepository = new RequestRepository();
 
         setTitle("Rename Request");
         txtName.setText(requestHead.getName());
@@ -34,28 +26,11 @@ public class RequestRenameFrame extends NameFrame {
         new WaitExecution(
                 this,
                 btnSave,
-                () -> save(requestHead)
+                () -> {
+                    controller.save(requestHead);
+                    setVisible(false);
+                    dispose();
+                }
         ).execute();
-    }
-
-    protected void save(RequestHeadDto requestHead) throws IOException {
-        RequestDto requestDto = requestRepository.load(requestHead)
-                .orElseThrow();
-
-        requestDto.setName(getTxtName().getText());
-        requestHead.setName(getTxtName().getText());
-
-        requestRepository.save(
-                requestHead.getPath(),
-                requestDto
-        );
-
-        RequestPublisher.getInstance().getOnChange().publish(
-                new RequestKey(requestHead),
-                new PublisherEvent<>(UPDATED, requestHead)
-        );
-
-        setVisible(false);
-        dispose();
     }
 }

@@ -268,7 +268,7 @@ public class RequestSplitPane extends JPanel {
     public void addSaveKeyboardAction() {
         this.registerKeyboardAction(
                 l -> btnSaveRequestAction(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK),
+                KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()),
                 JComponent.WHEN_IN_FOCUSED_WINDOW
         );
     }

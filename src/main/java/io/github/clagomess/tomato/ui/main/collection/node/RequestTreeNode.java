@@ -20,6 +20,7 @@ public class RequestTreeNode extends DefaultMutableTreeNode {
 
     private final DefaultTreeModel treeModel;
     private final RequestKey requestKey;
+    private final RequestHeadDto requestHead;
 
     public RequestTreeNode(
             DefaultTreeModel treeModel,
@@ -28,6 +29,7 @@ public class RequestTreeNode extends DefaultMutableTreeNode {
     ) {
         super(head, false);
         this.treeModel = treeModel;
+        this.requestHead = head;
         this.requestKey = new RequestKey(
                 head.getParent().getId(),
                 head.getId()
