@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 class BasePublisherTest {
@@ -16,9 +17,9 @@ class BasePublisherTest {
         List<UUID> uuids = new LinkedList<>();
 
         IntStream.range(0, 100).forEach(i -> {
-            var listener = new BasePublisher.Listener<String, String>(
+            var listener = new Listener<String, String>(
                     RandomStringUtils.secure().nextAlphanumeric(8),
-                    new BasePublisher.EventFI<>(){}
+                    ((Consumer<String>) s -> {}).toString()
             );
 
             publisher.getListeners().add(listener);
