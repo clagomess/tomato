@@ -1,7 +1,6 @@
 package io.github.clagomess.tomato.publisher.base;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -17,44 +16,30 @@ abstract class BasePublisher<K, T> {
         toDebug.add(this);
     }
 
+    protected UUID addListener(Listener<K, T> listener) {
+        if(log.isDebugEnabled()){
+            log.debug(
+                    "AddListener: {} - {}\n-> {}",
+                    listener.getAbbrevUuid(),
+                    listener.getKey(),
+                    listener.getListener()
+            );
+        }
+
+        listeners.add(listener);
+
+        return listener.getUuid();
+    }
+
     public void removeListener(UUID uuid) {
         Optional<Listener<K, T>> opt = listeners.stream()
                 .filter(Objects::nonNull)
-                .filter(listener -> Objects.equals(listener.uuid, uuid))
+                .filter(consumer -> Objects.equals(consumer.getUuid(), uuid))
                 .findFirst();
 
         if (opt.isPresent()) {
             if (log.isDebugEnabled()) log.debug("RemoveListener: {}", uuid);
             listeners.remove(opt.get());
-        }
-    }
-
-    public interface EventFI<T> {}
-
-    @FunctionalInterface
-    public interface EventPublishFI<T> extends EventFI<T> {
-        void run(T event);
-    }
-
-    @FunctionalInterface
-    public interface EventRequestFI<T> extends EventFI<T> {
-        T get();
-    }
-
-    @Getter
-    @Setter
-    protected static class Listener<K, T> {
-        private final UUID uuid = UUID.randomUUID();
-        private K key;
-        private final EventFI<T> runnable;
-
-        public Listener(K key, EventFI<T> runnable) {
-            this.key = key;
-            this.runnable = runnable;
-        }
-
-        public String getAbbrevUuid(){
-            return uuid.toString().substring(0, 8);
         }
     }
 
@@ -75,7 +60,7 @@ abstract class BasePublisher<K, T> {
                        sb.append(" - ");
                        sb.append(listener.getKey());
                        sb.append(" - ");
-                       sb.append(listener.getRunnable().toString()
+                       sb.append(listener.getListener().toString()
                                        .replace(basePackage, ""));
                        sb.append("\n");
                     });

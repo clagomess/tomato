@@ -34,7 +34,7 @@ class CurlSnippetTest extends RepositoryStubs {
     static void setup(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
-                .addListener(() -> List.of(new EnvironmentItemDto("foo", "bar")));
+                .addListener(query -> List.of(new EnvironmentItemDto("foo", "bar")));
     }
 
     @AfterAll

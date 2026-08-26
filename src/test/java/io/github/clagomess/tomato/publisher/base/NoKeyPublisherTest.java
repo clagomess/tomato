@@ -80,9 +80,9 @@ class NoKeyPublisherTest {
 
     @Test
     void request(){
-        NoKeyPublisher<String> publisher = new NoKeyPublisher<>();
-        publisher.addListener(() -> "opa1");
-        publisher.addListener(() -> "opa2");
+        var publisher = new NoKeyRequestPublisher<String, Void>();
+        publisher.addListener(query -> "opa1");
+        publisher.addListener(query -> "opa2");
 
         assertEquals("opa2", publisher.request());
     }

@@ -5,7 +5,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
-import io.github.clagomess.tomato.publisher.base.NoKeyPublisher;
+import io.github.clagomess.tomato.publisher.base.NoKeyRequestPublisher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class UrlBuilderTest {
 
     @BeforeEach
     void setup() {
-        NoKeyPublisher<List<EnvironmentItemDto>> currentEnvs = Mockito.spy(new NoKeyPublisher<>());
+        var currentEnvs = Mockito.spy(new NoKeyRequestPublisher<>());
         Mockito.doReturn(envList)
                 .when(currentEnvs)
                 .request();

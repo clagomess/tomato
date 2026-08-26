@@ -34,7 +34,7 @@ class HttpServicePerformTest extends RepositoryStubs {
     static void setup(){
         EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
-                .addListener(() -> List.of());
+                .addListener(query -> List.of());
     }
 
     @AfterAll

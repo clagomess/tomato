@@ -63,7 +63,7 @@ public class EnvironmentSwitcherComboBoxController {
         keystore.setGetNewPassword(ui::getNewPassword);
 
         environmentPublisher.getCurrentEnvs()
-                .addListener(() -> {
+                .addListener(query -> {
                     try {
                         Optional<List<EnvironmentItemDto>> envs = environmentRepository.getWorkspaceSessionEnvironment()
                                 .map(EnvironmentDto::getEnvs);
