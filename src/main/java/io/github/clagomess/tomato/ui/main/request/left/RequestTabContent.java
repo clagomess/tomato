@@ -5,6 +5,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.UrlParamDto;
 import io.github.clagomess.tomato.dto.key.TabKey;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.enums.BodyTypeEnum;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
@@ -16,6 +17,7 @@ import io.github.clagomess.tomato.ui.main.request.keyvalue.KeyValueOptions;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.LinkedList;
@@ -27,6 +29,7 @@ import static javax.swing.SwingUtilities.invokeLater;
 @Setter
 public class RequestTabContent extends JPanel {
     private final TabKey tabKey;
+    private final RequestHeadDto requestHead;
     private final RequestDto requestDto;
     private final RequestStagingMonitor requestStagingMonitor;
 
@@ -34,10 +37,12 @@ public class RequestTabContent extends JPanel {
 
     public RequestTabContent(
             TabKey tabKey,
+            @Nullable RequestHeadDto requestHead,
             RequestDto requestDto,
             RequestStagingMonitor requestStagingMonitor
     ){
         this.tabKey = tabKey;
+        this.requestHead = requestHead;
         this.requestDto = requestDto;
         this.requestStagingMonitor = requestStagingMonitor;
 
@@ -89,6 +94,7 @@ public class RequestTabContent extends JPanel {
 
     private void createTabQueryParams(JTabbedPane tabbedPane){
         var queryParams = new KeyValue<>(
+                requestHead,
                 requestDto.getUrlParam().getQuery(),
                 ContentTypeKeyValueItemDto.class,
                 requestStagingMonitor,
@@ -117,6 +123,7 @@ public class RequestTabContent extends JPanel {
 
     private void createTabPathVariables(JTabbedPane tabbedPane){
         var pathVariables = new KeyValue<>(
+                requestHead,
                 requestDto.getUrlParam().getPath(),
                 KeyValueItemDto.class,
                 requestStagingMonitor,
@@ -148,6 +155,7 @@ public class RequestTabContent extends JPanel {
 
     private void createTabBody(JTabbedPane tabbedPane){
         var body = new Body(
+                requestHead,
                 requestDto.getBody(),
                 requestStagingMonitor
         );
@@ -169,6 +177,7 @@ public class RequestTabContent extends JPanel {
 
     private void createTabHeaders(JTabbedPane tabbedPane){
         var headers = new KeyValue<>(
+                requestHead,
                 requestDto.getHeaders(),
                 KeyValueItemDto.class,
                 requestStagingMonitor
@@ -193,6 +202,7 @@ public class RequestTabContent extends JPanel {
         ComponentUtil.checkIsEventDispatchThread();
 
         var cookies = new KeyValue<>(
+                requestHead,
                 requestDto.getCookies(),
                 KeyValueItemDto.class,
                 requestStagingMonitor

@@ -65,7 +65,7 @@ public class CollectionTreeDto implements Comparable<CollectionTreeDto> {
     @Nullable
     public String getCollectionFileDir(){
         if(path == null) return null;
-        return new File(path.getParent(), COLLECTION_FILES_DIR).getAbsolutePath();
+        return new File(path, COLLECTION_FILES_DIR).getAbsolutePath();
     }
 
     @Override

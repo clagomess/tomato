@@ -3,13 +3,16 @@ package io.github.clagomess.tomato.ui.main.request.keyvalue;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import io.github.clagomess.tomato.ui.component.FileChooser;
+import io.github.clagomess.tomato.ui.component.RequestFileChooser;
 import io.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;
 import io.github.clagomess.tomato.ui.component.envtextfield.EnvTextfieldOptions;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -29,6 +32,7 @@ class ValueComponent<T extends KeyValueItemDto> {
     private final JComponent component;
 
     public ValueComponent(
+            @Nullable RequestHeadDto requestHead,
             RequestStagingMonitor requestStagingMonitor,
             KeyValueOptions options,
             T item
@@ -38,7 +42,7 @@ class ValueComponent<T extends KeyValueItemDto> {
         this.item = item;
 
         if(item instanceof FileKeyValueItemDto fvItem && fvItem.getType() == FILE){
-            component = buildFileChooser(fvItem);
+            component = buildFileChooser(requestHead, fvItem);
             return;
         }
 
@@ -50,8 +54,11 @@ class ValueComponent<T extends KeyValueItemDto> {
         component = buildEnvTextField(item);
     }
 
-    private FileChooser buildFileChooser(FileKeyValueItemDto fvItem){
-        var fileChooser = new FileChooser();
+    private RequestFileChooser buildFileChooser(
+            @Nullable RequestHeadDto requestHead,
+            FileKeyValueItemDto fvItem
+    ){
+        var fileChooser = new RequestFileChooser(requestHead);
         fileChooser.setValue(fvItem.getValue());
         fileChooser.addOnChange(file -> {
             try {

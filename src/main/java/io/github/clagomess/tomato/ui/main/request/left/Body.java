@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.ui.main.request.left;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.enums.BodyTypeEnum;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.ui.component.CharsetComboBox;
@@ -12,6 +13,7 @@ import io.github.clagomess.tomato.ui.main.request.left.bodytype.BinaryType;
 import io.github.clagomess.tomato.ui.main.request.left.bodytype.NoBodyType;
 import io.github.clagomess.tomato.ui.main.request.left.bodytype.RawBodyType;
 import net.miginfocom.swing.MigLayout;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -19,6 +21,7 @@ import java.awt.*;
 import java.util.Arrays;
 
 public class Body extends JPanel implements DisposableListener {
+    private final RequestHeadDto requestHead;
     private final BodyDto body;
     private final RequestStagingMonitor requestStagingMonitor;
     private final ButtonGroup bgBodyType = new ButtonGroup();
@@ -26,9 +29,11 @@ public class Body extends JPanel implements DisposableListener {
     private Component currentBodyType;
 
     public Body(
+            @Nullable RequestHeadDto requestHead,
             BodyDto body,
             RequestStagingMonitor requestStagingMonitor
     ) {
+        this.requestHead = requestHead;
         this.body = body;
         this.requestStagingMonitor = requestStagingMonitor;
 
@@ -79,11 +84,13 @@ public class Body extends JPanel implements DisposableListener {
     private Component getBodyType(){
         return switch (body.getType()) {
             case MULTIPART_FORM -> new KeyValue<>(
+                    requestHead,
                     body.getMultiPartForm(),
                     FileKeyValueItemDto.class,
                     requestStagingMonitor
             );
             case URL_ENCODED_FORM -> new KeyValue<>(
+                    requestHead,
                     body.getUrlEncodedForm(),
                     ContentTypeKeyValueItemDto.class,
                     requestStagingMonitor
@@ -93,6 +100,7 @@ public class Body extends JPanel implements DisposableListener {
                     requestStagingMonitor
             );
             case BINARY -> new BinaryType(
+                    requestHead,
                     body.getBinary(),
                     requestStagingMonitor
             );

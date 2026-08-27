@@ -91,23 +91,24 @@ class CollectionTreeDtoTest {
         }
 
         @Test
-        void whenPathIsSet_returnSiblingCollectionFilesDir(@TempDir File tempDir){
+        void whenPathIsSet_returnChildCollectionFilesDir(@TempDir File tempDir){
+            var collectionDir = new File(tempDir, "collection-8a1c");
             var dto = new CollectionTreeDto();
-            dto.setPath(new File(tempDir, "collection-8a1c"));
+            dto.setPath(collectionDir);
 
             assertEquals(
-                    new File(tempDir, COLLECTION_FILES_DIR).getAbsolutePath(),
+                    new File(collectionDir, COLLECTION_FILES_DIR).getAbsolutePath(),
                     dto.getCollectionFileDir()
             );
         }
 
         @Test
-        void whenPathHasNoParent_returnCollectionFilesDirOnWorkingDir(){
+        void whenPathIsRelative_returnAbsoluteCollectionFilesDir(){
             var dto = new CollectionTreeDto();
             dto.setPath(new File("collection-8a1c"));
 
             assertEquals(
-                    new File(COLLECTION_FILES_DIR).getAbsolutePath(),
+                    new File("collection-8a1c", COLLECTION_FILES_DIR).getAbsolutePath(),
                     dto.getCollectionFileDir()
             );
         }

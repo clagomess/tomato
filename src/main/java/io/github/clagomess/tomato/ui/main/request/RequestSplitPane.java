@@ -152,6 +152,7 @@ public class RequestSplitPane extends JPanel {
 
         this.requestContent = new RequestTabContent(
                 this.key,
+                requestHeadDto,
                 requestDto,
                 requestStagingMonitor
         );
