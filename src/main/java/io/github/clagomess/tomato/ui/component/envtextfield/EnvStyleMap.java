@@ -10,9 +10,12 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static io.github.clagomess.tomato.io.repository.EnvironmentRepository.SYSENV_KEYS;
 
 @Slf4j
 class EnvStyleMap implements StyleMap {
@@ -20,19 +23,31 @@ class EnvStyleMap implements StyleMap {
     private final SimpleAttributeSet filledStyle = new SimpleAttributeSet();
     private final SimpleAttributeSet notFilledStyle = new SimpleAttributeSet();
 
-    private final EnvironmentRepository environmentRepository = new EnvironmentRepository();
+    private final EnvironmentRepository environmentRepository;
 
     public EnvStyleMap() {
+        this(new EnvironmentRepository());
+    }
+
+    public EnvStyleMap(EnvironmentRepository environmentRepository) {
+        this.environmentRepository = environmentRepository;
         StyleConstants.setForeground(filledStyle, ColorConstant.GREEN);
         StyleConstants.setForeground(notFilledStyle, ColorConstant.RED);
     }
 
     protected boolean containsKey(String token) throws IOException {
+        String key = token.substring(2).substring(0, token.length() - 4);
+
+        if(SYSENV_KEYS.contains(key)){
+            injected.putIfAbsent(token, null);
+            return true;
+        }
+
         Optional<EnvironmentDto> current = environmentRepository.getWorkspaceSessionEnvironment();
         if(current.isEmpty()) return false;
 
         Optional<EnvironmentItemDto> result = current.get().getEnvs().parallelStream()
-                .filter(env -> token.equals("{{" + env.getKey() + "}}"))
+                .filter(env -> Objects.equals(env.getKey(), key))
                 .findFirst();
 
         if(result.isPresent()){

@@ -44,7 +44,7 @@ class HttpHeaderBuilderTest extends RepositoryStubs {
     void build_expectedDefaultUserAgent() throws IOException {
         var request = new RequestDto();
 
-        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        new HttpHeaderBuilder(httpRequestBuilder, null, request).build();
         var result = httpRequestBuilder.build().headers();
 
         Assertions.assertThat(result.firstValue("User-Agent").orElseThrow())
@@ -58,7 +58,7 @@ class HttpHeaderBuilderTest extends RepositoryStubs {
                 new KeyValueItemDto("User-Agent", "foo")
         ));
 
-        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        new HttpHeaderBuilder(httpRequestBuilder, null, request).build();
         var result = httpRequestBuilder.build().headers();
 
         Assertions.assertThat(result.firstValue("User-Agent").orElseThrow())
@@ -73,7 +73,7 @@ class HttpHeaderBuilderTest extends RepositoryStubs {
                 new KeyValueItemDto("Content-Type", "bar")
         ));
 
-        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        new HttpHeaderBuilder(httpRequestBuilder, null, request).build();
         var result = httpRequestBuilder.build().headers();
 
         Assertions.assertThat(result.allValues("Content-Type"))
@@ -88,7 +88,7 @@ class HttpHeaderBuilderTest extends RepositoryStubs {
                 new KeyValueItemDto("FOO", "bar")
         ));
 
-        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        new HttpHeaderBuilder(httpRequestBuilder, null, request).build();
         var result = httpRequestBuilder.build().headers();
 
         Assertions.assertThat(result.allValues("Cookie"))
@@ -102,7 +102,7 @@ class HttpHeaderBuilderTest extends RepositoryStubs {
                 new KeyValueItemDto("Content-Type", "{{foo}}")
         ));
 
-        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        new HttpHeaderBuilder(httpRequestBuilder, null, request).build();
         var result = httpRequestBuilder.build().headers();
 
         Assertions.assertThat(result.firstValue("Content-Type").orElseThrow())
@@ -116,7 +116,7 @@ class HttpHeaderBuilderTest extends RepositoryStubs {
                 new KeyValueItemDto("JSESSIONID", "{{foo}}")
         ));
 
-        new HttpHeaderBuilder(httpRequestBuilder, request).build();
+        new HttpHeaderBuilder(httpRequestBuilder, null, request).build();
         var result = httpRequestBuilder.build().headers();
 
         Assertions.assertThat(result.firstValue("Cookie").orElseThrow())

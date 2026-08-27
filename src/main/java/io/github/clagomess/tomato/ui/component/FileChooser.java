@@ -16,7 +16,7 @@ import static javax.swing.JFileChooser.FILES_ONLY;
 public class FileChooser extends ListenableTextField {
     private static final Icon FOLDER_OPEN_ICON = new BxFolderOpenIcon();
 
-    private final IconButton btnSelect = new IconButton(FOLDER_OPEN_ICON, "Select");
+    protected final IconButton btnSelect = new IconButton(FOLDER_OPEN_ICON, "Choose a File");
     private final int fileSelectionMode;
 
     private final WorkspaceSessionRepository workspaceSessionRepository;
@@ -49,7 +49,7 @@ public class FileChooser extends ListenableTextField {
         return null;
     }
 
-    private void btnSelectAction(){
+    protected void btnSelectAction(){
         JFileChooser file = new JFileChooser(getCurrentDirectory());
         file.setFileSelectionMode(fileSelectionMode);
 

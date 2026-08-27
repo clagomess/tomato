@@ -2,8 +2,10 @@ package io.github.clagomess.tomato.io.http;
 
 import io.github.clagomess.tomato.dto.ResponseDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,10 +28,15 @@ import static io.github.clagomess.tomato.io.http.MediaType.HTTP_CONTENT_TYPE;
 @Slf4j
 @RequiredArgsConstructor
 public class HttpService {
+    private final RequestHeadDto requestHead;
     private final RequestDto requestDto;
     private final HttpDebug debug;
 
-    public HttpService(RequestDto requestDto) {
+    public HttpService(
+            @Nullable RequestHeadDto requestHead,
+            RequestDto requestDto
+    ) {
+        this.requestHead = requestHead;
         this.requestDto = requestDto;
         this.debug = new HttpDebug();
     }
@@ -56,7 +63,7 @@ public class HttpService {
                     .uri(new UrlBuilder(requestDto).buildUri());
 
             // set headers
-            new HttpHeaderBuilder(requestBuilder, requestDto).build();
+            new HttpHeaderBuilder(requestBuilder, requestHead, requestDto).build();
 
             HttpRequest request = buildBody(requestBuilder);
             debug.setRequest(request);
@@ -175,7 +182,7 @@ public class HttpService {
     private HttpRequest buildBodyUrlEncoded(
             HttpRequest.Builder httpRequestBuilder
     ) throws IOException {
-        var form = new UrlEncodedFormBody(requestDto.getBody());
+        var form = new UrlEncodedFormBody(requestHead, requestDto.getBody());
 
         httpRequestBuilder.header(
                 HTTP_CONTENT_TYPE,
@@ -196,7 +203,7 @@ public class HttpService {
     private HttpRequest buildBodyMultipart(
             HttpRequest.Builder httpRequestBuilder
     ) throws IOException {
-        var form = new MultipartFormDataBody(requestDto.getBody());
+        var form = new MultipartFormDataBody(requestHead, requestDto.getBody());
 
         httpRequestBuilder.header(
                 HTTP_CONTENT_TYPE,

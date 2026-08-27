@@ -36,11 +36,12 @@ public class RequestSplitPaneController {
     }
 
     public Thread sendRequest(
+            RequestHeadDto requestHead,
             RequestDto request,
             OnSendRequestCompleteFI onComplete,
             OnSendRequestErrorFI onError
     ) {
-        var httpService = new HttpService(request);
+        var httpService = new HttpService(requestHead, request);
 
         Thread requestThread = new Thread(() -> {
             try {

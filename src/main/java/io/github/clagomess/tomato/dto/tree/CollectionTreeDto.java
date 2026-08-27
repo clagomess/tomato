@@ -5,9 +5,12 @@ import io.github.clagomess.tomato.dto.data.TomatoID;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.util.stream.Stream;
+
+import static io.github.clagomess.tomato.util.FileUtils.COLLECTION_FILES_DIR;
 
 @Getter
 @Setter
@@ -57,6 +60,12 @@ public class CollectionTreeDto implements Comparable<CollectionTreeDto> {
         sb.append(name);
 
         return sb;
+    }
+
+    @Nullable
+    public String getCollectionFileDir(){
+        if(path == null) return null;
+        return new File(path, COLLECTION_FILES_DIR).getAbsolutePath();
     }
 
     @Override

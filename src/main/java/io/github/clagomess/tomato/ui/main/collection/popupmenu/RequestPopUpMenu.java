@@ -5,17 +5,9 @@ import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxCodeAltIcon;
-import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxInfoCircleIcon;
-import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLinkExternalIcon;
-import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSortAlt2Icon;
-import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
+import io.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
 import io.github.clagomess.tomato.ui.main.request.codesnippet.CodeSnippetFrame;
-import io.github.clagomess.tomato.ui.request.RequestDeleteFrame;
-import io.github.clagomess.tomato.ui.request.RequestFrame;
-import io.github.clagomess.tomato.ui.request.RequestMoveFrame;
-import io.github.clagomess.tomato.ui.request.RequestPropertiesFrame;
-import io.github.clagomess.tomato.ui.request.RequestRenameFrame;
+import io.github.clagomess.tomato.ui.request.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -100,7 +92,7 @@ public class RequestPopUpMenu extends JPopupMenu {
                         parent,
                         () -> {
                             var request = controller.load(requestHead);
-                            new CodeSnippetFrame(this, request);
+                            new CodeSnippetFrame(this, requestHead, request);
                         }
                 ).execute()
         );

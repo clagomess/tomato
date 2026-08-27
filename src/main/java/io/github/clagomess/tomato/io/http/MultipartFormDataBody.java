@@ -2,8 +2,10 @@ package io.github.clagomess.tomato.io.http;
 
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.Nullable;
 
 import java.io.*;
 
@@ -12,10 +14,15 @@ import static io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.TEXT
 
 @RequiredArgsConstructor
 public class MultipartFormDataBody {
+    private final RequestHeadDto requestHead;
     private final String boundary;
     private final BodyDto body;
 
-    public MultipartFormDataBody(BodyDto body) {
+    public MultipartFormDataBody(
+            @Nullable RequestHeadDto requestHead,
+            BodyDto body
+    ) {
+        this.requestHead = requestHead;
         this.boundary = "tomato-" + System.currentTimeMillis();
         this.body = body;
     }
@@ -26,7 +33,7 @@ public class MultipartFormDataBody {
 
     public File build() throws IOException {
         var file = HttpService.createTempFile();
-        var requestBuilder = new RequestBuilder();
+        var requestBuilder = new RequestBuilder(requestHead);
 
         try(BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))){
             var form = requestBuilder.buildMultipartFormData(body.getMultiPartForm()).toList();

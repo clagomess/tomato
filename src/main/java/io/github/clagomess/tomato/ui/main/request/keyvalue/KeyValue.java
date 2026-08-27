@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.ui.main.request.keyvalue;
 
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
@@ -11,6 +12,7 @@ import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSortAZIcon;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import net.miginfocom.swing.MigLayout;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
@@ -23,6 +25,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
     private static final Icon SORT_AZ_ICON = new BxSortAZIcon();
     private static final Icon PLUS_ICON = new BxPlusIcon();
 
+    private final RequestHeadDto requestHead;
     private final Class<T> itemClass;
     private final List<T> listItens;
     private final RequestStagingMonitor requestStagingMonitor;
@@ -32,11 +35,13 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
     private final KeyValueOptions options;
 
     public KeyValue(
+            @Nullable RequestHeadDto requestHead,
             List<T> listItens,
             Class<T> itemClass,
             RequestStagingMonitor requestStagingMonitor
     ) {
         this(
+                requestHead,
                 listItens,
                 itemClass,
                 requestStagingMonitor,
@@ -45,6 +50,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
     }
 
     public KeyValue(
+            @Nullable RequestHeadDto requestHead,
             List<T> listItens,
             Class<T> itemClass,
             RequestStagingMonitor requestStagingMonitor,
@@ -52,6 +58,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
     ){
         ComponentUtil.checkIsEventDispatchThread();
 
+        this.requestHead = requestHead;
         this.itemClass = itemClass;
         this.listItens = listItens;
         this.requestStagingMonitor = requestStagingMonitor;
@@ -119,6 +126,7 @@ public class KeyValue<T extends KeyValueItemDto> extends JPanel implements Dispo
     private void addRow(T item){
         var row = new RowComponent<>(
                 rowsPanel,
+                requestHead,
                 this.requestStagingMonitor,
                 this.listItens,
                 item,

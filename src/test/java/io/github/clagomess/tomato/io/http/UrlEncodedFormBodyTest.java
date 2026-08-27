@@ -55,7 +55,7 @@ class UrlEncodedFormBodyTest {
                 new ContentTypeKeyValueItemDto(null, null)
         ));
 
-        var urlencoded = new UrlEncodedFormBody(body);
+        var urlencoded = new UrlEncodedFormBody(null, body);
         var result = urlencoded.build();
 
         assertEquals(
@@ -70,7 +70,7 @@ class UrlEncodedFormBodyTest {
                 new ContentTypeKeyValueItemDto("myparam", "{{foo}}")
         ));
 
-        var urlencoded = new UrlEncodedFormBody(body);
+        var urlencoded = new UrlEncodedFormBody(null, body);
         var result = urlencoded.build();
 
         assertEquals(
@@ -90,7 +90,7 @@ class UrlEncodedFormBodyTest {
                 new ContentTypeKeyValueItemDto("myparam", input)
         ));
 
-        var urlencoded = new UrlEncodedFormBody(body);
+        var urlencoded = new UrlEncodedFormBody(null, body);
         var result = urlencoded.build();
 
         Assertions.assertThat(result).contains(expected);

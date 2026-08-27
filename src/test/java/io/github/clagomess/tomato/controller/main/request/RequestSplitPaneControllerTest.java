@@ -47,6 +47,7 @@ class RequestSplitPaneControllerTest {
                 })
         ) {
             var thread = controller.sendRequest(
+                    null,
                     new RequestDto(),
                     response -> {
                         complete.set(true);
@@ -76,6 +77,7 @@ class RequestSplitPaneControllerTest {
                 })
         ) {
             var thread = controller.sendRequest(
+                    null,
                     new RequestDto(),
                     response -> {
                         complete.set(true);

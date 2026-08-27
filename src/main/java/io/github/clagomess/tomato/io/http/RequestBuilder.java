@@ -4,9 +4,11 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,10 +18,10 @@ import java.util.stream.Stream;
 public class RequestBuilder {
     private final List<EnvironmentItemDto> envs;
 
-    public RequestBuilder() {
+    public RequestBuilder(@Nullable RequestHeadDto requestHead) {
         this.envs = EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
-                .request();
+                .request(requestHead != null ? requestHead.getParent() : null);
     }
 
     protected String injectEnvironment(

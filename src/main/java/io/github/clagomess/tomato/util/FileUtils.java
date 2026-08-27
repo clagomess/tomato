@@ -6,6 +6,8 @@ import java.math.RoundingMode;
 import java.util.Objects;
 
 public class FileUtils {
+    public static final String COLLECTION_FILES_DIR = "__collection_files";
+
     public static String humanReadableByteCountBinary(long size){
         if(size <= 1024) return size + "B";
 

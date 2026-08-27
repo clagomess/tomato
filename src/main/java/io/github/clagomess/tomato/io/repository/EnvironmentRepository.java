@@ -21,6 +21,9 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class EnvironmentRepository extends AbstractRepository {
+    public static final String SYSENV_COLLECTION_FILE_DIR_KEY = "collectionFileDir";
+    public static final List<String> SYSENV_KEYS = List.of(SYSENV_COLLECTION_FILE_DIR_KEY);
+
     private final WorkspaceRepository workspaceRepository;
     private final WorkspaceSessionRepository workspaceSessionRepository;
     protected static final CacheManager<TomatoID, Optional<EnvironmentDto>> cache = new CacheManager<>();

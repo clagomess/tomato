@@ -152,6 +152,7 @@ public class RequestSplitPane extends JPanel {
 
         this.requestContent = new RequestTabContent(
                 this.key,
+                requestHeadDto,
                 requestDto,
                 requestStagingMonitor
         );
@@ -200,6 +201,7 @@ public class RequestSplitPane extends JPanel {
                 .forEach(btnCancelRequest::removeActionListener);
 
         Thread requestThread = controller.sendRequest(
+                requestHeadDto,
                 requestDto,
                 response -> invokeLater(() -> {
                     if(response != null) responseContent.update(response);
@@ -232,7 +234,7 @@ public class RequestSplitPane extends JPanel {
                 CodeSnippetFrame.class,
                 () -> new WaitExecution(
                         btnCodeSnippet,
-                        () -> new CodeSnippetFrame(this, requestDto)
+                        () -> new CodeSnippetFrame(this, requestHeadDto, requestDto)
                 ).execute()
         );
     }

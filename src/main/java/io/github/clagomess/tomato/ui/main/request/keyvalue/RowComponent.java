@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.ui.main.request.keyvalue;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import io.github.clagomess.tomato.ui.component.IconButton;
 import io.github.clagomess.tomato.ui.component.ListenableTextField;
@@ -12,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +27,7 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
     private static final Icon TRASH_ICON = new BxTrashIcon();
 
     private final Container parent;
+    private final RequestHeadDto requestHead;
     private final RequestStagingMonitor requestStagingMonitor;
     private final List<T> listItens;
     private final T item;
@@ -40,11 +43,13 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
 
     public RowComponent(
             Container parent,
+            @Nullable RequestHeadDto requestHead,
             RequestStagingMonitor requestStagingMonitor,
             List<T> listItens,
             T item,
             KeyValueOptions options
     ){
+        this.requestHead = requestHead;
         this.parent = parent;
         this.requestStagingMonitor = requestStagingMonitor;
         this.listItens = listItens;
@@ -79,7 +84,7 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
         txtKey.addOnChange(this::txtKeyOnChange);
         add(txtKey, "width 100!");
 
-        cValue = new ValueComponent<>(requestStagingMonitor, options, item);
+        cValue = new ValueComponent<>(requestHead, requestStagingMonitor, options, item);
         cValue.getComponent().setEnabled(item.isSelected());
         add(cValue.getComponent(), "width 100:100:100%");
 
@@ -98,7 +103,7 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
         int index = ComponentUtil.getComponentIndex(this, cValue.getComponent());
         remove(index);
 
-        cValue = new ValueComponent<>(requestStagingMonitor, options, item);
+        cValue = new ValueComponent<>(requestHead, requestStagingMonitor, options, item);
 
         add(cValue.getComponent(), "width 100:100:100%", index);
         revalidate();

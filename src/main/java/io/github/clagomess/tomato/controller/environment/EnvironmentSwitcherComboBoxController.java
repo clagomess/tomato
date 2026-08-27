@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.controller.environment;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.EnvironmentHeadDto;
 import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
@@ -16,9 +17,12 @@ import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static io.github.clagomess.tomato.io.repository.EnvironmentRepository.SYSENV_COLLECTION_FILE_DIR_KEY;
 
 @RequiredArgsConstructor
 public class EnvironmentSwitcherComboBoxController {
@@ -63,20 +67,34 @@ public class EnvironmentSwitcherComboBoxController {
         keystore.setGetNewPassword(ui::getNewPassword);
 
         environmentPublisher.getCurrentEnvs()
-                .addListener(query -> {
-                    try {
-                        Optional<List<EnvironmentItemDto>> envs = environmentRepository.getWorkspaceSessionEnvironment()
-                                .map(EnvironmentDto::getEnvs);
+                .addListener(query -> getEnvs(keystore, query));
+    }
 
-                        if(envs.isPresent()) {
-                            return keystore.loadSecret(envs.get());
-                        }else{
-                            return List.of();
-                        }
-                    } catch (Exception e) {
-                        throw new TomatoException(e);
-                    }
-                });
+    protected List<EnvironmentItemDto> getEnvs(
+            EnvironmentKeystore keystore,
+            CollectionTreeDto query
+    ) {
+        List<EnvironmentItemDto> toReturn = new ArrayList<>();
+
+        try {
+            if(query != null && query.getCollectionFileDir() != null){
+                toReturn.add(new EnvironmentItemDto(
+                        SYSENV_COLLECTION_FILE_DIR_KEY,
+                        query.getCollectionFileDir()
+                ));
+            }
+
+            Optional<List<EnvironmentItemDto>> envs = environmentRepository.getWorkspaceSessionEnvironment()
+                    .map(EnvironmentDto::getEnvs);
+
+            if(envs.isPresent()) {
+                toReturn.addAll(keystore.loadSecret(envs.get()));
+            }
+
+            return toReturn;
+        } catch (Exception e) {
+            throw new TomatoException(e);
+        }
     }
 
     public void setWorkspaceSessionSelected(

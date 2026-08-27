@@ -5,6 +5,7 @@ import io.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -52,12 +53,25 @@ public class FileExport extends JFileChooser {
         }
     }
 
+    public boolean save(File source, File target) throws IOException{
+        if(!source.exists()) throw new FileNotFoundException(source.getAbsolutePath());
+        if(target.exists() && cantOverrideFile(target)) return false;
+
+        Files.copy(
+                source.toPath(),
+                target.toPath(),
+                StandardCopyOption.REPLACE_EXISTING
+        );
+
+        return true;
+    }
+
     protected Optional<File> getTargetFile() throws IOException {
         if(showSaveDialog(parentComponent) != JFileChooser.APPROVE_OPTION){
             return Optional.empty();
         }
 
-        if(getSelectedFile().exists() && !canOverrideFile(getSelectedFile())){
+        if(getSelectedFile().exists() && cantOverrideFile(getSelectedFile())){
             return Optional.empty();
         }
 
@@ -68,7 +82,7 @@ public class FileExport extends JFileChooser {
         return Optional.of(getSelectedFile());
     }
 
-    protected boolean canOverrideFile(File target){
+    protected boolean cantOverrideFile(File target){
         int ret = JOptionPane.showConfirmDialog(
                 parentComponent,
                 String.format(
@@ -81,7 +95,7 @@ public class FileExport extends JFileChooser {
                 JOptionPane.WARNING_MESSAGE
         );
 
-        return ret == JOptionPane.OK_OPTION;
+        return ret != JOptionPane.OK_OPTION;
     }
 
     protected void showSuccessMessage(File target){

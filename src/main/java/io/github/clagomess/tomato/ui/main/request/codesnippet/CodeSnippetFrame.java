@@ -1,23 +1,28 @@
 package io.github.clagomess.tomato.ui.main.request.codesnippet;
 
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 import io.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import net.miginfocom.swing.MigLayout;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
 public class CodeSnippetFrame extends BaseFrame {
-    private final CodeSnippetComboBox codeSnippetComboBox = new CodeSnippetComboBox();
+    private final CodeSnippetComboBox codeSnippetComboBox;
     private final TRSyntaxTextArea textArea = new TRSyntaxTextArea();
 
     public CodeSnippetFrame(
             Component parent,
+            @Nullable RequestHeadDto requestHead,
             RequestDto request
     ) {
+        codeSnippetComboBox = new CodeSnippetComboBox(requestHead);
+
         setTitle("Code Snippet");
         setMinimumSize(new Dimension(600, 400));
 

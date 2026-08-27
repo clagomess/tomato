@@ -1,12 +1,14 @@
 package io.github.clagomess.tomato.ui.main.request.left.bodytype;
 
 import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
-import io.github.clagomess.tomato.ui.component.FileChooser;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.ui.component.ListenableTextField;
+import io.github.clagomess.tomato.ui.component.RequestFileChooser;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.File;
@@ -16,9 +18,9 @@ import java.nio.file.Files;
 @Slf4j
 public class BinaryType extends JPanel {
     private final ListenableTextField contentType = new ListenableTextField();
-    private final FileChooser fileChooser = new FileChooser();
 
     public BinaryType(
+            @Nullable RequestHeadDto requestHead,
             BinaryBodyDto binaryBody,
             RequestStagingMonitor requestStagingMonitor
     ){
@@ -33,6 +35,7 @@ public class BinaryType extends JPanel {
             requestStagingMonitor.update();
         });
 
+        var fileChooser = new RequestFileChooser(requestHead);
         fileChooser.setValue(binaryBody.getFile());
         fileChooser.addOnChange(value -> {
             binaryBody.setFile(value);

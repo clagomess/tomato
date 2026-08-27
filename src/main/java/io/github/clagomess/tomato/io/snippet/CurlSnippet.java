@@ -6,6 +6,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.io.http.RequestBuilder;
 import io.github.clagomess.tomato.io.http.UrlBuilder;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import static org.fife.ui.rsyntaxtextarea.SyntaxConstants.*;
 
 @RequiredArgsConstructor
 public class CurlSnippet implements CodeSnippet {
+    private final RequestHeadDto requestHead;
     private final Type type;
     private RequestBuilder requestBuilder;
 
@@ -32,7 +34,7 @@ public class CurlSnippet implements CodeSnippet {
     }
 
     public String build(RequestDto request) throws IOException {
-        requestBuilder = new RequestBuilder();
+        requestBuilder = new RequestBuilder(requestHead);
 
         StringBuilder code = new StringBuilder();
         code.append("curl -X ");
