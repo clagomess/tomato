@@ -1,7 +1,9 @@
 package io.github.clagomess.tomato.ui.environment.edit;
 
-public interface EnvironmentEditFrameInterface {
+import io.github.clagomess.tomato.dto.data.EnvironmentDto;
+import io.github.clagomess.tomato.ui.component.stagingmonitor.FrameTitleStagingMonitor;
+
+public interface EnvironmentEditFrameInterface extends FrameTitleStagingMonitor<EnvironmentDto> {
     String getPassword();
     String getNewPassword();
-    void resetStagingMonitor();
 }

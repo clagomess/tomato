@@ -1,4 +1,4 @@
-package io.github.clagomess.tomato.controller.workspace;
+package io.github.clagomess.tomato.controller.workspace.edit;
 
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
@@ -11,11 +11,11 @@ import java.io.IOException;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 
 @RequiredArgsConstructor
-public class WorkspaceRenameFrameController {
+public class WorkspaceEditFrameController {
     private final WorkspaceRepository workspaceRepository;
     private final WorkspacePublisher workspacePublisher;
 
-    public WorkspaceRenameFrameController() {
+    public WorkspaceEditFrameController() {
         this.workspaceRepository = new WorkspaceRepository();
         this.workspacePublisher = WorkspacePublisher.getInstance();
     }

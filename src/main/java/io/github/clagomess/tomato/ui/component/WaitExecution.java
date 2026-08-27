@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
+import static javax.swing.SwingUtilities.invokeLater;
+
 @RequiredArgsConstructor
 public class WaitExecution {
     private final Component component;
@@ -39,17 +41,20 @@ public class WaitExecution {
     }
 
     public void execute(){
-        SwingUtilities.invokeLater(() -> {
-            try {
-                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                setButtonEnabled(false);
-                execute.run();
-            } catch (Exception e){
-                new ExceptionDialog(component, e);
-            } finally {
-                setButtonEnabled(true);
-                setCursor(Cursor.getDefaultCursor());
-            }
+        invokeLater(() -> {
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            setButtonEnabled(false);
+
+            invokeLater(() -> {
+                try {
+                    execute.run();
+                } catch (Exception e){
+                    new ExceptionDialog(component, e);
+                } finally {
+                    setButtonEnabled(true);
+                    setCursor(Cursor.getDefaultCursor());
+                }
+            });
         });
     }
 

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -58,28 +59,11 @@ public class HttpService {
         ResponseDto result = new ResponseDto(requestDto.getId());
 
         try {
-            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
-                    .version(HttpClient.Version.HTTP_1_1)
-                    .uri(new UrlBuilder(requestDto).buildUri());
+            URI uri = new UrlBuilder(requestDto).buildUri();
 
-            // set headers
-            new HttpHeaderBuilder(requestBuilder, requestHead, requestDto).build();
-
-            HttpRequest request = buildBody(requestBuilder);
-            debug.setRequest(request);
-
-            var responseFile = createTempFile();
-            debug.setResponseBodyFile(responseFile);
-
-            long requestTime = System.currentTimeMillis();
-
-            HttpResponse<Path> response = getClient().send(
-                    request,
-                    HttpResponse.BodyHandlers.ofFile(responseFile.toPath())
-            );
-            debug.setResponse(response);
-
-            var resultHttp = new ResponseDto.Response(response, requestTime);
+            // @TODO: logic se pode ssh
+            var resultHttp = perform(uri); // vanila
+            // var resultHttp = new SSHProxyWrapper().wrap(uri, this::perform);
 
             result.setRequestStatus(true);
             result.setHttpResponse(resultHttp);
@@ -98,6 +82,31 @@ public class HttpService {
         }
 
         return result;
+    }
+
+    protected ResponseDto.Response perform(URI uri) throws Exception {
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .uri(uri);
+
+        // set headers
+        new HttpHeaderBuilder(requestBuilder, requestHead, requestDto).build();
+
+        HttpRequest request = buildBody(requestBuilder);
+        debug.setRequest(request);
+
+        var responseFile = createTempFile();
+        debug.setResponseBodyFile(responseFile);
+
+        long requestTime = System.currentTimeMillis();
+
+        HttpResponse<Path> response = getClient().send(
+                request,
+                HttpResponse.BodyHandlers.ofFile(responseFile.toPath())
+        );
+        debug.setResponse(response);
+
+        return new ResponseDto.Response(response, requestTime);
     }
 
     private HttpRequest buildBody(

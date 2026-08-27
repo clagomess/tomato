@@ -8,7 +8,7 @@ import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxEditIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import io.github.clagomess.tomato.ui.environment.edit.EnvironmentEditFrame;
 import io.github.clagomess.tomato.ui.workspace.WorkspaceDeleteDialog;
-import io.github.clagomess.tomato.ui.workspace.WorkspaceRenameFrame;
+import io.github.clagomess.tomato.ui.workspace.edit.WorkspaceEditFrame;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -60,7 +60,7 @@ class Row extends JPanel {
     ) {
         toFrontIfExists(
                 EnvironmentEditFrame.class,
-                () -> new WorkspaceRenameFrame(
+                () -> new WorkspaceEditFrame(
                         parent,
                         workspace
                 )
