@@ -24,6 +24,7 @@ import static io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.FILE
 
 @Slf4j
 class ValueComponent<T extends KeyValueItemDto> {
+    private final RequestHeadDto requestHead;
     private final RequestStagingMonitor requestStagingMonitor;
     private final KeyValueOptions options;
     private final T item;
@@ -37,6 +38,7 @@ class ValueComponent<T extends KeyValueItemDto> {
             KeyValueOptions options,
             T item
     ) {
+        this.requestHead = requestHead;
         this.requestStagingMonitor = requestStagingMonitor;
         this.options = options;
         this.item = item;
@@ -78,7 +80,7 @@ class ValueComponent<T extends KeyValueItemDto> {
     private EnvTextField buildEnvTextField(
             T item
     ){
-        var textField = new EnvTextField(EnvTextfieldOptions.builder().build());
+        var textField = new EnvTextField(requestHead, EnvTextfieldOptions.builder().build());
         textField.setText(item.getValue());
         textField.addOnChange(this::valueOnChange);
         return textField;
@@ -106,7 +108,7 @@ class ValueComponent<T extends KeyValueItemDto> {
             options.getOnChange().run(item);
         });
 
-        var textField = new EnvTextField(envTextfieldOptions);
+        var textField = new EnvTextField(requestHead, envTextfieldOptions);
         textField.setText(item.getValue());
         textField.addOnChange(this::valueOnChange);
         return textField;

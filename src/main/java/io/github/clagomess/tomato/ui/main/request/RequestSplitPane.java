@@ -87,7 +87,7 @@ public class RequestSplitPane extends JPanel {
         this.requestStagingMonitor = requestStagingMonitor;
         this.requestHeadDto = requestHeadDto;
         this.requestDto = requestDto;
-        this.txtRequestUrl = new EnvTextField(EnvTextfieldOptions.builder()
+        this.txtRequestUrl = new EnvTextField(requestHeadDto, EnvTextfieldOptions.builder()
                 .pathVar(new EnvTextfieldOptions.PathVar(
                         key,
                         requestDto.getUrlParam().getPath()
