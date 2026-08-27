@@ -1,11 +1,13 @@
 package io.github.clagomess.tomato.ui.component.envtextfield;
 
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.ui.component.IconButton;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxLinkExternalIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxListPlusIcon;
 import io.github.clagomess.tomato.ui.component.undoabletextcomponent.UndoableTextPane;
 import net.miginfocom.swing.MigLayout;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 
@@ -17,12 +19,17 @@ public class EnvTextField extends JPanel {
     private static final Icon LIST_PLUS_ICON = new BxListPlusIcon();
     private static final Icon LINK_EXTERNAL_ICON = new BxLinkExternalIcon();
 
+    private final RequestHeadDto requestHead;
     private final EnvDocumentListener envDocumentListener;
     private final JButton btnEnvView;
     private final JButton btnExpand;
     private final UndoableTextPane textPane;
 
-    public EnvTextField(EnvTextfieldOptions options) {
+    public EnvTextField(
+            @Nullable RequestHeadDto requestHead,
+            EnvTextfieldOptions options
+    ) {
+        this.requestHead = requestHead;
         this.btnEnvView = new IconButton(
                 LIST_PLUS_ICON,
                 "View Injected Environment"
@@ -82,6 +89,7 @@ public class EnvTextField extends JPanel {
                 ViewInjectedEnvironmentFrame.class,
                 () -> new ViewInjectedEnvironmentFrame(
                         this,
+                        requestHead,
                         envDocumentListener.getInjected()
                 )
         );
