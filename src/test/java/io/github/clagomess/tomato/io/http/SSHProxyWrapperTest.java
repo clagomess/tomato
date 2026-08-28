@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static io.github.clagomess.tomato.io.http.SSHProxyWrapper.LOCALHOST;
 import static org.junit.Assert.assertEquals;
 
 public class SSHProxyWrapperTest {
@@ -30,9 +31,10 @@ public class SSHProxyWrapperTest {
             "https://localhost.com.br",
             "http://localhost.com.br",
     })
-    void changeURIPort(String input) throws URISyntaxException {
+    void changeToLocalhost(String input) throws URISyntaxException {
         URI uri = URI.create(input);
-        var result = wrapper.changeURIPort(uri, 6666);
+        var result = wrapper.changeToLocalhost(uri, 6666);
         assertEquals(6666, result.getPort());
+        assertEquals(LOCALHOST, result.getHost());
     }
 }

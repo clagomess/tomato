@@ -12,6 +12,8 @@ public class Main {
     public static void main(String[] argv){
         log.info("Starting...");
 
+        System.setProperty("jdk.httpclient.allowRestrictedHeaders", "host");
+
         if (SystemInfo.isMacOS) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("apple.awt.application.appearance", "system");

@@ -1,0 +1,22 @@
+{
+  "id" : "9mIOY5Rw",
+  "createTime" : "2026-08-28T16:00:53",
+  "updateTime" : "2026-08-28T16:01:45",
+  "name" : "With SSH Proxy",
+  "method" : "GET",
+  "url" : "https://tomato-rest.app/",
+  "urlParam" : {
+    "charset" : "UTF-8",
+    "path" : [ ],
+    "query" : [ ]
+  },
+  "headers" : [ ],
+  "cookies" : [ ],
+  "body" : {
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
+  },
+  "config" : {
+    "proxyId" : "gvkmUmMo"
+  }
+}

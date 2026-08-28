@@ -1,7 +1,9 @@
 package io.github.clagomess.tomato.io.http;
 
 import io.github.clagomess.tomato.dto.ResponseDto;
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.workspace.ProxyDto;
+import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.LocalPortForwarder;
 import net.schmizz.sshj.connection.channel.direct.Parameters;
@@ -12,9 +14,24 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 public class SSHProxyWrapper {
-    private static final String LOCALHOST = "127.0.0.1";
+    protected static final String LOCALHOST = "127.0.0.1";
+
+    public ResponseDto.Response wrap(
+            TomatoID proxyId,
+            URI uri,
+            HttpPeformRunnable httpPeform
+    ) throws Exception {
+        ProxyDto proxy = new WorkspaceRepository().getDataSessionWorkspace().getProxies()
+                .stream()
+                .filter(item -> Objects.equals(item.getId(), proxyId))
+                .findFirst()
+                .orElseThrow();
+
+        return wrap(proxy, uri, httpPeform);
+    }
 
     public ResponseDto.Response wrap(
             ProxyDto proxy,
@@ -47,7 +64,10 @@ public class SSHProxyWrapper {
                 thread.setDaemon(true);
                 thread.start();
 
-                return httpPeform.apply(changeURIPort(uri, localPort));
+                return httpPeform.apply(
+                        changeToLocalhost(uri, localPort),
+                        uri
+                );
             }
         }
     }
@@ -59,11 +79,11 @@ public class SSHProxyWrapper {
         return port;
     }
 
-    protected URI changeURIPort(URI uri, int localPort) throws URISyntaxException {
+    protected URI changeToLocalhost(URI uri, int localPort) throws URISyntaxException {
         return new URI(
                 uri.getScheme(),
                 uri.getUserInfo(),
-                uri.getHost(),
+                LOCALHOST,
                 localPort,
                 uri.getPath(),
                 uri.getQuery(),
@@ -73,6 +93,6 @@ public class SSHProxyWrapper {
 
     @FunctionalInterface
     public interface HttpPeformRunnable {
-        ResponseDto.Response apply(URI value) throws Exception;
+        ResponseDto.Response apply(URI value, URI originalUri) throws Exception;
     }
 }

@@ -45,7 +45,7 @@ public class ProxyEditFrameController {
         new SSHProxyWrapper().wrap(
                 proxy,
                 URI.create("https://google.com"),
-                uri -> null
+                (uri, originalUri) -> null
         );
     }
 }

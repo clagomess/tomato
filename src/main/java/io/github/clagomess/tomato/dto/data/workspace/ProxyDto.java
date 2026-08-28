@@ -22,4 +22,8 @@ public class ProxyDto implements Comparable<ProxyDto> {
     public int compareTo(ProxyDto o) {
         return StringUtils.compareIgnoreCase(this.host, o.host, true);
     }
+
+    public String toString(){
+        return "%s@%s:%s".formatted(username, host, port);
+    }
 }

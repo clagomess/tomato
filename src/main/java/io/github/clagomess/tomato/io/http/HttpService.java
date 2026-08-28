@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 
+import javax.net.ssl.SNIHostName;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -48,11 +49,28 @@ public class HttpService {
         return file;
     }
 
-    private HttpClient getClient() throws NoSuchAlgorithmException, KeyManagementException {
-        return HttpClient.newBuilder()
-                .sslContext(new SSLContextBuilder(debug).build())
-                .executor(ForkJoinPool.commonPool())
-                .build();
+    private HttpClient getClient(
+            @Nullable URI originalUri
+    ) throws NoSuchAlgorithmException, KeyManagementException {
+        var sslContext = new SSLContextBuilder(debug).build();
+
+        var builder = HttpClient.newBuilder()
+                .sslContext(sslContext)
+                .executor(ForkJoinPool.commonPool());
+
+        if(originalUri != null){
+            var sslParameters = sslContext.getDefaultSSLParameters();
+            sslParameters.setServerNames(List.of(new SNIHostName(originalUri.getHost())));
+            builder.sslParameters(sslParameters);
+        }
+
+        return builder.build();
+    }
+
+    private static String hostHeader(URI uri){
+        return uri.getPort() > 0
+                ? uri.getHost() + ":" + uri.getPort()
+                : uri.getHost();
     }
 
     public ResponseDto perform(){
@@ -61,9 +79,17 @@ public class HttpService {
         try {
             URI uri = new UrlBuilder(requestDto).buildUri();
 
-            // @TODO: logic se pode ssh
-            var resultHttp = perform(uri); // vanila
-            // var resultHttp = new SSHProxyWrapper().wrap(uri, this::perform);
+            ResponseDto.Response resultHttp;
+
+            if(requestDto.getConfig().getProxyId() != null){
+                resultHttp = new SSHProxyWrapper().wrap(
+                        requestDto.getConfig().getProxyId(),
+                        uri,
+                        this::perform
+                );
+            }else{
+                resultHttp = perform(uri);
+            }
 
             result.setRequestStatus(true);
             result.setHttpResponse(resultHttp);
@@ -85,12 +111,23 @@ public class HttpService {
     }
 
     protected ResponseDto.Response perform(URI uri) throws Exception {
+        return perform(uri, null);
+    }
+
+    protected ResponseDto.Response perform(
+            URI uri,
+            @Nullable URI originalUri
+    ) throws Exception {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_1_1)
                 .uri(uri);
 
         // set headers
         new HttpHeaderBuilder(requestBuilder, requestHead, requestDto).build();
+
+        if(originalUri != null){
+            requestBuilder.setHeader("Host", hostHeader(originalUri));
+        }
 
         HttpRequest request = buildBody(requestBuilder);
         debug.setRequest(request);
@@ -100,7 +137,7 @@ public class HttpService {
 
         long requestTime = System.currentTimeMillis();
 
-        HttpResponse<Path> response = getClient().send(
+        HttpResponse<Path> response = getClient(originalUri).send(
                 request,
                 HttpResponse.BodyHandlers.ofFile(responseFile.toPath())
         );
