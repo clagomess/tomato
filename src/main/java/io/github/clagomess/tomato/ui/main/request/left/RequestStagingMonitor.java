@@ -5,7 +5,7 @@ import io.github.clagomess.tomato.dto.key.TabKey;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.io.repository.RequestRepository;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
-import io.github.clagomess.tomato.ui.component.StagingMonitor;
+import io.github.clagomess.tomato.ui.component.stagingmonitor.StagingMonitor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

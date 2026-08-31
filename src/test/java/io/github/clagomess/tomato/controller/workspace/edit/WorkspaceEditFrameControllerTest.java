@@ -1,4 +1,4 @@
-package io.github.clagomess.tomato.controller.workspace;
+package io.github.clagomess.tomato.controller.workspace.edit;
 
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
@@ -13,10 +13,10 @@ import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class WorkspaceRenameFrameControllerTest {
+class WorkspaceEditFrameControllerTest {
     private final WorkspacePublisher workspacePublisher = WorkspacePublisher.getInstance();
     private final WorkspaceRepository workspaceRepositoryMock = Mockito.mock(WorkspaceRepository.class);
-    private final WorkspaceRenameFrameController controller = new WorkspaceRenameFrameController(
+    private final WorkspaceEditFrameController controller = new WorkspaceEditFrameController(
             workspaceRepositoryMock,
             workspacePublisher
     );

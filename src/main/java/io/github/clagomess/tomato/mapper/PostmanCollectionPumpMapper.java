@@ -38,6 +38,7 @@ public interface PostmanCollectionPumpMapper {
     @Mapping(target = "headers", source = "request.header")
     @Mapping(target = "cookies", ignore = true)
     @Mapping(target = "body", source = "request.body")
+    @Mapping(target = "config", ignore = true)
     RequestDto toRequestDto(PostmanCollectionV210Dto.Item source);
 
     @AfterMapping

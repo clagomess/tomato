@@ -1,4 +1,4 @@
-package io.github.clagomess.tomato.ui.component;
+package io.github.clagomess.tomato.ui.component.stagingmonitor;
 
 public class StagingMonitor<T> {
     protected final T dto;

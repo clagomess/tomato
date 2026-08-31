@@ -6,5 +6,6 @@ services:
     volumes:
       - ./src/test/resources/echo-server:/var/www/html
     ports:
+      - "2200:22"
       - "8000:80"
       - "8443:443"

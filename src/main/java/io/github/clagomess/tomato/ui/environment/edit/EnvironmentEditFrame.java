@@ -6,8 +6,8 @@ import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ListenableTextField;
 import io.github.clagomess.tomato.ui.component.PasswordDialog;
-import io.github.clagomess.tomato.ui.component.StagingMonitor;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
+import io.github.clagomess.tomato.ui.component.stagingmonitor.StagingMonitor;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
@@ -24,6 +24,8 @@ public class EnvironmentEditFrame
     private final ListenableTextField txtName = new ListenableTextField();
     private final JCheckBox chkProduction = new JCheckBox();
     private final KeyValue keyValue;
+
+    @Getter
     private final StagingMonitor<EnvironmentDto> stagingMonitor;
 
     @Getter
@@ -39,7 +41,7 @@ public class EnvironmentEditFrame
         this.controller = new EnvironmentEditFrameController(environmentId, this);
         this.stagingMonitor = new StagingMonitor<>(controller.getEnvironment());
 
-        setTitle(buildTitle(false));
+        setTitle("Environment - " + controller.getEnvironment().getName());
         setMinimumSize(new Dimension(600, 500));
         setPreferredSize(new Dimension(600, 500));
         setResizable(true);
@@ -89,30 +91,10 @@ public class EnvironmentEditFrame
         return PasswordDialog.showInputNewPassword(this);
     }
 
-    private static final String TITLE_PREFIX = "Environment - ";
-    private static final String TITLE_CHANGING_PREFIX = "[*] Environment - ";
-    private String buildTitle(boolean isChanging){
-        if(isChanging){
-            return TITLE_CHANGING_PREFIX + controller.getEnvironment().getName();
-        }
-
-        return TITLE_PREFIX + controller.getEnvironment().getName();
-    }
-
-    public void updateStagingMonitor(){
-        stagingMonitor.update();
-
-        invokeLater(() -> setTitle(
-                buildTitle(stagingMonitor.isDiferent())
-        ));
-    }
-
     public void resetStagingMonitor(){
         keyValue.resetStagingMonitor();
         stagingMonitor.reset();
-        invokeLater(() -> setTitle(
-                buildTitle(false)
-        ));
+        invokeLater(() -> buildTitle(false));
     }
 
     private void btnSaveAction(){

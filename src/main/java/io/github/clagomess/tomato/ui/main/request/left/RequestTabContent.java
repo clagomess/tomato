@@ -58,6 +58,7 @@ public class RequestTabContent extends JPanel {
         createTabTitleBody(tpRequest);
         createTabTitleHeaders(tpRequest);
         createTabTitleCookies(tpRequest);
+        createTabTitleConfig(tpRequest);
         tpRequest.setSelectedIndex(-1);
 
         tpRequest.addChangeListener(e -> {
@@ -71,6 +72,7 @@ public class RequestTabContent extends JPanel {
                 case 2: createTabBody(tpRequest); break;
                 case 3: createTabHeaders(tpRequest); break;
                 case 4: createTabCookies(tpRequest); break;
+                case 5: createTabConfig(tpRequest); break;
             }
         });
 
@@ -210,6 +212,27 @@ public class RequestTabContent extends JPanel {
 
         tabbedPane.setComponentAt(4, cookies);
         disposables.add(cookies);
+    }
+
+    private void createTabTitleConfig(JTabbedPane tabbedPane){
+        var configTabTitle = new TabTitle(
+                tabKey,
+                "Config",
+                () -> requestDto.getConfig().isNotEmpty()
+        );
+
+        tabbedPane.addTab(configTabTitle.getTitle(), new LoadingPane());
+        tabbedPane.setTabComponentAt(5, configTabTitle);
+    }
+
+    private void createTabConfig(JTabbedPane tabbedPane){
+        var config = new ConfigPanel(
+                requestDto.getConfig(),
+                requestStagingMonitor
+        );
+
+        tabbedPane.setComponentAt(5, config);
+        disposables.add(config);
     }
 
     private void addCookieSetListener(JTabbedPane tabbedPane){

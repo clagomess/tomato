@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.dto.data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
+import io.github.clagomess.tomato.dto.data.request.ConfigDto;
 import io.github.clagomess.tomato.dto.data.request.UrlParamDto;
 import io.github.clagomess.tomato.enums.HttpMethodEnum;
 import lombok.EqualsAndHashCode;
@@ -26,6 +27,7 @@ public class RequestDto extends MetadataDto {
     private List<KeyValueItemDto> headers = new ArrayList<>();
     private List<KeyValueItemDto> cookies = new ArrayList<>();
     private BodyDto body = new BodyDto();
+    private ConfigDto config = new ConfigDto();
 
     public UrlParamDto getUrlParam() {
         if(urlParam == null) urlParam = new UrlParamDto();
@@ -45,5 +47,10 @@ public class RequestDto extends MetadataDto {
     public List<KeyValueItemDto> getHeaders() {
         if(headers == null) headers = new ArrayList<>();
         return headers;
+    }
+
+    public ConfigDto getConfig() {
+        if(config == null) config = new ConfigDto();
+        return config;
     }
 }

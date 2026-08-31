@@ -118,6 +118,12 @@
             <version>2.2.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.hierynomus</groupId>
+            <artifactId>sshj</artifactId>
+            <version>0.40.0</version>
+        </dependency>
+
         <!-- ######## SCOPE TEST ######## -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -228,6 +234,9 @@
                 <version>3.5.6</version>
                 <configuration>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <systemPropertyVariables>
+                        <jdk.httpclient.allowRestrictedHeaders>host</jdk.httpclient.allowRestrictedHeaders>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
 
