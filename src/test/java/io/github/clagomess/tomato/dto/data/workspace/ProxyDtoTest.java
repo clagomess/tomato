@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.dto.data.workspace;
 
+import io.github.clagomess.tomato.dto.data.TomatoID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -12,8 +13,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ProxyDtoTest {
     @Test
     void equalsHashCode(){
-        Assertions.assertThat(new ProxyDto())
-                .isEqualTo(new ProxyDto());
+        var id = new TomatoID();
+        var a = new ProxyDto();
+        a.setId(id);
+        var b = new ProxyDto();
+        b.setId(id);
+
+        Assertions.assertThat(a).isEqualTo(b);
     }
 
     @Test
