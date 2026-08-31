@@ -2,20 +2,25 @@ package io.github.clagomess.tomato.io.http;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.http.HttpHeaders;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @Getter
 @AllArgsConstructor
 public class MediaType {
+    protected static final String CHARSET_PARAM = "charset";
+
     private final String type;
     private final String subtype;
     private final Map<String, String> parameters = new TreeMap<>(String::compareToIgnoreCase);
@@ -29,7 +34,7 @@ public class MediaType {
 
     public MediaType(String type, String subtype, String charset) {
         this(type, subtype, Charset.forName(charset));
-        parameters.put("charset", charset.toLowerCase().trim());
+        parameters.put(CHARSET_PARAM, charset.toLowerCase().trim());
     }
 
     public MediaType(String contentType){
@@ -47,15 +52,13 @@ public class MediaType {
                         String[] param = item.split("=");
                         parameters.put(
                                 param[0].toLowerCase().trim(),
-                                param[1].toLowerCase().trim()
+                                param[1].replace("\"", "").toLowerCase().trim()
                         );
                     });
 
-            if(parameters.containsKey("charset")){
-                charset = Charset.forName(parameters.get("charset"));
-            }else{
-                charset = null;
-            }
+            charset = parameters.containsKey(CHARSET_PARAM) ?
+                    toCharset(parameters.get(CHARSET_PARAM)) :
+                    null;
         }else{
             subtype = contentType.substring(typeSeparator + 1);
             charset = null;
@@ -76,6 +79,16 @@ public class MediaType {
     public Charset getCharsetOrDefault(){
         if(charset == null) return StandardCharsets.UTF_8;
         return charset;
+    }
+
+    private Charset toCharset(String charset){
+        try{
+            return Charset.forName(charset);
+        }catch (UnsupportedCharsetException e){
+            log.warn("Charset {} is not supported", charset);
+        }
+
+        return null;
     }
 
     public String toString(){

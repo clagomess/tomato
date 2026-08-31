@@ -1,48 +1,67 @@
 package io.github.clagomess.tomato.io.http;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import static io.github.clagomess.tomato.io.http.MediaType.CHARSET_PARAM;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MediaTypeTest {
-    @Test
-    void constructor_type_subtype(){
-        var media = new MediaType("text", "plain");
-        assertNull(media.getCharset());
-    }
+    @Nested
+    class Constructor {
+        @Test
+        void type_subtype(){
+            var media = new MediaType("text", "plain");
+            assertNull(media.getCharset());
+        }
 
-    @Test
-    void contructor_type_subtype_charset(){
-        var media = new MediaType("text", "plain", "utf-8");
-        assertEquals(StandardCharsets.UTF_8, media.getCharset());
-        Assertions.assertThat(media.getParameters())
-                .containsEntry("charset", "utf-8");
-    }
+        @Test
+        void type_subtype_charset(){
+            var media = new MediaType("text", "plain", "utf-8");
+            assertEquals(StandardCharsets.UTF_8, media.getCharset());
+            Assertions.assertThat(media.getParameters())
+                    .containsEntry(CHARSET_PARAM, "utf-8");
+        }
 
-    @Test
-    void constructor_contentType(){
-        var media = new MediaType("application/javascript");
-        assertEquals("application", media.getType());
-        assertEquals("javascript", media.getSubtype());
-        assertNull(media.getCharset());
-        Assertions.assertThat(media.getParameters())
-                .isEmpty();
-    }
+        @Test
+        void contentType(){
+            var media = new MediaType("application/javascript");
+            assertEquals("application", media.getType());
+            assertEquals("javascript", media.getSubtype());
+            assertNull(media.getCharset());
+            Assertions.assertThat(media.getParameters())
+                    .isEmpty();
+        }
 
-    @Test
-    void constructor_contentType_whenWithCharset(){
-        var media = new MediaType("application/javascript;charset=UTF-8");
-        assertEquals("application", media.getType());
-        assertEquals("javascript", media.getSubtype());
-        assertEquals(StandardCharsets.UTF_8, media.getCharset());
-        Assertions.assertThat(media.getParameters())
-                .containsEntry("charset", "utf-8");
+        @ParameterizedTest
+        @ValueSource(strings = {
+                "application/javascript;charset=UTF-8",
+                "application/javascript;charset=utf-8",
+                "application/javascript; charset=\"UTF-8\"",
+        })
+        void contentType_whenWithCharset(String contentType){
+            var media = new MediaType(contentType);
+            assertEquals("application", media.getType());
+            assertEquals("javascript", media.getSubtype());
+            assertEquals(StandardCharsets.UTF_8, media.getCharset());
+            Assertions.assertThat(media.getParameters())
+                    .containsEntry(CHARSET_PARAM, "utf-8");
+        }
+
+        @Test
+        void contentType_whenWrongCharset(){
+            var media = new MediaType("application/javascript;charset=UTF-42");
+            assertNull(media.getCharset());
+            Assertions.assertThat(media.getParameters())
+                    .containsEntry(CHARSET_PARAM, "utf-42");
+        }
     }
 
     @Test
