@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.component;
 
 import io.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +26,11 @@ public class FileExport extends JFileChooser {
         this.parentComponent = parentComponent;
         this.workspaceSessionRepository = new WorkspaceSessionRepository();
 
-        setCurrentDirectory(workspaceSessionRepository.load().getLastOpenedDirectory());
+        var lastOpenedDirectory = workspaceSessionRepository.load().getLastOpenedDirectory();
+        if(StringUtils.isNotBlank(lastOpenedDirectory)) {
+            setCurrentDirectory(new File(lastOpenedDirectory));
+        }
+
         setFileSelectionMode(JFileChooser.FILES_ONLY);
     }
 
@@ -76,7 +81,9 @@ public class FileExport extends JFileChooser {
         }
 
         var session = workspaceSessionRepository.load();
-        session.setLastOpenedDirectory(getCurrentDirectory());
+        session.setLastOpenedDirectory(getCurrentDirectory() != null
+                ? getCurrentDirectory().getAbsolutePath()
+                : null);
         workspaceSessionRepository.save(session);
 
         return Optional.of(getSelectedFile());
