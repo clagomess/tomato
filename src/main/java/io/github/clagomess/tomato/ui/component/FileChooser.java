@@ -34,6 +34,7 @@ public class FileChooser extends ListenableTextField {
         btnSelect.addActionListener(l -> btnSelectAction());
     }
 
+    @Nullable
     private File getCurrentDirectory(){
         var file = getValue();
         if(file != null && file.exists()){
@@ -41,7 +42,9 @@ public class FileChooser extends ListenableTextField {
         }
 
         try {
-            return workspaceSessionRepository.load().getLastOpenedDirectory();
+            var lastOpenedDirectory = workspaceSessionRepository.load().getLastOpenedDirectory();
+            if(StringUtils.isBlank(lastOpenedDirectory)) return null;
+            return new File(lastOpenedDirectory);
         }catch (Exception e){
             log.warn(log.getName(), e.getMessage());
         }
@@ -58,9 +61,11 @@ public class FileChooser extends ListenableTextField {
 
             try {
                 var session = workspaceSessionRepository.load();
-                session.setLastOpenedDirectory(file.getCurrentDirectory());
+                session.setLastOpenedDirectory(file.getCurrentDirectory() != null
+                        ? file.getCurrentDirectory().getAbsolutePath()
+                        : null);
                 workspaceSessionRepository.save(session);
-            }catch (Exception e){
+            } catch (Exception e) {
                 log.warn(log.getName(), e.getMessage());
             }
 
