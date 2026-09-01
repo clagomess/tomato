@@ -62,7 +62,7 @@ The `~/.tomato/data` can be changed to be in another location like One Drive, Dr
 │   │   ├─ 📄 environment-{ID}.kdbx.bkp
 │   │   ├─ 📄 workspace-session.json
 │   │   ├─ 📂 collection-{ID}
-│   │   │   ├─  📂 __collection_files
+│   │   │   ├─ 📂 __collection_files
 │   │   │   ├─ 📄 collection-{ID}.json
 │   │   │   ├─ 📄 request-{ID}.json
 │   │   │   ├─ 📂 collection-{ID}
