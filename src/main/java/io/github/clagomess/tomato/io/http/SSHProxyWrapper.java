@@ -4,6 +4,7 @@ import io.github.clagomess.tomato.dto.ResponseDto;
 import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.workspace.ProxyDto;
 import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
+import lombok.extern.slf4j.Slf4j;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.LocalPortForwarder;
 import net.schmizz.sshj.connection.channel.direct.Parameters;
@@ -16,6 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
+@Slf4j
 public class SSHProxyWrapper {
     protected static final String LOCALHOST = "127.0.0.1";
 
@@ -39,7 +41,12 @@ public class SSHProxyWrapper {
             HttpPeformRunnable httpPeform
     ) throws Exception {
         try (SSHClient ssh = new SSHClient()){
-            ssh.loadKnownHosts();
+            try {
+                ssh.loadKnownHosts();
+            } catch (IOException e) {
+                log.warn(log.getName(), e.getMessage());
+            }
+
             ssh.addHostKeyVerifier(new PromiscuousVerifier());
             ssh.connect(proxy.getHost(), proxy.getPort());
             ssh.authPassword(proxy.getUsername(), proxy.getPassword());
