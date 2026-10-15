@@ -18,7 +18,7 @@ public class RevisionUtil {
                             .getResourceAsStream("git.properties")
             );
 
-            DEPLOY_DATE = properties.getProperty("git.build.time");
+            DEPLOY_DATE = properties.getProperty("git.commit.time");
             DEPLOY_COMMIT = properties.getProperty("git.commit.id.abbrev");
             DEPLOY_TAG = properties.getProperty("git.closest.tag.name")
                     .replace("v", "");
