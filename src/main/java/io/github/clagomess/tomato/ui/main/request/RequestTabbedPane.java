@@ -17,8 +17,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
@@ -93,6 +92,15 @@ public class RequestTabbedPane extends JTabbedPane {
             @NonNull RequestDto request
     ){
         ComponentUtil.checkIsEventDispatchThread();
+
+        // when tab is opened
+        Optional<Tab> tab = tabs.stream()
+                .filter(item -> Objects.equals(item.tabKey().getRequestId(), request.getId()))
+                .findFirst();
+        if(tab.isPresent()){
+            setSelectedIndex(indexOfTab(tab.get().tabKey().getUuid().toString()));
+            return;
+        }
 
         int tabPosition = getTabCount() - 1;
         var key = new TabKey(request.getId());
