@@ -175,7 +175,7 @@
                         <abbrev>0</abbrev>
                     </gitDescribe>
                     <includeOnlyProperties>
-                        <includeOnlyProperty>git.build.time</includeOnlyProperty>
+                        <includeOnlyProperty>git.commit.time</includeOnlyProperty>
                         <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
                         <includeOnlyProperty>git.closest.tag.name</includeOnlyProperty>
                     </includeOnlyProperties>
