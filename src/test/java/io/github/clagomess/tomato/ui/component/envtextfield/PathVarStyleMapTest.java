@@ -13,7 +13,7 @@ class PathVarStyleMapTest {
 
     @Test
     void pattern(){
-        Matcher matcher = PathVarStyleMap.pattern.matcher("debukis:8000?:aaasa=asas&:x132xx:&::-123123:w");
+        Matcher matcher = PathVarStyleMap.pattern.matcher("debukis:8000?:aaasa=asas&:x132xx:&::-123123:w&zap=:ZaP");
 
         List<String> found = new ArrayList<>();
 
@@ -26,7 +26,8 @@ class PathVarStyleMapTest {
                 .containsOnly(
                         ":aaasa",
                         ":x132xx",
-                        ":w"
+                        ":w",
+                        ":ZaP"
                 );
     }
 }
