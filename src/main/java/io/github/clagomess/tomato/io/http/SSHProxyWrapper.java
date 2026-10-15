@@ -63,18 +63,25 @@ public class SSHProxyWrapper {
                         getURIPort(uri)
                 ), serverSocket);
 
-                Thread thread = new Thread(() -> {
+                Thread threadLocalForward = new Thread(() -> {
                     try {
                         forwarder.listen();
-                    } catch (IOException ignored) {}
+                    } catch (IOException e) {
+                        log.error(log.getName(), e);
+                    }
                 }, "sshj-local-forward");
-                thread.setDaemon(true);
-                thread.start();
 
-                return httpPeform.apply(
-                        changeToLocalhost(uri, localPort),
-                        uri
-                );
+                try {
+                    threadLocalForward.setDaemon(true);
+                    threadLocalForward.start();
+
+                    return httpPeform.apply(
+                            changeToLocalhost(uri, localPort),
+                            uri
+                    );
+                } finally {
+                    forwarder.close();
+                }
             }
         }
     }
