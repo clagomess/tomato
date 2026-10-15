@@ -125,6 +125,6 @@ class EnvironmentRepositoryTest extends RepositoryStubs {
                 .thenReturn(workspaceDto);
 
         var result = environmentRepositoryMock.listHead();
-        Assertions.assertThat(result).isNotEmpty();
+        Assertions.assertThat(result).isSorted();
     }
 }
