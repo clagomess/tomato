@@ -94,6 +94,7 @@ public class EnvironmentRepository extends AbstractRepository {
                     }
                 })
                 .filter(Objects::nonNull)
+                .sorted()
                 .toList();
     }
 
