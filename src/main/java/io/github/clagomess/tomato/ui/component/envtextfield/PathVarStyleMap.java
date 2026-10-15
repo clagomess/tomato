@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class PathVarStyleMap implements StyleMap {
-    protected static final Pattern pattern = Pattern.compile("(:[a-z]\\w*)");
+    protected static final Pattern pattern = Pattern.compile("(:[a-zA-Z]\\w*)");
     private static final SimpleAttributeSet filledStyle = StyleMap.getBlueStyle();
     private static final SimpleAttributeSet notFilledStyle = StyleMap.getRedStyle();
 
