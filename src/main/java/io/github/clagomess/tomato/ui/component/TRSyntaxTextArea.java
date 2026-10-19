@@ -34,9 +34,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
     public TRSyntaxTextArea() {
         setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
         setCodeFoldingEnabled(true);
-        setLineWrap(true);
-        setWrapStyleWord(true);
-        setAntiAliasingEnabled(true);
+        setLineWrap(false);
         theme.apply(this);
 
         getDocument().addDocumentListener(new DocumentListener() {
