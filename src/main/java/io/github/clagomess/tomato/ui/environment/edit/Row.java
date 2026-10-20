@@ -2,13 +2,17 @@ package io.github.clagomess.tomato.ui.environment.edit;
 
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.io.keystore.EnvironmentKeystore;
-import io.github.clagomess.tomato.ui.component.*;
+import io.github.clagomess.tomato.ui.component.ComponentUtil;
+import io.github.clagomess.tomato.ui.component.ExceptionDialog;
+import io.github.clagomess.tomato.ui.component.IconButton;
+import io.github.clagomess.tomato.ui.component.ListenableTextField;
 import io.github.clagomess.tomato.ui.component.stagingmonitor.StagingMonitor;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;
@@ -114,7 +118,22 @@ class Row extends JPanel {
         }
     }
 
+    private static final String DIALOG_REMOVE_TITLE = "Remove Variable";
+    private static final String DIALOG_REMOVE_MESSAGE = "Are you sure you want to remove the \"%s\" variable?";
+    private static final String DIALOG_REMOVE_MESSAGE_UNNAMED = "Are you sure you want to remove this unnamed variable?";
     private void btnRemoveAction(){
+        int ret = JOptionPane.showConfirmDialog(
+                parent,
+                StringUtils.isBlank(item.getKey()) ?
+                        DIALOG_REMOVE_MESSAGE_UNNAMED :
+                        DIALOG_REMOVE_MESSAGE.formatted(item.getKey()),
+                DIALOG_REMOVE_TITLE,
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if(ret != JOptionPane.OK_OPTION) return;
+
         list.remove(item);
         parent.remove(ComponentUtil.getComponentIndex(parent, this));
         parent.revalidate();

@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
@@ -88,7 +89,6 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
         cValue.getComponent().setEnabled(item.isSelected());
         add(cValue.getComponent(), "width 100:100:100%");
 
-        btnRemove.setEnabled(item.isSelected());
         btnRemove.addActionListener(l -> btnRemoveAction());
         add(btnRemove);
     }
@@ -128,7 +128,22 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
         options.getOnChange().run(item);
     }
 
+    private static final String DIALOG_REMOVE_TITLE = "Remove Item";
+    private static final String DIALOG_REMOVE_MESSAGE = "Are you sure you want to remove the \"%s\" item?";
+    private static final String DIALOG_REMOVE_MESSAGE_UNNAMED = "Are you sure you want to remove this unnamed item?";
     private void btnRemoveAction(){
+        int ret = JOptionPane.showConfirmDialog(
+                parent,
+                StringUtils.isBlank(item.getKey()) ?
+                        DIALOG_REMOVE_MESSAGE_UNNAMED :
+                        DIALOG_REMOVE_MESSAGE.formatted(item.getKey()),
+                DIALOG_REMOVE_TITLE,
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if(ret != JOptionPane.OK_OPTION) return;
+
         listItens.remove(item);
         requestStagingMonitor.update();
         dispose();
