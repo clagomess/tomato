@@ -8,10 +8,8 @@ import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.io.http.RequestBuilder;
-import io.github.clagomess.tomato.io.http.UrlBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,11 +17,13 @@ import java.util.List;
 import static io.github.clagomess.tomato.io.http.MediaType.HTTP_CONTENT_TYPE;
 import static org.fife.ui.rsyntaxtextarea.SyntaxConstants.*;
 
-@RequiredArgsConstructor
-public class CurlSnippet implements CodeSnippet {
-    private final RequestHeadDto requestHead;
+public class CurlSnippet extends RequestBuilder implements CodeSnippet {
     private final Type type;
-    private RequestBuilder requestBuilder;
+
+    public CurlSnippet(RequestHeadDto requestHead, Type type) {
+        super(requestHead);
+        this.type = type;
+    }
 
     public String getName(){
         return type.getName();
@@ -34,14 +34,12 @@ public class CurlSnippet implements CodeSnippet {
     }
 
     public String build(RequestDto request) throws IOException {
-        requestBuilder = new RequestBuilder(requestHead);
-
         StringBuilder code = new StringBuilder();
         code.append("curl -X ");
         code.append(request.getMethod());
         code.append(" ");
         code.append(type.getStringQuote());
-        code.append(new UrlBuilder(request).buildUri().toString());
+        code.append(buildUri(request).toString());
         code.append(type.getStringQuote());
 
         buildHeaders(request.getHeaders(), code);
@@ -76,7 +74,7 @@ public class CurlSnippet implements CodeSnippet {
             List<KeyValueItemDto> headers,
             StringBuilder code
     ) {
-        requestBuilder.buildHeaders(headers).forEach(item ->
+        buildHeaders(headers).forEach(item ->
             writeHeader(item.getKey(), item.getValue(), code)
         );
     }
@@ -85,7 +83,7 @@ public class CurlSnippet implements CodeSnippet {
             List<KeyValueItemDto> cookies,
             StringBuilder code
     ) {
-        requestBuilder.buildCookies(cookies).forEach(item ->
+        buildCookies(cookies).forEach(item ->
             writeHeader(
                     "Cookie",
                     item.getKey() + "=" + item.getValue(),
@@ -108,7 +106,7 @@ public class CurlSnippet implements CodeSnippet {
         code.append("--data-binary ");
         code.append(type.getStringQuote());
         code.append("@");
-        code.append(binaryBody.getFile());
+        code.append(buildBodyBinary(binaryBody.getFile()));
         code.append(type.getStringQuote());
     }
 
@@ -141,7 +139,7 @@ public class CurlSnippet implements CodeSnippet {
             List<ContentTypeKeyValueItemDto> form,
             StringBuilder code
     ) {
-        requestBuilder.buildUrlEncodedForm(form).forEach(item -> {
+        buildUrlEncodedForm(form).forEach(item -> {
             code.append(type.getNewLine());
             code.append("-d ");
             code.append(type.getStringQuote());
@@ -156,7 +154,7 @@ public class CurlSnippet implements CodeSnippet {
             List<FileKeyValueItemDto> form,
             StringBuilder code
     ) {
-        requestBuilder.buildMultipartFormData(form).forEach(item -> {
+        buildMultipartFormData(form).forEach(item -> {
             code.append(type.getNewLine());
             code.append("-F ");
             code.append(type.getStringQuote());

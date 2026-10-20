@@ -11,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import java.io.File;
 import java.util.List;
 
 import static io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.TEXT;
@@ -31,7 +32,7 @@ class RequestBuilderTest {
                 new EnvironmentItemDto("null-env", null)
         );
 
-        var result = new RequestBuilder(envs)
+        var result = new RequestBuilder(null, envs){}
                 .injectEnvironment(input);
 
         assertEquals(expected, result);
@@ -44,7 +45,7 @@ class RequestBuilderTest {
         void whenNullKey_dontAdd(String key){
             var input = List.of(new KeyValueItemDto(key, null));
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildHeaders(input);
 
             Assertions.assertThat(result).isEmpty();
@@ -54,7 +55,7 @@ class RequestBuilderTest {
         void whenNotSelected_dontAdd(){
             var input = List.of(new KeyValueItemDto("a", "a", false));
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildHeaders(input);
 
             Assertions.assertThat(result).isEmpty();
@@ -64,7 +65,7 @@ class RequestBuilderTest {
         void whenEquals_dontDuplicateObject(){
             var item = new KeyValueItemDto("a", "a");
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildHeaders(List.of(item))
                     .toList()
                     .get(0);
@@ -80,7 +81,7 @@ class RequestBuilderTest {
         void whenNullKey_dontAdd(String key){
             var input = List.of(new KeyValueItemDto(key, null));
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildCookies(input);
 
             Assertions.assertThat(result).isEmpty();
@@ -90,7 +91,7 @@ class RequestBuilderTest {
         void whenNotSelected_dontAdd(){
             var input = List.of(new KeyValueItemDto("a", "a", false));
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildCookies(input);
 
             Assertions.assertThat(result).isEmpty();
@@ -100,12 +101,36 @@ class RequestBuilderTest {
         void whenEquals_dontDuplicateObject(){
             var item = new KeyValueItemDto("a", "a");
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildCookies(List.of(item))
                     .toList()
                     .get(0);
 
             assertSame(item, result);
+        }
+    }
+
+    @Nested
+    class buildBodyBinary {
+        @ParameterizedTest
+        @NullAndEmptySource
+        void whenBlankFile_returnNull(String file){
+            var result = new RequestBuilder(null, List.of()){}
+                    .buildBodyBinary(file);
+
+            Assertions.assertThat(result).isNull();
+        }
+
+        @Test
+        void whenEnvDefined_replace(){
+            List<EnvironmentItemDto> envs = List.of(
+                    new EnvironmentItemDto("dir", "/tmp")
+            );
+
+            var result = new RequestBuilder(null, envs){}
+                    .buildBodyBinary("{{dir}}/file.bin");
+
+            assertEquals(new File("/tmp/file.bin"), result);
         }
     }
 
@@ -116,7 +141,7 @@ class RequestBuilderTest {
         void whenNullKey_dontAdd(String key){
             var input = List.of(new ContentTypeKeyValueItemDto(key, null));
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildUrlEncodedForm(input);
 
             Assertions.assertThat(result).isEmpty();
@@ -131,7 +156,7 @@ class RequestBuilderTest {
                     false
             ));
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildUrlEncodedForm(input);
 
             Assertions.assertThat(result).isEmpty();
@@ -141,7 +166,7 @@ class RequestBuilderTest {
         void whenEquals_dontDuplicateObject(){
             var item = new ContentTypeKeyValueItemDto("a", "a");
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildUrlEncodedForm(List.of(item))
                     .toList()
                     .get(0);
@@ -157,7 +182,7 @@ class RequestBuilderTest {
         void whenNullKey_dontAdd(String key){
             var input = List.of(new FileKeyValueItemDto(key, null));
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildMultipartFormData(input);
 
             Assertions.assertThat(result).isEmpty();
@@ -173,7 +198,7 @@ class RequestBuilderTest {
                     false
             ));
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildMultipartFormData(input);
 
             Assertions.assertThat(result).isEmpty();
@@ -183,7 +208,7 @@ class RequestBuilderTest {
         void whenEquals_dontDuplicateObject(){
             var item = new FileKeyValueItemDto("a", "a");
 
-            var result = new RequestBuilder(List.of())
+            var result = new RequestBuilder(null, List.of()){}
                     .buildMultipartFormData(List.of(item))
                     .toList()
                     .get(0);

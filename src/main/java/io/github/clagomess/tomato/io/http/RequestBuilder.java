@@ -1,5 +1,6 @@
 package io.github.clagomess.tomato.io.http;
 
+import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
@@ -10,15 +11,21 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
 
+import java.io.File;
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-public class RequestBuilder {
+public abstract class RequestBuilder {
+    protected final RequestHeadDto requestHead;
     private final List<EnvironmentItemDto> envs;
 
-    public RequestBuilder(@Nullable RequestHeadDto requestHead) {
+    public RequestBuilder(
+            @Nullable RequestHeadDto requestHead
+    ) {
+        this.requestHead = requestHead;
         this.envs = EnvironmentPublisher.getInstance()
                 .getCurrentEnvs()
                 .request(requestHead != null ? requestHead.getParent() : null);
@@ -49,12 +56,20 @@ public class RequestBuilder {
         return valueBuilder.toString();
     }
 
-    public Stream<KeyValueItemDto> buildHeaders(
+    protected URI buildUri(RequestDto request){
+        return new UrlBuilder(request).buildUri();
+    }
+
+    protected <T extends KeyValueItemDto> Stream<T> filter(Stream<T> items){
+        return items
+                .filter(KeyValueItemDto::isSelected)
+                .filter(item -> StringUtils.isNotBlank(item.getKey()));
+    }
+
+    protected Stream<KeyValueItemDto> buildHeaders(
             List<KeyValueItemDto> headers
     ){
-        return headers.stream()
-                .filter(KeyValueItemDto::isSelected)
-                .filter(item -> StringUtils.isNotBlank(item.getKey()))
+        return filter(headers.stream())
                 .map(header -> {
                     var value = injectEnvironment(header.getValue());
                     if(Objects.equals(value, header.getValue())) return header;
@@ -62,12 +77,10 @@ public class RequestBuilder {
                 });
     }
 
-    public Stream<KeyValueItemDto> buildCookies(
+    protected Stream<KeyValueItemDto> buildCookies(
             List<KeyValueItemDto> cookies
     ){
-        return cookies.stream()
-                .filter(KeyValueItemDto::isSelected)
-                .filter(item -> StringUtils.isNotBlank(item.getKey()))
+        return filter(cookies.stream())
                 .map(cookie -> {
                     var value = injectEnvironment(cookie.getValue());
                     if(Objects.equals(value, cookie.getValue())) return cookie;
@@ -75,12 +88,16 @@ public class RequestBuilder {
                 });
     }
 
-    public Stream<ContentTypeKeyValueItemDto> buildUrlEncodedForm(
+    protected File buildBodyBinary(String file){
+        if(StringUtils.isBlank(file)) return null;
+        var value = injectEnvironment(file);
+        return new File(value);
+    }
+
+    protected Stream<ContentTypeKeyValueItemDto> buildUrlEncodedForm(
             List<ContentTypeKeyValueItemDto> form
     ){
-        return form.stream()
-                .filter(KeyValueItemDto::isSelected)
-                .filter(item -> StringUtils.isNotBlank(item.getKey()))
+        return filter(form.stream())
                 .map(item -> {
                     var value = injectEnvironment(item.getValue());
                     if(Objects.equals(value, item.getValue())) return item;
@@ -93,12 +110,10 @@ public class RequestBuilder {
                 });
     }
 
-    public Stream<FileKeyValueItemDto> buildMultipartFormData(
+    protected Stream<FileKeyValueItemDto> buildMultipartFormData(
             List<FileKeyValueItemDto> form
     ){
-        return form.stream()
-                .filter(FileKeyValueItemDto::isSelected)
-                .filter(item -> StringUtils.isNotBlank(item.getKey()))
+        return filter(form.stream())
                 .map(item -> {
                     var value = injectEnvironment(item.getValue());
                     if (Objects.equals(value, item.getValue())) return item;
