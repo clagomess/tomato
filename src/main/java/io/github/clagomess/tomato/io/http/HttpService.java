@@ -3,7 +3,6 @@ package io.github.clagomess.tomato.io.http;
 import io.github.clagomess.tomato.dto.ResponseDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
 
@@ -28,18 +27,16 @@ import static io.github.clagomess.tomato.io.http.MediaType.APPLICATION_FORM_URLE
 import static io.github.clagomess.tomato.io.http.MediaType.HTTP_CONTENT_TYPE;
 
 @Slf4j
-@RequiredArgsConstructor
-public class HttpService {
-    private final RequestHeadDto requestHead;
-    private final RequestDto requestDto;
+public class HttpService extends RequestBuilder {
     private final HttpDebug debug;
+    private final RequestDto request;
 
     public HttpService(
             @Nullable RequestHeadDto requestHead,
-            RequestDto requestDto
+            RequestDto request
     ) {
-        this.requestHead = requestHead;
-        this.requestDto = requestDto;
+        super(requestHead);
+        this.request = request;
         this.debug = new HttpDebug();
     }
 
@@ -74,16 +71,15 @@ public class HttpService {
     }
 
     public ResponseDto perform(){
-        ResponseDto result = new ResponseDto(requestDto.getId());
+        ResponseDto result = new ResponseDto(request.getId());
 
         try {
-            URI uri = new UrlBuilder(requestDto).buildUri();
-
+            URI uri = buildUri(request);
             ResponseDto.Response resultHttp;
 
-            if(requestDto.getConfig().getProxyId() != null){
+            if(request.getConfig().getProxyId() != null){
                 resultHttp = new SSHProxyWrapper().wrap(
-                        requestDto.getConfig().getProxyId(),
+                        request.getConfig().getProxyId(),
                         uri,
                         this::perform
                 );
@@ -123,7 +119,7 @@ public class HttpService {
                 .uri(uri);
 
         // set headers
-        new HttpHeaderBuilder(requestBuilder, requestHead, requestDto).build();
+        new HttpHeaderBuilder(requestBuilder, requestHead, request).build();
 
         if(originalUri != null){
             requestBuilder.setHeader("Host", hostHeader(originalUri));
@@ -149,11 +145,11 @@ public class HttpService {
     private HttpRequest buildBody(
             HttpRequest.Builder httpRequestBuilder
     ) throws IOException {
-        if(!List.of(PUT, POST).contains(requestDto.getMethod())){
+        if(!List.of(PUT, POST).contains(request.getMethod())){
             return buildBodyEmpty(httpRequestBuilder);
         }
 
-        return switch (requestDto.getBody().getType()){
+        return switch (request.getBody().getType()){
             case RAW -> buildBodyRaw(httpRequestBuilder);
             case BINARY -> buildBodyBinary(httpRequestBuilder);
             case URL_ENCODED_FORM -> buildBodyUrlEncoded(httpRequestBuilder);
@@ -166,7 +162,7 @@ public class HttpService {
             HttpRequest.Builder httpRequestBuilder
     ){
         httpRequestBuilder.method(
-                requestDto.getMethod().name(),
+                request.getMethod().name(),
                 HttpRequest.BodyPublishers.noBody()
         );
 
@@ -176,27 +172,27 @@ public class HttpService {
     private HttpRequest buildBodyRaw(
             HttpRequest.Builder httpRequestBuilder
     ){
-        if(requestDto.getHeaders().stream()
+        if(request.getHeaders().stream()
                 .noneMatch(item ->
                         HTTP_CONTENT_TYPE.equalsIgnoreCase(item.getKey())
                 )
         ) {
             httpRequestBuilder.header(
                     HTTP_CONTENT_TYPE,
-                    requestDto.getBody()
+                    request.getBody()
                             .getRaw()
                             .getType()
                             .getContentType().toString()
             );
         }
 
-        debug.setRequestBodyString(requestDto.getBody().getRaw().getRaw());
+        debug.setRequestBodyString(request.getBody().getRaw().getRaw());
 
         httpRequestBuilder.method(
-                requestDto.getMethod().name(),
+                request.getMethod().name(),
                 HttpRequest.BodyPublishers.ofString(
-                        requestDto.getBody().getRaw().getRaw(),
-                        requestDto.getBody().getCharset()
+                        request.getBody().getRaw().getRaw(),
+                        request.getBody().getCharset()
                 )
         );
 
@@ -208,18 +204,17 @@ public class HttpService {
     ) throws FileNotFoundException {
         httpRequestBuilder.header(
                 HTTP_CONTENT_TYPE,
-                requestDto.getBody()
+                request.getBody()
                         .getBinary()
                         .getContentType()
         );
 
-        var requestBuilder = new RequestBuilder(requestHead);
-        var file = requestBuilder.buildBodyBinary(requestDto.getBody().getBinary().getFile());
+        var file = buildBodyBinary(request.getBody().getBinary().getFile());
 
         debug.setRequestBodyFile(file);
 
         httpRequestBuilder.method(
-                requestDto.getMethod().name(),
+                request.getMethod().name(),
                 HttpRequest.BodyPublishers.ofFile(file.toPath())
         );
 
@@ -229,7 +224,7 @@ public class HttpService {
     private HttpRequest buildBodyUrlEncoded(
             HttpRequest.Builder httpRequestBuilder
     ) throws IOException {
-        var form = new UrlEncodedFormBody(requestHead, requestDto.getBody());
+        var form = new UrlEncodedFormBody(requestHead, request.getBody());
 
         httpRequestBuilder.header(
                 HTTP_CONTENT_TYPE,
@@ -240,7 +235,7 @@ public class HttpService {
         debug.setRequestBodyString(body);
 
         httpRequestBuilder.method(
-                requestDto.getMethod().name(),
+                request.getMethod().name(),
                 HttpRequest.BodyPublishers.ofString(body)
         );
 
@@ -250,7 +245,7 @@ public class HttpService {
     private HttpRequest buildBodyMultipart(
             HttpRequest.Builder httpRequestBuilder
     ) throws IOException {
-        var form = new MultipartFormDataBody(requestHead, requestDto.getBody());
+        var form = new MultipartFormDataBody(requestHead, request.getBody());
 
         httpRequestBuilder.header(
                 HTTP_CONTENT_TYPE,
@@ -261,7 +256,7 @@ public class HttpService {
         debug.setRequestBodyFile(body);
 
         httpRequestBuilder.method(
-                requestDto.getMethod().name(),
+                request.getMethod().name(),
                 HttpRequest.BodyPublishers.ofFile(body.toPath())
         );
 

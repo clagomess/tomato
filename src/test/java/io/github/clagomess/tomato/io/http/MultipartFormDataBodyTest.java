@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 @Slf4j
 class MultipartFormDataBodyTest {
-    private final String boundary = "tomato-test";
     private BodyDto body;
 
     @BeforeAll
@@ -64,7 +63,7 @@ class MultipartFormDataBodyTest {
                 new FileKeyValueItemDto(FILE, "myfile", formFile, null, true)
         ));
 
-        var multipart = new MultipartFormDataBody(null, boundary, body);
+        var multipart = new MultipartFormDataBody(null, body);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -94,7 +93,7 @@ class MultipartFormDataBodyTest {
                 new FileKeyValueItemDto(TEXT, "myparam", null, null, true)
         ));
 
-        var multipart = new MultipartFormDataBody(null, boundary, body);
+        var multipart = new MultipartFormDataBody(null, body);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -112,7 +111,7 @@ class MultipartFormDataBodyTest {
                 new FileKeyValueItemDto(FILE, "myfile", fileParam, null, true)
         ));
 
-        var multipart = new MultipartFormDataBody(null, boundary, body);
+        var multipart = new MultipartFormDataBody(null, body);
 
         assertThrowsExactly(
                 FileNotFoundException.class,
@@ -127,7 +126,7 @@ class MultipartFormDataBodyTest {
                 new FileKeyValueItemDto(TEXT, "mysecondparam", "myvalue", null, false)
         ));
 
-        var multipart = new MultipartFormDataBody(null, boundary, body);
+        var multipart = new MultipartFormDataBody(null, body);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
@@ -144,11 +143,7 @@ class MultipartFormDataBodyTest {
                 new FileKeyValueItemDto(TEXT, "myparam", "{{foo}}", null, true)
         ));
 
-        var multipart = new MultipartFormDataBody(
-                null,
-                "tomato-1",
-                body
-        );
+        var multipart = new MultipartFormDataBody(null, body);
         var tmpFile = multipart.build();
 
         Assertions.assertThat(tmpFile)
