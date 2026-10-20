@@ -213,13 +213,14 @@ public class HttpService {
                         .getContentType()
         );
 
-        debug.setRequestBodyFile(new File(requestDto.getBody().getBinary().getFile()));
+        var requestBuilder = new RequestBuilder(requestHead);
+        var file = requestBuilder.buildBodyBinary(requestDto.getBody().getBinary().getFile());
+
+        debug.setRequestBodyFile(file);
 
         httpRequestBuilder.method(
                 requestDto.getMethod().name(),
-                HttpRequest.BodyPublishers.ofFile(
-                        Path.of(requestDto.getBody().getBinary().getFile())
-                )
+                HttpRequest.BodyPublishers.ofFile(file.toPath())
         );
 
         return httpRequestBuilder.build();

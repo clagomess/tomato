@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
 
+import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -73,6 +74,12 @@ public class RequestBuilder {
                     if(Objects.equals(value, cookie.getValue())) return cookie;
                     return new KeyValueItemDto(cookie.getKey(), value);
                 });
+    }
+
+    public File buildBodyBinary(String file){
+        if(StringUtils.isBlank(file)) return null;
+        var value = injectEnvironment(file);
+        return new File(value);
     }
 
     public Stream<ContentTypeKeyValueItemDto> buildUrlEncodedForm(

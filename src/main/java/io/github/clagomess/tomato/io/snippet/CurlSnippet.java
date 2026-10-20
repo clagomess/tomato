@@ -108,7 +108,7 @@ public class CurlSnippet implements CodeSnippet {
         code.append("--data-binary ");
         code.append(type.getStringQuote());
         code.append("@");
-        code.append(binaryBody.getFile());
+        code.append(requestBuilder.buildBodyBinary(binaryBody.getFile()));
         code.append(type.getStringQuote());
     }
 
