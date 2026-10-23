@@ -24,6 +24,8 @@ class KeyValue extends JPanel {
             PLUS_ICON,
             "Add a new environment"
     );
+
+    private final JScrollPane rowsScrollPane;
     private final JPanel rowsPanel;
 
     public KeyValue(
@@ -55,19 +57,14 @@ class KeyValue extends JPanel {
                 "insets 0 0 0 0",
                 "[grow,fill]"
         ));
-        JScrollPane scrollPane = new JScrollPane(
+        rowsScrollPane = new JScrollPane(
                 rowsPanel,
                 VERTICAL_SCROLLBAR_AS_NEEDED,
                 HORIZONTAL_SCROLLBAR_NEVER
         );
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        add(scrollPane, "width ::100%, height 100%");
-        btnAddNew.addActionListener(l -> {
-            addRow(environmentKeystore, new EnvironmentItemDto());
-
-            var parent = (EnvironmentEditFrame) getAncestorOfClass(EnvironmentEditFrame.class, this);
-            parent.updateStagingMonitor();
-        });
+        rowsScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        add(rowsScrollPane, "width ::100%, height 100%");
+        btnAddNew.addActionListener(l -> addNewRow(environmentKeystore));
 
         SwingUtilities.invokeLater(() ->
             this.list.stream()
@@ -89,6 +86,19 @@ class KeyValue extends JPanel {
 
         rowsPanel.add(row, "wrap 4");
         rowsPanel.revalidate();
+    }
+
+    private void addNewRow(EnvironmentKeystore environmentKeystore){
+        addRow(environmentKeystore, new EnvironmentItemDto());
+
+        // scroll to bottom
+        SwingUtilities.invokeLater(() -> {
+            var bar = rowsScrollPane.getVerticalScrollBar();
+            bar.setValue(bar.getMaximum());
+        });
+
+        var parent = (EnvironmentEditFrame) getAncestorOfClass(EnvironmentEditFrame.class, this);
+        parent.updateStagingMonitor();
     }
 
     public void resetStagingMonitor(){
