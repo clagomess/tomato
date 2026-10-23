@@ -13,6 +13,7 @@ import lombok.Getter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 import static io.github.clagomess.tomato.io.http.MediaType.HTTP_CONTENT_TYPE;
 import static org.fife.ui.rsyntaxtextarea.SyntaxConstants.*;
@@ -38,9 +39,7 @@ public class CurlSnippet extends RequestBuilder implements CodeSnippet {
         code.append("curl -X ");
         code.append(request.getMethod());
         code.append(" ");
-        code.append(type.getStringQuote());
-        code.append(buildUri(request).toString());
-        code.append(type.getStringQuote());
+        code.append(quote(buildUri(request).toString()));
 
         buildHeaders(request.getHeaders(), code);
         buildCookies(request.getCookies(), code);
@@ -62,13 +61,14 @@ public class CurlSnippet extends RequestBuilder implements CodeSnippet {
     ) {
         code.append(type.getNewLine());
         code.append("-H ");
-        code.append(type.getStringQuote());
-        code.append(key);
-        code.append(": ");
-        code.append(value);
-        code.append(type.getStringQuote());
+        code.append(quote(key + ": " + value));
     }
 
+    protected String quote(String value) {
+        return type.getStringQuote() +
+                type.getEscape().apply(value) +
+                type.getStringQuote();
+    }
 
     protected void buildHeaders(
             List<KeyValueItemDto> headers,
@@ -104,10 +104,7 @@ public class CurlSnippet extends RequestBuilder implements CodeSnippet {
 
         code.append(type.getNewLine());
         code.append("--data-binary ");
-        code.append(type.getStringQuote());
-        code.append("@");
-        code.append(buildBodyBinary(binaryBody.getFile()));
-        code.append(type.getStringQuote());
+        code.append(quote("@" + buildBodyBinary(binaryBody.getFile())));
     }
 
     protected void buildBodyRaw(
@@ -130,9 +127,7 @@ public class CurlSnippet extends RequestBuilder implements CodeSnippet {
 
         code.append(type.getNewLine());
         code.append("--data-raw ");
-        code.append(type.getStringQuote());
-        code.append(raw.getRaw());
-        code.append(type.getStringQuote());
+        code.append(quote(raw.getRaw()));
     }
 
     protected void buildUrlEncodedForm(
@@ -142,11 +137,7 @@ public class CurlSnippet extends RequestBuilder implements CodeSnippet {
         buildUrlEncodedForm(form).forEach(item -> {
             code.append(type.getNewLine());
             code.append("-d ");
-            code.append(type.getStringQuote());
-            code.append(item.getKey());
-            code.append("=");
-            code.append(item.getValue());
-            code.append(type.getStringQuote());
+            code.append(quote(item.getKey() + "=" + item.getValue()));
         });
     }
 
@@ -157,16 +148,11 @@ public class CurlSnippet extends RequestBuilder implements CodeSnippet {
         buildMultipartFormData(form).forEach(item -> {
             code.append(type.getNewLine());
             code.append("-F ");
-            code.append(type.getStringQuote());
-            code.append(item.getKey());
-            code.append("=");
-
-            if(item.getType() == KeyValueTypeEnum.FILE){
-                code.append("@");
-            }
-
-            code.append(item.getValue());
-            code.append(type.getStringQuote());
+            code.append(quote(
+                    item.getKey() + "=" +
+                    (item.getType() == KeyValueTypeEnum.FILE ? "@" : "") +
+                    item.getValue()
+            ));
         });
     }
 
@@ -177,24 +163,30 @@ public class CurlSnippet extends RequestBuilder implements CodeSnippet {
                 "cURL - BASH",
                 SYNTAX_STYLE_UNIX_SHELL,
                 "'",
-                " \\\n"
+                " \\\n",
+                value -> value.replace("'", "'\\''")
         ),
         POWERSHELL(
                 "cURL - PowerShell",
                 SYNTAX_STYLE_NONE,
                 "'",
-                " `\n"
+                " `\n",
+                value -> value.replace("'", "''")
         ),
         CMD(
                 "cURL - CMD",
                 SYNTAX_STYLE_WINDOWS_BATCH,
                 "\"",
-                " ^\n"
+                " ^\n",
+                value -> value
+                        .replaceAll("(\\\\*)\"", "$1$1\\\\\"")
+                        .replaceAll("(\\\\+)$", "$1$1")
         );
 
         private final String name;
         private final String syntaxStyle;
         private final String stringQuote;
         private final String newLine;
+        private final UnaryOperator<String> escape;
     }
 }
