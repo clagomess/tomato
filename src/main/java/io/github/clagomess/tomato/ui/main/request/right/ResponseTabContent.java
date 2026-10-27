@@ -8,6 +8,8 @@ import io.github.clagomess.tomato.ui.component.*;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxDotsVerticalRoundedIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxDownloadIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
+import io.github.clagomess.tomato.ui.component.syntaxtextarea.ScrollableTomatoRSyntaxTextArea;
+import io.github.clagomess.tomato.ui.component.syntaxtextarea.TomatoRSyntaxTextArea;
 import io.github.clagomess.tomato.ui.component.tablemanager.TableManager;
 import io.github.clagomess.tomato.ui.main.request.right.cookie.CookieTable;
 import lombok.Getter;
@@ -35,7 +37,7 @@ public class ResponseTabContent extends JPanel {
     private final JButton btnSaveResponse = new IconButton(DOWNLOAD_ICON, "Save Response");
     private final JButton btnMoreOptions = new IconButton(DOTS_VERTICAL_ROUNDED_ICON, "More Options");
 
-    private TRSyntaxTextArea txtResponse;
+    private TomatoRSyntaxTextArea txtResponse;
     private TableManager<KeyValueTMDto> tblResponseHeader;
     private CookieTable cookieTable;
     private RawTextArea txtHTTPDebug;
@@ -76,9 +78,11 @@ public class ResponseTabContent extends JPanel {
     }
 
     private void createTabReponse(JTabbedPane tabbedPane){
-        txtResponse = new TRSyntaxTextArea();
-        var component = TRSyntaxTextArea.createScroll(txtResponse);
-        tabbedPane.addTab("Response", component);
+        txtResponse = new TomatoRSyntaxTextArea();
+        tabbedPane.addTab("Response", new ScrollableTomatoRSyntaxTextArea(
+                txtResponse,
+                new MatteBorder(0, 1, 1, 1, ColorConstant.GRAY)
+        ));
     }
 
     private void createTabHeader(JTabbedPane tabbedPane){

@@ -3,18 +3,17 @@ package io.github.clagomess.tomato.ui.main.request.codesnippet;
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.ui.BaseFrame;
-import io.github.clagomess.tomato.ui.component.ColorConstant;
-import io.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
+import io.github.clagomess.tomato.ui.component.syntaxtextarea.ScrollableTomatoRSyntaxTextArea;
+import io.github.clagomess.tomato.ui.component.syntaxtextarea.TomatoRSyntaxTextArea;
 import net.miginfocom.swing.MigLayout;
 import org.jspecify.annotations.Nullable;
 
-import javax.swing.border.MatteBorder;
 import java.awt.*;
 
 public class CodeSnippetFrame extends BaseFrame {
     private final CodeSnippetComboBox codeSnippetComboBox;
-    private final TRSyntaxTextArea textArea = new TRSyntaxTextArea();
+    private final TomatoRSyntaxTextArea textArea = new TomatoRSyntaxTextArea();
 
     public CodeSnippetFrame(
             Component parent,
@@ -32,10 +31,7 @@ public class CodeSnippetFrame extends BaseFrame {
         ));
 
         add(codeSnippetComboBox, "wrap");
-
-        var sp = TRSyntaxTextArea.createScroll(textArea);
-        sp.setBorder(new MatteBorder(1, 1, 1, 1, ColorConstant.GRAY));
-        add(sp, "height 100%");
+        add(new ScrollableTomatoRSyntaxTextArea(textArea), "height 100%");
 
         codeSnippetComboBox.addActionListener(l -> refresh(request));
 

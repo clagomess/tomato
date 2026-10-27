@@ -1,27 +1,26 @@
-package io.github.clagomess.tomato.ui.component;
+package io.github.clagomess.tomato.ui.component.syntaxtextarea;
 
 import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.io.http.MediaType;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
-import org.fife.ui.rtextarea.RTextScrollPane;
 
-import javax.swing.border.MatteBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static io.github.clagomess.tomato.io.http.MediaType.*;
 
-public class TRSyntaxTextArea extends RSyntaxTextArea {
+public class TomatoRSyntaxTextArea extends RSyntaxTextArea {
     private static final Theme theme;
 
     static {
         try {
-            theme = Theme.load(TRSyntaxTextArea.class.getResourceAsStream(
+            theme = Theme.load(TomatoRSyntaxTextArea.class.getResourceAsStream(
                     "trsyntax-textarea-theme.xml"
             ));
         } catch (IOException e) {
@@ -29,9 +28,9 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
         }
     }
 
-    private final List<OnChangeFI> onChangeList = new LinkedList<>();
+    private final List<Consumer<String>> onChangeList = new LinkedList<>();
 
-    public TRSyntaxTextArea() {
+    public TomatoRSyntaxTextArea() {
         setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
         setCodeFoldingEnabled(true);
         setLineWrap(false);
@@ -53,7 +52,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
             public void changedUpdate(DocumentEvent e) {}
 
             public void update(){
-                onChangeList.forEach(ch -> ch.change(getText()));
+                onChangeList.forEach(ch -> ch.accept(getText()));
             }
         });
     }
@@ -77,6 +76,11 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
         setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
     }
 
+    public void setText(String text) {
+        super.setText(text);
+        setCaretPosition(0);
+    }
+
     public void reset(){
         try {
             getDocument().remove(0, getDocument().getLength());
@@ -85,22 +89,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
         }
     }
 
-    public void addOnChange(OnChangeFI value){
+    public void addOnChange(Consumer<String> value){
         onChangeList.add(value);
-    }
-
-    @FunctionalInterface
-    public interface OnChangeFI {
-        void change(String content);
-    }
-
-    public static RTextScrollPane createScroll(RSyntaxTextArea textArea){
-        var color = ColorConstant.GRAY;
-
-        var sp = new RTextScrollPane(textArea);
-        sp.setBorder(new MatteBorder(0, 1, 1, 1, color));
-        sp.getGutter().setBorderColor(color);
-
-        return sp;
     }
 }
