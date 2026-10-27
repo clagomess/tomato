@@ -2,16 +2,15 @@ package io.github.clagomess.tomato.ui.main.request.left.bodytype;
 
 import io.github.clagomess.tomato.dto.data.request.RawBodyDto;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
-import io.github.clagomess.tomato.ui.component.ColorConstant;
-import io.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
+import io.github.clagomess.tomato.ui.component.syntaxtextarea.ScrollableTomatoRSyntaxTextArea;
+import io.github.clagomess.tomato.ui.component.syntaxtextarea.TomatoRSyntaxTextArea;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import io.github.clagomess.tomato.ui.main.request.right.BeautifierDialog;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.border.MatteBorder;
 
 @Slf4j
 public class RawBodyType extends JPanel {
@@ -26,7 +25,7 @@ public class RawBodyType extends JPanel {
     private final JButton btnBeautify = new JButton(MAGIC_WAND_ICON){{
         setToolTipText("Beautify body");
     }};
-    private final TRSyntaxTextArea textArea = new TRSyntaxTextArea();
+    private final TomatoRSyntaxTextArea textArea = new TomatoRSyntaxTextArea();
 
     public RawBodyType(
             RawBodyDto rawBody,
@@ -47,9 +46,7 @@ public class RawBodyType extends JPanel {
 
         add(cbContentType);
         add(btnBeautify, "wrap");
-        var sp = TRSyntaxTextArea.createScroll(textArea);
-        sp.setBorder(new MatteBorder(1, 1, 1, 1, ColorConstant.GRAY));
-        add(sp, "height 100%, span 2");
+        add(new ScrollableTomatoRSyntaxTextArea(textArea), "height 100%, span 2");
 
         textArea.setSyntaxEditingStyle(rawBody.getType().getSyntaxStyle());
         textArea.setText(rawBody.getRaw());

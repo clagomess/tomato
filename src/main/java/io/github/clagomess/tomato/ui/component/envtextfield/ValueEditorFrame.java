@@ -2,14 +2,13 @@ package io.github.clagomess.tomato.ui.component.envtextfield;
 
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import io.github.clagomess.tomato.ui.BaseFrame;
-import io.github.clagomess.tomato.ui.component.ColorConstant;
-import io.github.clagomess.tomato.ui.component.TRSyntaxTextArea;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
+import io.github.clagomess.tomato.ui.component.syntaxtextarea.ScrollableTomatoRSyntaxTextArea;
+import io.github.clagomess.tomato.ui.component.syntaxtextarea.TomatoRSyntaxTextArea;
 import io.github.clagomess.tomato.ui.main.request.right.BeautifierDialog;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.Objects;
 
@@ -27,7 +26,7 @@ class ValueEditorFrame extends BaseFrame {
         setToolTipText("Beautify value");
     }};
 
-    private final TRSyntaxTextArea textArea = new TRSyntaxTextArea();
+    private final TomatoRSyntaxTextArea textArea = new TomatoRSyntaxTextArea();
 
     public ValueEditorFrame(
             EnvTextField parent,
@@ -49,9 +48,7 @@ class ValueEditorFrame extends BaseFrame {
             add(btnBeautify, "wrap");
         }
 
-        var sp = TRSyntaxTextArea.createScroll(textArea);
-        sp.setBorder(new MatteBorder(1, 1, 1, 1, ColorConstant.GRAY));
-        add(sp, "height 100%, span 2");
+        add(new ScrollableTomatoRSyntaxTextArea(textArea), "height 100%, span 2");
 
         // set data
         cbContentType.setSelectedItem(options.getValueEditorSelectedRawBodyType());
