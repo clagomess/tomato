@@ -35,6 +35,7 @@ public class TRSyntaxTextArea extends RSyntaxTextArea {
         setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
         setCodeFoldingEnabled(true);
         setLineWrap(false);
+        setHighlightSecondaryLanguages(false);
         theme.apply(this);
 
         getDocument().addDocumentListener(new DocumentListener() {
