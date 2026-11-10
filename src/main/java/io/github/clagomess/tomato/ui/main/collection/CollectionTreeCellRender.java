@@ -4,6 +4,7 @@ import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxFolderIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxFolderOpenIcon;
+import io.github.clagomess.tomato.ui.main.collection.node.LoadingTreeNode;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -13,6 +14,7 @@ import java.awt.*;
 public class CollectionTreeCellRender extends DefaultTreeCellRenderer {
     private static final Icon FOLDER_ICON = new BxFolderIcon();
     private static final Icon FOLDER_OPEN_ICON = new BxFolderOpenIcon();
+    private static final CollectionTreeSkeletonCell SKELETON_CELL = new CollectionTreeSkeletonCell();
 
     @Override
     public Component getTreeCellRendererComponent(
@@ -24,6 +26,11 @@ public class CollectionTreeCellRender extends DefaultTreeCellRenderer {
             int row,
             boolean hasFocus
     ) {
+        if(value instanceof LoadingTreeNode){
+            SKELETON_CELL.scheduleRepaint(tree, row);
+            return SKELETON_CELL;
+        }
+
         Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
 
         if(userObject instanceof RequestHeadDto dto){

@@ -1,13 +1,10 @@
 package io.github.clagomess.tomato.ui.main.collection;
 
 import io.github.clagomess.tomato.ui.main.collection.node.CollectionTreeNode;
-import io.github.clagomess.tomato.ui.main.collection.node.RequestTreeNode;
+import io.github.clagomess.tomato.ui.main.collection.node.LoadingTreeNode;
 
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import static javax.swing.SwingUtilities.invokeLater;
 
 public class CollectionTreeExpansionListener implements TreeExpansionListener {
     @Override
@@ -15,16 +12,9 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
         CollectionTreeNode node = (CollectionTreeNode) event.getPath().getLastPathComponent();
         if(node.getChildCount() == 0) return;
 
-        DefaultMutableTreeNode firstChild = (DefaultMutableTreeNode) node.getChildAt(0);
-        if(firstChild instanceof CollectionTreeNode){
-            return;
-        }
+        if(!(node.getChildAt(0) instanceof LoadingTreeNode)) return;
 
-        if(firstChild instanceof RequestTreeNode){
-            return;
-        }
-
-        invokeLater(node::loadChildren);
+        node.loadChildren();
     }
 
     @Override
@@ -32,6 +22,6 @@ public class CollectionTreeExpansionListener implements TreeExpansionListener {
         CollectionTreeNode node = (CollectionTreeNode) event.getPath().getLastPathComponent();
         node.removeAllChildren();
         node.removeExpandedCollectionsIds(node.getCollection().getId());
-        node.add(new DefaultMutableTreeNode("loading"));
+        node.add(new LoadingTreeNode());
     }
 }

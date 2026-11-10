@@ -59,12 +59,7 @@ class CollectionTreeNodeTest {
         var rootNode = new CollectionTreeNode(tree, treeModel, collectionTree, List.of());
         treeModel.setRoot(rootNode);
 
-        try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
-            msSwing.when(SwingUtilities::isEventDispatchThread)
-                    .thenReturn(true);
-
-            rootNode.loadChildren();
-        }
+        rootNode.loadChildren().join();
 
         assertEquals(4, rootNode.getChildCount());
     }
@@ -73,12 +68,7 @@ class CollectionTreeNodeTest {
     void loadChildren_assertSortedCollections(){
         var rootNode = new CollectionTreeNode(tree, treeModel, collectionTree, List.of());
         treeModel.setRoot(rootNode);
-        try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
-            msSwing.when(SwingUtilities::isEventDispatchThread)
-                    .thenReturn(true);
-
-            rootNode.loadChildren();
-        }
+        rootNode.loadChildren().join();
 
         var result = IntStream.range(0, rootNode.getChildCount())
                 .mapToObj(rootNode::getChildAt)
@@ -95,12 +85,7 @@ class CollectionTreeNodeTest {
     void loadChildren_assertSortedRequests(){
         var rootNode = new CollectionTreeNode(tree, treeModel, collectionTree, List.of());
         treeModel.setRoot(rootNode);
-        try(var msSwing = Mockito.mockStatic(SwingUtilities.class)) {
-            msSwing.when(SwingUtilities::isEventDispatchThread)
-                    .thenReturn(true);
-
-            rootNode.loadChildren();
-        }
+        rootNode.loadChildren().join();
 
         var result = IntStream.range(0, rootNode.getChildCount())
                 .mapToObj(rootNode::getChildAt)
