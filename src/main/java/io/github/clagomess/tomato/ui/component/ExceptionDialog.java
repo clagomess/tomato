@@ -8,6 +8,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.CompletionException;
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
@@ -23,11 +24,11 @@ public class ExceptionDialog extends BaseDialog {
 
     public ExceptionDialog(
             Component parent,
-            Exception e
+            Throwable e
     ) {
         super(parent, "Error");
-
-        log.error(e.getMessage(), e);
+        var message = getMessage(e);
+        log.error(message, e.getCause());
 
         setMinimumSize(new Dimension(350, 130));
         setResizable(true);
@@ -44,7 +45,7 @@ public class ExceptionDialog extends BaseDialog {
         txtConsole.setLineWrap(true);
         txtConsole.setWrapStyleWord(true);
         txtConsole.setEditable(false);
-        txtConsole.setText(e.getMessage());
+        txtConsole.setText(message);
 
         JScrollPane sp = new JScrollPane(
                 txtConsole,
@@ -64,5 +65,13 @@ public class ExceptionDialog extends BaseDialog {
         pack();
         setLocationRelativeTo(parent);
         setVisible(true);
+    }
+
+    public String getMessage(Throwable e) {
+        if(e instanceof CompletionException && e.getCause() != null) {
+            return e.getCause().getMessage();
+        }
+
+        return e.getMessage();
     }
 }

@@ -1,26 +1,49 @@
 package io.github.clagomess.tomato.ui.component;
 
 import io.github.clagomess.tomato.ui.MainFrame;
-import lombok.RequiredArgsConstructor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ForkJoinPool;
 
-import static javax.swing.SwingUtilities.invokeLater;
-
-@RequiredArgsConstructor
 public class WaitExecution {
+    public static final Executor EDT = SwingUtilities::invokeLater;
+    public static final Executor BACKGROUND = ForkJoinPool.commonPool();
+
     private final Component component;
     private final JButton button;
-    private final Task execute;
 
-    public WaitExecution(Component component, Task execute) {
-        this(component, null, execute);
+    private record Step(Executor executor, Task task) {}
+    private final List<Step> steps = new ArrayList<>();
+
+    public WaitExecution(Component component, JButton button, Task task) {
+        this.component = component;
+        this.button = button;
+        thenEdt(task);
     }
 
-    public WaitExecution(Task execute) {
-        this(null, null, execute);
+    public WaitExecution(Component component, Task task) {
+        this(component, null, task);
+    }
+
+    public WaitExecution(Task task) {
+        this(null, task);
+    }
+
+    public WaitExecution thenBackground(Task task){
+        steps.add(new Step(BACKGROUND, task));
+        return this;
+    }
+
+    public WaitExecution thenEdt(Task task){
+        steps.add(new Step(EDT, task));
+        return this;
     }
 
     private void setCursor(Cursor cursor) {
@@ -40,22 +63,29 @@ public class WaitExecution {
         button.setEnabled(enabled);
     }
 
-    public void execute(){
-        invokeLater(() -> {
+    public CompletableFuture<Void> execute(){
+        var result = CompletableFuture.runAsync(() -> {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             setButtonEnabled(false);
+        }, EDT);
 
-            invokeLater(() -> {
+        for(var step : steps){
+            result = result.thenRunAsync(() -> {
                 try {
-                    execute.run();
-                } catch (Exception e){
-                    new ExceptionDialog(component, e);
-                } finally {
-                    setButtonEnabled(true);
-                    setCursor(Cursor.getDefaultCursor());
+                    step.task().run();
+                } catch (Exception e) {
+                    throw new CompletionException(e.getMessage(), e);
                 }
-            });
-        });
+            }, step.executor());
+        }
+
+        result.whenCompleteAsync((v, e) -> {
+            if(e != null) new ExceptionDialog(component, e);
+            setButtonEnabled(true);
+            setCursor(Cursor.getDefaultCursor());
+        }, EDT);
+
+        return result;
     }
 
     @FunctionalInterface
