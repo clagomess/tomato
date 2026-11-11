@@ -2,10 +2,13 @@ package io.github.clagomess.tomato.ui.main.collection.node;
 
 import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.publisher.CollectionPublisher;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.key.ParentCollectionKey;
 import io.github.clagomess.tomato.ui.component.ComponentUtil;
+import io.github.clagomess.tomato.ui.component.ExceptionDialog;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +20,7 @@ import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 import static javax.swing.SwingUtilities.invokeLater;
@@ -40,7 +44,7 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
             List<TomatoID> expandedCollectionsIds
     ) {
         super(collection, true);
-        add(new DefaultMutableTreeNode("loading"));
+        add(new LoadingTreeNode());
 
         this.tree = tree;
         this.treeModel = treeModel;
@@ -77,12 +81,27 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
         expandedCollectionsIds.remove(collectionId);
     }
 
-    public void loadChildren() {
-        ComponentUtil.checkIsEventDispatchThread();
+    public CompletableFuture<Void> loadChildren() {
+        var fCollectionList = CompletableFuture.supplyAsync(() -> collection.getChildren().toList());
+        var fRequestList = CompletableFuture.supplyAsync(() -> collection.getRequests().toList());
 
-        var collectionList = collection.getChildren().toList();
-        var requestList = collection.getRequests().toList();
+        return CompletableFuture.allOf(fCollectionList, fRequestList)
+                .thenAcceptAsync(result -> this.addChildren(
+                        fCollectionList.join(),
+                        fRequestList.join()
+                ), SwingUtilities::invokeLater)
+                .exceptionallyAsync(e -> {
+                    new ExceptionDialog(null, new TomatoException(e.getCause()));
+                    this.removeAllChildren();
+                    treeModel.reload(this);
+                    return null;
+                }, SwingUtilities::invokeLater);
+    }
 
+    private void addChildren(
+            List<CollectionTreeDto> collectionList,
+            List<RequestHeadDto> requestList
+    ) {
         this.removeAllChildren();
 
         List<TreePath> nodePaths = new ArrayList<>(expandedCollectionsIds.size());
