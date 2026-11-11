@@ -48,15 +48,15 @@ public class EnvironmentNewFrame extends BaseFrame {
     }
 
     private void btnSaveAction(){
-        new WaitExecution(this, btnSave, () -> {
-            EnvironmentDto environment = new EnvironmentDto();
-            environment.setName(txtName.getText());
-            environment.setProduction(chkProduction.isSelected());
+        EnvironmentDto environment = new EnvironmentDto();
+        environment.setName(txtName.getText());
+        environment.setProduction(chkProduction.isSelected());
 
+        new WaitExecution(this, btnSave).thenBackground(() -> {
             environmentRepository.save(environment);
             environmentPublisher.getOnChange()
                     .publish(new PublisherEvent<>(INSERTED, environment.getId()));
-
+        }).thenEdt(() -> {
             setVisible(false);
             dispose();
         }).execute();

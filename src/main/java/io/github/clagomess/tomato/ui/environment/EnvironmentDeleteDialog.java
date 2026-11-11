@@ -46,7 +46,7 @@ public class EnvironmentDeleteDialog {
     }
 
     private void delete(){
-        new WaitExecution(parent, () -> {
+        new WaitExecution(parent).thenBackground(() -> {
             environmentRepository.delete(environment);
             environmentPublisher.getOnChange()
                     .publish(new PublisherEvent<>(DELETED, environment.getId()));

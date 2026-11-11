@@ -11,18 +11,22 @@ import io.github.clagomess.tomato.ui.component.LoadingPane;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxPlusIcon;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
+@Slf4j
 public class RequestTabbedPane extends JTabbedPane {
     private static final Icon PLUS_ICON = new BxPlusIcon();
 
@@ -38,24 +42,40 @@ public class RequestTabbedPane extends JTabbedPane {
             if(getSelectedIndex() == getTabCount() - 1) setSelectedIndex(getTabCount() - 2);
         });
 
-        controller.addWorkspaceOnSwitchListener(() -> {
+        controller.addWorkspaceOnSwitchListener(() -> invokeLater(() -> {
             new ArrayList<>(tabs).forEach(tab -> removeTab(tab, true));
             loadRequestFromSession();
-        });
+        }));
 
         controller.addRequestOnLoadListener((requestHead, request) -> invokeLater(() ->
             addNewTab(requestHead, request)
         ));
 
-        controller.addSaveRequestsSnapshotListener(() ->
-            tabs.stream().map(item -> new RequestTabSnapshotDto(
-                    item.tabContent().getRequestStagingMonitor().isDiferent(),
-                    item.tabContent().getRequestHeadDto(),
-                    item.tabContent().getRequestDto()
-            )).toList()
-        );
+        controller.addSaveRequestsSnapshotListener(this::getRequestsSnapshot);
 
         loadRequestFromSession();
+    }
+
+    private List<RequestTabSnapshotDto> getRequestsSnapshot() {
+        if(!SwingUtilities.isEventDispatchThread()) {
+            var result = new AtomicReference<List<RequestTabSnapshotDto>>(List.of());
+
+            try {
+                SwingUtilities.invokeAndWait(() -> result.set(getRequestsSnapshot()));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (InvocationTargetException e) {
+                log.error(e.getMessage(), e);
+            }
+
+            return result.get();
+        }
+
+        return tabs.stream().map(item -> new RequestTabSnapshotDto(
+                item.tabContent().getRequestStagingMonitor().isDiferent(),
+                item.tabContent().getRequestHeadDto(),
+                item.tabContent().getRequestDto()
+        )).toList();
     }
 
     private void loadRequestFromSession(){

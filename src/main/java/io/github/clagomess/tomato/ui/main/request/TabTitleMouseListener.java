@@ -94,7 +94,7 @@ public class TabTitleMouseListener extends MouseAdapter {
 
         var tab = result.get();
 
-        new WaitExecution(() -> {
+        new WaitExecution().thenEdt(() -> {
             new RequestFrame(
                     tab.tabContent().getRequestHeadDto(),
                     tab.tabContent().getRequestDto()

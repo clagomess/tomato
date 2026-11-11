@@ -22,18 +22,17 @@ public class WaitExecution {
     private record Step(Executor executor, Task task) {}
     private final List<Step> steps = new ArrayList<>();
 
-    public WaitExecution(Component component, JButton button, Task task) {
+    public WaitExecution(Component component, JButton button) {
         this.component = component;
         this.button = button;
-        thenEdt(task);
     }
 
-    public WaitExecution(Component component, Task task) {
-        this(component, null, task);
+    public WaitExecution(Component component) {
+        this(component, null);
     }
 
-    public WaitExecution(Task task) {
-        this(null, task);
+    public WaitExecution() {
+        this(null, null);
     }
 
     public WaitExecution thenBackground(Task task){

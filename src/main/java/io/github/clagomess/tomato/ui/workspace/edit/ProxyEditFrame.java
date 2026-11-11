@@ -98,7 +98,7 @@ public class ProxyEditFrame
             WorkspaceDto workspace,
             ProxyDto proxy
     ){
-        new WaitExecution(this, btnSave, () -> {
+        new WaitExecution(this, btnSave).thenBackground(() -> {
             controller.save(workspace, proxy);
             parent.refresh(workspace);
         }).execute();
@@ -107,8 +107,9 @@ public class ProxyEditFrame
     private void btnTestAction(
             ProxyDto proxy
     ){
-        new WaitExecution(this, btnTest, () -> {
-            controller.test(proxy);
+        new WaitExecution(this, btnTest).thenBackground(() ->
+            controller.test(proxy)
+        ).thenEdt(() -> {
             JOptionPane.showMessageDialog(
                     this,
                     "SSH connection established successfully",

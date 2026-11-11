@@ -162,7 +162,7 @@ public class ResponseTabContent extends JPanel {
     }
 
     protected void btnSaveResponseAction(){
-        new WaitExecution(this, btnSaveResponse, () -> {
+        new WaitExecution(this, btnSaveResponse).thenEdt(() -> {
             var file = new FileExport(this);
             file.setSelectedFile(new File(responseDto.getHttpResponse().getBodyDownloadFileName()));
             file.save(responseDto.getHttpResponse().getBody());

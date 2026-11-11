@@ -42,14 +42,14 @@ public class DebugCacheFrame extends BaseFrame {
     }
 
     private void refresh() {
-        new WaitExecution(this, btnRefresh, () -> {
+        new WaitExecution(this, btnRefresh).thenEdt(() -> {
             console.reset();
             console.setText(CacheManager.debug());
         }).execute();
     }
 
     private void reset(){
-        new WaitExecution(this, btnReset, () -> {
+        new WaitExecution(this, btnReset).thenEdt(() -> {
             CacheManager.reset();
             console.reset();
             console.setText(CacheManager.debug());

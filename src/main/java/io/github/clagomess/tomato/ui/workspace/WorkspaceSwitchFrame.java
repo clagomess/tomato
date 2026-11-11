@@ -37,15 +37,18 @@ public class WorkspaceSwitchFrame extends BaseFrame {
     }
 
     private void btnSwitchAction(){
-        new WaitExecution(this, btnSwitch, () -> {
-            WorkspaceDto selected = cbWorkspace.getSelectedItem();
-            if(selected == null) return;
+        WorkspaceDto selected = cbWorkspace.getSelectedItem();
+        if(selected == null) return;
 
-            new WorkspaceSwitchFrameController()
-                    .switchWorkspace(selected);
-
-            setVisible(false);
-            dispose();
-        }).execute();
+        new WaitExecution(this, btnSwitch)
+                .thenBackground(() -> {
+                    var controller = new WorkspaceSwitchFrameController();
+                    controller.switchWorkspace(selected);
+                })
+                .thenEdt(() -> {
+                    setVisible(false);
+                    dispose();
+                })
+                .execute();
     }
 }

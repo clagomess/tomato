@@ -43,7 +43,7 @@ class Row extends JPanel {
                 "Edit environment"
         );
         btnEdit.addActionListener(l ->
-            new WaitExecution(parent, btnEdit, () -> btnEditAction(
+            new WaitExecution(parent, btnEdit).thenEdt(() -> btnEditAction(
                     parent,
                     environment.getId()
             )).execute()
@@ -55,7 +55,7 @@ class Row extends JPanel {
                 "Delete environment"
         );
         btnDelete.addActionListener(l -> {
-            new WaitExecution(parent, btnEdit, () -> {
+            new WaitExecution(parent, btnEdit).thenEdt(() -> {
                 new EnvironmentDeleteDialog(
                         parent,
                         environment.getId()

@@ -17,12 +17,13 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 
 public class RequestSaveFrame extends BaseFrame {
     private final RequestDto requestDto;
-    private final OnSaveFI onSaveListener;
+    private final Consumer<RequestHeadDto> onSaveListener;
     private final JButton btnSave = new JButton("Save");
     private final UndoableTextField txtName = new UndoableTextField();
     private final CollectionComboBox cbCollection = new CollectionComboBox(null);
@@ -33,7 +34,7 @@ public class RequestSaveFrame extends BaseFrame {
     public RequestSaveFrame(
             Component parent,
             RequestDto dto,
-            OnSaveFI onSaveListener
+            Consumer<RequestHeadDto> onSaveListener
     ){
         this.requestDto = dto;
         this.onSaveListener = onSaveListener;
@@ -64,41 +65,41 @@ public class RequestSaveFrame extends BaseFrame {
     }
 
     private void btnSaveAction(){
-        new WaitExecution(this, btnSave, () -> {
-            this.requestDto.setName(this.txtName.getText());
+        var name = this.txtName.getText();
+        CollectionTreeDto parent = cbCollection.getSelectedItem();
 
-            CollectionTreeDto parent = cbCollection.getSelectedItem();
-            if(parent == null) throw new TomatoException("Parent is null");
+        new WaitExecution(this, btnSave)
+                .thenBackground(() -> {
+                    if(parent == null) throw new TomatoException("Parent is null");
 
-            var filePath = requestRepository.save(
-                    parent.getPath(),
-                    requestDto
-            );
+                    this.requestDto.setName(name);
 
-            RequestHeadDto requestHead = RequestMapper.INSTANCE.toRequestHead(
-                    requestDto,
-                    parent,
-                    filePath
-            );
+                    var filePath = requestRepository.save(
+                            parent.getPath(),
+                            requestDto
+                    );
 
-            var oldKey = new RequestKey(null, requestHead.getId());
-            var newKey = new RequestKey(requestHead);
-            var event = new PublisherEvent<>(INSERTED, requestHead);
+                    RequestHeadDto requestHead = RequestMapper.INSTANCE.toRequestHead(
+                            requestDto,
+                            parent,
+                            filePath
+                    );
 
-            onSaveListener.response(requestHead);
+                    var oldKey = new RequestKey(null, requestHead.getId());
+                    var newKey = new RequestKey(requestHead);
+                    var event = new PublisherEvent<>(INSERTED, requestHead);
 
-            requestPublisher.getOnChange().publish(oldKey, event);
-            requestPublisher.getOnChange().publish(newKey, event);
-            requestPublisher.getOnChange()
-                    .changeKey(oldKey, newKey);
+                    onSaveListener.accept(requestHead);
 
-            setVisible(false);
-            dispose();
-        }).execute();
-    }
-
-    @FunctionalInterface
-    public interface OnSaveFI {
-        void response(RequestHeadDto requestHead);
+                    requestPublisher.getOnChange().publish(oldKey, event);
+                    requestPublisher.getOnChange().publish(newKey, event);
+                    requestPublisher.getOnChange()
+                            .changeKey(oldKey, newKey);
+                })
+                .thenEdt(() -> {
+                    setVisible(false);
+                    dispose();
+                })
+                .execute();
     }
 }

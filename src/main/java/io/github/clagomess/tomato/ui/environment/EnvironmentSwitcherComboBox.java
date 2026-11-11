@@ -58,7 +58,7 @@ public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSw
         var id = comboBox.getSelectedItem().getId();
         var parent = this;
 
-        new WaitExecution(this, btnEdit, () -> toFrontIfExists(
+        new WaitExecution(this, btnEdit).thenEdt(() -> toFrontIfExists(
                 EnvironmentEditFrame.class,
                 () -> new EnvironmentEditFrame(parent, id),
                 item -> Objects.equals(id, item.getEnvironmentId())
@@ -67,7 +67,7 @@ public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSw
 
     @Override
     public void refreshItems() {
-        new WaitExecution(this, () -> {
+        new WaitExecution(this).thenEdt(() -> {
             Arrays.stream(comboBox.getActionListeners())
                     .forEach(comboBox::removeActionListener);
 
@@ -78,20 +78,22 @@ public class EnvironmentSwitcherComboBox extends JPanel implements EnvironmentSw
     }
 
     private void configureActionListener() {
-        new WaitExecution(this, () -> {
-            setBtnEditEnabledOrDisabled();
-            controller.refreshEnvironmentCurrentEnvsListener();
-            comboBox.addActionListener(event ->
-                    setWorkspaceSessionSelected());
-        }).execute();
+        new WaitExecution(this)
+                .thenEdt(this::setBtnEditEnabledOrDisabled)
+                .thenBackground(controller::refreshEnvironmentCurrentEnvsListener)
+                .thenEdt(() -> comboBox.addActionListener(event ->
+                        setWorkspaceSessionSelected()))
+                .execute();
     }
 
     private void setWorkspaceSessionSelected() {
-        new WaitExecution(this, () -> {
-            controller.setWorkspaceSessionSelected(comboBox.getSelectedItem());
-            setBtnEditEnabledOrDisabled();
-            controller.refreshEnvironmentCurrentEnvsListener();
-        }).execute();
+        var selected = comboBox.getSelectedItem();
+
+        new WaitExecution(this)
+                .thenBackground(() -> controller.setWorkspaceSessionSelected(selected))
+                .thenEdt(this::setBtnEditEnabledOrDisabled)
+                .thenBackground(controller::refreshEnvironmentCurrentEnvsListener)
+                .execute();
     }
 
     @Override

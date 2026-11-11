@@ -15,6 +15,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import static javax.swing.SwingUtilities.invokeLater;
 
 class TabTitle extends JPanel {
     private static final Icon HAS_CHANGED_ICON = new BxsCircleIcon(Color.ORANGE);
@@ -55,14 +56,14 @@ class TabTitle extends JPanel {
                 HAS_NOT_CHANGED_ICON
         );
 
-        controller.addOnChangeListener(request, requestHead, (method, name) -> {
+        controller.addOnChangeListener(request, requestHead, (method, name) -> invokeLater(() -> {
             httpMethod.setIcon(method.getIcon());
             title.setText(name);
-        });
+        }));
 
-        controller.addOnStagingListener(key, hasChanged ->
+        controller.addOnStagingListener(key, hasChanged -> invokeLater(() ->
             changeIcon.setIcon(hasChanged ? HAS_CHANGED_ICON : HAS_NOT_CHANGED_ICON)
-        );
+        ));
     }
 
     public void dispose(){

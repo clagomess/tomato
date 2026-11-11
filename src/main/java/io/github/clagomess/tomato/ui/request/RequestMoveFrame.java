@@ -52,13 +52,17 @@ public class RequestMoveFrame extends BaseFrame {
     }
 
     private void btnMoveAction(){
-        new WaitExecution(this, () -> {
-            controller.moveRequest(
-                    requestHead,
-                    cbCollectionDestination.getSelectedItem()
-            );
-            setVisible(false);
-            dispose();
-        }).execute();
+        var destination = cbCollectionDestination.getSelectedItem();
+
+        new WaitExecution(this)
+                .thenBackground(() -> controller.moveRequest(
+                        requestHead,
+                        destination
+                ))
+                .thenEdt(() -> {
+                    setVisible(false);
+                    dispose();
+                })
+                .execute();
     }
 }

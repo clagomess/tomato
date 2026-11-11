@@ -68,9 +68,11 @@ public class ConfigurationFrame extends BaseFrame {
 
         if(ret != JOptionPane.OK_OPTION) return;
 
-        new WaitExecution(this, btnSave, () -> {
+        var dataDirectory = fcDataDir.getValue();
+
+        new WaitExecution(this, btnSave).thenBackground(() -> {
             ConfigurationDto configuration = configurationRepository.load();
-            configuration.setDataDirectory(fcDataDir.getValue());
+            configuration.setDataDirectory(dataDirectory);
             configurationRepository.save(configuration);
             System.exit(0);
         }).execute();

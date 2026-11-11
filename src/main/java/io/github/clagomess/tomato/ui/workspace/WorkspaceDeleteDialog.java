@@ -28,10 +28,9 @@ public class WorkspaceDeleteDialog {
         );
 
         if(ret == JOptionPane.OK_OPTION){
-            new WaitExecution(
-                    parent,
-                    () -> controller.delete(workspace)
-            ).execute();
+            new WaitExecution(parent)
+                    .thenBackground(() -> controller.delete(workspace))
+                    .execute();
         }
     }
 }

@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.main.collection.popupmenu;
 
 import io.github.clagomess.tomato.controller.main.collection.popupmenu.RequestPopUpMenuController;
+import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
@@ -11,6 +12,7 @@ import io.github.clagomess.tomato.ui.request.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.LOAD;
 import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
@@ -77,29 +79,29 @@ public class RequestPopUpMenu extends JPopupMenu {
     }
 
     protected void openDetached(RequestHeadDto requestHead) {
-        new WaitExecution(() ->
-                new RequestFrame(requestHead, null)
-        ).execute();
+        new WaitExecution()
+                .thenEdt(() -> new RequestFrame(requestHead, null))
+                .execute();
     }
 
     protected void codeSnippet(
             Component parent,
             RequestHeadDto requestHead
     ) {
-        disposeIfExists(
-                CodeSnippetFrame.class,
-                () -> new WaitExecution(
-                        parent,
-                        () -> {
-                            var request = controller.load(requestHead);
-                            new CodeSnippetFrame(this, requestHead, request);
-                        }
-                ).execute()
-        );
+        var request = new AtomicReference<RequestDto>();
+
+        new WaitExecution(parent)
+                .thenBackground(() -> request.set(controller.load(requestHead)))
+                .thenEdt(() -> disposeIfExists(
+                        CodeSnippetFrame.class,
+                        () -> new CodeSnippetFrame(this, requestHead, request.get())
+                ))
+                .execute();
     }
 
     protected void duplicate(RequestHeadDto requestHead) {
-        new WaitExecution(() -> controller.duplicate(requestHead))
+        new WaitExecution()
+                .thenBackground(() -> controller.duplicate(requestHead))
                 .execute();
     }
 

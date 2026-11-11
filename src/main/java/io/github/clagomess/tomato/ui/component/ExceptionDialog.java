@@ -28,7 +28,7 @@ public class ExceptionDialog extends BaseDialog {
     ) {
         super(parent, "Error");
         var message = getMessage(e);
-        log.error(message, e.getCause());
+        log.error(message, e);
 
         setMinimumSize(new Dimension(350, 130));
         setResizable(true);

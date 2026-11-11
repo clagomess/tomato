@@ -25,12 +25,14 @@ public class CollectionRenameFrame extends NameFrame {
     private void btnSaveAction(
             CollectionTreeDto collectionTree
     ){
-        new WaitExecution(this, btnSave, () -> {
+        var name = this.txtName.getText();
+
+        new WaitExecution(this, btnSave).thenBackground(() ->
             controller.save(
                     collectionTree,
-                    this.txtName.getText()
-            );
-
+                    name
+            )
+        ).thenEdt(() -> {
             setVisible(false);
             dispose();
         }).execute();
