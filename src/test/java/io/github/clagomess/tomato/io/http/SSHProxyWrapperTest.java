@@ -8,7 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static io.github.clagomess.tomato.io.http.SSHProxyWrapper.LOCALHOST;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SSHProxyWrapperTest {
     private final SSHProxyWrapper wrapper = new SSHProxyWrapper();
