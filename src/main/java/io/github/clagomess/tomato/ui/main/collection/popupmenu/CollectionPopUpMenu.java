@@ -2,11 +2,7 @@ package io.github.clagomess.tomato.ui.main.collection.popupmenu;
 
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.ui.collection.*;
-import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxExportIcon;
-import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxImportIcon;
-import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxInfoCircleIcon;
-import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxSortAlt2Icon;
-import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
+import io.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,42 +20,44 @@ public class CollectionPopUpMenu extends JPopupMenu {
             Component parent,
             CollectionTreeDto collectionTree
     ) {
-        var mMove = new JMenuItem("Move", SORT_ALT_2_ICON);
-        mMove.addActionListener(e -> disposeIfExists(
-                CollectionMoveFrame.class,
-                () -> new CollectionMoveFrame(parent, collectionTree)
-        ));
-        add(mMove);
-
-        var mRename = new JMenuItem("Rename");
-        mRename.addActionListener(e -> disposeIfExists(
-                CollectionRenameFrame.class,
-                () -> new CollectionRenameFrame(parent, collectionTree)
-        ));
-        add(mRename);
-
-        addSeparator();
-
-        var mNewCollection = new JMenuItem("New Collection");
+        var mNewCollection = new JMenuItem("New Collection…");
         mNewCollection.addActionListener(ae -> disposeIfExists(
                 CollectionNewFrame.class,
                 () -> new CollectionNewFrame(parent, collectionTree)
         ));
         add(mNewCollection);
 
-        var mImport = new JMenuItem("Import", IMPORT_ICON);
+        addSeparator();
+
+        var mImport = new JMenuItem("Import…", IMPORT_ICON);
         mImport.addActionListener(ae -> disposeIfExists(
                 CollectionImportFrame.class,
                 () -> new CollectionImportFrame(parent, collectionTree)
         ));
         add(mImport);
 
-        var mExport = new JMenuItem("Export", EXPORT_ICON);
+        var mExport = new JMenuItem("Export…", EXPORT_ICON);
         mExport.addActionListener(ae -> disposeIfExists(
                 CollectionExportFrame.class,
                 () -> new CollectionExportFrame(parent, collectionTree)
         ));
         add(mExport);
+
+        addSeparator();
+
+        var mMove = new JMenuItem("Move…", SORT_ALT_2_ICON);
+        mMove.addActionListener(e -> disposeIfExists(
+                CollectionMoveFrame.class,
+                () -> new CollectionMoveFrame(parent, collectionTree)
+        ));
+        add(mMove);
+
+        var mRename = new JMenuItem("Rename…");
+        mRename.addActionListener(e -> disposeIfExists(
+                CollectionRenameFrame.class,
+                () -> new CollectionRenameFrame(parent, collectionTree)
+        ));
+        add(mRename);
 
         addSeparator();
 

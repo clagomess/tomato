@@ -4,7 +4,6 @@ import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.io.http.UrlBuilder;
 import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ExceptionDialog;
-import io.github.clagomess.tomato.ui.main.request.RequestSplitPane;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -12,7 +11,7 @@ import java.awt.*;
 
 public class ViewRenderedUrlFrame extends BaseFrame {
     public ViewRenderedUrlFrame(
-            RequestSplitPane parent,
+            Component parent,
             RequestDto requestDto
     ){
         setTitle("View Rendered Url");

@@ -8,6 +8,7 @@ import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
 import io.github.clagomess.tomato.ui.main.request.codesnippet.CodeSnippetFrame;
+import io.github.clagomess.tomato.ui.main.request.left.ViewRenderedUrlFrame;
 import io.github.clagomess.tomato.ui.request.*;
 
 import javax.swing.*;
@@ -19,6 +20,7 @@ import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.dispos
 
 public class RequestPopUpMenu extends JPopupMenu {
     private static final Icon LINK_EXTERNAL_ICON = new BxLinkExternalIcon();
+    private static final Icon GLOBE_ICON = new BxGlobeIcon();
     private static final Icon CODE_ALT_ICON = new BxCodeAltIcon();
     private static final Icon SORT_ALT_2_ICON = new BxSortAlt2Icon();
     private static final Icon TRASH_ICON = new BxTrashIcon();
@@ -32,6 +34,7 @@ public class RequestPopUpMenu extends JPopupMenu {
     ) {
 
         var mOpen = new JMenuItem("Open");
+        mOpen.setFont(mOpen.getFont().deriveFont(Font.BOLD));
         mOpen.addActionListener(e -> open(requestHead));
         add(mOpen);
 
@@ -39,7 +42,13 @@ public class RequestPopUpMenu extends JPopupMenu {
         mOpenDetached.addActionListener(e -> openDetached(requestHead));
         add(mOpenDetached);
 
-        var mCodeSnippet = new JMenuItem("Code Snippet", CODE_ALT_ICON);
+        addSeparator();
+
+        var mViewRenderedUrl = new JMenuItem("View Rendered Url…", GLOBE_ICON);
+        mViewRenderedUrl.addActionListener(e -> viewRenderedUrl(parent, requestHead));
+        add(mViewRenderedUrl);
+
+        var mCodeSnippet = new JMenuItem("Code Snippet…", CODE_ALT_ICON);
         mCodeSnippet.addActionListener(e -> codeSnippet(parent, requestHead));
         add(mCodeSnippet);
 
@@ -49,11 +58,11 @@ public class RequestPopUpMenu extends JPopupMenu {
         mDuplicate.addActionListener(e -> duplicate(requestHead));
         add(mDuplicate);
 
-        var mMove = new JMenuItem("Move", SORT_ALT_2_ICON);
+        var mMove = new JMenuItem("Move…", SORT_ALT_2_ICON);
         mMove.addActionListener(e -> move(parent, requestHead));
         add(mMove);
 
-        var mRename = new JMenuItem("Rename");
+        var mRename = new JMenuItem("Rename…");
         mRename.addActionListener(e -> rename(parent, requestHead));
         add(mRename);
 
@@ -84,6 +93,21 @@ public class RequestPopUpMenu extends JPopupMenu {
                 .execute();
     }
 
+    protected void viewRenderedUrl(
+            Component parent,
+            RequestHeadDto requestHead
+    ) {
+        var request = new AtomicReference<RequestDto>();
+
+        new WaitExecution(parent)
+                .thenBackground(() -> request.set(controller.load(requestHead)))
+                .thenEdt(() -> disposeIfExists(
+                        ViewRenderedUrlFrame.class,
+                        () -> new ViewRenderedUrlFrame(parent, request.get())
+                ))
+                .execute();
+    }
+
     protected void codeSnippet(
             Component parent,
             RequestHeadDto requestHead
@@ -94,7 +118,7 @@ public class RequestPopUpMenu extends JPopupMenu {
                 .thenBackground(() -> request.set(controller.load(requestHead)))
                 .thenEdt(() -> disposeIfExists(
                         CodeSnippetFrame.class,
-                        () -> new CodeSnippetFrame(this, requestHead, request.get())
+                        () -> new CodeSnippetFrame(parent, requestHead, request.get())
                 ))
                 .execute();
     }
