@@ -15,7 +15,7 @@ public class NoKeyPublisher<T> extends BasePublisher<Void, Consumer<T>> {
     public void publish(T event){
         if(log.isDebugEnabled()) log.debug("Publishing: {}", event);
 
-        listeners.parallelStream().forEach(listener -> {
+        listeners.stream().forEach(listener -> {
             if(log.isDebugEnabled()){
                 log.debug(
                         "-> trigger: {}\n-> {}",
