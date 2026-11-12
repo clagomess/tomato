@@ -3,11 +3,9 @@ package io.github.clagomess.tomato.ui.main.collection.node;
 import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import io.github.clagomess.tomato.exception.TomatoException;
 import io.github.clagomess.tomato.publisher.CollectionPublisher;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.key.ParentCollectionKey;
-import io.github.clagomess.tomato.ui.component.ComponentUtil;
 import io.github.clagomess.tomato.ui.component.ExceptionDialog;
 import lombok.Getter;
 import lombok.Setter;
@@ -91,7 +89,7 @@ public class CollectionTreeNode extends DefaultMutableTreeNode {
                         fRequestList.join()
                 ), SwingUtilities::invokeLater)
                 .exceptionallyAsync(e -> {
-                    new ExceptionDialog(null, new TomatoException(e.getCause()));
+                    new ExceptionDialog(null, e);
                     this.removeAllChildren();
                     treeModel.reload(this);
                     return null;

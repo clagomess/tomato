@@ -49,15 +49,6 @@ public class FileExport extends JFileChooser {
         return target;
     }
 
-    public void save(Consumer consumer) throws IOException {
-        Optional<File> target = getTargetFile();
-
-        if(target.isPresent()){
-            consumer.accept(target.get());
-            showSuccessMessage(target.get());
-        }
-    }
-
     public boolean save(File source, File target) throws IOException{
         if(!source.exists()) throw new FileNotFoundException(source.getAbsolutePath());
         if(target.exists() && cantOverrideFile(target)) return false;
@@ -71,7 +62,7 @@ public class FileExport extends JFileChooser {
         return true;
     }
 
-    protected Optional<File> getTargetFile() throws IOException {
+    public Optional<File> getTargetFile() throws IOException {
         if(showSaveDialog(parentComponent) != JFileChooser.APPROVE_OPTION){
             return Optional.empty();
         }
@@ -105,7 +96,7 @@ public class FileExport extends JFileChooser {
         return ret != JOptionPane.OK_OPTION;
     }
 
-    protected void showSuccessMessage(File target){
+    public void showSuccessMessage(File target){
         JOptionPane.showMessageDialog(
                 parentComponent,
                 String.format(

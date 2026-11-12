@@ -36,7 +36,7 @@ public class DebugPublisherFrame extends BaseFrame {
     }
 
     private void refresh() {
-        new WaitExecution(this, btnRefresh, () -> {
+        new WaitExecution(this, btnRefresh).thenEdt(() -> {
             console.reset();
             console.setText(KeyPublisher.debug());
         }).execute();

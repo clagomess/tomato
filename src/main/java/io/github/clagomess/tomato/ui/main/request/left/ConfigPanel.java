@@ -3,6 +3,7 @@ package io.github.clagomess.tomato.ui.main.request.left;
 import io.github.clagomess.tomato.controller.request.left.ConfigPanelController;
 import io.github.clagomess.tomato.dto.data.request.ConfigDto;
 import io.github.clagomess.tomato.publisher.DisposableListener;
+import io.github.clagomess.tomato.ui.component.WaitExecution;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -34,7 +35,11 @@ public class ConfigPanel extends JPanel implements DisposableListener {
         // setup
         proxyComboBox.getComboBox().setSelectedItem(config.getProxyId());
         addOnChangeListeners();
-        controller.addOnChangeListener(() -> proxyComboBox.getComboBox().refresh(config.getProxyId()));
+        new WaitExecution(this)
+                .thenBackground(() -> controller.addOnChangeListener(() ->
+                        proxyComboBox.getComboBox().refresh(config.getProxyId())
+                ))
+                .execute();
     }
 
     private void addOnChangeListeners() {

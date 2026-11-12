@@ -4,6 +4,7 @@ import io.github.clagomess.tomato.controller.collection.CollectionExportFrameCon
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.ui.BaseFrame;
 import io.github.clagomess.tomato.ui.component.ConverterComboBox;
+import io.github.clagomess.tomato.ui.component.ExceptionDialog;
 import io.github.clagomess.tomato.ui.component.FileExport;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
 import net.miginfocom.swing.MigLayout;
@@ -12,6 +13,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+
+import static javax.swing.SwingUtilities.invokeLater;
 
 public class CollectionExportFrame
         extends BaseFrame
@@ -54,23 +57,38 @@ public class CollectionExportFrame
     }
 
     private void btnExportAction(){
-        new WaitExecution(this, btnExport, () -> {
-            controller.export(
-                    cbCollection.getSelectedItem(),
-                    cbConverter.getSelectedItem()
-            );
+        var selected = cbCollection.getSelectedItem();
+        var converter = cbConverter.getSelectedItem();
 
-            setVisible(false);
-            dispose();
-        }).execute();
+        new WaitExecution(this, btnExport)
+                .thenBackground(() -> controller.export(selected, converter))
+                .execute();
     }
 
+    @Override
     public void exportFile(
             String name,
             FileExport.Consumer consumer
-    ) throws IOException {
-        var file = new FileExport(this);
-        file.setSelectedFile(new File(name));
-        file.save(consumer);
+    ) {
+        invokeLater(() -> {
+            try {
+                var fileExport = new FileExport(this);
+                fileExport.setSelectedFile(new File(name));
+
+                var target = fileExport.getTargetFile();
+                if(target.isEmpty()) return;
+
+                new WaitExecution(this, btnExport)
+                        .thenBackground(() -> consumer.accept(target.get()))
+                        .thenEdt(() -> {
+                            fileExport.showSuccessMessage(target.get());
+                            setVisible(false);
+                            dispose();
+                        })
+                        .execute();
+            } catch (IOException e) {
+                new ExceptionDialog(this, e);
+            }
+        });
     }
 }

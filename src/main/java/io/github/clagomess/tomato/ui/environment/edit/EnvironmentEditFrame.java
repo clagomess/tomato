@@ -92,13 +92,16 @@ public class EnvironmentEditFrame
     }
 
     public void resetStagingMonitor(){
-        keyValue.resetStagingMonitor();
-        stagingMonitor.reset();
-        invokeLater(() -> buildTitle(false));
+        invokeLater(() -> {
+            keyValue.resetStagingMonitor();
+            stagingMonitor.reset();
+            buildTitle(false);
+        });
     }
 
     private void btnSaveAction(){
-        new WaitExecution(this, btnSave, controller::save)
+        new WaitExecution(this, btnSave)
+                .thenBackground(controller::save)
                 .execute();
     }
 }

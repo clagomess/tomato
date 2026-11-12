@@ -37,13 +37,16 @@ public class WorkspaceEditFrame extends BaseFrame {
 
         txtName.setText(workspace.getName());
 
-        btnSave.addActionListener(l -> new WaitExecution(this, btnSave, () -> {
+        btnSave.addActionListener(l -> {
             workspace.setName(txtName.getText());
-            controller.save(workspace);
 
-            setVisible(false);
-            dispose();
-        }).execute());
+            new WaitExecution(this, btnSave)
+                    .thenBackground(() -> controller.save(workspace))
+                    .thenEdt(() -> {
+                        setVisible(false);
+                        dispose();
+                    }).execute();
+        });
 
         getRootPane().setDefaultButton(btnSave);
 

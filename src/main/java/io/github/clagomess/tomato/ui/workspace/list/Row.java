@@ -33,7 +33,7 @@ class Row extends JPanel {
         // edit
         var btnEdit = new IconButton(EDIT_ICON, "Edit workspace");
         btnEdit.addActionListener(l ->
-            new WaitExecution(parent, btnEdit, () -> btnEditAction(
+            new WaitExecution(parent, btnEdit).thenEdt(() -> btnEditAction(
                     parent,
                     workspace
             )).execute()
@@ -42,7 +42,7 @@ class Row extends JPanel {
         // delete
         var btnDelete = new IconButton(TRASH_ICON, "Delete workspace");
         btnDelete.addActionListener(l -> {
-            new WaitExecution(parent, btnDelete, () -> new WorkspaceDeleteDialog(
+            new WaitExecution(parent, btnDelete).thenEdt(() -> new WorkspaceDeleteDialog(
                     parent,
                     workspace
             ).showConfirmDialog()).execute();

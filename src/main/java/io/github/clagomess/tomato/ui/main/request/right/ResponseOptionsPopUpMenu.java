@@ -30,13 +30,17 @@ public class ResponseOptionsPopUpMenu extends JPopupMenu {
         addSeparator();
 
         var mOpenResponseFile = new JMenuItem("Open Response File");
-        mOpenResponseFile.addActionListener(e -> new WaitExecution(parent, () ->
-                openResponseFile(parent.getResponseDto().getHttpResponse())
-        ).execute());
+        mOpenResponseFile.addActionListener(e -> {
+            var httpResponse = parent.getResponseDto().getHttpResponse();
+
+            new WaitExecution(parent)
+                    .thenBackground(() -> openResponseFile(httpResponse))
+                    .execute();
+        });
         add(mOpenResponseFile);
 
         var mCopyResponseFilePath = new JMenuItem("Copy Response File Path");
-        mCopyResponseFilePath.addActionListener(e -> new WaitExecution(parent, () ->
+        mCopyResponseFilePath.addActionListener(e -> new WaitExecution(parent).thenEdt(() ->
                 copyResponseFilePath(parent.getResponseDto().getHttpResponse())
         ).execute());
         add(mCopyResponseFilePath);

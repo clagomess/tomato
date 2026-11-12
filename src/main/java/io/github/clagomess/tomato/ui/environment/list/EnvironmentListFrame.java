@@ -54,14 +54,13 @@ public class EnvironmentListFrame
     }
 
     public void refresh() {
-        new WaitExecution(
-                this,
-                () -> refresh(controller.list())
-        ).execute();
+        new WaitExecution(this)
+                .thenBackground(() -> refresh(controller.list()))
+                .execute();
     }
 
     private void refresh(List<EnvironmentHeadDto> items){
-        new WaitExecution(this, () -> {
+        new WaitExecution(this).thenEdt(() -> {
             rowsPanel.removeAll();
 
             for(var item : items){

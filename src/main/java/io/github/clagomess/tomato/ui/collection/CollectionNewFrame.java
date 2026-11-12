@@ -50,12 +50,15 @@ public class CollectionNewFrame extends BaseFrame {
     }
 
     private void btnSaveAction(){
-        new WaitExecution(this, btnSave, () -> {
-            controller.save(
-                    cbCollectionParent.getSelectedItem(),
-                    txtName.getText()
-            );
+        var parent = cbCollectionParent.getSelectedItem();
+        var name = txtName.getText();
 
+        new WaitExecution(this, btnSave).thenBackground(() ->
+            controller.save(
+                    parent,
+                    name
+            )
+        ).thenEdt(() -> {
             setVisible(false);
             dispose();
         }).execute();

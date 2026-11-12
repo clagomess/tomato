@@ -36,7 +36,7 @@ class EnvironmentComboBox
             }
         }));
 
-        new WaitExecution(this, this::loadItems).execute();
+        new WaitExecution(this).thenEdt(this::loadItems).execute();
     }
 
     public void loadItems() throws IOException {

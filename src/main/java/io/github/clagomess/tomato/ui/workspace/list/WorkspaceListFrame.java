@@ -40,9 +40,9 @@ public class WorkspaceListFrame extends BaseFrame {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         add(scrollPane, "width ::100%, height 100%");
 
-        new WaitExecution(this, () -> {
-            controller.refresh(this::refresh);
-        }).execute();
+        new WaitExecution(this)
+                .thenBackground(() -> controller.refresh(this::refresh))
+                .execute();
 
         controller.addOnChangeListener(this::refresh);
 

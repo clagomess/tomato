@@ -23,14 +23,12 @@ public class RequestRenameFrame extends NameFrame {
     }
 
     private void btnSaveAction(RequestHeadDto requestHead){
-        new WaitExecution(
-                this,
-                btnSave,
-                () -> {
-                    controller.save(requestHead);
+        new WaitExecution(this, btnSave)
+                .thenBackground(() -> controller.save(requestHead))
+                .thenEdt(() -> {
                     setVisible(false);
                     dispose();
-                }
-        ).execute();
+                })
+                .execute();
     }
 }

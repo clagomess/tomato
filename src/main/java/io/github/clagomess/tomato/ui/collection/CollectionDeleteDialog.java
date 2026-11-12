@@ -44,9 +44,8 @@ public class CollectionDeleteDialog {
     }
 
     private void delete(){
-        new WaitExecution(
-                parent,
-                () -> controller.delete(collectionTree)
-        ).execute();
+        new WaitExecution(parent)
+                .thenBackground(() -> controller.delete(collectionTree))
+                .execute();
     }
 }

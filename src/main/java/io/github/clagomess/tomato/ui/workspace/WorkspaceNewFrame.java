@@ -39,12 +39,17 @@ public class WorkspaceNewFrame extends BaseFrame {
     }
 
     private void btnSaveAction(){
-        new WaitExecution(this, btnSave, () -> {
-            new WorkspaceNewFrameController()
-                    .save(txtName.getText());
+        var name = txtName.getText();
 
-            setVisible(false);
-            dispose();
-        }).execute();
+        new WaitExecution(this, btnSave)
+                .thenBackground(() -> {
+                    var controller = new WorkspaceNewFrameController();
+                    controller.save(name);
+                })
+                .thenEdt(() -> {
+                    setVisible(false);
+                    dispose();
+                })
+                .execute();
     }
 }

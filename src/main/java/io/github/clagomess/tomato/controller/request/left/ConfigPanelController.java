@@ -2,9 +2,9 @@ package io.github.clagomess.tomato.controller.request.left;
 
 import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import io.github.clagomess.tomato.publisher.WorkspacePublisher;
-import io.github.clagomess.tomato.ui.component.WaitExecution;
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -21,12 +21,10 @@ public class ConfigPanelController {
 
     public void addOnChangeListener(
             Runnable runnable
-    ) {
-        new WaitExecution(null, () -> {
-            var workspace = workspaceRepository.getDataSessionWorkspace();
-            listenerUuid = workspacePublisher.getOnChange()
-                    .addListener(workspace.getId(), event -> runnable.run());
-        }).execute();
+    ) throws IOException {
+        var workspace = workspaceRepository.getDataSessionWorkspace();
+        listenerUuid = workspacePublisher.getOnChange()
+                .addListener(workspace.getId(), event -> runnable.run());
     }
 
     public void dispose() {

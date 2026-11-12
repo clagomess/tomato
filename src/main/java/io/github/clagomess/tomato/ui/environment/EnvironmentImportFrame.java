@@ -50,15 +50,17 @@ public class EnvironmentImportFrame extends BaseFrame {
     }
 
     private void btnImportAction(){
-        new WaitExecution(this, btnImport, () -> {
-            InterfaceConverter converter = cbConverter.getSelectedItem();
+        InterfaceConverter converter = cbConverter.getSelectedItem();
+        var file = fileChooser.getValue();
+
+        new WaitExecution(this, btnImport).thenBackground(() -> {
             if(converter == null) throw new TomatoException("Type is empty");
 
-            var id = converter.pumpEnvironment(fileChooser.getValue());
+            var id = converter.pumpEnvironment(file);
 
             environmentPublisher.getOnChange()
                     .publish(new PublisherEvent<>(INSERTED, id));
-
+        }).thenEdt(() -> {
             setVisible(false);
             dispose();
         }).execute();

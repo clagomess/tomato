@@ -53,13 +53,17 @@ public class CollectionImportFrame extends BaseFrame {
     }
 
     private void btnImportAction(){
-        new WaitExecution(this, btnImport, () -> {
-            controller.importCollection(
-                    cbCollectionParent.getSelectedItem(),
-                    cbConverter.getSelectedItem(),
-                    fileChooser.getValue()
-            );
+        var parent = cbCollectionParent.getSelectedItem();
+        var converter = cbConverter.getSelectedItem();
+        var file = fileChooser.getValue();
 
+        new WaitExecution(this, btnImport).thenBackground(() ->
+            controller.importCollection(
+                    parent,
+                    converter,
+                    file
+            )
+        ).thenEdt(() -> {
             JOptionPane.showMessageDialog(
                     this,
                     "Collection imported"

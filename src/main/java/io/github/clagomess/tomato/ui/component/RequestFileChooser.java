@@ -49,7 +49,7 @@ public class RequestFileChooser extends FileChooser {
     @Override
     protected void btnSelectAction(){
         super.btnSelectAction();
-        new WaitExecution(this, btnSelect, this::importFile).execute();
+        new WaitExecution(this, btnSelect).thenEdt(this::importFile).execute();
     }
 
     @Override

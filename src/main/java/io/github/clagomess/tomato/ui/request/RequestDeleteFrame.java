@@ -32,7 +32,9 @@ public class RequestDeleteFrame {
         );
 
         if(ret == JOptionPane.OK_OPTION){
-            new WaitExecution(parent, this::delete).execute();
+            new WaitExecution(parent)
+                    .thenBackground(this::delete)
+                    .execute();
         }
     }
 

@@ -222,20 +222,18 @@ public class RequestSplitPane extends JPanel {
     public void btnViewRenderedUrlAction(){
         disposeIfExists(
                 ViewRenderedUrlFrame.class,
-                () -> new WaitExecution(
-                        btnViewRenderedUrl,
-                        () -> new ViewRenderedUrlFrame(this, requestDto)
-                ).execute()
+                () -> new WaitExecution(btnViewRenderedUrl)
+                        .thenEdt(() -> new ViewRenderedUrlFrame(this, requestDto))
+                        .execute()
         );
     }
 
     public void btnCodeSnippetAction(){
         disposeIfExists(
                 CodeSnippetFrame.class,
-                () -> new WaitExecution(
-                        btnCodeSnippet,
-                        () -> new CodeSnippetFrame(this, requestHeadDto, requestDto)
-                ).execute()
+                () -> new WaitExecution(btnCodeSnippet)
+                        .thenEdt(() -> new CodeSnippetFrame(this, requestHeadDto, requestDto))
+                        .execute()
         );
     }
 
@@ -251,20 +249,22 @@ public class RequestSplitPane extends JPanel {
             new RequestSaveFrame(
                     this,
                     requestDto,
-                    requestHead -> {
+                    requestHead -> invokeLater(() -> {
                         this.requestHeadDto = requestHead;
                         requestStagingMonitor.reset();
                         resetBtnState();
-                    }
+                    })
             );
             return;
         }
 
-        new WaitExecution(this, btnSaveRequest, () -> {
-            controller.save(requestHeadDto, requestDto);
-            requestStagingMonitor.reset();
-            resetBtnState();
-        }).execute();
+        new WaitExecution(this, btnSaveRequest)
+                .thenBackground(() -> {
+                    controller.save(requestHeadDto, requestDto);
+                    requestStagingMonitor.reset();
+                })
+                .thenEdt(this::resetBtnState)
+                .execute();
     }
 
     public void addSaveKeyboardAction() {

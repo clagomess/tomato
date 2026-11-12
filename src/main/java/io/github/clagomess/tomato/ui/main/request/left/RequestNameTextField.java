@@ -13,6 +13,7 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.UUID;
+import static javax.swing.SwingUtilities.invokeLater;
 
 public class RequestNameTextField extends JPanel {
     private final JLabel parent = new JLabel(){{
@@ -56,9 +57,12 @@ public class RequestNameTextField extends JPanel {
         RequestKey key = new RequestKey(requestHead, request);
 
         listenerUuid = requestPublisher.getOnChange().addListener(key, event -> {
-            parent.setText(event.getEvent().getParent().getFlattenedParentString());
-            lblRequestName.setText(event.getEvent().getName());
             request.setName(event.getEvent().getName());
+
+            invokeLater(() -> {
+                parent.setText(event.getEvent().getParent().getFlattenedParentString());
+                lblRequestName.setText(event.getEvent().getName());
+            });
         });
     }
 

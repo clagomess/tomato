@@ -79,7 +79,7 @@ public class ProxyRowPane extends JPanel {
             IconButton btn,
             ProxyDto proxy
     ) {
-        new WaitExecution(this, btn, () -> toFrontIfExists(
+        new WaitExecution(this, btn).thenEdt(() -> toFrontIfExists(
                 ProxyEditFrame.class,
                 () -> new ProxyEditFrame(parent, workspace, proxy),
                 item -> Objects.equals(proxy.getId(), item.getProxyId())
@@ -90,20 +90,20 @@ public class ProxyRowPane extends JPanel {
             IconButton btn,
             ProxyDto proxy
     ) {
-        new WaitExecution(parent, btn, () -> {
-            int ret = JOptionPane.showConfirmDialog(
-                    parent,
-                    String.format(
-                            "Are you sure you want to delete \"%s\"?",
-                            proxy.getHost()
-                    ),
-                    "Proxy Delete",
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-            );
+        int ret = JOptionPane.showConfirmDialog(
+                parent,
+                String.format(
+                        "Are you sure you want to delete \"%s\"?",
+                        proxy.getHost()
+                ),
+                "Proxy Delete",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
 
-            if(ret != JOptionPane.OK_OPTION) return;
+        if(ret != JOptionPane.OK_OPTION) return;
 
+        new WaitExecution(parent, btn).thenBackground(() -> {
             controller.delete(workspace, proxy);
             parent.refresh(workspace);
         }).execute();

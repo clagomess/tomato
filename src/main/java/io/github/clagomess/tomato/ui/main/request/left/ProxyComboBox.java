@@ -1,6 +1,7 @@
 package io.github.clagomess.tomato.ui.main.request.left;
 
 import io.github.clagomess.tomato.dto.data.TomatoID;
+import io.github.clagomess.tomato.dto.data.WorkspaceDto;
 import io.github.clagomess.tomato.dto.data.workspace.ProxyDto;
 import io.github.clagomess.tomato.io.repository.WorkspaceRepository;
 import io.github.clagomess.tomato.ui.component.IconButton;
@@ -14,6 +15,7 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.toFrontIfExists;
 
@@ -41,27 +43,31 @@ public class ProxyComboBox extends JPanel {
     }
 
     public void btnEditAction() {
-        new WaitExecution(this, btnEdit, () -> {
-            var workspace = new WorkspaceRepository().getDataSessionWorkspace();
-            toFrontIfExists(
-                    WorkspaceEditFrame.class,
-                    () -> new WorkspaceEditFrame(this, workspace)
-            );
-        }).execute();
+        var workspace = new AtomicReference<WorkspaceDto>();
+
+        new WaitExecution(this, btnEdit)
+                .thenBackground(() -> workspace.set(new WorkspaceRepository().getDataSessionWorkspace()))
+                .thenEdt(() -> toFrontIfExists(
+                        WorkspaceEditFrame.class,
+                        () -> new WorkspaceEditFrame(this, workspace.get())
+                ))
+                .execute();
     }
 
     static class ComboBox extends JComboBox<ProxyDto> {
         public void refresh(@Nullable TomatoID proxyId){
-            new WaitExecution(this, () -> {
+            var proxies = new AtomicReference<List<ProxyDto>>();
+
+            new WaitExecution(this).thenBackground(() -> proxies.set(
+                    new WorkspaceRepository()
+                            .getDataSessionWorkspace()
+                            .getProxies()
+            )).thenEdt(() -> {
                 removeAllItems();
                 addItem(null);
                 super.setSelectedItem(null);
 
-                List<ProxyDto> proxies = new WorkspaceRepository()
-                        .getDataSessionWorkspace()
-                        .getProxies();
-
-                for (var item : proxies){
+                for (var item : proxies.get()){
                     addItem(item);
                     if (Objects.equals(item.getId(), proxyId)){
                         super.setSelectedItem(item);

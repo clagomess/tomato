@@ -15,6 +15,7 @@ import java.awt.*;
 import java.io.IOException;
 
 import static io.github.clagomess.tomato.ui.component.ComponentUtil.getMainWindow;
+import static javax.swing.SwingUtilities.invokeLater;
 
 @Slf4j
 public class RequestFrame extends BaseFrame {
@@ -54,10 +55,10 @@ public class RequestFrame extends BaseFrame {
         controller.addOnStagingListener(
                 key,
                 loadedRequest,
-                this::setTitle
+                title -> invokeLater(() -> setTitle(title))
         );
 
-        controller.addOnChangeListener(requestHead, this::setTitle);
+        controller.addOnChangeListener(requestHead, title -> invokeLater(() -> setTitle(title)));
 
         if(requestStagingMonitor.isDiferent()) {
             setTitle("[*] " + loadedRequest.getName());

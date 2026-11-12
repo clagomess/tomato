@@ -10,6 +10,7 @@ import net.miginfocom.swing.MigLayout;
 import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CodeSnippetFrame extends BaseFrame {
     private final CodeSnippetComboBox codeSnippetComboBox;
@@ -43,15 +44,21 @@ public class CodeSnippetFrame extends BaseFrame {
     }
 
     private void refresh(RequestDto request){
-        new WaitExecution(this, () -> {
-            var codeSnippet = codeSnippetComboBox.getSelectedItem();
-            if(codeSnippet == null){
-                textArea.setText("");
-                return;
-            }
+        var codeSnippet = codeSnippetComboBox.getSelectedItem();
+        if(codeSnippet == null){
+            textArea.setText("");
+            textArea.setSyntaxEditingStyle(null);
+            return;
+        }
 
-            textArea.setText(codeSnippet.build(request));
-            textArea.setSyntaxEditingStyle(codeSnippet.getSyntaxStyle());
-        }).execute();
+        AtomicReference<String> text = new AtomicReference<>();
+        new WaitExecution(this)
+                .thenBackground(() -> text.set(codeSnippet.build(request)))
+                .thenEdt(() -> {
+                    textArea.setSyntaxEditingStyle(codeSnippet.getSyntaxStyle());
+                    textArea.setText(text.get());
+                    textArea.setCaretPosition(0);
+                })
+                .execute();
     }
 }

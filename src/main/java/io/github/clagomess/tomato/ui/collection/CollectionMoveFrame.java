@@ -52,12 +52,14 @@ public class CollectionMoveFrame extends BaseFrame {
     private void btnMoveAction(
             CollectionTreeDto source
     ){
-        new WaitExecution(this, btnMove, () -> {
+        var destination = cbCollectionDestination.getSelectedItem();
+
+        new WaitExecution(this, btnMove).thenBackground(() ->
             controller.move(
                     source,
-                    cbCollectionDestination.getSelectedItem()
-            );
-
+                    destination
+            )
+        ).thenEdt(() -> {
             setVisible(false);
             dispose();
         }).execute();

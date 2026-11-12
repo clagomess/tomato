@@ -98,10 +98,9 @@ public class EnvTextField extends JPanel {
     private void btnExpandAction(EnvTextfieldOptions options){
         disposeIfExists(
                 ValueEditorFrame.class,
-                () -> new WaitExecution(
-                    this,
-                    () -> new ValueEditorFrame(this, options)
-                ).execute()
+                () -> new WaitExecution(this)
+                        .thenEdt(() -> new ValueEditorFrame(this, options))
+                        .execute()
         );
     }
 
