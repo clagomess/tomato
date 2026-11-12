@@ -38,7 +38,7 @@ public class KeyPublisher<K, T> extends BasePublisher<K, Consumer<T>> {
     public void publish(K key, T event){
         if(log.isDebugEnabled()) log.debug("Publishing: {} - {}", key, event);
 
-        listeners.parallelStream()
+        listeners.stream()
                 .filter(item -> Objects.equals(item.getKey(), key))
                 .forEach(listener -> {
                     if (log.isDebugEnabled()) {
