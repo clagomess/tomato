@@ -6,7 +6,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import io.github.clagomess.tomato.dto.data.request.AuthDto;
-import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
+import io.github.clagomess.tomato.dto.data.request.body.BinaryBodyDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.io.http.RequestBuilder;
 import lombok.AllArgsConstructor;

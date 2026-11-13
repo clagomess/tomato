@@ -22,7 +22,7 @@ import java.util.Objects;
 
 import static io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.FILE;
 import static io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.TEXT;
-import static io.github.clagomess.tomato.enums.BodyTypeEnum.MULTIPART_FORM;
+import static io.github.clagomess.tomato.dto.data.request.BodyDto.Type.MULTIPART_FORM;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 @Slf4j

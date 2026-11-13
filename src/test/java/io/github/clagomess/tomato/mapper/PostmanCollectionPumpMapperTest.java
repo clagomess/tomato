@@ -7,8 +7,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
 import io.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
-import io.github.clagomess.tomato.enums.AuthTypeEnum;
-import io.github.clagomess.tomato.enums.BodyTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -63,7 +62,7 @@ class PostmanCollectionPumpMapperTest {
 
         BodyDto result = pumpMapper.map(body);
 
-        assertEquals(BodyTypeEnum.RAW, result.getType());
+        assertEquals(BodyDto.Type.RAW, result.getType());
         assertEquals(RawBodyTypeEnum.JSON, result.getRaw().getType());
         assertEquals(body.getRaw(), result.getRaw().getRaw());
     }
@@ -164,7 +163,7 @@ class PostmanCollectionPumpMapperTest {
 
         RequestDto result = pumpMapper.toRequestDto(request);
 
-        assertEquals(AuthTypeEnum.BASIC, result.getAuth().getType());
+        assertEquals(AuthDto.Type.BASIC, result.getAuth().getType());
         assertEquals("foo", result.getAuth().getBasic().getUsername());
         assertEquals("{{pass}}", result.getAuth().getBasic().getPassword());
         Assertions.assertThat(result.getHeaders())
@@ -178,6 +177,6 @@ class PostmanCollectionPumpMapperTest {
 
         RequestDto result = pumpMapper.toRequestDto(request);
 
-        assertEquals(AuthTypeEnum.NO_AUTH, result.getAuth().getType());
+        assertEquals(AuthDto.Type.NO_AUTH, result.getAuth().getType());
     }
 }

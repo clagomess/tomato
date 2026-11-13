@@ -6,10 +6,9 @@ import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
-import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
-import io.github.clagomess.tomato.dto.data.request.RawBodyDto;
-import io.github.clagomess.tomato.enums.BodyTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.body.BinaryBodyDto;
+import io.github.clagomess.tomato.dto.data.request.body.RawBodyDto;
 import io.github.clagomess.tomato.enums.HttpMethodEnum;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import io.github.clagomess.tomato.io.repository.RepositoryStubs;
@@ -184,7 +183,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/urlencoded-form");
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new BodyDto());
-        request.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
+        request.getBody().setType(BodyDto.Type.URL_ENCODED_FORM);
         request.getBody().setUrlEncodedForm(Collections.singletonList(new ContentTypeKeyValueItemDto("foo", "bar")));
 
         ResponseDto response = new HttpService(null, request).perform();
@@ -218,7 +217,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/multipart-form");
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new BodyDto());
-        request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
+        request.getBody().setType(BodyDto.Type.MULTIPART_FORM);
         request.getBody().getMultiPartForm().add(new FileKeyValueItemDto("foo", "bar"));
 
         ResponseDto response = new HttpService(null, request).perform();
@@ -231,7 +230,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/multipart-form-with-file");
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new BodyDto());
-        request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
+        request.getBody().setType(BodyDto.Type.MULTIPART_FORM);
 
         String formFile = Objects.requireNonNull(getClass()
                         .getResource("HttpServicePerformTest/dummy.txt"))
@@ -255,7 +254,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/raw");
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new BodyDto());
-        request.getBody().setType(BodyTypeEnum.RAW);
+        request.getBody().setType(BodyDto.Type.RAW);
         request.getBody().setRaw(new RawBodyDto(
                 RawBodyTypeEnum.JSON,
                 "{\"foo\": \"bar\"}"
@@ -271,7 +270,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/binary");
         request.setMethod(HttpMethodEnum.POST);
         request.setBody(new BodyDto());
-        request.getBody().setType(BodyTypeEnum.BINARY);
+        request.getBody().setType(BodyDto.Type.BINARY);
         request.getBody().setBinary(new BinaryBodyDto(
                 APPLICATION_OCTET_STREAM_TYPE,
                 ".gitignore"
@@ -287,7 +286,7 @@ class HttpServicePerformTest extends RepositoryStubs {
         request.setUrl("http://localhost:8500/raw");
         request.setMethod(HttpMethodEnum.PUT);
         request.setBody(new BodyDto());
-        request.getBody().setType(BodyTypeEnum.RAW);
+        request.getBody().setType(BodyDto.Type.RAW);
         request.getBody().setRaw(new RawBodyDto(
                 RawBodyTypeEnum.JSON,
                 "{\"foo\": \"bar\"}"

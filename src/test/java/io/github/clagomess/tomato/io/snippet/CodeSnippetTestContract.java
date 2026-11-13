@@ -5,11 +5,11 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
-import io.github.clagomess.tomato.dto.data.request.BasicAuthDto;
-import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
-import io.github.clagomess.tomato.dto.data.request.RawBodyDto;
-import io.github.clagomess.tomato.enums.AuthTypeEnum;
-import io.github.clagomess.tomato.enums.BodyTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.auth.BasicAuthDto;
+import io.github.clagomess.tomato.dto.data.request.body.BinaryBodyDto;
+import io.github.clagomess.tomato.dto.data.request.body.RawBodyDto;
+import io.github.clagomess.tomato.dto.data.request.AuthDto;
+import io.github.clagomess.tomato.dto.data.request.BodyDto;
 import io.github.clagomess.tomato.enums.HttpMethodEnum;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
@@ -194,7 +194,7 @@ interface CodeSnippetTestContract {
         request.setHeaders(List.of(
                 new KeyValueItemDto("foo", "bar")
         ));
-        request.getAuth().setType(AuthTypeEnum.BASIC);
+        request.getAuth().setType(AuthDto.Type.BASIC);
         request.getAuth().setBasic(new BasicAuthDto("foo", "bar"));
 
         return request;
@@ -221,7 +221,7 @@ interface CodeSnippetTestContract {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
-        request.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
+        request.getBody().setType(BodyDto.Type.URL_ENCODED_FORM);
         request.getBody().setUrlEncodedForm(List.of(
                 new ContentTypeKeyValueItemDto("foo", "bar")
         ));
@@ -233,7 +233,7 @@ interface CodeSnippetTestContract {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
-        request.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
+        request.getBody().setType(BodyDto.Type.URL_ENCODED_FORM);
         request.getBody().setUrlEncodedForm(List.of(
                 new ContentTypeKeyValueItemDto("foo", "{{foo}}")
         ));
@@ -245,7 +245,7 @@ interface CodeSnippetTestContract {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
-        request.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
+        request.getBody().setType(BodyDto.Type.URL_ENCODED_FORM);
         request.getBody().setUrlEncodedForm(List.of(
                 new ContentTypeKeyValueItemDto("foo", "\"C:\\tmp\""),
                 new ContentTypeKeyValueItemDto("bar", "C:\\tmp\\")
@@ -258,7 +258,7 @@ interface CodeSnippetTestContract {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
-        request.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
+        request.getBody().setType(BodyDto.Type.URL_ENCODED_FORM);
         request.getBody().setUrlEncodedForm(List.of(
                 new ContentTypeKeyValueItemDto("it's \"C:\\tmp\"", "bar"),
                 new ContentTypeKeyValueItemDto("C:\\tmp\\", "bar")
@@ -271,7 +271,7 @@ interface CodeSnippetTestContract {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
-        request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
+        request.getBody().setType(BodyDto.Type.MULTIPART_FORM);
         request.getBody().setMultiPartForm(List.of(
                 new FileKeyValueItemDto(FILE, "myfile", "/path/to/file", "application/json", true),
                 new FileKeyValueItemDto(TEXT, "foo", "bar", "text/plain", true)
@@ -284,7 +284,7 @@ interface CodeSnippetTestContract {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
-        request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
+        request.getBody().setType(BodyDto.Type.MULTIPART_FORM);
         request.getBody().setMultiPartForm(List.of(
                 new FileKeyValueItemDto(FILE, "myfile", "/path/{{foo}}/file", "application/json", true),
                 new FileKeyValueItemDto(TEXT, "foo", "{{foo}}", "text/plain", true)
@@ -297,7 +297,7 @@ interface CodeSnippetTestContract {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
-        request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
+        request.getBody().setType(BodyDto.Type.MULTIPART_FORM);
         request.getBody().setMultiPartForm(List.of(
                 new FileKeyValueItemDto(FILE, "myfile", "/tmp/it's.json", "application/json", true),
                 new FileKeyValueItemDto(TEXT, "foo", "it's \"C:\\tmp\"", "text/plain", true),
@@ -311,7 +311,7 @@ interface CodeSnippetTestContract {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
-        request.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
+        request.getBody().setType(BodyDto.Type.MULTIPART_FORM);
         request.getBody().setMultiPartForm(List.of(
                 new FileKeyValueItemDto(FILE, "it's \"C:\\tmp\"", "/path/to/file", "application/json", true),
                 new FileKeyValueItemDto(TEXT, "C:\\tmp\\", "bar", "text/plain", true)
@@ -324,7 +324,7 @@ interface CodeSnippetTestContract {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
-        request.getBody().setType(BodyTypeEnum.RAW);
+        request.getBody().setType(BodyDto.Type.RAW);
         request.getBody().setRaw(new RawBodyDto(
                 RawBodyTypeEnum.JSON,
                 "{\"foo\":\"bar\"}"
@@ -365,7 +365,7 @@ interface CodeSnippetTestContract {
         var request = new RequestDto();
         request.setUrl("http://localhost:8000");
         request.setMethod(HttpMethodEnum.POST);
-        request.getBody().setType(BodyTypeEnum.BINARY);
+        request.getBody().setType(BodyDto.Type.BINARY);
         request.getBody().setBinary(new BinaryBodyDto(
                 APPLICATION_OCTET_STREAM_TYPE,
                 "bitmap.png"

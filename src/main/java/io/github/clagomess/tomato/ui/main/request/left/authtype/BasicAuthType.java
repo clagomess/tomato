@@ -1,6 +1,6 @@
 package io.github.clagomess.tomato.ui.main.request.left.authtype;
 
-import io.github.clagomess.tomato.dto.data.request.BasicAuthDto;
+import io.github.clagomess.tomato.dto.data.request.auth.BasicAuthDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.ui.component.envtextfield.EnvTextField;

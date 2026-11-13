@@ -4,12 +4,11 @@ import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
-import io.github.clagomess.tomato.dto.data.request.BasicAuthDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
+import io.github.clagomess.tomato.dto.data.request.auth.BasicAuthDto;
 import io.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import io.github.clagomess.tomato.enums.AuthTypeEnum;
-import io.github.clagomess.tomato.enums.BodyTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -42,7 +41,7 @@ public interface PostmanCollectionDumpMapper {
             @MappingTarget PostmanCollectionV210Dto.Item target,
             RequestDto source
     ){
-        if(source.getBody().getType() == BodyTypeEnum.NO_BODY){
+        if(source.getBody().getType() == BodyDto.Type.NO_BODY){
             target.getRequest().setBody(null);
         }
 
@@ -54,7 +53,7 @@ public interface PostmanCollectionDumpMapper {
             target.getRequest().getUrl().setVariable(null);
         }
 
-        if(source.getAuth().getType() == AuthTypeEnum.BASIC){
+        if(source.getAuth().getType() == AuthDto.Type.BASIC){
             target.getRequest().setAuth(toAuthBasic(source.getAuth().getBasic()));
         }
     }

@@ -7,7 +7,6 @@ import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import io.github.clagomess.tomato.enums.AuthTypeEnum;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -85,7 +84,7 @@ public abstract class RequestBuilder {
     }
 
     protected Stream<KeyValueItemDto> buildAuthBasic(AuthDto auth){
-        if(auth.getType() != AuthTypeEnum.BASIC) return Stream.empty();
+        if(auth.getType() != AuthDto.Type.BASIC) return Stream.empty();
         if(StringUtils.isBlank(auth.getBasic().getUsername())) return Stream.empty();
         if(StringUtils.isBlank(auth.getBasic().getPassword())) return Stream.empty();
 

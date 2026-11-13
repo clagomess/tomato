@@ -2,7 +2,6 @@ package io.github.clagomess.tomato.ui.main.request.left;
 
 import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import io.github.clagomess.tomato.enums.AuthTypeEnum;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 import io.github.clagomess.tomato.ui.main.request.left.authtype.BasicAuthType;
@@ -18,8 +17,8 @@ public class AuthPanel extends JPanel implements DisposableListener {
     private final RequestHeadDto requestHead;
     private final AuthDto auth;
     private final RequestStagingMonitor requestStagingMonitor;
-    private final JComboBox<AuthTypeEnum> cbAuthType = new JComboBox<>(
-            AuthTypeEnum.values()
+    private final JComboBox<AuthDto.Type> cbAuthType = new JComboBox<>(
+            AuthDto.Type.values()
     );
     private Component currentAuthType;
 
@@ -55,7 +54,7 @@ public class AuthPanel extends JPanel implements DisposableListener {
     }
 
     private void cbAuthTypeAction(){
-        var type = (AuthTypeEnum) cbAuthType.getSelectedItem();
+        var type = (AuthDto.Type) cbAuthType.getSelectedItem();
         if(type == null || type == auth.getType()) return;
 
         dispose();

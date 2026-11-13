@@ -6,9 +6,9 @@ import com.networknt.schema.Schema;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
-import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
-import io.github.clagomess.tomato.dto.data.request.RawBodyDto;
-import io.github.clagomess.tomato.enums.BodyTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.body.BinaryBodyDto;
+import io.github.clagomess.tomato.dto.data.request.body.RawBodyDto;
+import io.github.clagomess.tomato.dto.data.request.BodyDto;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import io.github.clagomess.tomato.io.converter.JsonSchemaBuilder;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
@@ -85,7 +85,7 @@ class RequestDtoTest {
     void toJson_Body_Raw() throws JsonProcessingException {
         var dto = new RequestDto();
         dto.setUrl("http://localhost:8080/tomato");
-        dto.getBody().setType(BodyTypeEnum.RAW);
+        dto.getBody().setType(BodyDto.Type.RAW);
         dto.getBody().setRaw(new RawBodyDto(RawBodyTypeEnum.TEXT, "aaa"));
 
         var json = mapper.writeValueAsString(dto);
@@ -100,7 +100,7 @@ class RequestDtoTest {
     void toJson_Body_Binary() throws JsonProcessingException {
         var dto = new RequestDto();
         dto.setUrl("http://localhost:8080/tomato");
-        dto.getBody().setType(BodyTypeEnum.BINARY);
+        dto.getBody().setType(BodyDto.Type.BINARY);
         dto.getBody().setBinary(new BinaryBodyDto(
                 TEXT_PLAIN_TYPE,
                 "file"
@@ -118,7 +118,7 @@ class RequestDtoTest {
     void toJson_Body_urlEncodedForm() throws JsonProcessingException {
         var dto = new RequestDto();
         dto.setUrl("http://localhost:8080/tomato");
-        dto.getBody().setType(BodyTypeEnum.URL_ENCODED_FORM);
+        dto.getBody().setType(BodyDto.Type.URL_ENCODED_FORM);
         dto.getBody().getUrlEncodedForm().add(
                 new ContentTypeKeyValueItemDto("key", "value")
         );
@@ -135,7 +135,7 @@ class RequestDtoTest {
     void toJson_Body_multiPartForm() throws JsonProcessingException {
         var dto = new RequestDto();
         dto.setUrl("http://localhost:8080/tomato");
-        dto.getBody().setType(BodyTypeEnum.MULTIPART_FORM);
+        dto.getBody().setType(BodyDto.Type.MULTIPART_FORM);
         dto.getBody().getMultiPartForm().add(
                 new FileKeyValueItemDto("key", "value")
         );

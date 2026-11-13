@@ -5,14 +5,13 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
-import io.github.clagomess.tomato.dto.data.request.BasicAuthDto;
-import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
-import io.github.clagomess.tomato.dto.data.request.RawBodyDto;
+import io.github.clagomess.tomato.dto.data.request.auth.BasicAuthDto;
+import io.github.clagomess.tomato.dto.data.request.body.BinaryBodyDto;
+import io.github.clagomess.tomato.dto.data.request.body.RawBodyDto;
 import io.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
-import io.github.clagomess.tomato.enums.AuthTypeEnum;
-import io.github.clagomess.tomato.enums.BodyTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import io.github.clagomess.tomato.enums.HttpMethodEnum;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import io.github.clagomess.tomato.io.repository.RepositoryStubs;
@@ -167,7 +166,7 @@ class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     @Test
     void toItem_Request_authBasic(){
         var request = new RequestDto();
-        request.getAuth().setType(AuthTypeEnum.BASIC);
+        request.getAuth().setType(AuthDto.Type.BASIC);
         request.getAuth().setBasic(new BasicAuthDto("foo", "{{pass}}"));
 
         var result = dumpMapper.toItem(request);
@@ -205,7 +204,7 @@ class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     })
     void toBody_type(
             String expected,
-            BodyTypeEnum bodyType
+            BodyDto.Type bodyType
     ){
         var body =  new BodyDto();
         body.setType(bodyType);
@@ -217,7 +216,7 @@ class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     @Test
     void toBody_raw(){
         var body =  new BodyDto();
-        body.setType(BodyTypeEnum.RAW);
+        body.setType(BodyDto.Type.RAW);
         body.setRaw(new RawBodyDto());
         body.getRaw().setRaw("foo");
         body.getRaw().setType(RawBodyTypeEnum.JSON);
@@ -231,7 +230,7 @@ class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     @Test
     void toBody_binary(){
         var body =  new BodyDto();
-        body.setType(BodyTypeEnum.BINARY);
+        body.setType(BodyDto.Type.BINARY);
         body.setBinary(new BinaryBodyDto());
         body.getBinary().setFile("foo");
 
@@ -242,7 +241,7 @@ class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     @Test
     void toBody_urlEncodedForm(){
         var body =  new BodyDto();
-        body.setType(BodyTypeEnum.URL_ENCODED_FORM);
+        body.setType(BodyDto.Type.URL_ENCODED_FORM);
         body.setUrlEncodedForm(List.of(
                 new ContentTypeKeyValueItemDto("foo1", "bar"),
                 new ContentTypeKeyValueItemDto("foo2", "bar", "text/plain",false)
@@ -275,7 +274,7 @@ class PostmanCollectionDumpMapperTest extends RepositoryStubs {
     @Test
     void toBody_multiPartForm(){
         var body =  new BodyDto();
-        body.setType(BodyTypeEnum.MULTIPART_FORM);
+        body.setType(BodyDto.Type.MULTIPART_FORM);
         body.setMultiPartForm(List.of(
                 new FileKeyValueItemDto("foo1", "bar"),
                 new FileKeyValueItemDto(KeyValueTypeEnum.FILE, "foo2", "bar", "text/plain",false)

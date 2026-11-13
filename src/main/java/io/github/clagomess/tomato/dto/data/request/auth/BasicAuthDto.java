@@ -1,4 +1,4 @@
-package io.github.clagomess.tomato.dto.data.request;
+package io.github.clagomess.tomato.dto.data.request.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;

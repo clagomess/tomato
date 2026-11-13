@@ -5,8 +5,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.AuthDto;
-import io.github.clagomess.tomato.dto.data.request.BasicAuthDto;
-import io.github.clagomess.tomato.enums.AuthTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.auth.BasicAuthDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -79,7 +78,7 @@ class RequestBuilderTest {
         @Test
         void whenBasicAuth_appendAuthorizationHeader(){
             var auth = new AuthDto();
-            auth.setType(AuthTypeEnum.BASIC);
+            auth.setType(AuthDto.Type.BASIC);
             auth.setBasic(new BasicAuthDto("foo", "bar"));
 
             var result = new RequestBuilder(null, List.of()){}
@@ -118,7 +117,7 @@ class RequestBuilderTest {
                 String password
         ){
             var auth = new AuthDto();
-            auth.setType(AuthTypeEnum.BASIC);
+            auth.setType(AuthDto.Type.BASIC);
             auth.setBasic(new BasicAuthDto(username, password));
 
             var result = new RequestBuilder(null, List.of()){}
@@ -135,7 +134,7 @@ class RequestBuilderTest {
             );
 
             var auth = new AuthDto();
-            auth.setType(AuthTypeEnum.BASIC);
+            auth.setType(AuthDto.Type.BASIC);
             auth.setBasic(new BasicAuthDto("{{user}}", "{{pass}}"));
 
             var result = new RequestBuilder(null, envs){}
@@ -161,7 +160,7 @@ class RequestBuilderTest {
                 String expected
         ){
             var auth = new AuthDto();
-            auth.setType(AuthTypeEnum.BASIC);
+            auth.setType(AuthDto.Type.BASIC);
             auth.setBasic(new BasicAuthDto(username, password));
 
             var result = new RequestBuilder(null, List.of()){}

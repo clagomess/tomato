@@ -1,6 +1,6 @@
 package io.github.clagomess.tomato.ui.main.request.left.bodytype;
 
-import io.github.clagomess.tomato.dto.data.request.RawBodyDto;
+import io.github.clagomess.tomato.dto.data.request.body.RawBodyDto;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsMagicWandIcon;
 import io.github.clagomess.tomato.ui.component.syntaxtextarea.ScrollableTomatoRSyntaxTextArea;
