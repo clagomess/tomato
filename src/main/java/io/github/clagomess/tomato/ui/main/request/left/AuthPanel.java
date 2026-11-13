@@ -76,6 +76,7 @@ public class AuthPanel extends JPanel implements DisposableListener {
                     requestStagingMonitor
             );
             case NO_AUTH -> new NoAuthType();
+            case MTLS -> new NoAuthType(); // TODO: implement MTLSAuthType panel
         };
     }
 
