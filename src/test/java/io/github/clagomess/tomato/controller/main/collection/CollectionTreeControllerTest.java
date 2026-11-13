@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.controller.main.collection;
 
 import io.github.clagomess.tomato.dto.data.TomatoID;
 import io.github.clagomess.tomato.dto.data.WorkspaceDto;
+import io.github.clagomess.tomato.dto.data.WorkspaceSessionDto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.io.repository.TreeRepository;
 import io.github.clagomess.tomato.io.repository.WorkspaceSessionRepository;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
@@ -88,5 +90,20 @@ class CollectionTreeControllerTest {
         ));
 
         assertEquals(1, result.get());
+    }
+
+    @Test
+    void saveTreeExpandedState_saveExpandedIds() throws IOException {
+        var session = new WorkspaceSessionDto();
+        Mockito.doReturn(session)
+                .when(workspaceSessionRepository)
+                .load();
+
+        var ids = List.of(new TomatoID());
+
+        controller.saveTreeExpandedState(ids);
+
+        assertEquals(ids, session.getExpandedCollectionsIds());
+        Mockito.verify(workspaceSessionRepository).save(session);
     }
 }
