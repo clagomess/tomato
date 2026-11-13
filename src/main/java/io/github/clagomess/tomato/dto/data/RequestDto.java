@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.dto.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
 import io.github.clagomess.tomato.dto.data.request.ConfigDto;
 import io.github.clagomess.tomato.dto.data.request.UrlParamDto;
@@ -26,12 +27,18 @@ public class RequestDto extends MetadataDto {
     private UrlParamDto urlParam = new UrlParamDto();
     private List<KeyValueItemDto> headers = new ArrayList<>();
     private List<KeyValueItemDto> cookies = new ArrayList<>();
+    private AuthDto auth = new AuthDto();
     private BodyDto body = new BodyDto();
     private ConfigDto config = new ConfigDto();
 
     public UrlParamDto getUrlParam() {
         if(urlParam == null) urlParam = new UrlParamDto();
         return urlParam;
+    }
+
+    public AuthDto getAuth() {
+        if(auth == null) auth = new AuthDto();
+        return auth;
     }
 
     public BodyDto getBody() {

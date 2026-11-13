@@ -4,9 +4,11 @@ import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.request.BasicAuthDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
 import io.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import io.github.clagomess.tomato.enums.AuthTypeEnum;
 import io.github.clagomess.tomato.enums.BodyTypeEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.*;
@@ -51,6 +53,29 @@ public interface PostmanCollectionDumpMapper {
         if(target.getRequest().getUrl().getVariable().isEmpty()){
             target.getRequest().getUrl().setVariable(null);
         }
+
+        if(source.getAuth().getType() == AuthTypeEnum.BASIC){
+            target.getRequest().setAuth(toAuthBasic(source.getAuth().getBasic()));
+        }
+    }
+
+    default PostmanCollectionV210Dto.Item.Request.Auth toAuthBasic(BasicAuthDto source){
+        var result = new PostmanCollectionV210Dto.Item.Request.Auth();
+        result.setType("basic");
+        result.setBasic(List.of(
+                new PostmanCollectionV210Dto.Item.Request.Auth.Attribute(
+                        "username",
+                        source.getUsername(),
+                        "string"
+                ),
+                new PostmanCollectionV210Dto.Item.Request.Auth.Attribute(
+                        "password",
+                        source.getPassword(),
+                        "string"
+                )
+        ));
+
+        return result;
     }
 
     @Mapping(target = "urlencoded", source = "urlEncodedForm")

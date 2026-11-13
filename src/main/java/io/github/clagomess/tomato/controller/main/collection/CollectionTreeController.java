@@ -39,7 +39,6 @@ public class CollectionTreeController {
                 .addListener(event -> loadCurrentWorkspace.run());
     }
 
-    // @TODO: impl. junit
     public void addSaveTreeExpandedStateListener(
             Supplier<List<TomatoID>> expandedCollectionsIds
     ){
@@ -52,7 +51,6 @@ public class CollectionTreeController {
                 .addListener(e -> saveTreeExpandedState(expandedCollectionsIds.get()));
     }
 
-    // @TODO: impl. junit
     protected void saveTreeExpandedState(List<TomatoID> expandedCollectionsIds){
         try {
             var session = workspaceSessionRepository.load();

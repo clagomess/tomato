@@ -28,7 +28,7 @@ public class HttpHeaderBuilder extends RequestBuilder {
                 "Tomato/" + DEPLOY_TAG
         );
 
-        buildHeaders(request.getHeaders())
+        buildHeaders(request.getHeaders(), request.getAuth())
                 .forEach(header -> httpRequestBuilder.setHeader(
                         header.getKey(),
                         header.getValue()

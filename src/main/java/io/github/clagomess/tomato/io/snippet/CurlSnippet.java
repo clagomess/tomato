@@ -5,6 +5,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.io.http.RequestBuilder;
@@ -41,7 +42,7 @@ public class CurlSnippet extends RequestBuilder implements CodeSnippet {
         code.append(" ");
         code.append(quote(buildUri(request).toString()));
 
-        buildHeaders(request.getHeaders(), code);
+        buildHeaders(request.getHeaders(), request.getAuth(), code);
         buildCookies(request.getCookies(), code);
 
         switch (request.getBody().getType()){
@@ -72,9 +73,10 @@ public class CurlSnippet extends RequestBuilder implements CodeSnippet {
 
     protected void buildHeaders(
             List<KeyValueItemDto> headers,
+            AuthDto auth,
             StringBuilder code
     ) {
-        buildHeaders(headers).forEach(item ->
+        buildHeaders(headers, auth).forEach(item ->
             writeHeader(item.getKey(), item.getValue(), code)
         );
     }

@@ -49,3 +49,21 @@ jobs:
 
       - name: Maven
         run: mvn compile -Dmaven.test.skip -Dmaven.compiler.showDeprecation=true -Dmaven.compiler.failOnWarning=true
+
+  todo-check:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check TODOs in production code
+        run: |
+          matches=$(git grep -n -I -w 'TODO' -- 'src/main' || true)
+          if [ -n "$matches" ]; then
+            while IFS=: read -r file line content; do
+              echo "::error file=${file},line=${line}::TODO found: ${content}"
+            done <<< "$matches"
+            exit 1
+          fi

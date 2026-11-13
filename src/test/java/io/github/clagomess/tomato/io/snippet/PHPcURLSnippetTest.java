@@ -200,6 +200,25 @@ class PHPcURLSnippetTest extends RepositoryStubs implements CodeSnippetTestContr
     }
 
     @Test
+    public void authBasic() throws IOException {
+        var result = snippet.build(authBasicRequest());
+        assertThat(result)
+                .isEqualToIgnoringNewLines("""
+                <?php
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'http://localhost:8000');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'foo: bar',
+                    'Authorization: Basic Zm9vOmJhcg=='
+                ));
+                $response = curl_exec($ch);
+                curl_close($ch);
+                echo $response;
+                """);
+    }
+
+    @Test
     public void whenItemUnselectedOrBlankKey_ignore() throws IOException {
         var result = snippet.build(whenItemUnselectedOrBlankKeyRequest());
         assertThat(result)

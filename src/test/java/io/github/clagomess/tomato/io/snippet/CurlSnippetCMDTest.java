@@ -127,6 +127,17 @@ class CurlSnippetCMDTest extends RepositoryStubs implements CodeSnippetTestContr
     }
 
     @Test
+    public void authBasic() throws IOException {
+        var result = snippet.build(authBasicRequest());
+        assertThat(result)
+                .isEqualToIgnoringNewLines("""
+                curl -X GET "http://localhost:8000" ^
+                -H "foo: bar" ^
+                -H "Authorization: Basic Zm9vOmJhcg=="
+                """);
+    }
+
+    @Test
     public void whenItemUnselectedOrBlankKey_ignore() throws IOException {
         var result = snippet.build(whenItemUnselectedOrBlankKeyRequest());
         assertThat(result)

@@ -1,0 +1,29 @@
+{
+  "id" : "D49UDu2C",
+  "createTime" : "2026-11-13T11:20:51",
+  "updateTime" : "2026-11-13T11:21:54",
+  "name" : "Auth - Basic",
+  "method" : "GET",
+  "url" : "{{echoServer}}/echo.php",
+  "urlParam" : {
+    "charset" : "UTF-8",
+    "path" : [ ],
+    "query" : [ ]
+  },
+  "headers" : [ ],
+  "cookies" : [ ],
+  "auth" : {
+    "type" : "BASIC",
+    "basic" : {
+      "username" : "hello",
+      "password" : "world"
+    }
+  },
+  "body" : {
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
+  },
+  "config" : {
+    "proxyId" : null
+  }
+}

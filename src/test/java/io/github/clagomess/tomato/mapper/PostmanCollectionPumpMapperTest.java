@@ -7,6 +7,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
 import io.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
+import io.github.clagomess.tomato.enums.AuthTypeEnum;
 import io.github.clagomess.tomato.enums.BodyTypeEnum;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import org.assertj.core.api.Assertions;
@@ -148,5 +149,35 @@ class PostmanCollectionPumpMapperTest {
         Assertions.assertThat(result.getHeaders())
                 .filteredOn(item -> item.getKey().equalsIgnoreCase("Authorization"))
                 .anyMatch(item -> item.getValue().equals("Bearer {{token}}"));
+    }
+
+    @Test
+    void auth_whenBasic_mapToAuthBasic(){
+        var request = new PostmanCollectionV210Dto.Item();
+        request.setRequest(new PostmanCollectionV210Dto.Item.Request());
+        request.getRequest().setAuth(new PostmanCollectionV210Dto.Item.Request.Auth());
+        request.getRequest().getAuth().setType("basic");
+        request.getRequest().getAuth().setBasic(List.of(
+                new PostmanCollectionV210Dto.Item.Request.Auth.Attribute("password", "{{pass}}", "string"),
+                new PostmanCollectionV210Dto.Item.Request.Auth.Attribute("username", "foo", "string")
+        ));
+
+        RequestDto result = pumpMapper.toRequestDto(request);
+
+        assertEquals(AuthTypeEnum.BASIC, result.getAuth().getType());
+        assertEquals("foo", result.getAuth().getBasic().getUsername());
+        assertEquals("{{pass}}", result.getAuth().getBasic().getPassword());
+        Assertions.assertThat(result.getHeaders())
+                .noneMatch(item -> item.getKey().equalsIgnoreCase("Authorization"));
+    }
+
+    @Test
+    void auth_whenNotDefined_mapToNoAuth(){
+        var request = new PostmanCollectionV210Dto.Item();
+        request.setRequest(new PostmanCollectionV210Dto.Item.Request());
+
+        RequestDto result = pumpMapper.toRequestDto(request);
+
+        assertEquals(AuthTypeEnum.NO_AUTH, result.getAuth().getType());
     }
 }
