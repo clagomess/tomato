@@ -1,4 +1,4 @@
-package io.github.clagomess.tomato.controller.main.collection.popupmenu;
+package io.github.clagomess.tomato.controller.component.popupmenu;
 
 import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.data.TomatoID;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.INSERTED;
 import static org.junit.jupiter.api.Assertions.*;
 
-class RequestPopUpMenuControllerTest extends RepositoryStubs {
+class BaseRequestPopUpMenuControllerTest extends RepositoryStubs {
     private final RequestRepository requestRepository = new RequestRepository();
     private final TreeRepository treeRepository = new TreeRepository();
 
@@ -52,7 +52,7 @@ class RequestPopUpMenuControllerTest extends RepositoryStubs {
                     assertNotSame(head, event.getEvent());
                 });
 
-        var controller = new RequestPopUpMenuController();
+        var controller = new BaseRequestPopUpMenuController();
         controller.duplicate(head);
 
         assertTrue(hasPublished.get());
