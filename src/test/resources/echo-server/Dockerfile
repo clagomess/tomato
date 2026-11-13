@@ -12,12 +12,19 @@ RUN a2ensite default-ssl
 
 RUN make-ssl-cert generate-default-snakeoil
 
+# mTLS (client certificate required) on port 4443
+COPY src/test/resources/echo-server/mtls/ca.crt \
+     src/test/resources/echo-server/mtls/server.crt \
+     src/test/resources/echo-server/mtls/server.key \
+     /etc/apache2/mtls/
+COPY src/test/resources/echo-server/mtls/mtls-ssl.conf /etc/apache2/sites-available/
+RUN a2ensite mtls-ssl
+
 # ssh user
 RUN useradd -m -s /bin/bash -d /var/www/html php && \
     echo "php:php" | chpasswd && \
     usermod -aG www-data php
 
-RUN echo "service ssh start & \\" > /opt/init.sh && \
-    echo "apachectl -D FOREGROUND" >> /opt/init.sh
+COPY src/test/resources/echo-server/init.sh /opt/init.sh
 
 CMD ["bash", "/opt/init.sh"]
