@@ -1,20 +1,24 @@
 package io.github.clagomess.tomato.io.http;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.Nullable;
 
 import javax.net.ssl.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.Socket;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Collections;
 
 @Slf4j
 public class SSLContextBuilder extends X509ExtendedTrustManager {
     private final HttpDebug debug;
     private final X509ExtendedTrustManager defaultTrustManager;
+    private KeyManager @Nullable [] keyManagers;
 
     public SSLContextBuilder(HttpDebug debug) {
         X509ExtendedTrustManager defaultTrustManager = null;
@@ -85,10 +89,50 @@ public class SSLContextBuilder extends X509ExtendedTrustManager {
         void run() throws CertificateException;
     }
 
+    public SSLContextBuilder withPkcs12(
+            File file,
+            @Nullable String password,
+            @Nullable String alias
+    ) throws IOException, GeneralSecurityException {
+        var passwordChars = password != null ? password.toCharArray() : new char[0];
+
+        var keyStore = KeyStore.getInstance("PKCS12");
+        try (var is = new FileInputStream(file)) {
+            keyStore.load(is, passwordChars);
+        }
+
+        if (StringUtils.isNotBlank(alias)) {
+            if (!keyStore.isKeyEntry(alias)) {
+                throw new KeyStoreException(String.format(
+                        "Alias \"%s\" not found in %s. Available: %s",
+                        alias,
+                        file.getName(),
+                        Collections.list(keyStore.aliases())
+                ));
+            }
+
+            // only in memory, the file is untouched
+            for (var item : Collections.list(keyStore.aliases())) {
+                if (!item.equals(alias)) keyStore.deleteEntry(item);
+            }
+        }
+
+        var keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        keyManagerFactory.init(keyStore, passwordChars);
+        this.keyManagers = keyManagerFactory.getKeyManagers();
+
+        return this;
+    }
+
+    KeyManager @Nullable [] getKeyManagers() {
+        return keyManagers;
+    }
+
     public SSLContext build() throws NoSuchAlgorithmException, KeyManagementException {
         var sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, new TrustManager[]{this}, new SecureRandom());
+        sslContext.init(keyManagers, new TrustManager[]{this}, new SecureRandom());
 
         return sslContext;
     }
+
 }

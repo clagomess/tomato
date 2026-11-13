@@ -24,7 +24,6 @@ Client-side certificates for testing mutual TLS against the test server
 | `client.key`           | PEM (PKCS#8)    | client private key, unencrypted                                  | —        |
 | `client-encrypted.key` | PEM (PKCS#8)    | client private key, encrypted (AES-256-CBC)                      | `tomato` |
 | `ca.crt`               | PEM             | Tomato Test CA — trusts the server certificate                   | —        |
-| `generate.sh`          | script          | regenerates everything (CA, server and client certificates)      | —        |
 
 ## cURL examples
 
