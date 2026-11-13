@@ -195,7 +195,7 @@ public class PHPcURLSnippet extends RequestBuilder implements CodeSnippet {
         code.append("curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n");
 
         buildCookies(request.getCookies(), code);
-        headersBuffer.addAll(buildHeaders(request.getHeaders()).toList());
+        headersBuffer.addAll(buildHeaders(request.getHeaders(), request.getAuth()).toList());
 
         switch (request.getBody().getType()){
             case RAW -> buildBodyRaw(request, code);

@@ -5,7 +5,9 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import io.github.clagomess.tomato.enums.AuthTypeEnum;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +15,8 @@ import org.jspecify.annotations.Nullable;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -67,14 +71,34 @@ public abstract class RequestBuilder {
     }
 
     protected Stream<KeyValueItemDto> buildHeaders(
-            List<KeyValueItemDto> headers
+            List<KeyValueItemDto> headers,
+            AuthDto auth
     ){
-        return filter(headers.stream())
+        var result = filter(headers.stream())
                 .map(header -> {
                     var value = injectEnvironment(header.getValue());
                     if(Objects.equals(value, header.getValue())) return header;
                     return new KeyValueItemDto(header.getKey(), value);
                 });
+
+        return Stream.concat(result, buildAuthBasic(auth));
+    }
+
+    protected Stream<KeyValueItemDto> buildAuthBasic(AuthDto auth){
+        if(auth.getType() != AuthTypeEnum.BASIC) return Stream.empty();
+        if(StringUtils.isBlank(auth.getBasic().getUsername())) return Stream.empty();
+        if(StringUtils.isBlank(auth.getBasic().getPassword())) return Stream.empty();
+
+        var username = injectEnvironment(auth.getBasic().getUsername());
+        var password = injectEnvironment(auth.getBasic().getPassword());
+
+        var source = username + ":" + password;
+        var result = Base64.getEncoder().encodeToString(source.getBytes(StandardCharsets.UTF_8));
+
+        return Stream.of(new KeyValueItemDto(
+                "Authorization",
+                "Basic " + result
+        ));
     }
 
     protected Stream<KeyValueItemDto> buildCookies(

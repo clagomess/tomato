@@ -5,8 +5,10 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
+import io.github.clagomess.tomato.dto.data.request.BasicAuthDto;
 import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
 import io.github.clagomess.tomato.dto.data.request.RawBodyDto;
+import io.github.clagomess.tomato.enums.AuthTypeEnum;
 import io.github.clagomess.tomato.enums.BodyTypeEnum;
 import io.github.clagomess.tomato.enums.HttpMethodEnum;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
@@ -47,6 +49,7 @@ interface CodeSnippetTestContract {
     void withHeaders_whenKeyContainsQuoteOrBackslash_escape() throws Exception;
     void withHeadersAndCookies() throws Exception;
     void withEnvironment() throws Exception;
+    void authBasic() throws Exception;
     void whenItemUnselectedOrBlankKey_ignore() throws Exception;
     void urlEncodedForm() throws Exception;
     void urlEncodedForm_withEnvironment() throws Exception;
@@ -181,6 +184,18 @@ interface CodeSnippetTestContract {
         request.setCookies(List.of(
                 new KeyValueItemDto("foo", "{{foo}}")
         ));
+
+        return request;
+    }
+
+    default RequestDto authBasicRequest(){
+        var request = new RequestDto();
+        request.setUrl("http://localhost:8000");
+        request.setHeaders(List.of(
+                new KeyValueItemDto("foo", "bar")
+        ));
+        request.getAuth().setType(AuthTypeEnum.BASIC);
+        request.getAuth().setBasic(new BasicAuthDto("foo", "bar"));
 
         return request;
     }
