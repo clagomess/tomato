@@ -45,19 +45,19 @@ public class CollectionPopUpMenu extends JPopupMenu {
 
         addSeparator();
 
-        var mMove = new JMenuItem("Move…", SORT_ALT_2_ICON);
-        mMove.addActionListener(e -> disposeIfExists(
-                CollectionMoveFrame.class,
-                () -> new CollectionMoveFrame(parent, collectionTree)
-        ));
-        add(mMove);
-
         var mRename = new JMenuItem("Rename…");
         mRename.addActionListener(e -> disposeIfExists(
                 CollectionRenameFrame.class,
                 () -> new CollectionRenameFrame(parent, collectionTree)
         ));
         add(mRename);
+
+        var mMove = new JMenuItem("Move…", SORT_ALT_2_ICON);
+        mMove.addActionListener(e -> disposeIfExists(
+                CollectionMoveFrame.class,
+                () -> new CollectionMoveFrame(parent, collectionTree)
+        ));
+        add(mMove);
 
         addSeparator();
 

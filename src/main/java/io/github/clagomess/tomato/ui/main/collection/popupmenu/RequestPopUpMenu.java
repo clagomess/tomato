@@ -1,33 +1,18 @@
 package io.github.clagomess.tomato.ui.main.collection.popupmenu;
 
-import io.github.clagomess.tomato.controller.main.collection.popupmenu.RequestPopUpMenuController;
-import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.ui.component.WaitExecution;
-import io.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
-import io.github.clagomess.tomato.ui.main.request.codesnippet.CodeSnippetFrame;
-import io.github.clagomess.tomato.ui.main.request.left.ViewRenderedUrlFrame;
-import io.github.clagomess.tomato.ui.request.*;
+import io.github.clagomess.tomato.ui.component.popupmenu.BaseRequestPopUpMenu;
+import io.github.clagomess.tomato.ui.request.RequestFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.LOAD;
-import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
 
-public class RequestPopUpMenu extends JPopupMenu {
-    private static final Icon LINK_EXTERNAL_ICON = new BxLinkExternalIcon();
-    private static final Icon GLOBE_ICON = new BxGlobeIcon();
-    private static final Icon CODE_ALT_ICON = new BxCodeAltIcon();
-    private static final Icon SORT_ALT_2_ICON = new BxSortAlt2Icon();
-    private static final Icon TRASH_ICON = new BxTrashIcon();
-    private static final Icon INFO_CIRCLE_ICON = new BxInfoCircleIcon();
-
-    private final RequestPopUpMenuController controller = new RequestPopUpMenuController();
-
+public class RequestPopUpMenu extends BaseRequestPopUpMenu {
     public RequestPopUpMenu(
             Component parent,
             RequestHeadDto requestHead
@@ -43,40 +28,7 @@ public class RequestPopUpMenu extends JPopupMenu {
         add(mOpenDetached);
 
         addSeparator();
-
-        var mViewRenderedUrl = new JMenuItem("View Rendered Url…", GLOBE_ICON);
-        mViewRenderedUrl.addActionListener(e -> viewRenderedUrl(parent, requestHead));
-        add(mViewRenderedUrl);
-
-        var mCodeSnippet = new JMenuItem("Code Snippet…", CODE_ALT_ICON);
-        mCodeSnippet.addActionListener(e -> codeSnippet(parent, requestHead));
-        add(mCodeSnippet);
-
-        addSeparator();
-
-        var mDuplicate = new JMenuItem("Duplicate");
-        mDuplicate.addActionListener(e -> duplicate(requestHead));
-        add(mDuplicate);
-
-        var mMove = new JMenuItem("Move…", SORT_ALT_2_ICON);
-        mMove.addActionListener(e -> move(parent, requestHead));
-        add(mMove);
-
-        var mRename = new JMenuItem("Rename…");
-        mRename.addActionListener(e -> rename(parent, requestHead));
-        add(mRename);
-
-        addSeparator();
-
-        var mDelete = new JMenuItem("Delete", TRASH_ICON);
-        mDelete.addActionListener(e -> delete(parent, requestHead));
-        add(mDelete);
-
-        addSeparator();
-
-        var mProperties = new JMenuItem("Properties", INFO_CIRCLE_ICON);
-        mProperties.addActionListener(e -> properties(parent, requestHead));
-        add(mProperties);
+        setup(parent, requestHead);
     }
 
     protected void open(
@@ -91,79 +43,5 @@ public class RequestPopUpMenu extends JPopupMenu {
         new WaitExecution()
                 .thenEdt(() -> new RequestFrame(requestHead, null))
                 .execute();
-    }
-
-    protected void viewRenderedUrl(
-            Component parent,
-            RequestHeadDto requestHead
-    ) {
-        var request = new AtomicReference<RequestDto>();
-
-        new WaitExecution(parent)
-                .thenBackground(() -> request.set(controller.load(requestHead)))
-                .thenEdt(() -> disposeIfExists(
-                        ViewRenderedUrlFrame.class,
-                        () -> new ViewRenderedUrlFrame(parent, request.get())
-                ))
-                .execute();
-    }
-
-    protected void codeSnippet(
-            Component parent,
-            RequestHeadDto requestHead
-    ) {
-        var request = new AtomicReference<RequestDto>();
-
-        new WaitExecution(parent)
-                .thenBackground(() -> request.set(controller.load(requestHead)))
-                .thenEdt(() -> disposeIfExists(
-                        CodeSnippetFrame.class,
-                        () -> new CodeSnippetFrame(parent, requestHead, request.get())
-                ))
-                .execute();
-    }
-
-    protected void duplicate(RequestHeadDto requestHead) {
-        new WaitExecution()
-                .thenBackground(() -> controller.duplicate(requestHead))
-                .execute();
-    }
-
-    protected void move(
-            Component parent,
-            RequestHeadDto requestHead
-    ){
-        disposeIfExists(
-                RequestMoveFrame.class,
-                () -> new RequestMoveFrame(parent, requestHead)
-        );
-    }
-
-    protected void rename(
-            Component parent,
-            RequestHeadDto requestHead
-    ){
-        disposeIfExists(
-                RequestRenameFrame.class,
-                () -> new RequestRenameFrame(parent, requestHead)
-        );
-    }
-
-    protected void delete(
-            Component parent,
-            RequestHeadDto requestHead
-    ){
-        new RequestDeleteFrame(parent, requestHead)
-                .showConfirmDialog();
-    }
-
-    protected void properties(
-            Component parent,
-            RequestHeadDto requestHead
-    ){
-        disposeIfExists(
-                RequestPropertiesFrame.class,
-                () -> new RequestPropertiesFrame(parent, requestHead)
-        );
     }
 }

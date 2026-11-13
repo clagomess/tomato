@@ -8,6 +8,7 @@ import io.github.clagomess.tomato.ui.component.IconButton;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxXIcon;
 import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxsCircleIcon;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
+import io.github.clagomess.tomato.ui.main.request.popupmenu.TabTitleMouseListener;
 import net.miginfocom.swing.MigLayout;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -15,9 +16,10 @@ import org.jspecify.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+
 import static javax.swing.SwingUtilities.invokeLater;
 
-class TabTitle extends JPanel {
+class TabTitle extends JPanel implements TabTitleInterface {
     private static final Icon HAS_CHANGED_ICON = new BxsCircleIcon(Color.ORANGE);
     private static final Icon HAS_NOT_CHANGED_ICON = new BxsCircleIcon(Color.GRAY);
     private static final Icon X_ICON = new BxXIcon();
@@ -27,7 +29,7 @@ class TabTitle extends JPanel {
     protected final JLabel title = new JLabel();
     private final IconButton btnClose = new IconButton(X_ICON, "Close");
 
-    private final TabTitleController controller = new TabTitleController();
+    private final TabTitleController controller;
 
     public TabTitle(
             @Nullable RequestTabbedPane parent,
@@ -37,13 +39,15 @@ class TabTitle extends JPanel {
             @NonNull RequestDto request,
             @NonNull ActionListener onClose
     ){
+        this.controller = new TabTitleController(this, requestHead);
+
         setLayout(new MigLayout("insets 0 0 0 0"));
         setOpaque(false);
         add(changeIcon);
         add(httpMethod);
         add(title, "width ::200");
         add(btnClose);
-        addMouseListener(new TabTitleMouseListener(key, parent));
+        addMouseListener(new TabTitleMouseListener(key, parent, controller.getRequestHeadAR()));
         setToolTipText(request.getName());
 
         // set data
@@ -56,13 +60,20 @@ class TabTitle extends JPanel {
                 HAS_NOT_CHANGED_ICON
         );
 
-        controller.addOnChangeListener(request, requestHead, (method, name) -> invokeLater(() -> {
-            httpMethod.setIcon(method.getIcon());
-            title.setText(name);
-        }));
+        controller.addOnChangeListener(request);
+        controller.addOnStagingListener(key);
+    }
 
-        controller.addOnStagingListener(key, hasChanged -> invokeLater(() ->
-            changeIcon.setIcon(hasChanged ? HAS_CHANGED_ICON : HAS_NOT_CHANGED_ICON)
+    public void refresh(RequestHeadDto requestHead){
+        invokeLater(() -> {
+            httpMethod.setIcon(requestHead.getMethod().getIcon());
+            title.setText(requestHead.getName());
+        });
+    }
+
+    public void setIcon(boolean hasChanged){
+        invokeLater(() -> changeIcon.setIcon(
+                hasChanged ? HAS_CHANGED_ICON : HAS_NOT_CHANGED_ICON
         ));
     }
 

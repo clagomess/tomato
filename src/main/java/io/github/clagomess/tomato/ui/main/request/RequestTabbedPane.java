@@ -178,7 +178,7 @@ public class RequestTabbedPane extends JTabbedPane {
         return ret == JOptionPane.OK_OPTION;
     }
 
-    protected void removeTab(Tab tab, boolean forceRemove){
+    public void removeTab(Tab tab, boolean forceRemove){
         if(!forceRemove && !isSafeToRemoveTab(tab)) return;
 
         var tabId = tab.tabKey().getUuid().toString();
@@ -188,14 +188,14 @@ public class RequestTabbedPane extends JTabbedPane {
         tabs.remove(tab);
     }
 
-    protected void removeTab(TabKey tabKey){
+    public void removeTab(TabKey tabKey){
         tabs.stream()
                 .filter(tab -> tab.tabKey().equals(tabKey))
                 .findFirst()
                 .ifPresent(tab -> removeTab(tab, false));
     }
 
-    protected record Tab(
+    public record Tab(
             TabKey tabKey,
             TabTitle tabTitle,
             RequestSplitPane tabContent
