@@ -11,10 +11,8 @@ import io.github.clagomess.tomato.ui.component.svgicon.boxicons.*;
 import io.github.clagomess.tomato.ui.main.request.codesnippet.CodeSnippetFrame;
 import io.github.clagomess.tomato.ui.main.request.left.*;
 import io.github.clagomess.tomato.ui.main.request.right.ResponseTabContent;
-import io.github.clagomess.tomato.ui.request.RequestRenameFrame;
 import io.github.clagomess.tomato.ui.request.RequestSaveFrame;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -28,12 +26,10 @@ import java.util.Arrays;
 import static io.github.clagomess.tomato.ui.component.PreventDefaultFrame.disposeIfExists;
 import static javax.swing.SwingUtilities.invokeLater;
 
-@Slf4j
 @Getter
 public class RequestSplitPane extends JPanel {
     private static final Icon BLOCK_ICON = new BxBlockIcon(Color.RED);
     private static final Icon GLOBE_ICON = new BxGlobeIcon();
-    private static final Icon EDIT_ICON = new BxEditIcon();
     private static final Icon CODE_ALT_ICON = new BxCodeAltIcon();
     private static final Icon SAVE_ICON = new BxSaveIcon();
     private static final Icon SEND_ICON = new BxSendIcon();
@@ -46,10 +42,6 @@ public class RequestSplitPane extends JPanel {
     private final IconButton btnViewRenderedUrl = new IconButton(
             GLOBE_ICON,
             "View Rendered Url"
-    );
-    private final IconButton btnRename = new IconButton(
-            EDIT_ICON,
-            "Rename"
     );
     private final IconButton btnCodeSnippet = new IconButton(
             CODE_ALT_ICON,
@@ -105,7 +97,6 @@ public class RequestSplitPane extends JPanel {
         ));
         paneRequestName.add(txtRequestName, "width 300::100%");
         paneRequestName.add(btnViewRenderedUrl);
-        paneRequestName.add(btnRename);
         paneRequestName.add(btnCodeSnippet);
         paneRequestName.add(btnSaveRequest);
         add(paneRequestName, "wrap");
@@ -137,7 +128,6 @@ public class RequestSplitPane extends JPanel {
         });
         btnSendRequest.addActionListener(l -> btnSendRequestAction());
         btnViewRenderedUrl.addActionListener(l -> btnViewRenderedUrlAction());
-        btnRename.addActionListener(l -> btnRenameAction());
         btnCodeSnippet.addActionListener(l -> btnCodeSnippetAction());
         btnSaveRequest.addActionListener(l -> btnSaveRequestAction());
         resetBtnState();
@@ -187,7 +177,8 @@ public class RequestSplitPane extends JPanel {
     }
 
     private void resetBtnState(){
-        btnRename.setEnabled(requestHeadDto != null);
+        btnViewRenderedUrl.setEnabled(requestHeadDto != null);
+        btnCodeSnippet.setEnabled(requestHeadDto != null);
     }
 
     public void btnSendRequestAction(){
@@ -234,13 +225,6 @@ public class RequestSplitPane extends JPanel {
                 () -> new WaitExecution(btnCodeSnippet)
                         .thenEdt(() -> new CodeSnippetFrame(this, requestHeadDto, requestDto))
                         .execute()
-        );
-    }
-
-    protected void btnRenameAction(){
-        disposeIfExists(
-                RequestRenameFrame.class,
-                () -> new RequestRenameFrame(this, requestHeadDto)
         );
     }
 

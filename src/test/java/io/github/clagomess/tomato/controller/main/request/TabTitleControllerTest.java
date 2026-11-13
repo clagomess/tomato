@@ -4,30 +4,30 @@ import io.github.clagomess.tomato.dto.data.RequestDto;
 import io.github.clagomess.tomato.dto.key.TabKey;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import io.github.clagomess.tomato.enums.HttpMethodEnum;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.publisher.base.PublisherEvent;
 import io.github.clagomess.tomato.publisher.key.RequestKey;
+import io.github.clagomess.tomato.ui.main.request.TabTitleInterface;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static io.github.clagomess.tomato.enums.HttpMethodEnum.GET;
 import static io.github.clagomess.tomato.enums.HttpMethodEnum.POST;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
 class TabTitleControllerTest {
     private final RequestPublisher requestPublisher = RequestPublisher.getInstance();
+    private final TabTitleInterface ui = Mockito.mock(TabTitleInterface.class);
 
     private TabKey tabKey;
     private RequestDto request;
     private RequestHeadDto requestHead;
-    private final TabTitleController controller = Mockito.spy(TabTitleController.class);
+    private TabTitleController controller;
 
     @BeforeEach
     void setup() {
@@ -41,31 +41,23 @@ class TabTitleControllerTest {
 
         tabKey = new TabKey(request.getId());
 
-        // mocks
-        Mockito.reset(controller);
+        Mockito.reset(ui);
     }
 
     @AfterEach
     void dispose(){
         controller.dispose();
 
-        assertFalse(requestPublisher.getOnChange()
-                .containsListener(new RequestKey(requestHead)));
+        assertThat(requestPublisher.getOnChange()
+                .containsListener(new RequestKey(requestHead)))
+                .isFalse();
 
-        assertFalse(requestPublisher.getOnStaging()
-                .containsListener(tabKey));
+        assertThat(requestPublisher.getOnStaging()
+                .containsListener(tabKey))
+                .isFalse();
     }
 
-    @Test
-    void addOnChangeListener_trigger(){
-        AtomicReference<HttpMethodEnum> methodResult = new AtomicReference<>();
-        AtomicReference<String> nameResult = new AtomicReference<>();
-
-        controller.addOnChangeListener(request, requestHead, (method, name) -> {
-            methodResult.set(method);
-            nameResult.set(name);
-        });
-
+    private RequestHeadDto publishUpdate(){
         var requestHeadUpdate = new RequestHeadDto();
         requestHeadUpdate.setId(requestHead.getId());
         requestHeadUpdate.setName("bbb");
@@ -76,23 +68,43 @@ class TabTitleControllerTest {
                 new PublisherEvent<>(UPDATED, requestHeadUpdate)
         );
 
-        assertEquals(
-                requestHeadUpdate.getMethod(),
-                methodResult.get()
-        );
-        assertEquals(
-                requestHeadUpdate.getName(),
-                nameResult.get()
-        );
+        return requestHeadUpdate;
+    }
+
+    @Nested
+    class addOnChangeListener {
+        @Test
+        void whenTrigger_refreshUi(){
+            controller = new TabTitleController(ui, requestHead);
+            controller.addOnChangeListener(request);
+
+            var requestHeadUpdate = publishUpdate();
+
+            verify(ui).refresh(requestHeadUpdate);
+            assertThat(controller.getRequestHeadAR().get())
+                    .isSameAs(requestHead);
+        }
+
+        @Test
+        void whenRequestHeadIsNull_setRequestHeadFromEvent(){
+            controller = new TabTitleController(ui, null);
+            controller.addOnChangeListener(request);
+
+            var requestHeadUpdate = publishUpdate();
+
+            verify(ui).refresh(requestHeadUpdate);
+            assertThat(controller.getRequestHeadAR().get())
+                    .isSameAs(requestHeadUpdate);
+        }
     }
 
     @Test
     void addOnStagingListener_trigger(){
-        AtomicBoolean result = new AtomicBoolean();
-        controller.addOnStagingListener(tabKey, result::set);
+        controller = new TabTitleController(ui, requestHead);
+        controller.addOnStagingListener(tabKey);
 
         requestPublisher.getOnStaging().publish(tabKey, true);
 
-        assertTrue(result.get());
+        verify(ui).setIcon(true);
     }
 }
