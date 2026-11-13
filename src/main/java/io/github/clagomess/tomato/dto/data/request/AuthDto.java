@@ -8,17 +8,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 import static io.github.clagomess.tomato.enums.AuthTypeEnum.BASIC;
+import static io.github.clagomess.tomato.enums.AuthTypeEnum.NO_AUTH;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthDto {
-    private AuthTypeEnum type = BASIC;
+    private AuthTypeEnum type = NO_AUTH;
     private BasicAuthDto basic;
 
     public AuthTypeEnum getType() {
-        if(type == null) type = AuthTypeEnum.BASIC;
+        if(type == null) type = NO_AUTH;
         return type;
     }
 

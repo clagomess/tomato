@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AuthTypeEnum {
+    NO_AUTH("No Auth"),
     BASIC("Basic");
 
     private final String description;

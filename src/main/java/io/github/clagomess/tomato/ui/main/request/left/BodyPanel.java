@@ -20,7 +20,7 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.Arrays;
 
-public class Body extends JPanel implements DisposableListener {
+public class BodyPanel extends JPanel implements DisposableListener {
     private final RequestHeadDto requestHead;
     private final BodyDto body;
     private final RequestStagingMonitor requestStagingMonitor;
@@ -28,7 +28,7 @@ public class Body extends JPanel implements DisposableListener {
     private final CharsetComboBox charsetComboBox = new CharsetComboBox();
     private Component currentBodyType;
 
-    public Body(
+    public BodyPanel(
             @Nullable RequestHeadDto requestHead,
             BodyDto body,
             RequestStagingMonitor requestStagingMonitor

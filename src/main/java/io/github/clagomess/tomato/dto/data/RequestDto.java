@@ -36,6 +36,11 @@ public class RequestDto extends MetadataDto {
         return urlParam;
     }
 
+    public AuthDto getAuth() {
+        if(auth == null) auth = new AuthDto();
+        return auth;
+    }
+
     public BodyDto getBody() {
         if(body == null) body = new BodyDto();
         return body;

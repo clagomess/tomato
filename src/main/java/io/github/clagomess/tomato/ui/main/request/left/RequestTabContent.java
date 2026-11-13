@@ -6,6 +6,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.UrlParamDto;
 import io.github.clagomess.tomato.dto.key.TabKey;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import io.github.clagomess.tomato.enums.AuthTypeEnum;
 import io.github.clagomess.tomato.enums.BodyTypeEnum;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
@@ -57,6 +58,7 @@ public class RequestTabContent extends JPanel {
         createTabTitlePathVariables(tpRequest);
         createTabTitleBody(tpRequest);
         createTabTitleHeaders(tpRequest);
+        createTabTitleAuth(tpRequest);
         createTabTitleCookies(tpRequest);
         createTabTitleConfig(tpRequest);
         tpRequest.setSelectedIndex(-1);
@@ -71,8 +73,9 @@ public class RequestTabContent extends JPanel {
                 case 1: createTabPathVariables(tpRequest); break;
                 case 2: createTabBody(tpRequest); break;
                 case 3: createTabHeaders(tpRequest); break;
-                case 4: createTabCookies(tpRequest); break;
-                case 5: createTabConfig(tpRequest); break;
+                case 4: createTabAuth(tpRequest); break;
+                case 5: createTabCookies(tpRequest); break;
+                case 6: createTabConfig(tpRequest); break;
             }
         });
 
@@ -156,7 +159,7 @@ public class RequestTabContent extends JPanel {
     }
 
     private void createTabBody(JTabbedPane tabbedPane){
-        var body = new Body(
+        var body = new BodyPanel(
                 requestHead,
                 requestDto.getBody(),
                 requestStagingMonitor
@@ -189,6 +192,28 @@ public class RequestTabContent extends JPanel {
         disposables.add(headers);
     }
 
+    private void createTabTitleAuth(JTabbedPane tabbedPane){
+        var authTabTitle = new TabTitle(
+                tabKey,
+                "Auth",
+                () -> requestDto.getAuth().getType() != AuthTypeEnum.NO_AUTH
+        );
+
+        tabbedPane.addTab(authTabTitle.getTitle(), new LoadingPane());
+        tabbedPane.setTabComponentAt(4, authTabTitle);
+    }
+
+    private void createTabAuth(JTabbedPane tabbedPane){
+        var auth = new AuthPanel(
+                requestHead,
+                requestDto.getAuth(),
+                requestStagingMonitor
+        );
+
+        tabbedPane.setComponentAt(4, auth);
+        disposables.add(auth);
+    }
+
     private void createTabTitleCookies(JTabbedPane tabbedPane){
         var cookiesTabTitle = new TabTitle(
                 tabKey,
@@ -197,7 +222,7 @@ public class RequestTabContent extends JPanel {
         );
 
         tabbedPane.addTab(cookiesTabTitle.getTitle(), new LoadingPane());
-        tabbedPane.setTabComponentAt(4, cookiesTabTitle);
+        tabbedPane.setTabComponentAt(5, cookiesTabTitle);
     }
 
     private void createTabCookies(JTabbedPane tabbedPane){
@@ -210,7 +235,7 @@ public class RequestTabContent extends JPanel {
                 requestStagingMonitor
         );
 
-        tabbedPane.setComponentAt(4, cookies);
+        tabbedPane.setComponentAt(5, cookies);
         disposables.add(cookies);
     }
 
@@ -222,7 +247,7 @@ public class RequestTabContent extends JPanel {
         );
 
         tabbedPane.addTab(configTabTitle.getTitle(), new LoadingPane());
-        tabbedPane.setTabComponentAt(5, configTabTitle);
+        tabbedPane.setTabComponentAt(6, configTabTitle);
     }
 
     private void createTabConfig(JTabbedPane tabbedPane){
@@ -231,7 +256,7 @@ public class RequestTabContent extends JPanel {
                 requestStagingMonitor
         );
 
-        tabbedPane.setComponentAt(5, config);
+        tabbedPane.setComponentAt(6, config);
         disposables.add(config);
     }
 
@@ -239,9 +264,9 @@ public class RequestTabContent extends JPanel {
         var uuid = RequestPublisher.getInstance()
                 .getOnCookieSet()
                 .addListener(tabKey, event -> invokeLater(() -> {
-                    tabbedPane.setSelectedIndex(4);
+                    tabbedPane.setSelectedIndex(5);
 
-                    if(tabbedPane.getComponentAt(4) instanceof KeyValue<?> cookies){
+                    if(tabbedPane.getComponentAt(5) instanceof KeyValue<?> cookies){
                         cookies.update(event.getKey(), event.getValue());
                     }
                 }));
