@@ -11,7 +11,6 @@ import io.github.clagomess.tomato.ui.component.svgicon.boxicons.BxTrashIcon;
 import io.github.clagomess.tomato.ui.main.request.left.RequestStagingMonitor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.Nullable;
@@ -21,7 +20,6 @@ import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 
-@Slf4j
 @Getter
 @Setter
 class RowComponent<T extends KeyValueItemDto> extends JPanel {
@@ -157,7 +155,6 @@ class RowComponent<T extends KeyValueItemDto> extends JPanel {
         cbType.setEnabled(enabled);
         txtKey.setEnabled(enabled);
         cValue.getComponent().setEnabled(enabled);
-        btnRemove.setEnabled(enabled);
     }
 
     public void dispose(){

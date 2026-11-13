@@ -62,7 +62,6 @@ class Row extends JPanel {
                 ).showConfirmDialog();
             }).execute();
         });
-        btnDelete.setEnabled(true);
 
         var label = new JLabel(environment.getName());
         if(environment.isProduction()) label.setIcon(PRODUCTION_ICON);
