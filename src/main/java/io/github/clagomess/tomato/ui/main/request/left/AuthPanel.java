@@ -5,6 +5,7 @@ import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
 import io.github.clagomess.tomato.ui.main.request.left.authtype.BasicAuthType;
+import io.github.clagomess.tomato.ui.main.request.left.authtype.MTLSAuthType;
 import io.github.clagomess.tomato.ui.main.request.left.authtype.NoAuthType;
 import net.miginfocom.swing.MigLayout;
 import org.jspecify.annotations.Nullable;
@@ -76,7 +77,11 @@ public class AuthPanel extends JPanel implements DisposableListener {
                     requestStagingMonitor
             );
             case NO_AUTH -> new NoAuthType();
-            case MTLS -> new NoAuthType(); // TODO: implement MTLSAuthType panel
+            case MTLS -> new MTLSAuthType(
+                    requestHead,
+                    auth.getMtls(),
+                    requestStagingMonitor
+            );
         };
     }
 
