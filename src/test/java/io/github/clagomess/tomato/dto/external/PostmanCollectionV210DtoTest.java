@@ -22,6 +22,7 @@ class PostmanCollectionV210DtoTest {
     @ParameterizedTest
     @ValueSource(strings = {
             "auth.postman.collection.v2.1.0.json",
+            "auth-basic.postman.collection.v2.1.0.json",
             "without-auth.postman.collection.v2.1.0.json",
             "body-raw.postman.collection.v2.1.0.json",
             "formdata-file.postman.collection.v2.1.0.json",

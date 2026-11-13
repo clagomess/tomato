@@ -5,10 +5,13 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.BasicAuthDto;
 import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
 import io.github.clagomess.tomato.dto.data.request.RawBodyDto;
+import io.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
 import io.github.clagomess.tomato.dto.tree.CollectionTreeDto;
+import io.github.clagomess.tomato.enums.AuthTypeEnum;
 import io.github.clagomess.tomato.enums.BodyTypeEnum;
 import io.github.clagomess.tomato.enums.HttpMethodEnum;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
@@ -159,6 +162,38 @@ class PostmanCollectionDumpMapperTest extends RepositoryStubs {
                     headers.get(i).getDisabled()
             );
         }
+    }
+
+    @Test
+    void toItem_Request_authBasic(){
+        var request = new RequestDto();
+        request.getAuth().setType(AuthTypeEnum.BASIC);
+        request.getAuth().setBasic(new BasicAuthDto("foo", "{{pass}}"));
+
+        var result = dumpMapper.toItem(request);
+
+        var auth = result.getRequest().getAuth();
+        assertNotNull(auth);
+        assertEquals("basic", auth.getType());
+        Assertions.assertThat(auth.getBasic())
+                .extracting(
+                        PostmanCollectionV210Dto.Item.Request.Auth.Attribute::getKey,
+                        PostmanCollectionV210Dto.Item.Request.Auth.Attribute::getValue,
+                        PostmanCollectionV210Dto.Item.Request.Auth.Attribute::getType
+                )
+                .containsExactly(
+                        Assertions.tuple("username", "foo", "string"),
+                        Assertions.tuple("password", "{{pass}}", "string")
+                );
+    }
+
+    @Test
+    void toItem_Request_noAuth(){
+        var request = new RequestDto();
+
+        var result = dumpMapper.toItem(request);
+
+        assertNull(result.getRequest().getAuth());
     }
 
     @ParameterizedTest

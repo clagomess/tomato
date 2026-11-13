@@ -6,8 +6,10 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.BasicAuthDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
 import io.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
+import io.github.clagomess.tomato.enums.AuthTypeEnum;
 import io.github.clagomess.tomato.enums.BodyTypeEnum;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import org.mapstruct.AfterMapping;
@@ -17,6 +19,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Mapper
 public interface PostmanCollectionPumpMapper {
@@ -37,6 +40,7 @@ public interface PostmanCollectionPumpMapper {
     @Mapping(target = "method", source = "request.method")
     @Mapping(target = "headers", source = "request.header")
     @Mapping(target = "cookies", ignore = true)
+    @Mapping(target = "auth", ignore = true)
     @Mapping(target = "body", source = "request.body")
     @Mapping(target = "config", ignore = true)
     RequestDto toRequestDto(PostmanCollectionV210Dto.Item source);
@@ -58,6 +62,25 @@ public interface PostmanCollectionPumpMapper {
                 ))
             );
         }
+
+        if(source.getRequest().getAuth() != null && "basic".equals(source.getRequest().getAuth().getType())){
+            target.getAuth().setType(AuthTypeEnum.BASIC);
+            target.getAuth().setBasic(toBasicAuthDto(source.getRequest().getAuth().getBasic()));
+        }
+    }
+
+    default BasicAuthDto toBasicAuthDto(
+            List<PostmanCollectionV210Dto.Item.Request.Auth.Attribute> source
+    ){
+        var result = new BasicAuthDto();
+        if(source == null) return result;
+
+        source.forEach(item -> {
+            if("username".equals(item.getKey())) result.setUsername(item.getValue());
+            if("password".equals(item.getKey())) result.setPassword(item.getValue());
+        });
+
+        return result;
     }
 
     @Mapping(target = "selected", ignore = true)

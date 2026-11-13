@@ -3,7 +3,9 @@ package io.github.clagomess.tomato.dto.external;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -58,6 +60,20 @@ public class PostmanCollectionV210Dto {
 
                 @JsonInclude(JsonInclude.Include.NON_NULL)
                 private List<Bearer> bearer;
+
+                @JsonInclude(JsonInclude.Include.NON_NULL)
+                private List<Attribute> basic;
+
+                @Getter
+                @Setter
+                @NoArgsConstructor
+                @AllArgsConstructor
+                @JsonIgnoreProperties(ignoreUnknown = true)
+                public static class Attribute {
+                    private String key;
+                    private String value;
+                    private String type;
+                }
 
                 @Getter
                 @Setter
