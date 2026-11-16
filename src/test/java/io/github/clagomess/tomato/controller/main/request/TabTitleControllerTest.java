@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 
 import static io.github.clagomess.tomato.enums.HttpMethodEnum.GET;
 import static io.github.clagomess.tomato.enums.HttpMethodEnum.POST;
+import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.DELETED;
 import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.UPDATED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -95,6 +96,20 @@ class TabTitleControllerTest {
             verify(ui).refresh(requestHeadUpdate);
             assertThat(controller.getRequestHeadAR().get())
                     .isSameAs(requestHeadUpdate);
+        }
+
+        @Test
+        void whenDeleted_closeTab(){
+            controller = new TabTitleController(ui, requestHead);
+            controller.addOnChangeListener(request);
+
+            requestPublisher.getOnChange().publish(
+                    new RequestKey(requestHead),
+                    new PublisherEvent<>(DELETED, requestHead)
+            );
+
+            verify(ui).removeTab(true);
+            verify(ui, Mockito.never()).refresh(Mockito.any());
         }
     }
 

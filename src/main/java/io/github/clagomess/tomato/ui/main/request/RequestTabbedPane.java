@@ -137,8 +137,7 @@ public class RequestTabbedPane extends JTabbedPane {
                 key,
                 requestStagingMonitor,
                 requestHead,
-                request,
-                l -> removeTab(key)
+                request
         );
 
         insertTab(tabId, null, new LoadingPane(), null, tabPosition);
@@ -188,11 +187,11 @@ public class RequestTabbedPane extends JTabbedPane {
         tabs.remove(tab);
     }
 
-    public void removeTab(TabKey tabKey){
+    public void removeTab(TabKey tabKey, boolean forceRemove){
         tabs.stream()
                 .filter(tab -> tab.tabKey().equals(tabKey))
                 .findFirst()
-                .ifPresent(tab -> removeTab(tab, false));
+                .ifPresent(tab -> removeTab(tab, forceRemove));
     }
 
     public record Tab(

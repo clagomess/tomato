@@ -27,7 +27,7 @@ public class RequestPopUpMenu extends BaseRequestPopUpMenu {
         add(mDetach);
 
         var mClose = new JMenuItem("Close");
-        mClose.addActionListener(e -> parent.removeTab(tabKey));
+        mClose.addActionListener(e -> parent.removeTab(tabKey, false));
         add(mClose);
 
         var mCloseOthers = new JMenuItem("Close Other Tabs");
