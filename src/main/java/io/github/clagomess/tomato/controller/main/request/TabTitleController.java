@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static io.github.clagomess.tomato.publisher.base.EventTypeEnum.DELETED;
+
 @Getter
 public class TabTitleController {
     private final List<Runnable> dispose = new ArrayList<>(2);
@@ -37,6 +39,11 @@ public class TabTitleController {
         var uuid = RequestPublisher.getInstance()
                 .getOnChange()
                 .addListener(key, event -> {
+                    if(event.getType() == DELETED) {
+                        ui.removeTab(true);
+                        return;
+                    }
+
                     requestHeadAR.compareAndSet(null, event.getEvent());
                     ui.refresh(event.getEvent());
                 });

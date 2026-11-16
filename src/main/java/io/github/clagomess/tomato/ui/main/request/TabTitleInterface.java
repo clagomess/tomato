@@ -5,4 +5,5 @@ import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 public interface TabTitleInterface {
     void refresh(RequestHeadDto requestHead);
     void setIcon(boolean hasChanged);
+    void removeTab(boolean forceRemove);
 }

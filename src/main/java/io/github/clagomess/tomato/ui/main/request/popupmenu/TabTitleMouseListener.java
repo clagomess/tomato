@@ -31,7 +31,7 @@ public class TabTitleMouseListener extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent e) {
         if(e.getButton() == BUTTON2) {
-            parent.removeTab(tabKey);
+            parent.removeTab(tabKey, false);
             return;
         }
 

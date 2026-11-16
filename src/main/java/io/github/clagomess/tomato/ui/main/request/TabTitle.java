@@ -15,7 +15,6 @@ import org.jspecify.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 import static javax.swing.SwingUtilities.invokeLater;
 
@@ -30,15 +29,18 @@ class TabTitle extends JPanel implements TabTitleInterface {
     private final IconButton btnClose = new IconButton(X_ICON, "Close");
 
     private final TabTitleController controller;
+    private final RequestTabbedPane parent;
+    private final TabKey key;
 
     public TabTitle(
-            @Nullable RequestTabbedPane parent,
+            RequestTabbedPane parent,
             @NonNull TabKey key,
             @NonNull RequestStagingMonitor requestStagingMonitor,
             @Nullable RequestHeadDto requestHead,
-            @NonNull RequestDto request,
-            @NonNull ActionListener onClose
+            @NonNull RequestDto request
     ){
+        this.parent = parent;
+        this.key = key;
         this.controller = new TabTitleController(this, requestHead);
 
         setLayout(new MigLayout("insets 0 0 0 0"));
@@ -53,8 +55,7 @@ class TabTitle extends JPanel implements TabTitleInterface {
         // set data
         httpMethod.setIcon(request.getMethod().getIcon());
         title.setText(request.getName());
-        btnClose.addActionListener(onClose);
-        btnClose.addActionListener(l -> dispose());
+        btnClose.addActionListener(l -> removeTab(false));
         changeIcon.setIcon(requestStagingMonitor.isDiferent() ?
                 HAS_CHANGED_ICON :
                 HAS_NOT_CHANGED_ICON
@@ -75,6 +76,10 @@ class TabTitle extends JPanel implements TabTitleInterface {
         invokeLater(() -> changeIcon.setIcon(
                 hasChanged ? HAS_CHANGED_ICON : HAS_NOT_CHANGED_ICON
         ));
+    }
+
+    public void removeTab(boolean forceRemove){
+        invokeLater(() -> parent.removeTab(key, forceRemove));
     }
 
     public void dispose(){
