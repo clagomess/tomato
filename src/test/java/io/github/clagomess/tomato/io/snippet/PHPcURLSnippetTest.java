@@ -219,6 +219,24 @@ class PHPcURLSnippetTest extends RepositoryStubs implements CodeSnippetTestContr
     }
 
     @Test
+    public void authMTLSPKCS12() throws IOException {
+        var result = snippet.build(authMTLSPKCS12Request());
+        assertThat(result)
+                .isEqualToIgnoringNewLines("""
+                <?php
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://localhost:8444');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSLCERTTYPE, 'P12');
+                curl_setopt($ch, CURLOPT_SSLCERT, 'bar/client.pfx');
+                curl_setopt($ch, CURLOPT_SSLCERTPASSWD, 'tomato');
+                $response = curl_exec($ch);
+                curl_close($ch);
+                echo $response;
+                """);
+    }
+
+    @Test
     public void whenItemUnselectedOrBlankKey_ignore() throws IOException {
         var result = snippet.build(whenItemUnselectedOrBlankKeyRequest());
         assertThat(result)

@@ -11,6 +11,7 @@ import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.io.http.RequestBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,6 +45,7 @@ public class CurlSnippet extends RequestBuilder implements CodeSnippet {
 
         buildHeaders(request.getHeaders(), request.getAuth(), code);
         buildCookies(request.getCookies(), code);
+        buildAuthMTLS(request.getAuth(), code);
 
         switch (request.getBody().getType()){
             case RAW -> buildBodyRaw(request, code);
@@ -92,6 +94,30 @@ public class CurlSnippet extends RequestBuilder implements CodeSnippet {
                     code
             )
         );
+    }
+
+    protected void buildAuthMTLS(
+            AuthDto auth,
+            StringBuilder code
+    ) {
+        if(auth.getType() != AuthDto.Type.MTLS) return;
+
+        var mtls = buildAuthMTLS(auth).getMtls();
+
+        switch (mtls.getType()) {
+            case PKCS12 -> {
+                var pkcs12 = mtls.getPkcs12();
+
+                code.append(type.getNewLine());
+                code.append("--cert-type P12");
+                code.append(type.getNewLine());
+                code.append("--cert ");
+                code.append(quote(StringUtils.isNotEmpty(pkcs12.getPassword()) ?
+                        pkcs12.getFile() + ":" + pkcs12.getPassword() :
+                        pkcs12.getFile()
+                ));
+            }
+        }
     }
 
     protected void buildBodyBinary(

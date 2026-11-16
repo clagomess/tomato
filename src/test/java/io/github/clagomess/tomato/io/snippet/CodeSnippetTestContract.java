@@ -6,6 +6,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.auth.BasicAuthDto;
+import io.github.clagomess.tomato.dto.data.request.auth.MTLSAuthDto;
 import io.github.clagomess.tomato.dto.data.request.body.BinaryBodyDto;
 import io.github.clagomess.tomato.dto.data.request.body.RawBodyDto;
 import io.github.clagomess.tomato.dto.data.request.AuthDto;
@@ -50,6 +51,7 @@ interface CodeSnippetTestContract {
     void withHeadersAndCookies() throws Exception;
     void withEnvironment() throws Exception;
     void authBasic() throws Exception;
+    void authMTLSPKCS12() throws Exception;
     void whenItemUnselectedOrBlankKey_ignore() throws Exception;
     void urlEncodedForm() throws Exception;
     void urlEncodedForm_withEnvironment() throws Exception;
@@ -196,6 +198,19 @@ interface CodeSnippetTestContract {
         ));
         request.getAuth().setType(AuthDto.Type.BASIC);
         request.getAuth().setBasic(new BasicAuthDto("foo", "bar"));
+
+        return request;
+    }
+
+    default RequestDto authMTLSPKCS12Request(){
+        var request = new RequestDto();
+        request.setUrl("https://localhost:8444");
+        request.getAuth().setType(AuthDto.Type.MTLS);
+        request.getAuth().getMtls().setPkcs12(new MTLSAuthDto.Pkcs12Dto(
+                "{{foo}}/client.pfx",
+                "tomato",
+                "tomato-client"
+        ));
 
         return request;
     }

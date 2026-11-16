@@ -138,6 +138,17 @@ class CurlSnippetCMDTest extends RepositoryStubs implements CodeSnippetTestContr
     }
 
     @Test
+    public void authMTLSPKCS12() throws IOException {
+        var result = snippet.build(authMTLSPKCS12Request());
+        assertThat(result)
+                .isEqualToIgnoringNewLines("""
+                curl -X GET "https://localhost:8444" ^
+                --cert-type P12 ^
+                --cert "bar/client.pfx:tomato"
+                """);
+    }
+
+    @Test
     public void whenItemUnselectedOrBlankKey_ignore() throws IOException {
         var result = snippet.build(whenItemUnselectedOrBlankKeyRequest());
         assertThat(result)
