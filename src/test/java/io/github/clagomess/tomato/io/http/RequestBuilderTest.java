@@ -6,6 +6,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import io.github.clagomess.tomato.dto.data.request.auth.BasicAuthDto;
+import io.github.clagomess.tomato.dto.data.request.auth.MTLSAuthDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -173,6 +174,60 @@ class RequestBuilderTest {
                         assertEquals("Authorization", item.getKey());
                         assertEquals(expected, item.getValue());
                     });
+        }
+    }
+
+    @Nested
+    class buildAuthMTLS {
+        private static AuthDto mtlsAuth(){
+            var auth = new AuthDto();
+            auth.setType(AuthDto.Type.MTLS);
+            auth.getMtls().setPkcs12(new MTLSAuthDto.Pkcs12Dto(
+                    "{{dir}}/client.pfx",
+                    "{{pass}}",
+                    "{{alias}}"
+            ));
+
+            return auth;
+        }
+
+        private final List<EnvironmentItemDto> envs = List.of(
+                new EnvironmentItemDto("dir", "/tmp"),
+                new EnvironmentItemDto("pass", "tomato"),
+                new EnvironmentItemDto("alias", "tomato-client")
+        );
+
+        @Test
+        void whenNotMtls_returnSameObject(){
+            var auth = new AuthDto();
+
+            var result = new RequestBuilder(null, envs){}
+                    .buildAuthMTLS(auth);
+
+            assertSame(auth, result);
+        }
+
+        @Test
+        void whenPkcs12_injectEnvironment(){
+            var result = new RequestBuilder(null, envs){}
+                    .buildAuthMTLS(mtlsAuth());
+
+            Assertions.assertThat(result.getMtls().getPkcs12())
+                    .isEqualTo(new MTLSAuthDto.Pkcs12Dto(
+                            "/tmp/client.pfx",
+                            "tomato",
+                            "tomato-client"
+                    ));
+        }
+
+        @Test
+        void whenPkcs12_dontChangeSource(){
+            var auth = mtlsAuth();
+
+            new RequestBuilder(null, envs){}
+                    .buildAuthMTLS(auth);
+
+            Assertions.assertThat(auth).isEqualTo(mtlsAuth());
         }
     }
 

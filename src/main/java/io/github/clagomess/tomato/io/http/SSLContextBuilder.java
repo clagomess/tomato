@@ -7,6 +7,7 @@ import org.jspecify.annotations.Nullable;
 import javax.net.ssl.*;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.*;
@@ -90,10 +91,15 @@ public class SSLContextBuilder extends X509ExtendedTrustManager {
     }
 
     public SSLContextBuilder withPkcs12(
-            File file,
+            String filepath,
             @Nullable String password,
             @Nullable String alias
     ) throws IOException, GeneralSecurityException {
+        var file = new File(filepath);
+        if(!file.isFile()) {
+            throw new FileNotFoundException("mTLS: certificate file not informed/found");
+        }
+
         var passwordChars = password != null ? password.toCharArray() : new char[0];
 
         var keyStore = KeyStore.getInstance("PKCS12");

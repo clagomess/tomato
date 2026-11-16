@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import javax.net.ssl.X509KeyManager;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyStoreException;
@@ -20,9 +21,10 @@ class SSLContextBuilderTest {
     private static final String ALIAS = "tomato-client";
     private static final String OTHER_ALIAS = "other-client";
 
-    private static File getMtlsClientFile(String name) throws URISyntaxException {
+    private static String getMtlsClientFile(String name) throws URISyntaxException {
         return new File(Objects.requireNonNull(SSLContextBuilderTest.class
-                .getResource("/echo-server/mtls-client/" + name)).toURI());
+                .getResource("/echo-server/mtls-client/" + name)).toURI())
+                .getAbsolutePath();
     }
 
     private static X509KeyManager getKeyManager(SSLContextBuilder builder){
@@ -101,14 +103,16 @@ class SSLContextBuilderTest {
         }
 
         @Test
-        void whenFileNotFound_throwIOException() {
+        void whenFileNotFound_throwFileNotFoundException() {
             var builder = new SSLContextBuilder(new HttpDebug());
 
             Assertions.assertThatThrownBy(() -> builder.withPkcs12(
-                    new File("target/not-found.pfx"),
+                    "target/not-found.pfx",
                     PASSWORD,
                     null
-            )).isInstanceOf(IOException.class);
+            ))
+                    .isInstanceOf(FileNotFoundException.class)
+                    .hasMessage("mTLS: certificate file not informed/found");
         }
     }
 

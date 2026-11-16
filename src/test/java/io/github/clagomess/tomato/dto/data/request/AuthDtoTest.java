@@ -1,19 +1,30 @@
 package io.github.clagomess.tomato.dto.data.request;
 
+import io.github.clagomess.tomato.dto.data.request.auth.MTLSAuthDto;
 import io.github.clagomess.tomato.util.ObjectMapperUtil;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static io.github.clagomess.tomato.dto.data.request.AuthDto.Type.*;
+import static io.github.clagomess.tomato.dto.data.request.AuthDto.Type.BASIC;
+import static io.github.clagomess.tomato.dto.data.request.AuthDto.Type.MTLS;
 
 class AuthDtoTest {
     private final ObjectMapperUtil mapper = ObjectMapperUtil.getInstance();
 
     @Test
     void equalsHashCode(){
-        Assertions.assertThat(new AuthDto())
-                .isEqualTo(new AuthDto());
+        var dtoA = new AuthDto();
+        dtoA.setType(MTLS);
+        dtoA.getMtls().setPkcs12(new MTLSAuthDto.Pkcs12Dto("client.p12", "changeit", "client"));
+
+        var dtoB = new AuthDto();
+        dtoB.setType(MTLS);
+        dtoB.getMtls().setPkcs12(new MTLSAuthDto.Pkcs12Dto("client.p12", "changeit", "client"));
+
+        Assertions.assertThat(dtoA)
+                .isEqualTo(dtoB)
+                .hasSameHashCodeAs(dtoB);
     }
 
     @Nested

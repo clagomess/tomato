@@ -7,6 +7,7 @@ import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
+import io.github.clagomess.tomato.mapper.CloneMapper;
 import io.github.clagomess.tomato.publisher.EnvironmentPublisher;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -98,6 +99,25 @@ public abstract class RequestBuilder {
                 "Authorization",
                 "Basic " + result
         ));
+    }
+
+    protected AuthDto buildAuthMTLS(AuthDto auth){
+        if(auth.getType() != AuthDto.Type.MTLS) return auth;
+
+        var target = CloneMapper.INSTANCE.clone(auth.getMtls());
+        switch (target.getType()) {
+            case PKCS12:
+                target.getPkcs12().setFile(injectEnvironment(target.getPkcs12().getFile()));
+                target.getPkcs12().setPassword(injectEnvironment(target.getPkcs12().getPassword()));
+                target.getPkcs12().setAlias(injectEnvironment(target.getPkcs12().getAlias()));
+                break;
+        }
+
+        var result = new AuthDto();
+        result.setType(AuthDto.Type.MTLS);
+        result.setMtls(target);
+
+        return result;
     }
 
     protected Stream<KeyValueItemDto> buildCookies(
