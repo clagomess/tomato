@@ -1,0 +1,33 @@
+{
+  "id" : "AJRWr7s1",
+  "createTime" : "2026-11-16T11:23:13",
+  "updateTime" : "2026-11-16T11:35:33",
+  "name" : "Auth - mTLS - PKCS#12",
+  "method" : "GET",
+  "url" : "{{echoServerMTLS}}/echo.php",
+  "urlParam" : {
+    "charset" : "UTF-8",
+    "path" : [ ],
+    "query" : [ ]
+  },
+  "headers" : [ ],
+  "cookies" : [ ],
+  "auth" : {
+    "type" : "MTLS",
+    "mtls" : {
+      "type" : "PKCS12",
+      "pkcs12" : {
+        "file" : "{{collectionFileDir}}/client.pfx",
+        "password" : "tomato",
+        "alias" : "tomato-client"
+      }
+    }
+  },
+  "body" : {
+    "type" : "NO_BODY",
+    "charset" : "UTF-8"
+  },
+  "config" : {
+    "proxyId" : null
+  }
+}

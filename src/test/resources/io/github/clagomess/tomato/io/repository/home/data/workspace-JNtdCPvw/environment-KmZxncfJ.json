@@ -1,7 +1,7 @@
 {
   "id" : "KmZxncfJ",
   "createTime" : "2025-01-08T10:35:34",
-  "updateTime" : "2025-04-03T11:48:04",
+  "updateTime" : "2026-11-16T11:26:08",
   "name" : "Local",
   "envs" : [ {
     "type" : "TEXT",
@@ -13,6 +13,11 @@
     "secretId" : "b77de78d-e521-42b8-acba-5d1fc208b48a",
     "key" : "token",
     "value" : null
+  }, {
+    "type" : "TEXT",
+    "secretId" : null,
+    "key" : "echoServerMTLS",
+    "value" : "https://localhost:8444"
   } ],
   "production" : false
 }
