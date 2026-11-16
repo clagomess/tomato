@@ -217,13 +217,3 @@ a:hover {
     font-size: 0.85rem;
     background: var(--bg-alt);
 }
-
-.badge-beta {
-    background: var(--leaf);
-    color: #10250a;
-    font-weight: 700;
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-size: 0.7rem;
-    vertical-align: middle;
-}
