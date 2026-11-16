@@ -1,4 +1,4 @@
-package io.github.clagomess.tomato.dto.data.request;
+package io.github.clagomess.tomato.dto.data.request.body;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

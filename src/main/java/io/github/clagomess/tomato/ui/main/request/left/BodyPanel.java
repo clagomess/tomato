@@ -4,7 +4,6 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import io.github.clagomess.tomato.enums.BodyTypeEnum;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.ui.component.CharsetComboBox;
 import io.github.clagomess.tomato.ui.component.ColorConstant;
@@ -50,7 +49,7 @@ public class BodyPanel extends JPanel implements DisposableListener {
         pRadioBodyType.setBorder(new MatteBorder(0, 0, 1, 0, ColorConstant.GRAY));
         pRadioBodyType.add(charsetComboBox);
 
-        Arrays.stream(BodyTypeEnum.values()).forEach(item -> {
+        Arrays.stream(BodyDto.Type.values()).forEach(item -> {
             JRadioButton rbBodyType = new JRadioButton(item.getDescription());
             rbBodyType.setSelected(item == body.getType());
 

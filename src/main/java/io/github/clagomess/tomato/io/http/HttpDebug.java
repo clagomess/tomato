@@ -16,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -124,34 +125,47 @@ public class HttpDebug {
             result.append("\n");
         }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
         try {
-            Arrays.stream(session.getPeerCertificates())
-                    .filter(X509Certificate.class::isInstance)
-                    .map(X509Certificate.class::cast)
-                    .forEach(certificate -> {
-                        var subject = certificate.getSubjectX500Principal();
-                        var issuer = certificate.getIssuerX500Principal();
-
-                        result.append("Subject: ");
-                        result.append(assemblyCN(subject.getName()));
-                        result.append("\n");
-                        result.append("Valid from: ");
-                        result.append(formatter.format(certificate.getNotBefore()));
-                        result.append(" - ");
-                        result.append(formatter.format(certificate.getNotAfter()));
-                        result.append("\n");
-
-                        if(!issuer.equals(subject)) {
-                            result.append("Issuer: ");
-                            result.append(assemblyCN(issuer.getName()));
-                            result.append("\n\n");
-                        }
-                    });
+            result.append(assemblyCertificates(session.getPeerCertificates()));
         }catch (Exception e){
             log.warn(e.getMessage(), e);
         }
+
+        var localCertificates = session.getLocalCertificates();
+        if(localCertificates != null && localCertificates.length > 0){
+            result.append("\n# CLIENT CERTIFICATE (mTLS)\n");
+            result.append(assemblyCertificates(localCertificates));
+        }
+
+        return result;
+    }
+
+    protected StringBuilder assemblyCertificates(Certificate[] certificates){
+        StringBuilder result = new StringBuilder();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        Arrays.stream(certificates)
+                .filter(X509Certificate.class::isInstance)
+                .map(X509Certificate.class::cast)
+                .forEach(certificate -> {
+                    var subject = certificate.getSubjectX500Principal();
+                    var issuer = certificate.getIssuerX500Principal();
+
+                    result.append("Subject: ");
+                    result.append(assemblyCN(subject.getName()));
+                    result.append("\n");
+                    result.append("Valid from: ");
+                    result.append(formatter.format(certificate.getNotBefore()));
+                    result.append(" - ");
+                    result.append(formatter.format(certificate.getNotAfter()));
+                    result.append("\n");
+
+                    if(!issuer.equals(subject)) {
+                        result.append("Issuer: ");
+                        result.append(assemblyCN(issuer.getName()));
+                        result.append("\n\n");
+                    }
+                });
 
         return result;
     }

@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.mapper;
 
 import io.github.clagomess.tomato.dto.data.EnvironmentDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.EnvironmentItemDto;
+import io.github.clagomess.tomato.dto.data.request.auth.MTLSAuthDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,4 +20,6 @@ public interface CloneMapper {
     @Mapping(target = "parent", ignore = true)
     @Mapping(target = "path", ignore = true)
     RequestHeadDto clone(RequestHeadDto source);
+
+    MTLSAuthDto clone(MTLSAuthDto source);
 }

@@ -1,11 +1,12 @@
 {
   "id" : "3pcVWtsy",
   "createTime" : "2024-12-19T00:21:28",
-  "updateTime" : "2026-03-20T14:17:06",
+  "updateTime" : "2026-11-16T11:26:55",
   "environmentId" : "KmZxncfJ",
   "requests" : [ {
     "filepath" : "collection-a70uf9Xv/request-tmCsbrzA.json",
     "staging" : null
   } ],
-  "expandedCollectionsIds" : [ "a70uf9Xv", "i4L8x1ne", "JNtdCPvw", "KEbtdVhR", "SCUJoweU" ]
+  "expandedCollectionsIds" : [ "a70uf9Xv", "i4L8x1ne", "JNtdCPvw", "KEbtdVhR", "SCUJoweU" ],
+  "lastOpenedDirectory" : "/Users/claudio/_projetos/tomato/src/test/resources/echo-server/mtls-client"
 }

@@ -1,4 +1,4 @@
-package io.github.clagomess.tomato.dto.data.request;
+package io.github.clagomess.tomato.dto.data.request.body;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;

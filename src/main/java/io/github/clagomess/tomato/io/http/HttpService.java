@@ -2,6 +2,7 @@ package io.github.clagomess.tomato.io.http;
 
 import io.github.clagomess.tomato.dto.ResponseDto;
 import io.github.clagomess.tomato.dto.data.RequestDto;
+import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
@@ -16,8 +17,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
@@ -48,8 +48,8 @@ public class HttpService extends RequestBuilder {
 
     private HttpClient getClient(
             @Nullable URI originalUri
-    ) throws NoSuchAlgorithmException, KeyManagementException {
-        var sslContext = new SSLContextBuilder(debug).build();
+    ) throws IOException, GeneralSecurityException {
+        var sslContext = buildSSLContext(request.getAuth(), debug).build();
 
         var builder = HttpClient.newBuilder()
                 .sslContext(sslContext)
@@ -62,6 +62,24 @@ public class HttpService extends RequestBuilder {
         }
 
         return builder.build();
+    }
+
+    protected SSLContextBuilder buildSSLContext(
+            AuthDto auth,
+            HttpDebug debug
+    ) throws IOException, GeneralSecurityException {
+        var builder = new SSLContextBuilder(debug);
+        if(auth.getType() != AuthDto.Type.MTLS) return builder;
+
+        var mtls = buildAuthMTLS(auth).getMtls();
+
+        return switch (mtls.getType()) {
+            case PKCS12 -> builder.withPkcs12(
+                    mtls.getPkcs12().getFile(),
+                    mtls.getPkcs12().getPassword(),
+                    mtls.getPkcs12().getAlias()
+            );
+        };
     }
 
     private static String hostHeader(URI uri){

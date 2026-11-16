@@ -1,6 +1,6 @@
 package io.github.clagomess.tomato.ui.main.request.left.bodytype;
 
-import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
+import io.github.clagomess.tomato.dto.data.request.body.BinaryBodyDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.ui.component.ListenableTextField;
 import io.github.clagomess.tomato.ui.component.RequestFileChooser;

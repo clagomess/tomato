@@ -19,8 +19,8 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum.FILE;
-import static io.github.clagomess.tomato.enums.BodyTypeEnum.BINARY;
-import static io.github.clagomess.tomato.enums.BodyTypeEnum.MULTIPART_FORM;
+import static io.github.clagomess.tomato.dto.data.request.BodyDto.Type.BINARY;
+import static io.github.clagomess.tomato.dto.data.request.BodyDto.Type.MULTIPART_FORM;
 import static io.github.clagomess.tomato.io.repository.EnvironmentRepository.SYSENV_COLLECTION_FILE_DIR_KEY;
 import static io.github.clagomess.tomato.util.FileUtils.COLLECTION_FILES_DIR;
 

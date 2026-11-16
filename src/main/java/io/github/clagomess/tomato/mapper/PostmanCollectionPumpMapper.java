@@ -6,11 +6,10 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
-import io.github.clagomess.tomato.dto.data.request.BasicAuthDto;
 import io.github.clagomess.tomato.dto.data.request.BodyDto;
+import io.github.clagomess.tomato.dto.data.request.auth.BasicAuthDto;
 import io.github.clagomess.tomato.dto.external.PostmanCollectionV210Dto;
-import io.github.clagomess.tomato.enums.AuthTypeEnum;
-import io.github.clagomess.tomato.enums.BodyTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.AuthDto;
 import io.github.clagomess.tomato.enums.RawBodyTypeEnum;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -64,7 +63,7 @@ public interface PostmanCollectionPumpMapper {
         }
 
         if(source.getRequest().getAuth() != null && "basic".equals(source.getRequest().getAuth().getType())){
-            target.getAuth().setType(AuthTypeEnum.BASIC);
+            target.getAuth().setType(AuthDto.Type.BASIC);
             target.getAuth().setBasic(toBasicAuthDto(source.getRequest().getAuth().getBasic()));
         }
     }
@@ -128,14 +127,14 @@ public interface PostmanCollectionPumpMapper {
         }
     }
 
-    default BodyTypeEnum map(String source){
-        if("raw".equals(source)) return BodyTypeEnum.RAW;
-        if("graphql".equals(source)) return BodyTypeEnum.RAW;
-        if("file".equals(source)) return BodyTypeEnum.BINARY;
-        if("formdata".equals(source)) return BodyTypeEnum.MULTIPART_FORM;
-        if("urlencoded".equals(source)) return BodyTypeEnum.URL_ENCODED_FORM;
+    default BodyDto.Type map(String source){
+        if("raw".equals(source)) return BodyDto.Type.RAW;
+        if("graphql".equals(source)) return BodyDto.Type.RAW;
+        if("file".equals(source)) return BodyDto.Type.BINARY;
+        if("formdata".equals(source)) return BodyDto.Type.MULTIPART_FORM;
+        if("urlencoded".equals(source)) return BodyDto.Type.URL_ENCODED_FORM;
 
-        return BodyTypeEnum.NO_BODY;
+        return BodyDto.Type.NO_BODY;
     }
 
     @Mapping(target = "selected", ignore = true)

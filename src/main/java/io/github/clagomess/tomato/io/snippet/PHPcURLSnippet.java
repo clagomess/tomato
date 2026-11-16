@@ -5,7 +5,8 @@ import io.github.clagomess.tomato.dto.data.keyvalue.ContentTypeKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.FileKeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueTypeEnum;
-import io.github.clagomess.tomato.dto.data.request.BinaryBodyDto;
+import io.github.clagomess.tomato.dto.data.request.AuthDto;
+import io.github.clagomess.tomato.dto.data.request.body.BinaryBodyDto;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
 import io.github.clagomess.tomato.io.http.RequestBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -58,6 +59,32 @@ public class PHPcURLSnippet extends RequestBuilder implements CodeSnippet {
         });
 
         code.append("');\n");
+    }
+
+    protected void buildAuthMTLS(
+            AuthDto auth,
+            StringBuilder code
+    ) {
+        if(auth.getType() != AuthDto.Type.MTLS) return;
+
+        var mtls = buildAuthMTLS(auth).getMtls();
+
+        switch (mtls.getType()) {
+            case PKCS12 -> {
+                var pkcs12 = mtls.getPkcs12();
+
+                code.append("curl_setopt($ch, CURLOPT_SSLCERTTYPE, 'P12');\n");
+                code.append("curl_setopt($ch, CURLOPT_SSLCERT, '");
+                code.append(quote(pkcs12.getFile()));
+                code.append("');\n");
+
+                if(StringUtils.isNotEmpty(pkcs12.getPassword())) {
+                    code.append("curl_setopt($ch, CURLOPT_SSLCERTPASSWD, '");
+                    code.append(quote(pkcs12.getPassword()));
+                    code.append("');\n");
+                }
+            }
+        }
     }
 
     private final List<KeyValueItemDto> headersBuffer = new ArrayList<>();
@@ -194,6 +221,7 @@ public class PHPcURLSnippet extends RequestBuilder implements CodeSnippet {
 
         code.append("curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n");
 
+        buildAuthMTLS(request.getAuth(), code);
         buildCookies(request.getCookies(), code);
         headersBuffer.addAll(buildHeaders(request.getHeaders(), request.getAuth()).toList());
 

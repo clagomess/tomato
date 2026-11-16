@@ -19,8 +19,6 @@ Features:
 - No account required.
 - No sneaky subscriptions plans.
 
-Actually the project are in BETA stage, more functionalities will come soon, be patient.
-
 ## Download
 
 Check: [Latest Release](https://github.com/clagomess/tomato/releases/latest)

@@ -2,10 +2,14 @@ package io.github.clagomess.tomato.io.http;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.assertj.core.api.Assertions;
+import org.jspecify.annotations.Nullable;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.Mockito;
 
+import javax.net.ssl.SSLSession;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -14,8 +18,12 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -127,5 +135,62 @@ class HttpDebugTest {
 
         Assertions.assertThat(result)
                 .contains("helloworda\n[more");
+    }
+
+    @Nested
+    class assemblyCertificates {
+        private static X509Certificate loadCertificate(String path) throws Exception {
+            try (var is = Objects.requireNonNull(HttpDebugTest.class.getResourceAsStream(path))) {
+                return (X509Certificate) CertificateFactory.getInstance("X.509")
+                        .generateCertificate(is);
+            }
+        }
+
+        private static SSLSession mockSession(
+                Certificate[] peerCertificates,
+                Certificate @Nullable [] localCertificates
+        ) throws Exception {
+            var session = Mockito.mock(SSLSession.class);
+            Mockito.when(session.getProtocol()).thenReturn("TLSv1.3");
+            Mockito.when(session.getCipherSuite()).thenReturn("TLS_AES_256_GCM_SHA384");
+            Mockito.when(session.getPeerCertificates()).thenReturn(peerCertificates);
+            Mockito.when(session.getLocalCertificates()).thenReturn(localCertificates);
+
+            return session;
+        }
+
+        @Test
+        void whenClientCertificateSent_appendClientCertificate() throws Exception {
+            var session = mockSession(
+                    new Certificate[]{
+                            loadCertificate("/echo-server/mtls/server.crt"),
+                            loadCertificate("/echo-server/mtls/ca.crt"),
+                    },
+                    new Certificate[]{
+                            loadCertificate("/echo-server/mtls-client/client.crt"),
+                    }
+            );
+
+            var result = new HttpDebug().assemblyCertificates(session).toString();
+
+            Assertions.assertThat(result)
+                    .contains("Subject: localhost")
+                    .contains("# CLIENT CERTIFICATE (mTLS)\nSubject: Tomato Client")
+                    .endsWith("Issuer: Tomato Test CA\n\n");
+        }
+
+        @Test
+        void whenClientCertificateNotSent_dontAppendClientCertificate() throws Exception {
+            var session = mockSession(
+                    new Certificate[]{loadCertificate("/echo-server/mtls/server.crt")},
+                    null
+            );
+
+            var result = new HttpDebug().assemblyCertificates(session).toString();
+
+            Assertions.assertThat(result)
+                    .contains("Subject: localhost")
+                    .doesNotContain("CLIENT CERTIFICATE");
+        }
     }
 }

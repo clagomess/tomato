@@ -15,7 +15,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.io.IOException;
 import java.util.List;
 
-import static io.github.clagomess.tomato.enums.BodyTypeEnum.URL_ENCODED_FORM;
+import static io.github.clagomess.tomato.dto.data.request.BodyDto.Type.URL_ENCODED_FORM;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UrlEncodedFormBodyTest {

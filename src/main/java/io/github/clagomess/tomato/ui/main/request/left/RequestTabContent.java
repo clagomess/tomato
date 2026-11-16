@@ -6,8 +6,8 @@ import io.github.clagomess.tomato.dto.data.keyvalue.KeyValueItemDto;
 import io.github.clagomess.tomato.dto.data.request.UrlParamDto;
 import io.github.clagomess.tomato.dto.key.TabKey;
 import io.github.clagomess.tomato.dto.tree.RequestHeadDto;
-import io.github.clagomess.tomato.enums.AuthTypeEnum;
-import io.github.clagomess.tomato.enums.BodyTypeEnum;
+import io.github.clagomess.tomato.dto.data.request.AuthDto;
+import io.github.clagomess.tomato.dto.data.request.BodyDto;
 import io.github.clagomess.tomato.publisher.DisposableListener;
 import io.github.clagomess.tomato.publisher.RequestPublisher;
 import io.github.clagomess.tomato.ui.component.CharsetComboBox;
@@ -151,7 +151,7 @@ public class RequestTabContent extends JPanel {
         var bodyTabTabTitle = new TabTitle(
                 tabKey,
                 "Body",
-                () -> requestDto.getBody().getType() != BodyTypeEnum.NO_BODY
+                () -> requestDto.getBody().getType() != BodyDto.Type.NO_BODY
         );
 
         tabbedPane.addTab(bodyTabTabTitle.getTitle(), new LoadingPane());
@@ -196,7 +196,7 @@ public class RequestTabContent extends JPanel {
         var authTabTitle = new TabTitle(
                 tabKey,
                 "Auth",
-                () -> requestDto.getAuth().getType() != AuthTypeEnum.NO_AUTH
+                () -> requestDto.getAuth().getType() != AuthDto.Type.NO_AUTH
         );
 
         tabbedPane.addTab(authTabTitle.getTitle(), new LoadingPane());
